@@ -9,6 +9,7 @@ import {
   JOB_CARD_TYPE_META, phasesForType, phaseIndex, daysInStage, jobCardSituation,
 } from '../../utils/documentWorkflow';
 import { WorkflowStepper } from './WorkflowStepper';
+import { formatDate } from '../../utils/formatDate';
 
 export type JobCardPerspective = 'client' | 'account_manager' | 'client_manager' | 'readonly';
 
@@ -23,7 +24,7 @@ interface JobCardCardProps {
 }
 
 function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(iso);
 }
 
 function relTime(iso: string): string {

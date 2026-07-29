@@ -19,6 +19,7 @@ import { mockJobCards } from '../data/mockJobCards';
 import { PersonAvatar } from '../components/PersonAvatar';
 import { getPersonPhoto } from '../data/personPhotos';
 import { getDashPrefs, subscribeDashPrefs, type DashPrefs } from '../data/dashboardPrefs';
+import { formatDateShort } from '../utils/formatDate';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getGreeting() {
@@ -138,8 +139,7 @@ export default function HomePage() {
   const overdueDays = topOverdue?.dueDate
     ? Math.max(1, Math.floor((Date.now() - new Date(topOverdue.dueDate).getTime()) / 86400000))
     : 0;
-  const fmtShortDate = (iso?: string) =>
-    iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  const fmtShortDate = (iso?: string) => formatDateShort(iso);
 
   // ── Campaign Snapshot — derived from the seeded campaigns ──────────────────
   const campaignSnapshot = useMemo(() => (tccClient?.campaigns ?? []).map((c) => {

@@ -1,5 +1,6 @@
 import type { Lead } from '../mockData';
 import type { Invoice } from '../mockInvoices';
+import { formatDate } from './formatDate';
 
 // ─── CSV Export ──────────────────────────────────────────────────────────────
 
@@ -227,7 +228,7 @@ function formatDateForFile() {
 }
 
 function formatDateForDisplay(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(dateStr);
 }
 
 // ─── Reports & Analytics Export (PDF / CSV / XLSX) ───────────────────────────

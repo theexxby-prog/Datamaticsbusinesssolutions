@@ -10,6 +10,7 @@ import { TableRow } from './TableRow';
 import { toast } from 'sonner';
 import { AnimatedCounter } from './AnimatedCounter';
 import { EmptyState } from './EmptyState';
+import { formatDate } from '../utils/formatDate';
 
 interface Document {
   id: string;
@@ -117,7 +118,7 @@ const statusConfig: Record<Document['status'], { label: string; color: string; b
 };
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(dateStr);
 }
 
 export function DocumentLibraryTab() {

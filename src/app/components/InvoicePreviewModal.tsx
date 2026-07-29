@@ -1,5 +1,6 @@
 import { X, Download, CreditCard, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { formatDate } from '../utils/formatDate';
 
 interface Invoice {
   id: string;
@@ -92,13 +93,13 @@ export function InvoicePreviewModal({ isOpen, onClose, invoice }: InvoicePreview
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Issue Date:</span>
                       <span className="text-sm font-medium text-gray-900">
-                        {new Date(invoice.issueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {formatDate(invoice.issueDate)}
                       </span>
                     </div>
                     <div className="flex justify-between">
                       <span className="text-sm text-gray-600">Due Date:</span>
                       <span className="text-sm font-medium text-gray-900">
-                        {new Date(invoice.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {formatDate(invoice.dueDate)}
                       </span>
                     </div>
                   </div>

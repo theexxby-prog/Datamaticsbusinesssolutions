@@ -10,6 +10,7 @@ import {
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { EmptyState } from '../components/EmptyState';
 import { toast } from 'sonner';
+import { formatDate } from '../utils/formatDate';
 
 interface Ticket {
   id: string;
@@ -323,7 +324,7 @@ export default function Support() {
                     </td>
                     <td className="px-6 py-4">
                       <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
-                        {new Date(ticket.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        {formatDate(ticket.lastUpdated)}
                       </div>
                     </td>
                     <td className="px-6 py-4">
@@ -369,7 +370,7 @@ export default function Support() {
 
                 {/* Last updated */}
                 <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-                  Updated {new Date(ticket.lastUpdated).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  Updated {formatDate(ticket.lastUpdated)}
                 </div>
 
                 {/* Full-width View button */}

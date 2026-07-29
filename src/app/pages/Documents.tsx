@@ -16,6 +16,7 @@ import {
   confirmOpportunity, confirmJobCard, sendForSignature, signJobCard, uploadScopeDump,
 } from '../utils/documentWorkflow';
 import type { JobCard, ScopeSummary } from '../types';
+import { formatDate } from '../utils/formatDate';
 
 // ─── Sign modal (client) ──────────────────────────────────────────────────────
 
@@ -52,8 +53,8 @@ function SignModal({ card, onClose, onSigned }: { card: JobCard; onClose: () => 
               ['Geography', card.scope.geography],
               ['Target Leads', card.scope.targetLeads.toLocaleString('en-US')],
               ['CPL', `$${card.scope.cpl.toLocaleString('en-US')}`],
-              ['Start', new Date(card.scope.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })],
-              ['End', new Date(card.scope.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })],
+              ['Start', formatDate(card.scope.startDate)],
+              ['End', formatDate(card.scope.endDate)],
             ].map(([label, value]) => (
               <div key={label as string}>
                 <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{label}: </span>
@@ -188,8 +189,8 @@ function scopeFacts(card: JobCard) {
     ['Geography', card.scope.geography],
     ['Target Leads', card.scope.targetLeads.toLocaleString('en-US')],
     ['Cost per Lead', `$${card.scope.cpl.toLocaleString('en-US')}`],
-    ['Start', new Date(card.scope.startDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })],
-    ['End', new Date(card.scope.endDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })],
+    ['Start', formatDate(card.scope.startDate)],
+    ['End', formatDate(card.scope.endDate)],
   ] as const;
 }
 
@@ -206,7 +207,7 @@ function ClientSignatureCard({ card, onSign, busy }: { card: JobCard; onSign: (c
         {card.campaignName}
       </h3>
       <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)', marginBottom: '14px' }}>
-        {card.id}{card.signature?.sentAt && <> · Sent {new Date(card.signature.sentAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</>}
+        {card.id}{card.signature?.sentAt && <> · Sent {formatDate(card.signature.sentAt)}</>}
       </p>
 
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
@@ -243,7 +244,7 @@ function ClientSignedRow({ card }: { card: JobCard }) {
           <div className="truncate" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)' }}>{card.campaignName}</div>
           <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
             {card.id}
-            {card.signature?.signedAt && <> · Signed {new Date(card.signature.signedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</>}
+            {card.signature?.signedAt && <> · Signed {formatDate(card.signature.signedAt)}</>}
             {card.signature?.signedBy && <> by {card.signature.signedBy}</>}
           </div>
         </div>

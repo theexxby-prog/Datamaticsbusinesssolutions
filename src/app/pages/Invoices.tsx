@@ -18,12 +18,13 @@ import {
   sendInvoice, initiatePayment, syncPaymentToTally,
 } from '../utils/invoiceWorkflow';
 import type { InvoiceRecord } from '../types';
+import { formatDate } from '../utils/formatDate';
 
 type InvoicePerspective = 'client' | 'accounts' | 'readonly';
 
 function fmtDate(iso?: string) {
   if (!iso) return '—';
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(iso);
 }
 
 const stageChipStyles: Record<string, string> = {
