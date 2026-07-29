@@ -5,9 +5,15 @@ import type { Campaign } from '../data/mockClients';
 
 interface DeliveryScheduleSectionProps {
   campaign: Campaign;
+  /**
+   * Renders without its own card chrome, heading and overall-progress bar —
+   * used when this sits inside the campaign analytics tabs, where the card is
+   * already provided and the progress figure is in the KPI band above.
+   */
+  bare?: boolean;
 }
 
-export function DeliveryScheduleSection({ campaign }: DeliveryScheduleSectionProps) {
+export function DeliveryScheduleSection({ campaign, bare = false }: DeliveryScheduleSectionProps) {
   // Don't render if missing required data
   if (!campaign.deliverySchedule || !campaign.goalLeads || !campaign.deliveredLeads) {
     return null;
@@ -58,26 +64,35 @@ export function DeliveryScheduleSection({ campaign }: DeliveryScheduleSectionPro
   };
 
   return (
-    <motion.div 
-      className="glass-card p-6 mt-6"
-      initial={{ opacity: 0, y: 20 }}
+    <motion.div
+      className={bare ? '' : 'glass-card p-6 mt-6'}
+      initial={{ opacity: 0, y: bare ? 0 : 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
     >
-      <div className="flex items-center justify-between mb-6">
-        <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-          Delivery Schedule & Progress
-        </h2>
+      <div className={`flex items-center justify-between ${bare ? 'mb-4' : 'mb-6'}`}>
+        {bare ? (
+          <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+            Delivering every {campaign.deliveryDays?.join(', ')}
+          </span>
+        ) : (
+          <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+            Delivery Schedule & Progress
+          </h2>
+        )}
         <div className="flex items-center gap-2">
           <Calendar className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
-          <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-            {campaign.deliveryDays?.join(', ')}
-          </span>
+          {!bare && (
+            <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+              {campaign.deliveryDays?.join(', ')}
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Progress Bar */}
-      <div className="mb-6">
+      {/* Progress Bar — hidden in `bare` mode, where the KPI band already
+          carries this exact percentage. */}
+      <div className={bare ? 'hidden' : 'mb-6'}>
         <div className="flex items-center justify-between mb-2">
           <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>
             Overall Progress
@@ -172,7 +187,7 @@ export function DeliveryScheduleSection({ campaign }: DeliveryScheduleSectionPro
             <TrendingUp className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
             Upcoming Deliveries
           </h3>
-          <div className="space-y-3">
+          <div className={bare ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5' : 'space-y-3'}>
             {upcomingDeliveries.map((delivery, index) => {
               const relativeLabel = getRelativeDateLabel(delivery.date);
               const isNext = index === 0;
@@ -180,8 +195,8 @@ export function DeliveryScheduleSection({ campaign }: DeliveryScheduleSectionPro
               return (
                 <motion.div
                   key={index}
-                  className="flex items-center justify-between p-4 rounded-lg"
-                  style={{ 
+                  className={`flex items-center justify-between rounded-lg ${bare ? 'p-2.5' : 'p-4'}`}
+                  style={{
                     background: isNext ? 'var(--color-primary-tint)' : 'var(--color-bg-secondary)',
                     border: isNext ? '1px solid var(--color-primary)' : '1px solid var(--color-border)'
                   }}
@@ -190,8 +205,8 @@ export function DeliveryScheduleSection({ campaign }: DeliveryScheduleSectionPro
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: isNext ? 'var(--color-primary)' : 'var(--color-bg-tertiary)' }}>
-                      <Calendar className="w-5 h-5" style={{ color: isNext ? 'white' : 'var(--color-text-secondary)' }} />
+                    <div className={`${bare ? 'w-8 h-8' : 'w-10 h-10'} rounded-full flex items-center justify-center`} style={{ background: isNext ? 'var(--color-primary)' : 'var(--color-bg-tertiary)' }}>
+                      <Calendar className={bare ? 'w-4 h-4' : 'w-5 h-5'} style={{ color: isNext ? 'white' : 'var(--color-text-secondary)' }} />
                     </div>
                     <div>
                       <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>

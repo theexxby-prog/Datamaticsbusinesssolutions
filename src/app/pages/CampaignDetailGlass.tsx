@@ -1,23 +1,8 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { 
-  ChevronRight, 
-  Target, 
-  TrendingUp, 
-  CheckCircle, 
-  FileText,
-  Download,
-  DollarSign,
-  ArrowLeft,
-  Activity,
-  Package,
-  Copy,
-  Clock,
-  Mail,
-} from 'lucide-react';
+import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound } from 'lucide-react';
 import { AppLayout } from '../components/AppLayout';
 import { JobCardModal } from '../components/JobCardModalGlass';
-import { AnimatedDonutChart } from '../components/AnimatedDonutChart';
 import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
 import { NewCampaignModal, type CampaignFormData } from '../components/NewCampaignModal';
@@ -25,6 +10,10 @@ import { CampaignHealthBadge, ReplacementTracker } from '../components/CampaignH
 import { CampaignThread } from '../components/thread/CampaignThread';
 import { TalBadge } from '../components/thread/TalBadge';
 import { ConvertrQAStats } from '../components/ConvertrQAStatus';
+import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
+import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
+import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
+import { useCampaignThread } from '../context/CampaignThreadContext';
 import { allClients } from '../data/mockClients';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
@@ -37,6 +26,7 @@ export default function CampaignDetail() {
   const [showCloneModal, setShowCloneModal] = useState(false);
   const [showNewCampaignModal, setShowNewCampaignModal] = useState(false);
   const [clonePrefill, setClonePrefill] = useState<Partial<CampaignFormData> | undefined>(undefined);
+  const { openRequestsFor } = useCampaignThread();
   
   // Find the campaign across all clients
   let campaign = null;
@@ -87,6 +77,12 @@ export default function CampaignDetail() {
   const replacementStats = getReplacementStats(campaign.id);
   const isConvertr = client?.leadAcceptanceMethod === 'convertr';
 
+  const acceptanceMethod = isConvertr
+    ? { label: 'Automated lead delivery', color: '#6366F1' }
+    : client?.leadAcceptanceMethod === 'csv_manual'
+      ? { label: 'Manual CSV review', color: 'var(--color-warning)' }
+      : { label: 'Portal review', color: 'var(--color-success)' };
+
   // Automated QA snapshot derived from campaign delivery — mirrors the ~97%
   // acceptance rate the seeded campaigns report elsewhere.
   const qaCaution = Math.max(1, Math.round(deliveredLeads * 0.02));
@@ -127,377 +123,116 @@ export default function CampaignDetail() {
           <span style={{ color: 'var(--color-text-primary)' }}>{campaign.name}</span>
         </div>
 
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6 gap-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <button
-                onClick={() => navigate('/dashboard')}
-                className="btn-ghost p-2"
-              >
+        {/* Header — carries what the old "Campaign Details" sidebar card held.
+            Status, dates and health were already duplicated here; budget and
+            account manager join them so that 313px card can go. */}
+        <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="min-w-0">
+            <div className="mb-2 flex items-center gap-3">
+              <button onClick={() => navigate('/dashboard')} className="btn-ghost p-2">
                 <ArrowLeft className="w-5 h-5" />
               </button>
-              <h1 style={{ color: 'var(--color-text-primary)' }}>{campaign.name}</h1>
+              <h1 className="truncate" style={{ color: 'var(--color-text-primary)' }}>{campaign.name}</h1>
             </div>
-            <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pl-1">
               <span className={getStatusColor(campaign.status)}>{formatStatus(campaign.status)}</span>
               <CampaignHealthBadge health={health} showDetails />
               {campaign.startDate && campaign.endDate && (
                 <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                  {campaign.startDate} - {campaign.endDate}
+                  {campaign.startDate} – {campaign.endDate}
                 </span>
               )}
+              {campaign.budget && (
+                <span className="inline-flex items-center gap-1.5" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                  <Wallet className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
+                  {fmtMoney(campaign.budget)} budget
+                </span>
+              )}
+              <span className="inline-flex items-center gap-1.5" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                <UserRound className="w-3.5 h-3.5" style={{ color: 'var(--color-text-muted)' }} />
+                Brijesh Singh
+              </span>
+              <span className="inline-flex items-center gap-1.5" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                <span className="w-2 h-2 rounded-full" style={{ background: acceptanceMethod.color }} />
+                {acceptanceMethod.label}
+              </span>
               <TalBadge campaignId={campaign.id} />
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-            <button
-              onClick={() => setShowJobCard(true)}
-              className="btn-outline px-4 py-2.5 flex items-center justify-center gap-2"
-            >
+
+          <div className="grid flex-shrink-0 grid-cols-3 gap-2 sm:flex sm:flex-row">
+            <button onClick={() => setShowJobCard(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
               <FileText className="w-4 h-4" />
-              View Job Card
+              Job Card
             </button>
-            <button
-              onClick={() => setShowCloneModal(true)}
-              className="btn-outline px-4 py-2.5 flex items-center justify-center gap-2"
-            >
+            <button onClick={() => setShowCloneModal(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
               <Copy className="w-4 h-4" />
-              Clone Campaign
+              Clone
             </button>
             <button
               onClick={() => toast.success('Exporting report… your download will begin shortly.')}
-              className="btn-primary px-4 py-2.5 flex items-center justify-center gap-2"
+              className="btn-primary px-3.5 py-2 flex items-center justify-center gap-2"
             >
               <Download className="w-4 h-4" />
-              Export Report
+              Export
             </button>
           </div>
         </div>
 
-        {/* KPI Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stagger-children">
-          {/* Total Billable — larger (spans 2), brand-tinted, CPL inside */}
-          <div className="kpi-card animate-slideInUp col-span-2 flex flex-col justify-between"
-            style={{ background: 'linear-gradient(135deg, rgba(186,32,39,0.06), rgba(186,32,39,0.01))', border: '1px solid rgba(186,32,39,0.18)' }}>
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-primary-tint)' }}>
-                <DollarSign className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
-              </div>
-              <span className="px-2 py-1 rounded-md" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(186,32,39,0.10)', color: '#BA2027' }}>
-                {fmtMoney(cpl)} CPL
-              </span>
-            </div>
-            <div>
-              <div className="kpi-card__number" style={{ fontSize: '30px', lineHeight: 1.1 }}>{fmtMoney(totalBillable)}</div>
-              <div className="kpi-card__label">Total Billable</div>
-              <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: 2 }}>
-                {deliveredLeads.toLocaleString()} leads × {fmtMoney(cpl)} CPL
-              </div>
-            </div>
-          </div>
+        {/* KPI band — absorbs the old donut card and Delivery Pace card. */}
+        <CampaignKpiBand
+          billable={fmtMoney(totalBillable)}
+          cpl={fmtMoney(cpl)}
+          delivered={deliveredLeads}
+          target={targetLeads}
+          progressPercent={progressPercentage}
+          acceptanceRate={acceptanceRate}
+          timeElapsedPercent={health.timeElapsedPercent}
+          paceColor={health.color}
+          paceLabel={health.label}
+          qaValidPercent={isConvertr ? Math.round((convertrStats.valid / convertrStats.totalProcessed) * 100) : undefined}
+          openRequests={openRequestsFor(campaign.id)}
+          onOpenRequests={() => document.getElementById('campaign-discussion')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+        />
 
-          <div className="kpi-card animate-slideInUp">
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-info-bg)' }}>
-                <TrendingUp className="w-5 h-5" style={{ color: 'var(--color-info)' }} />
-              </div>
-            </div>
-            <div className="kpi-card__number">{deliveredLeads.toLocaleString()}</div>
-            <div className="kpi-card__label">Total Leads</div>
-          </div>
-
-          <div className="kpi-card animate-slideInUp">
-            <div className="flex items-center justify-between mb-3">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-success-bg)' }}>
-                <CheckCircle className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
-              </div>
-            </div>
-            <div className="kpi-card__number">{acceptanceRate}%</div>
-            <div className="kpi-card__label">Acceptance</div>
-          </div>
-        </div>
-
-        {/* Main Layout Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
-          {/* Left Column: Primary Metrics, Analytics & Activity (2/3 width) */}
-          <div className="lg:col-span-2 space-y-6">
-            {/* Progress Chart */}
-            <div className="glass-card p-6">
-              <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-6">
-                Campaign Progress
-              </h2>
-              <div className="flex items-center justify-center">
-                <AnimatedDonutChart
-                  percentage={progressPercentage}
-                  size={200}
-                  strokeWidth={20}
-                  color="var(--color-primary)"
-                />
-              </div>
-              <div className="mt-6 grid grid-cols-3 gap-4">
-                <div className="text-center">
-                  <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                    {campaign.target || campaign.totalLeads}
-                  </div>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>Target</div>
-                </div>
-                <div className="text-center">
-                  <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)' }}>
-                    {campaign.delivered || campaign.totalLeads}
-                  </div>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>Delivered</div>
-                </div>
-                <div className="text-center">
-                  <div style={{ fontSize: 'var(--font-size-2xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                    {(campaign.target || campaign.totalLeads) - (campaign.delivered || campaign.totalLeads)}
-                  </div>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>Remaining</div>
-                </div>
-              </div>
-            </div>
-
-            {/* Outreach Funnel Analytics */}
-            {campaign.outreachMetrics && (
-              <div className="glass-card p-6 animate-slideInUp">
-                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-6 flex items-center gap-2">
-                  <Mail className="w-5 h-5 text-[var(--color-primary)]" />
-                  Outreach Funnel Analytics
-                </h2>
-
-                <div className="space-y-5">
-                  {/* Emails Sent */}
-                  <div>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>Emails Sent</span>
-                      <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                        {campaign.outreachMetrics.emailsSent.toLocaleString()}
-                      </span>
-                    </div>
-                    <div className="w-full h-2 rounded-full overflow-hidden border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                      <div 
-                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-500" 
-                        style={{ width: '100%' }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Opened Emails */}
-                  <div>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>Opened Emails</span>
-                      <div className="flex items-center gap-2">
-                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', fontWeight: 'var(--font-weight-medium)' }}>
-                          {campaign.outreachMetrics.emailsOpened.toLocaleString()}
-                        </span>
-                        <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: '#6366F1' }}>
-                          {campaign.outreachMetrics.openRate}%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-full h-2 rounded-full overflow-hidden border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                      <div 
-                        className="h-full rounded-full bg-gradient-to-r from-indigo-400 to-purple-500" 
-                        style={{ width: `${campaign.outreachMetrics.openRate}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Clicked Emails */}
-                  <div>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>Clicks (CTR)</span>
-                      <div className="flex items-center gap-2">
-                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', fontWeight: 'var(--font-weight-medium)' }}>
-                          {campaign.outreachMetrics.emailsClicked.toLocaleString()}
-                        </span>
-                        <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: '#10B981' }}>
-                          {campaign.outreachMetrics.clickRate}%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-full h-2 rounded-full overflow-hidden border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                      <div 
-                        className="h-full rounded-full bg-gradient-to-r from-emerald-400 to-teal-500" 
-                        style={{ width: `${campaign.outreachMetrics.clickRate * 5}%` }}
-                      />
-                    </div>
-                  </div>
-
-                  {/* Delivered Leads */}
-                  <div>
-                    <div className="flex justify-between items-center mb-1.5">
-                      <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>Delivered Leads</span>
-                      <div className="flex items-center gap-2">
-                        <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)', fontWeight: 'var(--font-weight-medium)' }}>
-                          {(campaign.delivered || campaign.totalLeads).toLocaleString()}
-                        </span>
-                        <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-primary)' }}>
-                          {Math.round(((campaign.delivered || campaign.totalLeads) / campaign.outreachMetrics.emailsSent) * 1000) / 10}%
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-full h-2 rounded-full overflow-hidden border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                      <div 
-                        className="h-full rounded-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--brand-red-light)]" 
-                        style={{ width: `${Math.max(2, Math.round(((campaign.delivered || campaign.totalLeads) / campaign.outreachMetrics.emailsSent) * 100))}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Conversion Metrics Footer */}
-                <div className="mt-6 pt-5 border-t border-[var(--border)] grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  <div className="text-center p-3 rounded-xl border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                    <div style={{ fontSize: '9px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-0.5">CTOR</div>
-                    <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                      {Math.round((campaign.outreachMetrics.emailsClicked / campaign.outreachMetrics.emailsOpened) * 1000) / 10}%
-                    </div>
-                    <div style={{ fontSize: '9px', fontWeight: 'var(--font-weight-semibold)', color: '#10B981' }} className="mt-0.5">Excellent</div>
-                  </div>
-                  <div className="text-center p-3 rounded-xl border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                    <div style={{ fontSize: '9px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-0.5">Open to Lead</div>
-                    <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                      {Math.round(((campaign.delivered || campaign.totalLeads) / campaign.outreachMetrics.emailsOpened) * 1000) / 10}%
-                    </div>
-                    <div style={{ fontSize: '9px', color: 'var(--color-text-secondary)' }} className="mt-0.5">Conversion</div>
-                  </div>
-                  <div className="text-center p-3 rounded-xl border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                    <div style={{ fontSize: '9px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-0.5">Click to Lead</div>
-                    <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                      {Math.round(((campaign.delivered || campaign.totalLeads) / campaign.outreachMetrics.emailsClicked) * 1000) / 10}%
-                    </div>
-                    <div style={{ fontSize: '9px', color: 'var(--color-text-secondary)' }} className="mt-0.5">Action Rate</div>
-                  </div>
-                  <div className="text-center p-3 rounded-xl border border-[var(--border)]" style={{ background: 'var(--background-muted)' }}>
-                    <div style={{ fontSize: '9px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-0.5">Bounce Rate</div>
-                    <div style={{ fontSize: 'var(--font-size-md)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                      0.8%
-                    </div>
-                    <div style={{ fontSize: '9px', fontWeight: 'var(--font-weight-semibold)', color: '#10B981' }} className="mt-0.5">Healthy (&lt;2%)</div>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Automated QA results (only for automated-delivery clients) */}
-            {isConvertr && (
-              <ConvertrQAStats {...convertrStats} />
-            )}
-
-            {/* Discussion — comments, documents and change requests, with
-                system activity folded in chronologically. */}
-            <CampaignThread
-              campaignId={campaign.id}
-              campaignName={campaign.name}
-              activities={activities}
+        {/* Analytics on the left, the conversation pinned alongside it. */}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5 items-start">
+          <div className="lg:col-span-3 space-y-5">
+            <CampaignAnalyticsTabs
+              tabs={[
+                Boolean(campaign.outreachMetrics) && {
+                  key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
+                  content: <OutreachFunnel metrics={campaign.outreachMetrics!} deliveredLeads={deliveredLeads} />,
+                },
+                {
+                  key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
+                  content: <DeliveryScheduleSection campaign={campaign} bare />,
+                },
+                isConvertr && {
+                  key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
+                  content: <ConvertrQAStats {...convertrStats} />,
+                },
+              ]}
             />
-          </div>
 
-          {/* Right Column: Metadata & Detailed Trackers (1/3 width) */}
-          <div className="space-y-6 lg:sticky lg:top-6">
-            {/* Campaign Details */}
-            <div className="glass-card p-6">
-              <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-4">
-                Campaign Details
-              </h2>
-              <div className="space-y-4">
-                <div>
-                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-1">
-                    Status
-                  </div>
-                  <span className={getStatusColor(campaign.status)}>{formatStatus(campaign.status)}</span>
-                </div>
-                {campaign.startDate && campaign.endDate && (
-                  <div>
-                    <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-1">
-                      Duration
-                    </div>
-                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
-                      {campaign.startDate} - {campaign.endDate}
-                    </div>
-                  </div>
-                )}
-                {campaign.budget && (
-                  <div>
-                    <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-1">
-                      Budget
-                    </div>
-                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
-                      ${campaign.budget.toLocaleString()}
-                    </div>
-                  </div>
-                )}
-                <div>
-                  <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }} className="mb-1">
-                    Account Manager
-                  </div>
-                  <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
-                    Brijesh Singh
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Replacement Tracker */}
             <ReplacementTracker
               totalRejected={replacementStats.totalRejected}
               totalReplaced={replacementStats.totalReplaced}
               remaining={replacementStats.remaining}
             />
+          </div>
 
-            {/* Delivery Pace */}
-            <div className="glass-card p-5">
-              <h3 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-3">
-                Delivery Pace
-              </h3>
-              <div className="space-y-2">
-                <div className="flex justify-between" style={{ fontSize: 'var(--font-size-xs)' }}>
-                  <span style={{ color: 'var(--color-text-muted)' }}>Time elapsed</span>
-                  <span style={{ color: 'var(--color-text-primary)', fontWeight: 'var(--font-weight-semibold)' }}>{health.timeElapsedPercent}%</span>
-                </div>
-                <div className="w-full h-2 rounded-full" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="h-full rounded-full" style={{ width: `${health.timeElapsedPercent}%`, background: 'var(--color-text-muted)' }} />
-                </div>
-                <div className="flex justify-between" style={{ fontSize: 'var(--font-size-xs)' }}>
-                  <span style={{ color: 'var(--color-text-muted)' }}>Leads delivered</span>
-                  <span style={{ color: health.color, fontWeight: 'var(--font-weight-semibold)' }}>{health.progressPercent}%</span>
-                </div>
-                <div className="w-full h-2 rounded-full" style={{ background: 'var(--color-bg-secondary)' }}>
-                  <div className="h-full rounded-full" style={{ width: `${health.progressPercent}%`, background: health.color }} />
-                </div>
-              </div>
-            </div>
-
-            {/* Lead Acceptance Method */}
-            <div className="glass-card p-5">
-              <h3 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-2">
-                Lead Acceptance
-              </h3>
-              <div className="flex items-center gap-2" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-                {isConvertr ? (
-                  <>
-                    <div className="w-2 h-2 rounded-full bg-indigo-500" />
-                    <span>Automated lead delivery</span>
-                  </>
-                ) : client?.leadAcceptanceMethod === 'csv_manual' ? (
-                  <>
-                    <div className="w-2 h-2 rounded-full" style={{ background: 'var(--color-warning)' }} />
-                    <span>Manual CSV review</span>
-                  </>
-                ) : (
-                  <>
-                    <div className="w-2 h-2 rounded-full" style={{ background: 'var(--color-success)' }} />
-                    <span>Portal review</span>
-                  </>
-                )}
-              </div>
-            </div>
+          {/* The thread scrolls inside itself so the page height no longer
+              depends on how much the client and the campaign manager talk. */}
+          <div id="campaign-discussion" className="lg:col-span-2 lg:sticky lg:top-5">
+            <CampaignThread
+              campaignId={campaign.id}
+              campaignName={campaign.name}
+              activities={activities}
+              variant="rail"
+            />
           </div>
         </div>
-
-        {/* Delivery Schedule Section */}
-        <DeliveryScheduleSection campaign={campaign} />
       </div>
 
       {/* Job Card Modal */}

@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { MessageSquare, ChevronDown, ChevronRight, Activity } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useCampaignThread } from '../../context/CampaignThreadContext';
@@ -94,13 +94,22 @@ interface CampaignThreadProps {
   campaignName: string;
   /** System-generated events for this campaign — deliveries, milestones. */
   activities?: CampaignActivity[];
+  /**
+   * `rail` pins the thread to the viewport height and scrolls the feed inside
+   * itself, with the composer fixed at the bottom. A conversation is the one
+   * section on this page with unbounded height; left to grow inline it pushes
+   * everything below it off the page and gets longer every week.
+   */
+  variant?: 'inline' | 'rail';
 }
 
-export function CampaignThread({ campaignId, campaignName, activities = [] }: CampaignThreadProps) {
+export function CampaignThread({ campaignId, campaignName, activities = [], variant = 'inline' }: CampaignThreadProps) {
+  const isRail = variant === 'rail';
   const { currentUser } = useAuth();
   const { entriesFor, addComment, addChangeRequest, addAttachment, setRequestStatus } = useCampaignThread();
   const { addNotification } = useNotifications();
   const [filter, setFilter] = useState<FilterKey>('all');
+  const feedRef = useRef<HTMLDivElement>(null);
 
   const author = useMemo(() => authorFromUser(currentUser), [currentUser]);
   const canResolve = canResolveRequests(currentUser);
@@ -153,17 +162,27 @@ export function CampaignThread({ campaignId, campaignName, activities = [] }: Ca
     toast.success(status === 'done' ? 'Request marked done' : 'Request acknowledged');
   }
 
+  // Open on the newest entry, and follow along as new ones are posted.
+  useEffect(() => {
+    if (!isRail || !feedRef.current) return;
+    feedRef.current.scrollTop = feedRef.current.scrollHeight;
+  }, [isRail, feed.length, filter]);
+
   return (
-    <div className="glass-card p-6">
-      <div className="mb-4 flex flex-wrap items-center gap-3">
+    <div
+      className={`glass-card flex flex-col ${
+        isRail ? 'max-h-[calc(100vh-16rem)] min-h-[26rem] p-5' : 'p-6'
+      }`}
+    >
+      <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
         <h2 className="text-lg font-semibold text-[var(--color-text-primary)]">Discussion</h2>
         <span className="text-sm text-[var(--color-text-muted)]">
-          Notes, documents and change requests for this campaign
+          {isRail ? 'Notes, documents and requests' : 'Notes, documents and change requests for this campaign'}
         </span>
       </div>
 
       {/* Filters, not tabs — the conversation stays one list. */}
-      <div className="mb-5 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-shrink-0 flex-wrap gap-2">
         {FILTERS.map(({ key, label }) => (
           <button
             key={key}
@@ -184,7 +203,10 @@ export function CampaignThread({ campaignId, campaignName, activities = [] }: Ca
         ))}
       </div>
 
-      <div className="mb-5 space-y-4">
+      <div
+        ref={feedRef}
+        className={`mb-4 space-y-4 ${isRail ? 'min-h-0 flex-1 overflow-y-auto pr-1' : ''}`}
+      >
         {feed.length === 0 ? (
           <EmptyState
             icon={MessageSquare}
@@ -211,11 +233,13 @@ export function CampaignThread({ campaignId, campaignName, activities = [] }: Ca
         )}
       </div>
 
-      <ThreadComposer
-        onComment={handleComment}
-        onChangeRequest={handleChangeRequest}
-        onAttachment={handleAttachment}
-      />
+      <div className="flex-shrink-0">
+        <ThreadComposer
+          onComment={handleComment}
+          onChangeRequest={handleChangeRequest}
+          onAttachment={handleAttachment}
+        />
+      </div>
     </div>
   );
 }
