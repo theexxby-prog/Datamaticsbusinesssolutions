@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import {
   Search, Plus, FileText, Filter, Grid3x3, List, Download, Trash2,
   Eye, Star, Calendar, User, FolderOpen, Upload, X, Check,
@@ -11,11 +11,14 @@ import { toast } from 'sonner';
 import { AnimatedCounter } from './AnimatedCounter';
 import { EmptyState } from './EmptyState';
 import { formatDate } from '../utils/formatDate';
+import { useCampaignThread } from '../context/CampaignThreadContext';
+import { allClients } from '../data/mockClients';
+import { ATTACHMENT_KIND_LABEL, type CampaignThreadEntry } from '../data/campaignThread';
 
 interface Document {
   id: string;
   name: string;
-  type: 'Contract' | 'SOW' | 'NDA' | 'Invoice' | 'Report' | 'Other';
+  type: 'Contract' | 'SOW' | 'NDA' | 'Invoice' | 'Report' | 'Campaign' | 'Other';
   uploadedBy: string;
   uploadDate: string;
   size: string;
@@ -107,6 +110,7 @@ const typeConfig: Record<Document['type'], { color: string; bg: string; icon: Re
   NDA: { color: '#BA2027', bg: 'rgba(186,32,39,0.1)', icon: Lock },
   Invoice: { color: '#0F9D58', bg: 'rgba(15,157,88,0.1)', icon: FileText },
   Report: { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: FileSpreadsheet },
+  Campaign: { color: '#BA2027', bg: 'rgba(186,32,39,0.1)', icon: FileSpreadsheet },
   Other: { color: '#6B7280', bg: 'rgba(107,114,128,0.1)', icon: FileText },
 };
 
@@ -116,6 +120,35 @@ const statusConfig: Record<Document['status'], { label: string; color: string; b
   Pending: { label: 'Pending', color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
   Archived: { label: 'Archived', color: '#6B7280', bg: 'rgba(107,114,128,0.1)' },
 };
+
+
+const campaignNameById = new Map(
+  allClients.flatMap(client => client.campaigns.map(c => [c.id, c.name] as const)),
+);
+
+/**
+ * Files attached to a campaign discussion are the same records shown here —
+ * one upload, two views. Giving the library its own separate store would
+ * recreate the shared folder this feature exists to replace.
+ */
+function attachmentsAsDocuments(entries: CampaignThreadEntry[]): Document[] {
+  return entries.flatMap(entry =>
+    (entry.attachments ?? []).map(attachment => ({
+      id: `thread_${attachment.id}`,
+      name: attachment.name,
+      type: 'Campaign' as const,
+      uploadedBy: entry.author.name,
+      uploadDate: entry.createdAt.slice(0, 10),
+      size: attachment.sizeLabel,
+      status: 'Active' as const,
+      campaign: campaignNameById.get(entry.campaignId) ?? entry.campaignId,
+      tags: [
+        ATTACHMENT_KIND_LABEL[attachment.kind],
+        ...(attachment.version ? [`v${attachment.version}`] : []),
+      ],
+    })),
+  );
+}
 
 export function DocumentLibraryTab() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -131,7 +164,16 @@ export function DocumentLibraryTab() {
   const [showUploadModal, setShowUploadModal] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
-  const filteredDocuments = mockDocuments.filter((doc) => {
+  const { entriesFor } = useCampaignThread();
+  const documents = useMemo(() => {
+    const fromCampaigns = allClients
+      .flatMap(client => client.campaigns)
+      .flatMap(campaign => attachmentsAsDocuments(entriesFor(campaign.id)));
+    // Newest first, so a TAL uploaded during the call appears at the top.
+    return [...fromCampaigns, ...mockDocuments].sort((a, b) => b.uploadDate.localeCompare(a.uploadDate));
+  }, [entriesFor]);
+
+  const filteredDocuments = documents.filter((doc) => {
     const matchesSearch =
       doc.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       doc.uploadedBy.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -160,8 +202,8 @@ export function DocumentLibraryTab() {
     setActiveMenu(null);
   };
 
-  const totalActive = mockDocuments.filter((d) => d.status === 'Active').length;
-  const totalContracts = mockDocuments.filter((d) => d.type === 'Contract' || d.type === 'SOW' || d.type === 'NDA').length;
+  const totalActive = documents.filter((d) => d.status === 'Active').length;
+  const totalContracts = documents.filter((d) => d.type === 'Contract' || d.type === 'SOW' || d.type === 'NDA').length;
 
   return (
     <>
@@ -180,10 +222,10 @@ export function DocumentLibraryTab() {
         {/* KPI Row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 stagger-children">
           {[
-            { label: 'Total Documents', value: mockDocuments.length, icon: FileText, color: 'var(--color-primary)', bg: 'var(--color-primary-tint)' },
+            { label: 'Total Documents', value: documents.length, icon: FileText, color: 'var(--color-primary)', bg: 'var(--color-primary-tint)' },
             { label: 'Active', value: totalActive, icon: Check, color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
             { label: 'Contracts & Legal', value: totalContracts, icon: Lock, color: '#7C3AED', bg: 'rgba(124,58,237,0.1)' },
-            { label: 'Reports', value: mockDocuments.filter(d => d.type === 'Report').length, icon: FileSpreadsheet, color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
+            { label: 'Reports', value: documents.filter(d => d.type === 'Report').length, icon: FileSpreadsheet, color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
           ].map(({ label, value, icon: Icon, color, bg }, i) => (
             <div key={label} className="kpi-card animate-slideInUp" style={{ animationDelay: `${i * 80}ms` }}>
               <div className="flex items-center justify-between mb-3">
@@ -230,7 +272,7 @@ export function DocumentLibraryTab() {
                 style={{ fontSize: 'var(--font-size-sm)' }}
               >
                 <option value="All">All Types</option>
-                {(['Contract', 'SOW', 'NDA', 'Invoice', 'Report', 'Other'] as const).map((t) => (
+                {(['Contract', 'SOW', 'NDA', 'Invoice', 'Report', 'Campaign', 'Other'] as const).map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
               </select>

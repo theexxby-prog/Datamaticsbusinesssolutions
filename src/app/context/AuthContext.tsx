@@ -25,6 +25,8 @@ export interface User {
 interface AuthContextValue {
   currentUser: User;
   setCurrentUser: (user: User) => void;
+  /** Clears the remembered persona so Log Out survives a refresh too. */
+  signOut: () => void;
   canUploadLeads: () => boolean;
   canAccessOps: () => boolean;
   canManageTeam: () => boolean;
@@ -108,9 +110,43 @@ export const mockUsers: User[] = [
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
+// The signed-in persona is remembered for the life of the tab. Held purely in
+// memory it survived in-app navigation but not a refresh — which silently
+// dropped whoever was signed in back to the client, so an internal page would
+// keep rendering while the viewer had quietly become someone else.
+const SESSION_KEY = 'signed-in-user-id';
+
+function initialUser(): User {
+  if (typeof window === 'undefined') return mockUsers[0];
+  try {
+    const id = window.sessionStorage.getItem(SESSION_KEY);
+    return mockUsers.find(u => u.id === id) ?? mockUsers[0];
+  } catch {
+    return mockUsers[0];
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
-  // Default to first user (client) initially
-  const [currentUser, setCurrentUser] = useState<User>(mockUsers[0]);
+  // Defaults to the client persona; restored from the tab's session if set.
+  const [currentUser, setCurrentUserState] = useState<User>(initialUser);
+
+  const signOut = useCallback(() => {
+    setCurrentUserState(mockUsers[0]);
+    try {
+      window.sessionStorage.removeItem(SESSION_KEY);
+    } catch {
+      // Nothing to clear if storage is unavailable.
+    }
+  }, []);
+
+  const setCurrentUser = useCallback((user: User) => {
+    setCurrentUserState(user);
+    try {
+      window.sessionStorage.setItem(SESSION_KEY, user.id);
+    } catch {
+      // Private mode / quota — the persona just won't survive a refresh.
+    }
+  }, []);
 
   // Permission helpers — wrapped in useCallback so their identity stays stable
   // across re-renders. This prevents all context consumers from re-rendering
@@ -151,6 +187,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value={{
         currentUser,
         setCurrentUser,
+        signOut,
         canUploadLeads,
         canAccessOps,
         canManageTeam,

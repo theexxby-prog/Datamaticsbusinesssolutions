@@ -43,7 +43,7 @@ interface SidebarProps {
 export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { currentUser } = useAuth();
+  const { currentUser, signOut } = useAuth();
   
   // Hover state management
   const [isHovered, setIsHovered] = useState(false);
@@ -678,6 +678,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
         <div className="relative">
           <button
             onClick={() => {
+              signOut();
               navigate('/');
             }}
             onMouseEnter={() => handleItemMouseEnter('Log Out')}
