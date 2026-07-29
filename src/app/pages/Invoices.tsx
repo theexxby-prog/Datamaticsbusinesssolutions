@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   Receipt, CheckCircle2, AlertCircle, Clock, ChevronDown, ChevronUp,
-  Download, CreditCard, Loader2, RefreshCw, Send, FileCheck2, Link2,
+  Download, CreditCard, Loader2, RefreshCw, Send, FileCheck2, Link2, FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AppLayout } from '../components/AppLayout';
@@ -12,6 +12,10 @@ import { EmptyState } from '../components/EmptyState';
 import { WorkflowStepper } from '../components/workflow/WorkflowStepper';
 import { IntegrationChip } from '../components/workflow/IntegrationChip';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
+import { tccTaxInvoices } from '../data/tccTaxInvoices';
+import { TaxInvoiceModal } from '../components/TaxInvoiceModal';
+import { generateTaxInvoicePDF } from '../utils/taxInvoicePdf';
+import type { TaxInvoice } from '../types';
 import {
   INVOICE_STAGE_ORDER, INVOICE_STAGE_META, GROUPING_META, stageIndex,
   formatBillingPeriod, formatUSD, validateInvoice, syncInvoiceToTally,
@@ -218,15 +222,28 @@ function clientStatus(inv: InvoiceRecord): ClientStatus {
 }
 
 const CLIENT_STATUS_META: Record<ClientStatus, { label: string; bg: string; color: string }> = {
-  due: { label: 'Due', bg: 'rgba(217,119,6,0.12)', color: '#B45309' },
-  overdue: { label: 'Overdue', bg: 'rgba(220,38,38,0.12)', color: '#DC2626' },
+  // 'due' here is the ageing statement's "Not Due" — issued, still within terms.
+  due: { label: 'Not due', bg: 'rgba(100,116,139,0.12)', color: '#475569' },
+  overdue: { label: 'Due', bg: 'rgba(217,119,6,0.14)', color: '#B45309' },
   paid: { label: 'Paid', bg: 'rgba(5,150,105,0.12)', color: '#065F46' },
 };
 
-function ClientInvoiceCard({ invoice, busy, onPay }: {
+/** Days since the invoice was issued — the ageing column on the AR statement. */
+function ageingDays(issueDate?: string): number | null {
+  if (!issueDate) return null;
+  const [y, m, d] = issueDate.split('-').map(Number);
+  const issued = new Date(y, m - 1, d);
+  const now = new Date();
+  // Floor, not round: ageing is whole days elapsed, so it matches the AR
+  // statement rather than tipping to the next day after midday.
+  return Math.max(0, Math.floor((now.getTime() - issued.getTime()) / 86400000));
+}
+
+function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
   invoice: InvoiceRecord;
   busy: boolean;
   onPay: (inv: InvoiceRecord) => void;
+  onView: (invoiceNumber: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const status = clientStatus(invoice);
@@ -252,6 +269,7 @@ function ClientInvoiceCard({ invoice, busy, onPay }: {
           </div>
           <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
             {formatBillingPeriod(invoice.billingPeriod)} billing
+            {ageingDays(invoice.issueDate) !== null && <> · {ageingDays(invoice.issueDate)} days</>}
             {status === 'paid' && invoice.payment?.paidAt
               ? <> · Paid {fmtDate(invoice.payment.paidAt)}{invoice.payment.reference ? <span style={{ color: 'var(--color-text-muted)' }}> · Ref {invoice.payment.reference}</span> : null}</>
               : invoice.dueDate ? <> · Due <strong style={{ color: status === 'overdue' ? '#DC2626' : 'var(--color-text-primary)' }}>{fmtDate(invoice.dueDate)}</strong></> : null}
@@ -276,7 +294,23 @@ function ClientInvoiceCard({ invoice, busy, onPay }: {
             {busy ? 'Processing…' : 'Pay Now'}
           </button>
         )}
-        <button onClick={() => toast.success(`Downloading ${invoice.invoiceNumber}.pdf…`)} className="btn-secondary px-4 py-2 flex items-center gap-2">
+        <button onClick={() => onView(invoice.invoiceNumber)} className="btn-secondary px-4 py-2 flex items-center gap-2">
+          <FileText className="w-4 h-4" />
+          View invoice
+        </button>
+        <button
+          onClick={async () => {
+            const doc = tccTaxInvoices.find((t) => t.invoiceNumber === invoice.invoiceNumber);
+            if (!doc) return;
+            try {
+              await generateTaxInvoicePDF(doc);
+              toast.success(`Invoice ${doc.invoiceNumber} downloaded`);
+            } catch {
+              toast.error('Could not generate the invoice PDF');
+            }
+          }}
+          className="btn-secondary px-4 py-2 flex items-center gap-2"
+        >
           <Download className="w-4 h-4" />
           Download
         </button>
@@ -341,6 +375,12 @@ export default function Invoices() {
         : 'readonly';
 
   const [invoices, setInvoices] = useState<InvoiceRecord[]>(mockInvoiceRecords);
+  const [viewing, setViewing] = useState<TaxInvoice | null>(null);
+  // Ageing filter for the client list — lets the whole AR position, just what
+  // is past terms, or just what is still within them be shown on demand.
+  const [arFilter, setArFilter] = useState<'all' | 'due' | 'not_due'>('all');
+  const openInvoice = (invoiceNumber: string) =>
+    setViewing(tccTaxInvoices.find((t) => t.invoiceNumber === invoiceNumber) ?? null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const now = () => new Date().toISOString();
@@ -374,7 +414,17 @@ export default function Invoices() {
     : [];
   const rest = perspective === 'accounts'
     ? visibleInvoices.filter((inv) => !validationQueue.includes(inv))
-    : visibleInvoices;
+    : visibleInvoices.filter((inv) =>
+        arFilter === 'all' ? true
+        : arFilter === 'due' ? inv.stage === 'overdue'
+        : inv.stage === 'sent');
+
+  // Tab counts always describe the full position, not the filtered view.
+  const arCounts = {
+    all: visibleInvoices.length,
+    due: visibleInvoices.filter((i) => i.stage === 'overdue').length,
+    not_due: visibleInvoices.filter((i) => i.stage === 'sent').length,
+  };
 
   // ─── Accounts: validate → Tally sales voucher → send to client ───
   const handleValidate = async (invoice: InvoiceRecord) => {
@@ -463,6 +513,14 @@ export default function Invoices() {
   // ─── KPIs per perspective ───
   const outstanding = visibleInvoices.filter((i) => i.stage === 'sent' || i.stage === 'overdue').reduce((s, i) => s + i.total, 0);
   const paidTotal = visibleInvoices.filter((i) => i.stage === 'paid').reduce((s, i) => s + i.total, 0);
+  // Split the outstanding balance the way the AR ageing statement does.
+  const dueTotal = visibleInvoices.filter((i) => i.stage === 'overdue').reduce((s, i) => s + i.total, 0);
+  const notYetDueTotal = visibleInvoices.filter((i) => i.stage === 'sent').reduce((s, i) => s + i.total, 0);
+  const oldestAgeing = visibleInvoices
+    .filter((i) => i.stage === 'sent' || i.stage === 'overdue')
+    .map((i) => ageingDays(i.issueDate))
+    .filter((n): n is number => n != null)
+    .sort((a, b) => b - a)[0] ?? null;
   const overdueCount = visibleInvoices.filter((i) => i.stage === 'overdue').length;
   const pendingValidationCount = invoices.filter((i) => i.stage === 'draft' || i.stage === 'pending_validation').length;
   const tallyIssues = invoices.filter((i) => i.tally.invoiceEntry === 'failed' || i.tally.paymentEntry === 'failed').length;
@@ -483,10 +541,10 @@ export default function Invoices() {
     ]
     : perspective === 'client'
       ? [
-        { label: 'Amount Due', value: outstanding, icon: Clock, money: true },
-        { label: 'Next Due Date', value: nextDue ? fmtDate(nextDue) : '—', icon: Receipt, money: false },
-        { label: 'Overdue', value: overdueCount, icon: AlertCircle, money: false },
-        { label: 'Paid This Year', value: paidTotal, icon: CheckCircle2, money: true },
+        { label: 'Total Outstanding', value: outstanding, icon: Clock, money: true },
+        { label: 'Due', value: dueTotal, icon: AlertCircle, money: true },
+        { label: 'Not Yet Due', value: notYetDueTotal, icon: Receipt, money: true },
+        { label: 'Oldest Invoice', value: oldestAgeing != null ? `${oldestAgeing} days` : '—', icon: CheckCircle2, money: false },
       ]
       : [
         { label: 'Outstanding', value: outstanding, icon: Clock, money: true },
@@ -551,6 +609,44 @@ export default function Invoices() {
         <h2 className="mb-3" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
           {perspective === 'accounts' ? 'All Invoices' : 'Your Invoices'}
         </h2>
+
+        {perspective === 'client' && (
+          <div
+            className="inline-flex items-center gap-1 p-1 rounded-xl mb-4"
+            style={{ background: 'var(--color-main-bg)', border: '1px solid var(--color-border)' }}
+            role="tablist"
+            aria-label="Filter invoices by ageing"
+          >
+            {([
+              ['all', 'All', arCounts.all],
+              ['due', 'Due', arCounts.due],
+              ['not_due', 'Not due', arCounts.not_due],
+            ] as const).map(([key, label, count]) => {
+              const active = arFilter === key;
+              return (
+                <button
+                  key={key}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setArFilter(key)}
+                  className="px-3.5 py-1.5 rounded-lg transition-colors"
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: active ? 600 : 500,
+                    background: active ? 'var(--color-card)' : 'transparent',
+                    color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                    boxShadow: active ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                  }}
+                >
+                  {label}
+                  <span className="ml-1.5" style={{ color: 'var(--color-text-muted)', fontWeight: 500 }}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
         {rest.length === 0 && validationQueue.length === 0 ? (
           <EmptyState
             icon={Receipt}
@@ -561,7 +657,7 @@ export default function Invoices() {
           <div className="space-y-4">
             {rest.map((inv) => (
               perspective === 'client' ? (
-                <ClientInvoiceCard key={inv.id} invoice={inv} busy={busyId === inv.id} onPay={handlePay} />
+                <ClientInvoiceCard key={inv.id} invoice={inv} busy={busyId === inv.id} onPay={handlePay} onView={openInvoice} />
               ) : (
                 <InvoiceCard
                   key={inv.id}
@@ -577,6 +673,8 @@ export default function Invoices() {
           </div>
         )}
       </div>
+    
+      <TaxInvoiceModal invoice={viewing} onClose={() => setViewing(null)} />
     </AppLayout>
   );
 }

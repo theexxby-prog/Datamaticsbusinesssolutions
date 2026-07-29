@@ -226,7 +226,7 @@ export const mockCampaigns: Campaign[] = [
     pricingModel: 'CPL',
     clientDetails: {
       name: 'The Channel Company',
-      address: 'One Research Drive, Westborough, MA',
+      address: '350 Jericho Turnpike | Ste 310, Jericho, NY 11753',
       contact: 'Renuka Lawless',
     },
     scopeOfWork: ['Content syndication', 'Lead validation & QA', 'Weekly delivery reporting'],
@@ -252,7 +252,7 @@ export const mockCampaigns: Campaign[] = [
     pricingModel: 'CPL',
     clientDetails: {
       name: 'The Channel Company',
-      address: 'One Research Drive, Westborough, MA',
+      address: '350 Jericho Turnpike | Ste 310, Jericho, NY 11753',
       contact: 'Renuka Lawless',
     },
     scopeOfWork: ['Lead generation', 'Lead validation & QA', 'Weekly delivery reporting'],
@@ -278,7 +278,7 @@ export const mockCampaigns: Campaign[] = [
     pricingModel: 'CPL',
     clientDetails: {
       name: 'The Channel Company',
-      address: 'One Research Drive, Westborough, MA',
+      address: '350 Jericho Turnpike | Ste 310, Jericho, NY 11753',
       contact: 'Renuka Lawless',
     },
     scopeOfWork: ['Content syndication', 'Lead validation & QA', 'Weekly delivery reporting'],

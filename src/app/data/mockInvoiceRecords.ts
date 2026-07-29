@@ -1,77 +1,62 @@
 import type { InvoiceRecord } from '../types';
+import { tccTaxInvoices } from './tccTaxInvoices';
 
-// Invoice records across every lifecycle stage and all three grouping modes.
-// Amounts are always billable leads × CPL — never Delivered.
+const MONTHS: Record<string, string> = {
+  Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06',
+  Jul: '07', Aug: '08', Sep: '09', Oct: '10', Nov: '11', Dec: '12',
+};
+
+/** 'Feb-2026' -> '2026-02' */
+function billingPeriod(forMonth: string): string {
+  const [m, y] = forMonth.split('-');
+  return `${y}-${MONTHS[m] ?? '01'}`;
+}
+
+/**
+ * The client's invoice list is derived from the issued invoices rather than
+ * duplicated, so the list, the rendered document and the PDF are guaranteed to
+ * agree on every figure. Line items carry the real description, records and
+ * rate; a paid invoice gets its settlement recorded.
+ */
+const tccRecords: InvoiceRecord[] = tccTaxInvoices.map((inv) => ({
+  id: `inv_${inv.invoiceNumber}`,
+  invoiceNumber: inv.invoiceNumber,
+  clientId: 'client_1',
+  clientCompany: 'The Channel Company',
+  billingPeriod: billingPeriod(inv.forMonth),
+  grouping: 'consolidated',
+  lineItems: inv.lineItems.map((l, i) => ({
+    campaignId: `${inv.invoiceNumber}-${i + 1}`,
+    campaignName: l.description,
+    jobCardId: l.po,
+    geo: 'NAM',
+    billableLeads: l.qty,
+    cpl: l.rate,
+    amount: l.amount,
+  })),
+  subtotal: inv.total,
+  total: inv.total,
+  currency: 'USD',
+  stage: inv.status === 'due' ? 'overdue' : 'sent',
+  issueDate: inv.issueDate,
+  dueDate: inv.dueDate,
+  raisedBy: 'Kartik',
+  validatedBy: 'Kartik',
+  validatedAt: `${inv.issueDate}T08:30:00Z`,
+  tally: {
+    invoiceEntry: 'synced',
+    paymentEntry: 'not_synced',
+    voucherId: `TLY-${inv.invoiceNumber.slice(-6)}`,
+  },
+  history: [
+    { at: `${inv.issueDate}T06:00:00Z`, actor: 'System', action: `Draft generated from ${inv.forMonth} billable records` },
+    { at: `${inv.issueDate}T08:30:00Z`, actor: 'Kartik', action: 'Validated amount' },
+    { at: `${inv.issueDate}T09:00:00Z`, actor: 'System', action: 'Invoice sent to client' },
+  ],
+}));
 
 export const mockInvoiceRecords: InvoiceRecord[] = [
-  // ── The Channel Company — exactly two client-visible invoices ──────────────
-  // One settled (June billables) and one currently due (July billables, Net 30,
-  // not yet past its due date). Amounts are always billable leads × CPL, and the
-  // billable counts reconcile to the delivery schedules in data/mockClients.ts.
-
-  // 1 — Paid: June billables, consolidated NAM.
-  {
-    id: 'inv_101',
-    invoiceNumber: 'INV-2026-001271',
-    clientId: 'client_1',
-    clientCompany: 'The Channel Company',
-    billingPeriod: '2026-06',
-    grouping: 'consolidated',
-    lineItems: [
-      { campaignId: '46888', campaignName: 'Lenovo Intel FIFA AI', jobCardId: 'JC-2026-0041', geo: 'NAM', billableLeads: 138, cpl: 45, amount: 6210 },
-      { campaignId: '46873', campaignName: 'Uptime Solutions CRN2 - Lead Gen', jobCardId: 'JC-2026-0042', geo: 'NAM', billableLeads: 29, cpl: 60, amount: 1740 },
-      { campaignId: '46936', campaignName: 'Eaton 2026 Full Year 1_Q3', jobCardId: 'JC-2026-0043', geo: 'NAM', billableLeads: 6, cpl: 50, amount: 300 },
-    ],
-    subtotal: 8250,
-    total: 8250,
-    currency: 'USD',
-    stage: 'paid',
-    issueDate: '2026-07-02',
-    dueDate: '2026-08-01',
-    raisedBy: 'Hema',
-    validatedBy: 'Hema',
-    validatedAt: '2026-07-02T07:45:00Z',
-    tally: { invoiceEntry: 'synced', paymentEntry: 'synced', voucherId: 'TLY-8D1QA7' },
-    payment: { method: 'Bank transfer', reference: 'PAY-001271-8XKQ', paidAt: '2026-07-20T13:12:00Z' },
-    history: [
-      { at: '2026-07-01T06:00:00Z', actor: 'System', action: 'Draft generated from June billable leads' },
-      { at: '2026-07-02T07:45:00Z', actor: 'Hema', action: 'Validated amount' },
-      { at: '2026-07-02T08:00:00Z', actor: 'System', action: 'Invoice sent to client' },
-      { at: '2026-07-20T13:12:00Z', actor: 'Renuka Lawless', action: 'Payment received' },
-      { at: '2026-07-20T13:15:00Z', actor: 'System', action: 'Receipt voucher created in Tally' },
-    ],
-  },
-
-  // 2 — Due: July billables, consolidated NAM, Net 30 (due Aug 27).
-  {
-    id: 'inv_102',
-    invoiceNumber: 'INV-2026-001042',
-    clientId: 'client_1',
-    clientCompany: 'The Channel Company',
-    billingPeriod: '2026-07',
-    grouping: 'consolidated',
-    lineItems: [
-      { campaignId: '46888', campaignName: 'Lenovo Intel FIFA AI', jobCardId: 'JC-2026-0041', geo: 'NAM', billableLeads: 176, cpl: 45, amount: 7920 },
-      { campaignId: '46873', campaignName: 'Uptime Solutions CRN2 - Lead Gen', jobCardId: 'JC-2026-0042', geo: 'NAM', billableLeads: 25, cpl: 60, amount: 1500 },
-      { campaignId: '46936', campaignName: 'Eaton 2026 Full Year 1_Q3', jobCardId: 'JC-2026-0043', geo: 'NAM', billableLeads: 35, cpl: 50, amount: 1750 },
-    ],
-    subtotal: 11170,
-    total: 11170,
-    currency: 'USD',
-    stage: 'sent',
-    issueDate: '2026-07-28',
-    dueDate: '2026-08-27',
-    raisedBy: 'Kartik',
-    validatedBy: 'Kartik',
-    validatedAt: '2026-07-28T08:30:00Z',
-    tally: { invoiceEntry: 'synced', paymentEntry: 'not_synced', voucherId: 'TLY-9F2KD1' },
-    history: [
-      { at: '2026-07-28T06:00:00Z', actor: 'System', action: 'Draft generated from July billable leads' },
-      { at: '2026-07-28T08:30:00Z', actor: 'Kartik', action: 'Validated amount' },
-      { at: '2026-07-28T08:32:00Z', actor: 'System', action: 'Sales voucher created in Tally' },
-      { at: '2026-07-28T09:00:00Z', actor: 'System', action: 'Invoice sent to client' },
-    ],
-  },
+  ...tccRecords,
 
   // ── Other clients — internal pipeline coverage only (never client-visible) ──
   // Draft awaiting Accounts validation.

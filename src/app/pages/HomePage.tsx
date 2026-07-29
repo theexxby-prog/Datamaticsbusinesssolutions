@@ -97,25 +97,18 @@ export default function HomePage() {
     };
   }, [tccClient]);
 
-  // ── Total Business: accepted leads × CPL per campaign ──────────────────────
+  // ── Total Business: what has actually been invoiced ────────────────────────
+  // Derived from the issued invoices rather than recomputed from campaign
+  // budgets, so this card and the Invoices page can never disagree.
   const businessData = useMemo(() => {
-    const camps = tccClient?.campaigns ?? [];
-    let monthlyTotal = 0;
-    let yearlyTotal = 0;
-    camps.forEach(camp => {
-      const { budget = 0, goalLeads = 0, deliveredLeads = 0, totalLeads = 0, leadsThisMonth: ltm = 0 } = camp;
-      if (!budget || !goalLeads) return;
-      const cpl = budget / goalLeads;
-      // Accepted === delivered for these campaigns, so billable is delivered × CPL
-      // with no gap to explain — this ties exactly to the invoice line items.
-      yearlyTotal += (deliveredLeads || totalLeads) * cpl;
-      monthlyTotal += ltm * cpl;
-    });
+    const mine = mockInvoiceRecords.filter((i) => i.clientId === 'client_1');
+    const thisMonth = new Date().toISOString().slice(0, 7);
     return {
-      monthly: monthlyTotal, yearly: yearlyTotal,
+      monthly: mine.filter((i) => (i.issueDate ?? '').startsWith(thisMonth)).reduce((s, i) => s + i.total, 0),
+      yearly: mine.reduce((s, i) => s + i.total, 0),
       monthlyTrend: '+8.4%', yearlyTrend: '+21.2%',
     };
-  }, [tccClient]);
+  }, []);
 
   const bizValue = bizPeriod === 'month' ? businessData.monthly : businessData.yearly;
   const bizTrend = bizPeriod === 'month' ? businessData.monthlyTrend : businessData.yearlyTrend;
@@ -350,7 +343,7 @@ export default function HomePage() {
                 <span className="font-bold text-[#1F2937]" style={{ fontSize: 'clamp(20px, 5vw, 32px)', lineHeight: 1 }}>{formatBusinessValue(bizValue)}</span>
                 <span className="text-sm font-semibold text-[#8B5CF6]">{bizTrend}</span>
               </div>
-              <p className="text-xs text-[#9CA3AF] leading-snug">{bizLabel} · accepted × CPL</p>
+              <p className="text-xs text-[#9CA3AF] leading-snug">{bizLabel} · invoiced</p>
             </div>
           </motion.div>
           )}

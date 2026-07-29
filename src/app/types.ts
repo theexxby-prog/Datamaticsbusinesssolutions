@@ -235,3 +235,32 @@ export interface InvoiceRecord {
   };
   history: InvoiceEvent[];
 }
+
+// ─── Tax invoice document ────────────────────────────────────────────────────
+// The issued-invoice shape, mirroring the PDF Datamatics sends: per-line
+// records × rate, a PO reference where one applies, and the invoice-level
+// metadata (service month, internal reference, billing contact).
+
+export interface TaxInvoiceLine {
+  description: string;
+  po?: string;
+  /** Records delivered, or FTE count on an FTE Project invoice. */
+  qty: number;
+  rate: number;
+  amount: number;
+}
+
+export interface TaxInvoice {
+  invoiceNumber: string;
+  issueDate: string;   // ISO date
+  dueDate: string;     // ISO date — Net 30 from issue
+  forMonth: string;    // service month, e.g. 'Feb-2026'
+  reference: string | null;
+  contactEmail: string;
+  serviceType: 'Optins Services' | 'FTE Project';
+  /** From the AR ageing statement: 'due' is past terms, 'not_due' is within them. */
+  status: 'due' | 'not_due';
+  lineItems: TaxInvoiceLine[];
+  qtyTotal: number;
+  total: number;
+}
