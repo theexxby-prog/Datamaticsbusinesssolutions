@@ -1,19 +1,35 @@
+import { useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { Download } from 'lucide-react';
 import { toast } from 'sonner';
+import { buildWeeklyDigestData, generateWeeklyDigestPDF } from '../utils/weeklyDigest';
 
 interface EmailDigestModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-function getCurrentMonthYear() {
-  return new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-}
-
 export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
+  // Same source as the downloadable PDF, so the preview and the report can
+  // never show different numbers.
+  const digest = useMemo(() => buildWeeklyDigestData(), []);
+  const [downloading, setDownloading] = useState(false);
+
   const handleSend = () => {
-    toast.success('Digest sent to john@acmecorp.com!');
+    toast.success('Digest sent to rlawless@thechannelcompany.com!');
     onClose();
+  };
+
+  const handleDownload = async () => {
+    setDownloading(true);
+    try {
+      await generateWeeklyDigestPDF(digest);
+      toast.success('Weekly digest downloaded');
+    } catch {
+      toast.error('Could not generate the digest PDF');
+    } finally {
+      setDownloading(false);
+    }
   };
 
   return (
@@ -48,7 +64,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                 </div>
                 <div className="flex gap-2">
                   <span className="font-semibold text-gray-500 w-16">To:</span>
-                  <span>john@acmecorp.com</span>
+                  <span>rlawless@thechannelcompany.com</span>
                 </div>
                 <div className="flex gap-2">
                   <span className="font-semibold text-gray-500 w-16">Subject:</span>
@@ -66,8 +82,11 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                   style={{ background: '#BA2027' }}
                 >
                   <h1 className="text-white font-bold" style={{ fontSize: '20px', letterSpacing: '-0.02em' }}>
-                    Datamatics Business Solutions
+                    {digest.clientName}
                   </h1>
+                  <p className="text-white/80" style={{ fontSize: '12px', marginTop: '2px' }}>
+                    Weekly Campaign Digest · {digest.weekLabel}
+                  </p>
                 </div>
 
                 {/* Sub-heading */}
@@ -79,15 +98,15 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                     Weekly Performance Digest
                   </h2>
                   <p className="text-gray-500" style={{ fontSize: '13px' }}>
-                    {getCurrentMonthYear()}
+                    Prepared by {digest.preparedBy}, {digest.preparedByRole}
                   </p>
 
                   {/* 3 stat boxes */}
                   <div className="grid grid-cols-3 gap-3 mt-5">
                     {[
-                      { label: 'Leads Delivered', value: '847' },
-                      { label: 'Acceptance Rate', value: '94%' },
-                      { label: 'Pipeline Value', value: '$127,500' },
+                      { label: 'Leads This Week', value: String(digest.totals.thisWeek) },
+                      { label: 'Acceptance Rate', value: `${digest.quality.acceptanceRate}%` },
+                      { label: 'Hot Leads (90+)', value: String(digest.quality.hotLeads) },
                     ].map((stat) => (
                       <div
                         key={stat.label}
@@ -108,34 +127,29 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                   </div>
                 </div>
 
-                {/* Bar chart placeholder */}
+                {/* Per-campaign delivery for the week */}
                 <div className="bg-white rounded-xl border border-gray-200 p-6 mb-5">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
-                    Leads by Day
+                    Delivery by campaign
                   </p>
-                  {/* bars */}
-                  <div className="flex items-end justify-around gap-3" style={{ height: '80px' }}>
-                    {[
-                      { day: 'Mon', h: 48, count: 152 },
-                      { day: 'Tue', h: 68, count: 214 },
-                      { day: 'Wed', h: 80, count: 251 },
-                      { day: 'Thu', h: 56, count: 176 },
-                      { day: 'Fri', h: 36, count: 54 },
-                    ].map((bar) => (
-                      <div key={bar.day} className="flex-1 flex flex-col items-center gap-1">
-                        <span className="text-[10px] font-semibold" style={{ color: '#BA2027' }}>{bar.count}</span>
-                        <div
-                          className="w-full rounded-t-lg"
-                          style={{ height: `${bar.h}px`, background: 'linear-gradient(180deg, #D32F2F 0%, #BA2027 100%)', opacity: 0.85 }}
-                        />
+                  <div className="space-y-3">
+                    {digest.campaigns.map((c) => (
+                      <div key={c.name}>
+                        <div className="flex items-baseline justify-between gap-3 mb-1">
+                          <span className="text-gray-700 truncate" style={{ fontSize: '12px', fontWeight: 500 }}>{c.name}</span>
+                          <span className="flex-shrink-0 text-gray-500" style={{ fontSize: '11px' }}>
+                            {c.thisWeek} this week · {c.delivered}/{c.target}
+                          </span>
+                        </div>
+                        <div className="w-full rounded-full overflow-hidden" style={{ height: '6px', background: '#F1F1F4' }}>
+                          <div
+                            className="h-full rounded-full"
+                            style={{ width: `${c.pct}%`, background: 'linear-gradient(90deg, #D32F2F 0%, #BA2027 100%)' }}
+                          />
+                        </div>
                       </div>
                     ))}
                   </div>
-                  {/* labels */}
-                  <div className="flex justify-around gap-3 mt-2">
-                    {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map(day => (
-                      <span key={day} className="flex-1 text-center text-xs text-gray-400">{day}</span>
-                    ))}</div>
                 </div>
 
                 {/* View full report link */}
@@ -166,6 +180,14 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                 className="btn-outline px-5 py-2 text-sm font-medium"
               >
                 Cancel
+              </button>
+              <button
+                onClick={handleDownload}
+                disabled={downloading}
+                className="btn-outline px-5 py-2 text-sm font-medium flex items-center gap-2"
+              >
+                <Download className="w-4 h-4" />
+                {downloading ? 'Preparing…' : 'Download PDF'}
               </button>
               <button
                 onClick={handleSend}

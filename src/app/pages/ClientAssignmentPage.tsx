@@ -31,7 +31,7 @@ interface TeamMember {
 }
 
 const availableManagers: TeamMember[] = [
-  { id: 'mgr_1', name: 'Anish Akkoat', email: 'anish.akkoat@datamaticsbpm.com', role: 'campaign_manager', currentClients: 3 },
+  { id: 'mgr_1', name: 'Brijesh Singh', email: 'brijesh.singh@datamaticsbpm.com', role: 'campaign_manager', currentClients: 3 },
   { id: 'mgr_2', name: 'Michael Chen', email: 'michael.chen@datamaticsbpm.com', role: 'campaign_manager', currentClients: 2 },
   { id: 'mgr_3', name: 'Emily Rodriguez', email: 'emily.rodriguez@datamaticsbpm.com', role: 'campaign_manager', currentClients: 1 },
 ];

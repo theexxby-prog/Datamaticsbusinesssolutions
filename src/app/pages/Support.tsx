@@ -29,28 +29,30 @@ interface Ticket {
 const mockTickets: Ticket[] = [
   {
     id: 'TKT-001',
-    title: 'Lead verification issue for Healthcare Campaign',
-    description: 'Several leads from the Healthcare Campaign Feb 2026 are bouncing back with invalid email addresses.',
+    title: 'Add Budget Authority field to lead format',
+    description: 'Requesting two extra qualification fields (Budget Authority, Purchase Timeline) on delivered leads for Lenovo Intel FIFA AI.',
     status: 'In Progress',
-    priority: 'High',
-    category: 'Lead Quality',
-    createdBy: 'John Carter',
-    createdDate: '2026-02-27',
-    lastUpdated: '2026-02-28',
-    assignedTo: 'Support Team',
-    campaign: 'Healthcare Content Syndication - Feb 2026',
+    priority: 'Low',
+    category: 'General',
+    createdBy: 'Renuka Lawless',
+    createdDate: '2026-07-22',
+    lastUpdated: '2026-07-27',
+    assignedTo: 'Brijesh Singh',
+    campaign: 'Lenovo Intel FIFA AI',
     messages: 5
   },
   {
     id: 'TKT-002',
-    title: 'Invoice discrepancy for January billing',
-    description: 'The invoice #2026-01-234 shows incorrect lead count.',
-    status: 'Waiting',
-    priority: 'Medium',
-    category: 'Billing',
-    createdBy: 'Sarah Johnson',
-    createdDate: '2026-02-25',
-    lastUpdated: '2026-02-27',
+    title: 'Add a second recipient to weekly digest',
+    description: 'Please copy our channel marketing lead on the weekly campaign digest email.',
+    status: 'Resolved',
+    priority: 'Low',
+    category: 'General',
+    createdBy: 'Renuka Lawless',
+    createdDate: '2026-07-14',
+    lastUpdated: '2026-07-16',
+    assignedTo: 'Brijesh Singh',
+    campaign: 'Uptime Solutions CRN2 - Lead Gen',
     messages: 3
   },
   {
@@ -60,16 +62,24 @@ const mockTickets: Ticket[] = [
     status: 'Resolved',
     priority: 'Low',
     category: 'General',
-    createdBy: 'Michael Chen',
-    createdDate: '2026-02-20',
-    lastUpdated: '2026-02-26',
-    assignedTo: 'Account Manager',
+    createdBy: 'Renuka Lawless',
+    createdDate: '2026-07-06',
+    lastUpdated: '2026-07-09',
+    assignedTo: 'Brijesh Singh',
+    campaign: 'Eaton 2026 Full Year 1_Q3',
     messages: 7
   }
 ];
 
 export default function Support() {
   const { currentUser } = useAuth();
+  const ticketStats = {
+    total: mockTickets.length,
+    active: mockTickets.filter(t => t.status !== 'Resolved' && t.status !== 'Closed').length,
+    resolved: mockTickets.filter(t => t.status === 'Resolved' || t.status === 'Closed').length,
+    highPriority: mockTickets.filter(t => t.priority === 'High' || t.priority === 'Urgent').length,
+  };
+
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const [priorityFilter, setPriorityFilter] = useState<string>('All');
@@ -181,7 +191,7 @@ export default function Support() {
             <div className="flex items-center justify-between">
               <MessageSquare className="kpi-card__icon" />
             </div>
-            <div className="kpi-card__number">3</div>
+            <div className="kpi-card__number">{ticketStats.total}</div>
             <div className="kpi-card__label">Total Tickets</div>
           </div>
 
@@ -189,7 +199,7 @@ export default function Support() {
             <div className="flex items-center justify-between">
               <Clock className="kpi-card__icon" />
             </div>
-            <div className="kpi-card__number">1</div>
+            <div className="kpi-card__number">{ticketStats.active}</div>
             <div className="kpi-card__label">Active</div>
           </div>
 
@@ -197,7 +207,7 @@ export default function Support() {
             <div className="flex items-center justify-between">
               <CheckCircle className="kpi-card__icon" />
             </div>
-            <div className="kpi-card__number">1</div>
+            <div className="kpi-card__number">{ticketStats.resolved}</div>
             <div className="kpi-card__label">Resolved</div>
           </div>
 
@@ -205,7 +215,7 @@ export default function Support() {
             <div className="flex items-center justify-between">
               <AlertCircle className="kpi-card__icon" />
             </div>
-            <div className="kpi-card__number">1</div>
+            <div className="kpi-card__number">{ticketStats.highPriority}</div>
             <div className="kpi-card__label">High Priority</div>
           </div>
         </div>

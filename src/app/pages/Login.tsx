@@ -185,7 +185,7 @@ export default function Login() {
                 <input
                   id="login-email"
                   type="email"
-                  value="john@acmecorp.com"
+                  value="rlawless@thechannelcompany.com"
                   readOnly
                   className="input-base w-full"
                   style={{ padding: '11px 14px', fontSize: '14px' }}

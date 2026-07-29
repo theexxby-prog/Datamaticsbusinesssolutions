@@ -82,7 +82,7 @@ export function InvoicePreviewModal({ isOpen, onClose, invoice }: InvoicePreview
                 <div>
                   <h3 className="text-sm font-semibold mb-2 text-gray-600">BILL TO</h3>
                   <div className="text-gray-900">
-                    <p className="font-semibold mb-1">Acme Corp</p>
+                    <p className="font-semibold mb-1">The Channel Company</p>
                     <p className="text-sm">222 Third Street, Suite 2240</p>
                     <p className="text-sm">Cambridge, MA 02142</p>
                   </div>

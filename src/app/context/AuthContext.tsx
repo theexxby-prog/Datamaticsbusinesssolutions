@@ -41,17 +41,20 @@ interface AuthContextValue {
 export const mockUsers: User[] = [
   {
     id: 'u1',
-    name: 'John Carter',
-    email: 'john@acmecorp.com',
+    name: 'Renuka Lawless',
+    email: 'rlawless@thechannelcompany.com',
     role: 'client',
     assignedClients: [],
-    company: 'Acme Corp',
-    logo: 'https://placehold.co/200x60/BA2027/FFFFFF?text=ACME',
+    // No logo asset on hand for TCC — omitting the field renders the RL
+    // initials avatar on the brand tile instead. Drop the file at
+    // public/logos/tcc-logo.png and set TCC_LOGO_PATH in config/branding.ts
+    // to switch every surface over at once.
+    company: 'The Channel Company',
   },
   {
     id: 'u2',
-    name: 'Anish Akkoat',
-    email: 'anish.akkoat@datamaticsbpm.com',
+    name: 'Brijesh Singh',
+    email: 'brijesh.singh@datamaticsbpm.com',
     role: 'campaign_manager',
     assignedClients: ['client_1', 'client_2'],
   },

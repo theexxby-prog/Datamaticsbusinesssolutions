@@ -1,23 +1,4 @@
-import { Shield, CheckCircle, AlertTriangle, XCircle, Zap } from 'lucide-react';
-
-interface ConvertrBadgeProps {
-  className?: string;
-}
-
-export function ConvertrBadge({ className = '' }: ConvertrBadgeProps) {
-  return (
-    <div
-      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg ${className}`}
-      style={{
-        background: 'linear-gradient(135deg, #1a1a2e, #16213e)',
-        border: '1px solid rgba(99, 102, 241, 0.3)',
-      }}
-    >
-      <Zap className="w-3.5 h-3.5 text-indigo-400" />
-      <span className="text-xs font-semibold text-indigo-300">Powered by Convertr</span>
-    </div>
-  );
-}
+import { Shield, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
 interface ConvertrQAStatsProps {
   totalProcessed: number;
@@ -40,7 +21,6 @@ export function ConvertrQAStats({ totalProcessed, valid, caution, invalid }: Con
             Automated QA Results
           </h3>
         </div>
-        <ConvertrBadge />
       </div>
 
       {/* QA breakdown */}
@@ -84,7 +64,7 @@ export function ConvertrQAStats({ totalProcessed, valid, caution, invalid }: Con
       </div>
 
       <p className="mt-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-        Lead validation is handled automatically via Convertr. Accepted leads are delivered to your CRM in real-time.
+        Lead validation is handled automatically. Accepted leads are delivered to your CRM in real-time.
       </p>
     </div>
   );

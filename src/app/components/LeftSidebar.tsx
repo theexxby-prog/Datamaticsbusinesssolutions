@@ -30,6 +30,7 @@ import { useAuth } from '../context/AuthContext';
 import { getAssignedClients, recentUploadBatches, allClients } from '../data/mockClients';
 import { LeadUploadModal } from './LeadUploadModal';
 import { getPendingSubmissions } from '../mockData';
+import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
 import { NotificationPanel } from './NotificationPanel';
 import { useNotifications } from '../context/NotificationContext';
 import { PersonAvatar } from './PersonAvatar';
@@ -140,19 +141,28 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
     const totalLeads = allClients.reduce((sum, c) => sum + c.totalLeads, 0);
     const pendingApprovals = getPendingSubmissions().length;
 
-    // Client-scoped: only count campaigns belonging to client_1 (Acme Corp)
+    // Client-scoped: only count campaigns belonging to client_1 (The Channel Company)
     const clientData = allClients.find(c => c.id === 'client_1');
     const clientActiveCampaigns = clientData?.campaigns.filter(c => c.status === 'active').length ?? 0;
     const clientTotalLeads = clientData?.totalLeads ?? 0;
+
+    // Derived rather than hardcoded so the badge can never contradict the
+    // Invoices page.
+    const unpaidInvoices = mockInvoiceRecords.filter(
+      (inv) => inv.clientId === 'client_1' && (inv.stage === 'sent' || inv.stage === 'overdue'),
+    ).length;
+
+    // Matches the Support page's own "Active" count.
+    const openSupportTickets = 1;
 
     return {
       processingUploads,
       failedUploads,
       activeCampaigns,
       totalLeads,
-      unpaidInvoices: 2,
+      unpaidInvoices,
       pendingApprovals,
-      openSupportTickets: 2,
+      openSupportTickets,
       clientActiveCampaigns,
       clientTotalLeads,
     };
@@ -255,14 +265,10 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
         badge: badges.clientActiveCampaigns > 0 ? badges.clientActiveCampaigns : undefined,
         badgeColor: 'bg-[#BA2027]'
       },
-      { 
-        name: 'Leads', 
-        icon: Users, 
-        path: '/leads', 
-        section: 'PLATFORM',
-        badge: badges.clientTotalLeads > 0 ? badges.clientTotalLeads : undefined,
-        badgeColor: 'bg-[#BA2027]'
-      },
+      // No count badge here: the sidebar total (all leads delivered to date)
+      // and the Leads page header (the current lead table) legitimately differ,
+      // and showing both side by side reads as a bug.
+      { name: 'Leads', icon: Users, path: '/leads', section: 'PLATFORM' },
       { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
       { 
         name: 'Invoices', 

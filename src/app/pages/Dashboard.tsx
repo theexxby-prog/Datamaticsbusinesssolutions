@@ -71,13 +71,13 @@ export default function Dashboard() {
     return campaigns;
   }, []);
   
-  // For client users, only show their own company's campaigns (Acme Corp = client_1)
+  // For client users, only show their own company's campaigns (The Channel Company = client_1)
   // NOTE: defined BEFORE baseCampaigns so KPI cards are correctly scoped to this client.
   const isClientRole = currentUser?.role === 'client';
-  const acmeClient = allClients.find(c => c.id === 'client_1');
+  const tccClient = allClients.find(c => c.id === 'client_1');
 
   // Base data — scoped to the client's own campaigns when in client role
-  const clientCampaigns = acmeClient?.campaigns ?? [];
+  const clientCampaigns = tccClient?.campaigns ?? [];
   const baseCampaigns = isClientRole
     ? clientCampaigns.filter((c) => c.status === 'active').length
     : allCampaignsFlat.filter((c) => c.status === 'active').length;
@@ -104,9 +104,9 @@ export default function Dashboard() {
   const leadsData = useMemo(() => generateSparklineData(totalLeadsDelivered / 12, 'up'), [totalLeadsDelivered]);
   const spendData = useMemo(() => generateSparklineData(totalSpend / 12, 'down'), [totalSpend]);
 
-  // For client users, only show their own company's campaigns (Acme Corp = client_1)
+  // For client users, only show their own company's campaigns (The Channel Company = client_1)
   const visibleCampaigns = isClientRole
-    ? (acmeClient?.campaigns.map(c => ({ ...c, clientName: acmeClient.companyName })) ?? [])
+    ? (tccClient?.campaigns.map(c => ({ ...c, clientName: tccClient.companyName })) ?? [])
     : allCampaignsFlat;
 
   const filteredCampaigns = visibleCampaigns.filter((campaign) => {

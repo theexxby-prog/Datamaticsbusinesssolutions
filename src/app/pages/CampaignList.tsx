@@ -248,7 +248,7 @@ export default function CampaignList() {
     const newCampaign = {
       id: `${campaigns.length + 1}`,
       name: formData.name,
-      clientCompany: 'Acme Corp',
+      clientCompany: 'The Channel Company',
       serviceType: formData.type as ServiceType,
       status: 'Pending Approval' as CampaignStatus,
       startDate: new Date().toISOString().split('T')[0],
@@ -266,9 +266,9 @@ export default function CampaignList() {
       jobTitles: formData.titles.join(', '),
       pricingModel: `Per lead ($${formData.cpl}/lead)`,
       clientDetails: {
-        name: 'Acme Corp',
-        address: '123 Market Street, San Francisco, CA 94105',
-        contact: 'John Carter, john@acmecorp.com, +1 415-555-0123',
+        name: 'The Channel Company',
+        address: 'One Research Drive, Westborough, MA',
+        contact: 'Renuka Lawless, rlawless@thechannelcompany.com',
       },
       scopeOfWork: [
         `Campaign type: ${formData.type}`,
@@ -288,11 +288,11 @@ export default function CampaignList() {
       id: `sub_new_${Date.now()}`,
       campaignName: formData.name,
       clientId: 'client_1',
-      clientCompany: 'Acme Corp',
-      submittedBy: 'John Carter',
+      clientCompany: 'The Channel Company',
+      submittedBy: 'Renuka Lawless',
       submittedAt: new Date().toISOString(),
-      assignedManager: 'Anish Akkoat',
-      assignedManagerEmail: 'anish.akkoat@datamaticsbpm.com',
+      assignedManager: 'Brijesh Singh',
+      assignedManagerEmail: 'brijesh.singh@datamaticsbpm.com',
       status: 'Pending Approval',
       serviceType: formData.type,
       geography: formData.geography,
@@ -333,8 +333,8 @@ export default function CampaignList() {
   const filteredCampaigns = campaigns.filter(campaign => {
     const matchesSearch = campaign.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'All' || campaign.status === statusFilter;
-    // Client view: only show Acme Corp campaigns (demo client)
-    const matchesClient = campaign.clientCompany === 'Acme Corp';
+    // Client view: only show The Channel Company campaigns (demo client)
+    const matchesClient = campaign.clientCompany === 'The Channel Company';
     const matchesDate = matchesDateRange(campaign.startDate);
     return matchesSearch && matchesStatus && matchesClient && matchesDate;
   });

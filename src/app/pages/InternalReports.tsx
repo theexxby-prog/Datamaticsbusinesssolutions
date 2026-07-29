@@ -39,7 +39,7 @@ const monthlyData = [
 
 // Operator performance data
 const operatorData = [
-  { name: 'Anish Akkoat', leads: 3240, acceptance: 92, clients: 3 },
+  { name: 'Brijesh Singh', leads: 3240, acceptance: 92, clients: 3 },
   { name: 'Michael Chen', leads: 2180, acceptance: 89, clients: 2 },
   { name: 'Emily Rodriguez', leads: 1560, acceptance: 94, clients: 1 },
   { name: 'Arjun Patel', leads: 2890, acceptance: 91, clients: 3 },

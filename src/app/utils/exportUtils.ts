@@ -122,10 +122,10 @@ export async function generateInvoicePDF(invoice: Invoice) {
   y += 7;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
-  doc.text('Acme Corp', 15, y);
+  doc.text('The Channel Company', 15, y);
   y += 5;
   doc.setTextColor(...gray);
-  doc.text('John Carter, VP of Sales', 15, y);
+  doc.text('Renuka Lawless, VP of Sales', 15, y);
   doc.setTextColor(...dark);
 
   // From

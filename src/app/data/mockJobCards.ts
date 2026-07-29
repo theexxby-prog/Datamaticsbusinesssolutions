@@ -1,63 +1,159 @@
 import type { JobCard } from '../types';
 
 // Job cards across every pipeline stage so each role's view and action set can
-// be demonstrated. client_1 = Acme Corp (the demo client login).
+// be demonstrated. client_1 = The Channel Company (the demo client login).
 
 export const mockJobCards: JobCard[] = [
-  // 1 — Awaiting the client's signature: the hero card on the client's Documents page.
+  // ── The Channel Company (client_1) — one card per seeded campaign ──────────
+
+  // 1 — Awaiting the client's signature: the hero card on the client's Documents
+  //     page and the live e-signature demo.
   {
-    id: 'JC-2026-0047',
-    campaignName: 'Enterprise Data Platform Leads – NAM Q3 2026',
+    id: 'JC-2026-0041',
+    campaignName: 'Lenovo Intel FIFA AI',
     clientId: 'client_1',
-    clientCompany: 'Acme Corp',
+    clientCompany: 'The Channel Company',
     type: 'client_signature',
     stage: 'sent_for_signature',
-    createdAt: '2026-06-24T09:12:00Z',
-    updatedAt: '2026-07-02T14:30:00Z',
+    createdAt: '2026-06-02T09:12:00Z',
+    updatedAt: '2026-07-27T14:30:00Z',
     accountManager: 'Vishal Mehta',
-    clientManager: 'Anish Akkoat',
+    clientManager: 'Brijesh Singh',
     scope: {
       serviceType: 'Content Syndication',
       geography: 'NAM',
-      targetLeads: 750,
-      cpl: 42,
-      startDate: '2026-08-01',
-      endDate: '2026-11-30',
-      jobTitles: ['CDO', 'VP Data Engineering', 'Head of Analytics'],
-      industry: 'Technology',
-      employeeSize: '1,000+',
+      targetLeads: 350,
+      cpl: 45,
+      startDate: '2026-06-07',
+      endDate: '2026-10-31',
+      jobTitles: ['IT Director', 'VP IT', 'CIO', 'CTO'],
+      industry: 'Information Technology',
+      employeeSize: '500+',
     },
-    scopeSource: { fileName: 'acme-corp-dataplatform-thread.pdf', uploadedAt: '2026-06-24T09:12:00Z', uploadedBy: 'Vishal Mehta' },
-    salesforce: { status: 'synced', opportunityId: '006QK2748PLMR3', syncedAt: '2026-06-24T09:15:00Z' },
+    scopeSource: { fileName: 'tcc-lenovo-intel-fifa-scope.pdf', uploadedAt: '2026-06-02T09:12:00Z', uploadedBy: 'Vishal Mehta' },
+    salesforce: { status: 'synced', opportunityId: '006QK2748PLMR3', syncedAt: '2026-06-02T09:15:00Z' },
     confirmations: {
-      accountManager: { confirmed: true, at: '2026-07-01T10:05:00Z' },
-      clientManager: { confirmed: true, at: '2026-07-02T14:28:00Z' },
+      accountManager: { confirmed: true, at: '2026-07-26T10:05:00Z' },
+      clientManager: { confirmed: true, at: '2026-07-27T14:28:00Z' },
     },
-    signature: { provider: 'DocuSign', envelopeId: 'ENV-8H2KD91A', sentAt: '2026-07-02T14:30:00Z' },
+    signature: { provider: 'DocuSign', envelopeId: 'ENV-8H2KD91A', sentAt: '2026-07-27T14:30:00Z' },
     documentUrl: '#',
     history: [
-      { at: '2026-06-24T09:12:00Z', actor: 'Vishal Mehta', action: 'Uploaded conversation dump' },
-      { at: '2026-06-24T09:15:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
-      { at: '2026-06-26T11:40:00Z', actor: 'Anish Akkoat', action: 'Verified opportunity details' },
-      { at: '2026-06-26T11:41:00Z', actor: 'System', action: 'Job card generated from template' },
-      { at: '2026-07-01T10:05:00Z', actor: 'Vishal Mehta', action: 'Confirmed job card accuracy' },
-      { at: '2026-07-02T14:28:00Z', actor: 'Anish Akkoat', action: 'Confirmed job card accuracy' },
-      { at: '2026-07-02T14:30:00Z', actor: 'System', action: 'Sent for client signature via DocuSign' },
+      { at: '2026-06-02T09:12:00Z', actor: 'Vishal Mehta', action: 'Uploaded conversation dump' },
+      { at: '2026-06-02T09:15:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
+      { at: '2026-06-04T11:40:00Z', actor: 'Brijesh Singh', action: 'Verified opportunity details' },
+      { at: '2026-06-04T11:41:00Z', actor: 'System', action: 'Job card generated from template' },
+      { at: '2026-07-26T10:05:00Z', actor: 'Vishal Mehta', action: 'Confirmed job card accuracy' },
+      { at: '2026-07-27T14:28:00Z', actor: 'Brijesh Singh', action: 'Confirmed job card accuracy' },
+      { at: '2026-07-27T14:30:00Z', actor: 'System', action: 'Sent for client signature via DocuSign' },
     ],
   },
 
-  // 2 — Awaiting dual confirmation: AM confirmed, CM pending.
+  // 2 — Signed and complete: the green-checkmark end state.
+  {
+    id: 'JC-2026-0042',
+    campaignName: 'Uptime Solutions CRN2 - Lead Gen',
+    clientId: 'client_1',
+    clientCompany: 'The Channel Company',
+    type: 'client_signature',
+    stage: 'signed',
+    createdAt: '2026-05-11T10:00:00Z',
+    updatedAt: '2026-05-21T17:05:00Z',
+    accountManager: 'Vishal Mehta',
+    clientManager: 'Brijesh Singh',
+    scope: {
+      serviceType: 'Leads',
+      geography: 'NAM',
+      targetLeads: 80,
+      cpl: 60,
+      startDate: '2026-05-25',
+      endDate: '2026-08-31',
+      jobTitles: ['IT Manager', 'Infrastructure Lead', 'DevOps Manager'],
+      industry: 'Information Technology',
+      employeeSize: '200+',
+    },
+    scopeSource: { fileName: 'tcc-uptime-crn2-scope.pdf', uploadedAt: '2026-05-11T10:00:00Z', uploadedBy: 'Vishal Mehta' },
+    salesforce: { status: 'synced', opportunityId: '006QK1998ARFC2', syncedAt: '2026-05-11T10:04:00Z' },
+    confirmations: {
+      accountManager: { confirmed: true, at: '2026-05-14T09:00:00Z' },
+      clientManager: { confirmed: true, at: '2026-05-15T11:30:00Z' },
+    },
+    signature: {
+      provider: 'DocuSign',
+      envelopeId: 'ENV-3XA9PL07',
+      sentAt: '2026-05-15T11:32:00Z',
+      signedAt: '2026-05-21T17:05:00Z',
+      signedBy: 'Renuka Lawless',
+    },
+    documentUrl: '#',
+    history: [
+      { at: '2026-05-11T10:00:00Z', actor: 'Vishal Mehta', action: 'Uploaded conversation dump' },
+      { at: '2026-05-11T10:04:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
+      { at: '2026-05-13T13:20:00Z', actor: 'Brijesh Singh', action: 'Verified opportunity details' },
+      { at: '2026-05-15T11:32:00Z', actor: 'System', action: 'Sent for client signature via DocuSign' },
+      { at: '2026-05-21T17:05:00Z', actor: 'Renuka Lawless', action: 'Signed the job card' },
+    ],
+  },
+
+  // 3 — Signed: the third seeded campaign, referenced by the July invoice.
+  {
+    id: 'JC-2026-0043',
+    campaignName: 'Eaton 2026 Full Year 1_Q3',
+    clientId: 'client_1',
+    clientCompany: 'The Channel Company',
+    type: 'client_signature',
+    stage: 'signed',
+    createdAt: '2026-06-15T08:30:00Z',
+    updatedAt: '2026-06-25T15:40:00Z',
+    accountManager: 'Vishal Mehta',
+    clientManager: 'Brijesh Singh',
+    scope: {
+      serviceType: 'Content Syndication',
+      geography: 'NAM',
+      targetLeads: 100,
+      cpl: 50,
+      startDate: '2026-06-29',
+      endDate: '2026-09-30',
+      jobTitles: ['Facilities Director', 'VP Operations', 'Data Center Manager'],
+      industry: 'Manufacturing & Energy',
+      employeeSize: '1,000+',
+    },
+    scopeSource: { fileName: 'tcc-eaton-fy2026-q3-scope.pdf', uploadedAt: '2026-06-15T08:30:00Z', uploadedBy: 'Vishal Mehta' },
+    salesforce: { status: 'synced', opportunityId: '006QK2811TWXR9', syncedAt: '2026-06-15T08:33:00Z' },
+    confirmations: {
+      accountManager: { confirmed: true, at: '2026-06-18T09:20:00Z' },
+      clientManager: { confirmed: true, at: '2026-06-19T10:10:00Z' },
+    },
+    signature: {
+      provider: 'DocuSign',
+      envelopeId: 'ENV-5PQ2MN44',
+      sentAt: '2026-06-19T10:12:00Z',
+      signedAt: '2026-06-25T15:40:00Z',
+      signedBy: 'Renuka Lawless',
+    },
+    documentUrl: '#',
+    history: [
+      { at: '2026-06-15T08:30:00Z', actor: 'Vishal Mehta', action: 'Uploaded conversation dump' },
+      { at: '2026-06-15T08:33:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
+      { at: '2026-06-17T16:10:00Z', actor: 'Brijesh Singh', action: 'Verified opportunity details' },
+      { at: '2026-06-19T10:12:00Z', actor: 'System', action: 'Sent for client signature via DocuSign' },
+      { at: '2026-06-25T15:40:00Z', actor: 'Renuka Lawless', action: 'Signed the job card' },
+    ],
+  },
+
+  // ── Other clients — internal pipeline stage coverage (never client-visible) ─
+  // Awaiting dual confirmation: AM confirmed, CM pending.
   {
     id: 'JC-2026-0046',
     campaignName: 'Cybersecurity BANT Program – EMEA H2 2026',
-    clientId: 'client_1',
-    clientCompany: 'Acme Corp',
+    clientId: 'client_2',
+    clientCompany: 'TechCo Ltd',
     type: 'client_signature',
     stage: 'pending_confirmations',
     createdAt: '2026-06-28T08:00:00Z',
     updatedAt: '2026-07-05T09:20:00Z',
-    accountManager: 'Vishal Mehta',
-    clientManager: 'Anish Akkoat',
+    accountManager: 'Gautam Gupta',
+    clientManager: 'Brijesh Singh',
     scope: {
       serviceType: 'BANT',
       geography: 'EMEA',
@@ -69,19 +165,19 @@ export const mockJobCards: JobCard[] = [
       industry: 'Financial Services',
       employeeSize: '5,000+',
     },
-    scopeSource: { fileName: 'acme-corp-emea-bant-scope.docx', uploadedAt: '2026-06-28T08:00:00Z', uploadedBy: 'Vishal Mehta' },
-    salesforce: { status: 'synced', opportunityId: '006QK2811TWXR9', syncedAt: '2026-06-28T08:03:00Z' },
+    scopeSource: { fileName: 'techco-emea-bant-scope.docx', uploadedAt: '2026-06-28T08:00:00Z', uploadedBy: 'Gautam Gupta' },
+    salesforce: { status: 'synced', opportunityId: '006QK2905TWXR9', syncedAt: '2026-06-28T08:03:00Z' },
     confirmations: {
       accountManager: { confirmed: true, at: '2026-07-05T09:20:00Z' },
       clientManager: { confirmed: false },
     },
     documentUrl: '#',
     history: [
-      { at: '2026-06-28T08:00:00Z', actor: 'Vishal Mehta', action: 'Uploaded conversation dump' },
+      { at: '2026-06-28T08:00:00Z', actor: 'Gautam Gupta', action: 'Uploaded conversation dump' },
       { at: '2026-06-28T08:03:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
-      { at: '2026-07-01T16:10:00Z', actor: 'Anish Akkoat', action: 'Verified opportunity details' },
+      { at: '2026-07-01T16:10:00Z', actor: 'Brijesh Singh', action: 'Verified opportunity details' },
       { at: '2026-07-01T16:11:00Z', actor: 'System', action: 'Job card generated from template' },
-      { at: '2026-07-05T09:20:00Z', actor: 'Vishal Mehta', action: 'Confirmed job card accuracy' },
+      { at: '2026-07-05T09:20:00Z', actor: 'Gautam Gupta', action: 'Confirmed job card accuracy' },
     ],
   },
 
@@ -96,7 +192,7 @@ export const mockJobCards: JobCard[] = [
     createdAt: '2026-07-03T12:30:00Z',
     updatedAt: '2026-07-03T12:34:00Z',
     accountManager: 'Gautam Gupta',
-    clientManager: 'Anish Akkoat',
+    clientManager: 'Brijesh Singh',
     scope: {
       serviceType: 'Leads',
       geography: 'APAC',
@@ -119,7 +215,6 @@ export const mockJobCards: JobCard[] = [
       { at: '2026-07-03T12:34:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
     ],
   },
-
   // 4 — Salesforce sync failure: the unhappy path the backend must surface.
   {
     id: 'JC-2026-0049',
@@ -131,7 +226,7 @@ export const mockJobCards: JobCard[] = [
     createdAt: '2026-07-06T15:45:00Z',
     updatedAt: '2026-07-06T15:47:00Z',
     accountManager: 'Gautam Gupta',
-    clientManager: 'Anish Akkoat',
+    clientManager: 'Brijesh Singh',
     scope: {
       serviceType: 'Appointment Setting',
       geography: 'NAM',
@@ -154,52 +249,6 @@ export const mockJobCards: JobCard[] = [
       { at: '2026-07-06T15:47:00Z', actor: 'System', action: 'Salesforce sync failed — API timeout' },
     ],
   },
-
-  // 5 — Signed and complete: the green-checkmark end state.
-  {
-    id: 'JC-2026-0041',
-    campaignName: 'AI-Powered SaaS Lead Generation Q2 2026',
-    clientId: 'client_1',
-    clientCompany: 'Acme Corp',
-    type: 'client_signature',
-    stage: 'signed',
-    createdAt: '2026-03-10T10:00:00Z',
-    updatedAt: '2026-03-21T17:05:00Z',
-    accountManager: 'Vishal Mehta',
-    clientManager: 'Anish Akkoat',
-    scope: {
-      serviceType: 'Leads',
-      geography: 'Global',
-      targetLeads: 600,
-      cpl: 38,
-      startDate: '2026-04-01',
-      endDate: '2026-06-30',
-      jobTitles: ['CTO', 'VP Engineering', 'Head of AI'],
-      industry: 'Technology',
-      employeeSize: '500+',
-    },
-    salesforce: { status: 'synced', opportunityId: '006QK1998ARFC2', syncedAt: '2026-03-10T10:04:00Z' },
-    confirmations: {
-      accountManager: { confirmed: true, at: '2026-03-14T09:00:00Z' },
-      clientManager: { confirmed: true, at: '2026-03-15T11:30:00Z' },
-    },
-    signature: {
-      provider: 'DocuSign',
-      envelopeId: 'ENV-3XA9PL07',
-      sentAt: '2026-03-15T11:32:00Z',
-      signedAt: '2026-03-21T17:05:00Z',
-      signedBy: 'John Carter',
-    },
-    documentUrl: '#',
-    history: [
-      { at: '2026-03-10T10:00:00Z', actor: 'Vishal Mehta', action: 'Uploaded conversation dump' },
-      { at: '2026-03-10T10:04:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
-      { at: '2026-03-12T13:20:00Z', actor: 'Anish Akkoat', action: 'Verified opportunity details' },
-      { at: '2026-03-15T11:32:00Z', actor: 'System', action: 'Sent for client signature via DocuSign' },
-      { at: '2026-03-21T17:05:00Z', actor: 'John Carter', action: 'Signed the job card' },
-    ],
-  },
-
   // 6 — MSA client: no job card needed, short-circuits to completed.
   {
     id: 'JC-2026-0044',
@@ -211,7 +260,7 @@ export const mockJobCards: JobCard[] = [
     createdAt: '2026-05-18T09:30:00Z',
     updatedAt: '2026-05-19T10:15:00Z',
     accountManager: 'Gautam Gupta',
-    clientManager: 'Anish Akkoat',
+    clientManager: 'Brijesh Singh',
     scope: {
       serviceType: 'Single Touch',
       geography: 'NAM',
@@ -231,7 +280,7 @@ export const mockJobCards: JobCard[] = [
     history: [
       { at: '2026-05-18T09:30:00Z', actor: 'Gautam Gupta', action: 'Uploaded conversation dump' },
       { at: '2026-05-18T09:33:00Z', actor: 'System', action: 'Scope extracted · Salesforce opportunity created' },
-      { at: '2026-05-19T10:15:00Z', actor: 'Anish Akkoat', action: 'Verified opportunity — MSA in place, no job card required' },
+      { at: '2026-05-19T10:15:00Z', actor: 'Brijesh Singh', action: 'Verified opportunity — MSA in place, no job card required' },
     ],
   },
 ];

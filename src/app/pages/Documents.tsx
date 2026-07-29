@@ -121,7 +121,7 @@ function IntakeModal({ onClose, onCreated }: { onClose: () => void; onCreated: (
               <FileUp className="w-8 h-8" style={{ color: 'var(--color-primary)' }} />
               <input
                 type="text"
-                placeholder="e.g. acme-corp-q4-thread.pdf"
+                placeholder="e.g. tcc-q3-campaign-thread.pdf"
                 value={fileName}
                 onChange={(e) => setFileName(e.target.value)}
                 className="input-base w-full max-w-xs px-3 py-2 text-center"
@@ -407,13 +407,13 @@ export default function Documents() {
       id,
       campaignName: `${scope.industry} ${scope.serviceType} – ${scope.geography} ${new Date(scope.startDate).getFullYear()}`,
       clientId: 'client_1',
-      clientCompany: 'Acme Corp',
+      clientCompany: 'The Channel Company',
       type: 'client_signature',
       stage: 'pending_cm_review',
       createdAt: now(),
       updatedAt: now(),
       accountManager: currentUser.name,
-      clientManager: 'Anish Akkoat',
+      clientManager: 'Brijesh Singh',
       scope,
       scopeSource: { fileName, uploadedAt: now(), uploadedBy: currentUser.name },
       salesforce: { status: 'synced', opportunityId: oppId, syncedAt: now() },

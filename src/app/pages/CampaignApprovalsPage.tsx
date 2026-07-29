@@ -412,7 +412,7 @@ export default function CampaignApprovalsPage() {
     setSubmissions(prev =>
       prev.map(s =>
         s.id === id
-          ? { ...s, status: 'Approved' as SubmissionStatus, reviewedAt: new Date().toISOString(), reviewedBy: 'Anish Akkoat' }
+          ? { ...s, status: 'Approved' as SubmissionStatus, reviewedAt: new Date().toISOString(), reviewedBy: 'Brijesh Singh' }
           : s
       )
     );
@@ -433,7 +433,7 @@ export default function CampaignApprovalsPage() {
     setSubmissions(prev =>
       prev.map(s =>
         s.id === id
-          ? { ...s, status: 'Declined' as SubmissionStatus, reviewedAt: new Date().toISOString(), reviewedBy: 'Anish Akkoat' }
+          ? { ...s, status: 'Declined' as SubmissionStatus, reviewedAt: new Date().toISOString(), reviewedBy: 'Brijesh Singh' }
           : s
       )
     );
@@ -460,7 +460,7 @@ export default function CampaignApprovalsPage() {
               status: 'Changes Requested' as SubmissionStatus,
               managerNotes: notes,
               reviewedAt: new Date().toISOString(),
-              reviewedBy: 'Anish Akkoat',
+              reviewedBy: 'Brijesh Singh',
             }
           : s
       )

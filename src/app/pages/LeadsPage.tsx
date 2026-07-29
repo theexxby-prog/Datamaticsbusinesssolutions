@@ -5,7 +5,7 @@ import { TableRow } from '../components/TableRow';
 import {
   Search, Filter, Download, Mail, Phone, Building2, CheckCircle, XCircle,
   Clock, FileText, UserCheck, MoreVertical, Star, Tag, Plus,
-  TrendingUp, Users, Target, Award, Activity, Eye, AlertTriangle, X,
+  TrendingUp, Users, Target, Award, Activity, Eye, X,
   ThumbsUp, ThumbsDown, Shield,
 } from 'lucide-react';
 import { mockLeads, type Lead } from '../mockData';
@@ -18,7 +18,7 @@ import { UnifiedKpiCard } from '../components/UnifiedKpiCard';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { EmptyState } from '../components/EmptyState';
 import { TableSkeleton } from '../components/SkeletonLoader';
-import { ConvertrBadge, ConvertrQAStats } from '../components/ConvertrQAStatus';
+import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { exportLeadsToCSV } from '../utils/exportUtils';
 import { allClients } from '../data/mockClients';
 import { toast } from 'sonner';
@@ -63,12 +63,17 @@ export default function LeadsPage() {
   const isConvertr = acceptanceMethod === 'convertr';
   const showManualReview = acceptanceMethod === 'csv_manual' || acceptanceMethod === 'portal_review';
 
-  // Convertr mock QA stats
+  // Automated QA snapshot across everything delivered to date (not just the
+  // sample in the table below), so the percentages match the ~97% acceptance
+  // rate reported on the campaigns and in the weekly digest.
+  const deliveredToDate = clientData?.totalLeads ?? leads.length;
+  const qaCaution = Math.round(deliveredToDate * 0.02);
+  const qaInvalid = Math.round(deliveredToDate * 0.01);
   const convertrQAStats = {
-    totalProcessed: leads.length + 6,
-    valid: leads.filter(l => l.status === 'Accepted' || l.status === 'Contacted').length,
-    caution: 4,
-    invalid: 2,
+    totalProcessed: deliveredToDate + qaCaution + qaInvalid,
+    valid: deliveredToDate,
+    caution: qaCaution,
+    invalid: qaInvalid,
   };
 
   const rejectionReasons = [
@@ -274,7 +279,6 @@ export default function LeadsPage() {
             <div>
               <div className="flex items-center gap-3 mb-2">
                 <h1 style={{ color: 'var(--color-text-primary)' }}>Lead Management</h1>
-                {isConvertr && <ConvertrBadge />}
               </div>
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                 {stats.total} leads • {stats.pending} pending review • {stats.hotLeads} hot leads
@@ -289,7 +293,7 @@ export default function LeadsPage() {
             </button>
           </div>
 
-          {/* Convertr QA Stats (only for Convertr clients) */}
+          {/* Automated QA results (only for automated-delivery clients) */}
           {isConvertr && (
             <div className="mb-6">
               <ConvertrQAStats {...convertrQAStats} />
@@ -318,26 +322,27 @@ export default function LeadsPage() {
           </div>
         </div>
 
-        {/* Alert Banner */}
-        {showAlert && (
-          <div 
+        {/* Highlight callout — count is derived from the table so the two can
+            never disagree on screen. */}
+        {showAlert && stats.hotLeads > 0 && (
+          <div
             className="mb-5 p-3 rounded-xl border flex items-center justify-between gap-4 animate-slideInUp"
             style={{
-              backgroundColor: '#FFFBEB',
-              borderColor: 'rgba(217,119,6,0.2)'
+              backgroundColor: 'var(--color-success-bg)',
+              borderColor: 'var(--color-success)',
             }}
           >
             <div className="flex items-center gap-3 flex-1">
-              <div className="flex-shrink-0 p-2 rounded-lg" style={{ backgroundColor: 'rgba(217,119,6,0.1)' }}>
-                <AlertTriangle className="w-5 h-5 text-orange-500" />
+              <div className="flex-shrink-0 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-success-bg)' }}>
+                <TrendingUp className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
               </div>
-              <p className="text-sm font-medium" style={{ color: '#92400e' }}>
-                2 leads haven't been contacted in over 7 days. Follow up to maintain engagement.
+              <p className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>
+                {stats.hotLeads} hot leads scored 90+ this week.
               </p>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
               <button
-                onClick={() => setStatusFilter('Pending Review')}
+                onClick={() => setSortField('leadScore')}
                 className="btn-primary px-4 py-2 text-sm"
               >
                 View Leads
@@ -345,8 +350,9 @@ export default function LeadsPage() {
               <button
                 onClick={() => setShowAlert(false)}
                 className="btn-ghost p-2"
+                aria-label="Dismiss"
               >
-                <X className="w-4 h-4 text-orange-600" />
+                <X className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
               </button>
             </div>
           </div>

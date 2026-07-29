@@ -80,7 +80,7 @@ export default function Account() {
                 <div
                   className="w-20 h-20 rounded-full flex items-center justify-center flex-shrink-0"
                   style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)', fontSize: '24px', fontWeight: 700 }}
-                  aria-label="John Carter"
+                  aria-label="Renuka Lawless"
                 >
                   JC
                 </div>
@@ -104,7 +104,7 @@ export default function Account() {
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Last Name</label>
-                  <input type="text" defaultValue="Carter" className="input-base w-full px-4 py-3" />
+                  <input type="text" defaultValue="Lawless" className="input-base w-full px-4 py-3" />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Job Title</label>
@@ -112,11 +112,11 @@ export default function Account() {
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Company</label>
-                  <input type="text" defaultValue="Acme Corp" className="input-base w-full px-4 py-3" disabled style={{ background: '#F5F5F5' }} />
+                  <input type="text" defaultValue="The Channel Company" className="input-base w-full px-4 py-3" disabled style={{ background: '#F5F5F5' }} />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Email Address</label>
-                  <input type="email" defaultValue="john@acmecorp.com" className="input-base w-full px-4 py-3" />
+                  <input type="email" defaultValue="rlawless@thechannelcompany.com" className="input-base w-full px-4 py-3" />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Phone Number</label>
@@ -178,7 +178,7 @@ export default function Account() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Company Name</label>
-                  <input type="text" defaultValue="Acme Corp" className="input-base w-full px-4 py-3" />
+                  <input type="text" defaultValue="The Channel Company" className="input-base w-full px-4 py-3" />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Industry</label>
@@ -200,7 +200,7 @@ export default function Account() {
                 </div>
                 <div className="md:col-span-2">
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Website</label>
-                  <input type="url" defaultValue="https://acme-corp.com" className="input-base w-full px-4 py-3" />
+                  <input type="url" defaultValue="https://thechannelcompany.com" className="input-base w-full px-4 py-3" />
                 </div>
               </div>
               <div className="flex justify-end gap-2">
@@ -267,9 +267,9 @@ export default function Account() {
               </div>
               <div className="space-y-3">
                 {[
-                  { name: 'John Smith', email: 'john.smith@acme-corp.com', role: 'Admin' },
-                  { name: 'Sarah Johnson', email: 'sarah.j@acme-corp.com', role: 'Member' },
-                  { name: 'Michael Chen', email: 'michael.c@acme-corp.com', role: 'Member' },
+                  { name: 'Renuka Lawless', email: 'rlawless@thechannelcompany.com', role: 'Admin' },
+                  { name: 'Dana Whitcomb', email: 'dwhitcomb@thechannelcompany.com', role: 'Member' },
+                  { name: 'Peter Ashford', email: 'pashford@thechannelcompany.com', role: 'Member' },
                 ].map((member, i) => (
                   <div key={i} className="flex items-center justify-between p-4 rounded-lg" style={{ background: 'var(--color-border-light)' }}>
                     <div className="flex items-center gap-3">
