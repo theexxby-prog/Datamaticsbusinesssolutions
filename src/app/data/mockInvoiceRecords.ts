@@ -37,7 +37,7 @@ const tccRecords: InvoiceRecord[] = tccTaxInvoices.map((inv) => ({
   subtotal: inv.total,
   total: inv.total,
   currency: 'USD',
-  stage: inv.status === 'paid' ? 'paid' : 'sent',
+  stage: inv.status === 'due' ? 'overdue' : 'sent',
   issueDate: inv.issueDate,
   dueDate: inv.dueDate,
   raisedBy: 'Kartik',
@@ -45,17 +45,13 @@ const tccRecords: InvoiceRecord[] = tccTaxInvoices.map((inv) => ({
   validatedAt: `${inv.issueDate}T08:30:00Z`,
   tally: {
     invoiceEntry: 'synced',
-    paymentEntry: inv.status === 'paid' ? 'synced' : 'not_synced',
+    paymentEntry: 'not_synced',
     voucherId: `TLY-${inv.invoiceNumber.slice(-6)}`,
   },
-  ...(inv.paidAt
-    ? { payment: { method: 'Bank transfer', reference: `PAY-${inv.invoiceNumber}`, paidAt: `${inv.paidAt}T13:12:00Z` } }
-    : {}),
   history: [
     { at: `${inv.issueDate}T06:00:00Z`, actor: 'System', action: `Draft generated from ${inv.forMonth} billable records` },
     { at: `${inv.issueDate}T08:30:00Z`, actor: 'Kartik', action: 'Validated amount' },
     { at: `${inv.issueDate}T09:00:00Z`, actor: 'System', action: 'Invoice sent to client' },
-    ...(inv.paidAt ? [{ at: `${inv.paidAt}T13:12:00Z`, actor: 'The Channel Company', action: 'Payment received' }] : []),
   ],
 }));
 

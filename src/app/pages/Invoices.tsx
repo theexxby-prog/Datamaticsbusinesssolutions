@@ -222,10 +222,22 @@ function clientStatus(inv: InvoiceRecord): ClientStatus {
 }
 
 const CLIENT_STATUS_META: Record<ClientStatus, { label: string; bg: string; color: string }> = {
-  due: { label: 'Due', bg: 'rgba(217,119,6,0.12)', color: '#B45309' },
-  overdue: { label: 'Overdue', bg: 'rgba(220,38,38,0.12)', color: '#DC2626' },
+  // 'due' here is the ageing statement's "Not Due" — issued, still within terms.
+  due: { label: 'Not due', bg: 'rgba(100,116,139,0.12)', color: '#475569' },
+  overdue: { label: 'Due', bg: 'rgba(217,119,6,0.14)', color: '#B45309' },
   paid: { label: 'Paid', bg: 'rgba(5,150,105,0.12)', color: '#065F46' },
 };
+
+/** Days since the invoice was issued — the ageing column on the AR statement. */
+function ageingDays(issueDate?: string): number | null {
+  if (!issueDate) return null;
+  const [y, m, d] = issueDate.split('-').map(Number);
+  const issued = new Date(y, m - 1, d);
+  const now = new Date();
+  // Floor, not round: ageing is whole days elapsed, so it matches the AR
+  // statement rather than tipping to the next day after midday.
+  return Math.max(0, Math.floor((now.getTime() - issued.getTime()) / 86400000));
+}
 
 function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
   invoice: InvoiceRecord;
@@ -257,6 +269,7 @@ function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
           </div>
           <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>
             {formatBillingPeriod(invoice.billingPeriod)} billing
+            {ageingDays(invoice.issueDate) !== null && <> · {ageingDays(invoice.issueDate)} days</>}
             {status === 'paid' && invoice.payment?.paidAt
               ? <> · Paid {fmtDate(invoice.payment.paidAt)}{invoice.payment.reference ? <span style={{ color: 'var(--color-text-muted)' }}> · Ref {invoice.payment.reference}</span> : null}</>
               : invoice.dueDate ? <> · Due <strong style={{ color: status === 'overdue' ? '#DC2626' : 'var(--color-text-primary)' }}>{fmtDate(invoice.dueDate)}</strong></> : null}
@@ -487,6 +500,14 @@ export default function Invoices() {
   // ─── KPIs per perspective ───
   const outstanding = visibleInvoices.filter((i) => i.stage === 'sent' || i.stage === 'overdue').reduce((s, i) => s + i.total, 0);
   const paidTotal = visibleInvoices.filter((i) => i.stage === 'paid').reduce((s, i) => s + i.total, 0);
+  // Split the outstanding balance the way the AR ageing statement does.
+  const dueTotal = visibleInvoices.filter((i) => i.stage === 'overdue').reduce((s, i) => s + i.total, 0);
+  const notYetDueTotal = visibleInvoices.filter((i) => i.stage === 'sent').reduce((s, i) => s + i.total, 0);
+  const oldestAgeing = visibleInvoices
+    .filter((i) => i.stage === 'sent' || i.stage === 'overdue')
+    .map((i) => ageingDays(i.issueDate))
+    .filter((n): n is number => n != null)
+    .sort((a, b) => b - a)[0] ?? null;
   const overdueCount = visibleInvoices.filter((i) => i.stage === 'overdue').length;
   const pendingValidationCount = invoices.filter((i) => i.stage === 'draft' || i.stage === 'pending_validation').length;
   const tallyIssues = invoices.filter((i) => i.tally.invoiceEntry === 'failed' || i.tally.paymentEntry === 'failed').length;
@@ -507,10 +528,10 @@ export default function Invoices() {
     ]
     : perspective === 'client'
       ? [
-        { label: 'Amount Due', value: outstanding, icon: Clock, money: true },
-        { label: 'Next Due Date', value: nextDue ? fmtDate(nextDue) : '—', icon: Receipt, money: false },
-        { label: 'Overdue', value: overdueCount, icon: AlertCircle, money: false },
-        { label: 'Paid This Year', value: paidTotal, icon: CheckCircle2, money: true },
+        { label: 'Total Outstanding', value: outstanding, icon: Clock, money: true },
+        { label: 'Due', value: dueTotal, icon: AlertCircle, money: true },
+        { label: 'Not Yet Due', value: notYetDueTotal, icon: Receipt, money: true },
+        { label: 'Oldest Invoice', value: oldestAgeing != null ? `${oldestAgeing} days` : '—', icon: CheckCircle2, money: false },
       ]
       : [
         { label: 'Outstanding', value: outstanding, icon: Clock, money: true },

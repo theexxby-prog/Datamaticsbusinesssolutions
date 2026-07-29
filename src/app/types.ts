@@ -258,8 +258,8 @@ export interface TaxInvoice {
   reference: string | null;
   contactEmail: string;
   serviceType: 'Optins Services' | 'FTE Project';
-  status: 'paid' | 'due';
-  paidAt?: string;
+  /** From the AR ageing statement: 'due' is past terms, 'not_due' is within them. */
+  status: 'due' | 'not_due';
   lineItems: TaxInvoiceLine[];
   qtyTotal: number;
   total: number;

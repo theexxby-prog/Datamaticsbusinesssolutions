@@ -20,8 +20,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/314.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-19',
+    status: 'due',
     lineItems: [
       { description: 'N-Able [ANZ] - End User Lead Gen - Oct-Dec 2025 - 006UJ00000S10kGYAR', qty: 61, rate: 12, amount: 732 },
       { description: 'CEMEA_SP_14379 Huntress CRN6 - Lead Gen ANZ', po: 'PO3218', qty: 23, rate: 12, amount: 276 },
@@ -40,8 +39,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/315.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-19',
+    status: 'due',
     lineItems: [
       { description: 'CEMEA_14471 Assembly x Lenovo, Q4 Aura x Intel 1_DE Single Touch', po: 'PO3199', qty: 500, rate: 12, amount: 6000 },
       { description: 'CEMEA_SP_14316 Huntress CRN7 - Channel Accelerator - Q1 Webinar', po: 'PO3257', qty: 25, rate: 12, amount: 300 },
@@ -67,8 +65,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/316.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-19',
+    status: 'due',
     lineItems: [
       { description: 'CNAM_SP_05193 Huntress 2025 Q4 MSP Appointment Setting NAM_Oct-Dec\'25 1 – Addend', po: 'PO3272', qty: 154, rate: 12, amount: 1848 },
       { description: 'CNAM_SP_05061 Lenovo FY\'25 Q2-Q4 Media Renewal - 2025 / 2026 Q1 FY26_PO3208', po: 'PO3208', qty: 50, rate: 12, amount: 600 },
@@ -90,8 +87,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/292.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-26',
+    status: 'due',
     lineItems: [
       { description: 'CNAM_SP_05238 Pax8 2026 Q1 Marketplace of the Future CRN Hub', po: 'PO3208', qty: 163, rate: 12, amount: 1956 },
       { description: 'CNAM_SP_04878 CyberPower Xchange Mar 2025 Renewal', po: 'PO3208', qty: 13, rate: 12, amount: 156 },
@@ -112,8 +108,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/314.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-26',
+    status: 'due',
     lineItems: [
       { description: 'CAPAC_SP_13365 Sophos CRN ANZ 1 - Content Syndication (2026)', po: 'PO3259', qty: 84, rate: 12, amount: 1008 },
       { description: 'CAPAC_SP_006UJ00000TiHZ7YAN Sophos CRN Asia 1 - Content Syndication (2026)', po: 'PO3260', qty: 95, rate: 12, amount: 1140 },
@@ -130,8 +125,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/316.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-26',
+    status: 'due',
     lineItems: [
       { description: 'CNAM_SP_05268 Eaton 2026 Full Year 1', po: 'PO3272', qty: 100, rate: 12, amount: 1200 },
       { description: 'CNAM_SP_05193 Huntress 2025 Q4 MSP Appointment Setting NAM_Oct-Dec\'25 1 – Addend', po: 'PO3272', qty: 243, rate: 12, amount: 2916 },
@@ -154,8 +148,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/315.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-04-26',
+    status: 'due',
     lineItems: [
       { description: 'CEMEA_SP_Q-14316- Huntress CRN7 CA 2026_Jan: 3199', po: 'PO3199', qty: 17, rate: 12, amount: 204 },
       { description: 'CEMEA_SP_11766 Seagate EMEA CRN1 - Channel Accelerator_Jan: 3199', po: 'PO3199', qty: 8, rate: 12, amount: 96 },
@@ -176,8 +169,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2026-2027/TCC/13.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'paid',
-    paidAt: '2026-05-13',
+    status: 'due',
     lineItems: [
       { description: 'CNAM_SP_05252 Seagate CRN Media Jan-March 2026 SPP', qty: 100, rate: 12, amount: 1200 },
       { description: 'CNAM_04982 SP SE 2025 CRN CloseUp_ Mar’25- Feb’26 Q4', qty: 60, rate: 12, amount: 720 },
@@ -199,8 +191,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2023-2024/TCC/157.1',
     contactEmail: 'awilde@thechannelcompany.com',
     serviceType: 'FTE Project',
-    status: 'paid',
-    paidAt: '2026-06-13',
+    status: 'due',
     lineItems: [
       { description: 'CAN Member Clean-Up - Amy Wilde', qty: 1.85, rate: 1000, amount: 1850 },
     ],
@@ -215,8 +206,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2023-2024/TCC/157.1',
     contactEmail: 'awilde@thechannelcompany.com',
     serviceType: 'FTE Project',
-    status: 'paid',
-    paidAt: '2026-06-13',
+    status: 'due',
     lineItems: [
       { description: 'KMC - Amy Wilde', qty: 3.1, rate: 1000, amount: 3100 },
     ],
@@ -231,7 +221,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2023-2024/TCC/157.1',
     contactEmail: 'awilde@thechannelcompany.com',
     serviceType: 'FTE Project',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'All EMEA APAC Member Data - Jun \'26', qty: 0.82, rate: 1000, amount: 820 },
     ],
@@ -246,7 +236,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2025-2026/TCC/292.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CNAM_SP_04878 CyberPower Xchange Mar 2025 Renewal', po: 'PO3208', qty: 2, rate: 12, amount: 24 },
       { description: 'CNAM_SP_05239 N-able Technologies 1Q Global Media campaign - 2026_PO3208', po: 'PO3208', qty: 18, rate: 12, amount: 216 },
@@ -262,7 +252,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2026-2027/TCC/13.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CNAM_05280_SP Alternative Payments - XC Mar and Aug NG 2026', qty: 19, rate: 12, amount: 228 },
       { description: 'CNAM_05124_SP Bitdefender - Q3 Media -2025', qty: 50, rate: 12, amount: 600 },
@@ -278,7 +268,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2026-2027/TCC/72.1',
     contactEmail: 'mogeary@thechannelcompany.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CAPAC_SP_15794 Dentsu_Lenovo CRN3 Aus - Content Syndication', qty: 35, rate: 22, amount: 770 },
     ],
@@ -293,7 +283,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: null,
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CEMEA_SP_Q-14316- Huntress CRN7 CA 2026 Q2', qty: 10, rate: 12, amount: 120 },
       { description: 'CEMEA_SP_Q-14316- Huntress CRN7 CA 2026 Q2', qty: 10, rate: 12, amount: 120 },
@@ -310,7 +300,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: null,
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CNAM_SP_05321 SE 2026 CRN Media Campaign_Mar\'26-Feb\'27_Q1', qty: 85, rate: 12, amount: 1020 },
       { description: 'CNAM_SP_05321 SE 2026 CRN Media Campaign_Mar\'26-Feb\'27_Q1', qty: 15, rate: 12, amount: 180 },
@@ -352,7 +342,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2026-2027/TCC/72.1',
     contactEmail: 'mogeary@thechannelcompany.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CEMEA_006UJ00000QksOGYAZ_SP Coro - MSPs Lead Gen + Awareness - ANZ', qty: 166, rate: 12, amount: 1992 },
     ],
@@ -367,7 +357,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: null,
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CEMEA_SP_15837 - N-able CRN Campaign 2Q UK - 2026', qty: 80, rate: 18, amount: 1440 },
       { description: 'CEMEA_SP_14746 Watchguard EMEA 2026 Media', qty: 208, rate: 22, amount: 4576 },
@@ -383,7 +373,7 @@ export const tccTaxInvoices: TaxInvoice[] = [
     reference: 'DBSL/FY 2026-2027/TCC/74.1',
     contactEmail: 'mogeary@thechannelco.com',
     serviceType: 'Optins Services',
-    status: 'due',
+    status: 'not_due',
     lineItems: [
       { description: 'CNAM_SP_05260 OpenText 2026 April_ June Media', qty: 20, rate: 12, amount: 240 },
       { description: 'CNAM_SP_14653 - N-able CRN campaign 2Q - 2026', qty: 8, rate: 21, amount: 168 },
