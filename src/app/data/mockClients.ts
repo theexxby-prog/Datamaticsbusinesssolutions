@@ -90,7 +90,7 @@ export const allClients: Client[] = [
         delivered: 314,
         startDate: 'Jun 7, 2026',
         endDate: 'Oct 31, 2026',
-        budget: 15750,
+        budget: 4200,
         goalLeads: 350,
         deliveredLeads: 314,
         deliverySchedule: [
@@ -128,7 +128,7 @@ export const allClients: Client[] = [
         delivered: 59,
         startDate: 'May 25, 2026',
         endDate: 'Aug 31, 2026',
-        budget: 4800,
+        budget: 960,
         goalLeads: 80,
         deliveredLeads: 59,
         deliverySchedule: [
@@ -168,7 +168,7 @@ export const allClients: Client[] = [
         delivered: 41,
         startDate: 'Jun 29, 2026',
         endDate: 'Sep 30, 2026',
-        budget: 5000,
+        budget: 1200,
         goalLeads: 100,
         deliveredLeads: 41,
         deliverySchedule: [

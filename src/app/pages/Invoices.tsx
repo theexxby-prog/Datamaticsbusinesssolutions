@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   Receipt, CheckCircle2, AlertCircle, Clock, ChevronDown, ChevronUp,
-  Download, CreditCard, Loader2, RefreshCw, Send, FileCheck2, Link2,
+  Download, CreditCard, Loader2, RefreshCw, Send, FileCheck2, Link2, FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AppLayout } from '../components/AppLayout';
@@ -12,6 +12,10 @@ import { EmptyState } from '../components/EmptyState';
 import { WorkflowStepper } from '../components/workflow/WorkflowStepper';
 import { IntegrationChip } from '../components/workflow/IntegrationChip';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
+import { tccTaxInvoices } from '../data/tccTaxInvoices';
+import { TaxInvoiceModal } from '../components/TaxInvoiceModal';
+import { generateTaxInvoicePDF } from '../utils/taxInvoicePdf';
+import type { TaxInvoice } from '../types';
 import {
   INVOICE_STAGE_ORDER, INVOICE_STAGE_META, GROUPING_META, stageIndex,
   formatBillingPeriod, formatUSD, validateInvoice, syncInvoiceToTally,
@@ -223,10 +227,11 @@ const CLIENT_STATUS_META: Record<ClientStatus, { label: string; bg: string; colo
   paid: { label: 'Paid', bg: 'rgba(5,150,105,0.12)', color: '#065F46' },
 };
 
-function ClientInvoiceCard({ invoice, busy, onPay }: {
+function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
   invoice: InvoiceRecord;
   busy: boolean;
   onPay: (inv: InvoiceRecord) => void;
+  onView: (invoiceNumber: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
   const status = clientStatus(invoice);
@@ -276,7 +281,23 @@ function ClientInvoiceCard({ invoice, busy, onPay }: {
             {busy ? 'Processing…' : 'Pay Now'}
           </button>
         )}
-        <button onClick={() => toast.success(`Downloading ${invoice.invoiceNumber}.pdf…`)} className="btn-secondary px-4 py-2 flex items-center gap-2">
+        <button onClick={() => onView(invoice.invoiceNumber)} className="btn-secondary px-4 py-2 flex items-center gap-2">
+          <FileText className="w-4 h-4" />
+          View invoice
+        </button>
+        <button
+          onClick={async () => {
+            const doc = tccTaxInvoices.find((t) => t.invoiceNumber === invoice.invoiceNumber);
+            if (!doc) return;
+            try {
+              await generateTaxInvoicePDF(doc);
+              toast.success(`Invoice ${doc.invoiceNumber} downloaded`);
+            } catch {
+              toast.error('Could not generate the invoice PDF');
+            }
+          }}
+          className="btn-secondary px-4 py-2 flex items-center gap-2"
+        >
           <Download className="w-4 h-4" />
           Download
         </button>
@@ -341,6 +362,9 @@ export default function Invoices() {
         : 'readonly';
 
   const [invoices, setInvoices] = useState<InvoiceRecord[]>(mockInvoiceRecords);
+  const [viewing, setViewing] = useState<TaxInvoice | null>(null);
+  const openInvoice = (invoiceNumber: string) =>
+    setViewing(tccTaxInvoices.find((t) => t.invoiceNumber === invoiceNumber) ?? null);
   const [busyId, setBusyId] = useState<string | null>(null);
 
   const now = () => new Date().toISOString();
@@ -561,7 +585,7 @@ export default function Invoices() {
           <div className="space-y-4">
             {rest.map((inv) => (
               perspective === 'client' ? (
-                <ClientInvoiceCard key={inv.id} invoice={inv} busy={busyId === inv.id} onPay={handlePay} />
+                <ClientInvoiceCard key={inv.id} invoice={inv} busy={busyId === inv.id} onPay={handlePay} onView={openInvoice} />
               ) : (
                 <InvoiceCard
                   key={inv.id}
@@ -577,6 +601,8 @@ export default function Invoices() {
           </div>
         )}
       </div>
+    
+      <TaxInvoiceModal invoice={viewing} onClose={() => setViewing(null)} />
     </AppLayout>
   );
 }

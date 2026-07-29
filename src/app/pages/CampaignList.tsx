@@ -267,7 +267,7 @@ export default function CampaignList() {
       pricingModel: `Per lead ($${formData.cpl}/lead)`,
       clientDetails: {
         name: 'The Channel Company',
-        address: 'One Research Drive, Westborough, MA',
+        address: '350 Jericho Turnpike | Ste 310, Jericho, NY 11753',
         contact: 'Renuka Lawless, rlawless@thechannelcompany.com',
       },
       scopeOfWork: [
