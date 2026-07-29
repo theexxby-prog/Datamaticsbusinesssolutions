@@ -117,10 +117,6 @@ const statusConfig: Record<Document['status'], { label: string; color: string; b
   Archived: { label: 'Archived', color: '#6B7280', bg: 'rgba(107,114,128,0.1)' },
 };
 
-function formatDate(dateStr: string) {
-  return formatDate(dateStr);
-}
-
 export function DocumentLibraryTab() {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('All');
