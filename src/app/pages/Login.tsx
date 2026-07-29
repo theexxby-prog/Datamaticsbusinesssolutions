@@ -57,10 +57,11 @@ function PulseWave() {
   );
 }
 
-const HIGHLIGHTS = [
-  'Live delivery pacing against every campaign target',
-  'Job cards signed in the portal, not over email',
-  'Invoices reconciled to billable leads automatically',
+const CAPABILITIES = [
+  'Campaign delivery and pacing',
+  'Lead review and export',
+  'Job cards and e-signature',
+  'Invoices and payments',
 ];
 
 function useClockGreeting() {
@@ -173,34 +174,26 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Hero */}
+        {/* Wave, label and what the portal covers read as one block, so the
+            panel divides cleanly into wordmark / content / compliance. */}
         <div className="relative">
           <PulseWave />
-          <h2 className="mt-10 text-white font-bold tracking-tight text-3xl xl:text-4xl leading-[1.15]">
-            Every campaign,
-            <br />
-            in one pulse.
+          <h2 className="mt-10 text-white font-semibold tracking-tight text-2xl">
+            Client portal
           </h2>
-          <p className="mt-4 text-white/75 text-[15px] leading-relaxed max-w-md">
-            Delivery, lead quality, job cards and invoices — the whole engagement in a
-            single view, updated as the work happens.
-          </p>
-        </div>
-
-        {/* Proof points */}
-        <div className="relative">
-          <ul className="space-y-3">
-            {HIGHLIGHTS.map((item) => (
-              <li key={item} className="flex items-start gap-3 text-white/85 text-sm leading-snug">
-                <CheckCircle2 className="w-[18px] h-[18px] mt-px flex-shrink-0 text-white/60" />
+          <ul className="mt-6 space-y-2.5">
+            {CAPABILITIES.map((item) => (
+              <li key={item} className="flex items-center gap-3 text-white/80 text-sm">
+                <span className="w-1 h-1 rounded-full bg-white/50 flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}
           </ul>
-          <p className="mt-8 pt-6 border-t border-white/20 text-white/55 text-xs tracking-wide">
-            ISO 27001:2022 · SOC 1 &amp; 2 Type II · GDPR
-          </p>
         </div>
+
+        <p className="relative text-white/55 text-xs tracking-wide">
+          ISO 27001:2022 · SOC 1 &amp; 2 Type II · GDPR
+        </p>
       </aside>
 
       {/* ── Form side ──────────────────────────────────────────────────────── */}
