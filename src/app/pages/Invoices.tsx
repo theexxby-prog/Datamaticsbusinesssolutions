@@ -376,6 +376,9 @@ export default function Invoices() {
 
   const [invoices, setInvoices] = useState<InvoiceRecord[]>(mockInvoiceRecords);
   const [viewing, setViewing] = useState<TaxInvoice | null>(null);
+  // Ageing filter for the client list — lets the whole AR position, just what
+  // is past terms, or just what is still within them be shown on demand.
+  const [arFilter, setArFilter] = useState<'all' | 'due' | 'not_due'>('all');
   const openInvoice = (invoiceNumber: string) =>
     setViewing(tccTaxInvoices.find((t) => t.invoiceNumber === invoiceNumber) ?? null);
   const [busyId, setBusyId] = useState<string | null>(null);
@@ -411,7 +414,17 @@ export default function Invoices() {
     : [];
   const rest = perspective === 'accounts'
     ? visibleInvoices.filter((inv) => !validationQueue.includes(inv))
-    : visibleInvoices;
+    : visibleInvoices.filter((inv) =>
+        arFilter === 'all' ? true
+        : arFilter === 'due' ? inv.stage === 'overdue'
+        : inv.stage === 'sent');
+
+  // Tab counts always describe the full position, not the filtered view.
+  const arCounts = {
+    all: visibleInvoices.length,
+    due: visibleInvoices.filter((i) => i.stage === 'overdue').length,
+    not_due: visibleInvoices.filter((i) => i.stage === 'sent').length,
+  };
 
   // ─── Accounts: validate → Tally sales voucher → send to client ───
   const handleValidate = async (invoice: InvoiceRecord) => {
@@ -596,6 +609,44 @@ export default function Invoices() {
         <h2 className="mb-3" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
           {perspective === 'accounts' ? 'All Invoices' : 'Your Invoices'}
         </h2>
+
+        {perspective === 'client' && (
+          <div
+            className="inline-flex items-center gap-1 p-1 rounded-xl mb-4"
+            style={{ background: 'var(--color-main-bg)', border: '1px solid var(--color-border)' }}
+            role="tablist"
+            aria-label="Filter invoices by ageing"
+          >
+            {([
+              ['all', 'All', arCounts.all],
+              ['due', 'Due', arCounts.due],
+              ['not_due', 'Not due', arCounts.not_due],
+            ] as const).map(([key, label, count]) => {
+              const active = arFilter === key;
+              return (
+                <button
+                  key={key}
+                  role="tab"
+                  aria-selected={active}
+                  onClick={() => setArFilter(key)}
+                  className="px-3.5 py-1.5 rounded-lg transition-colors"
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: active ? 600 : 500,
+                    background: active ? 'var(--color-card)' : 'transparent',
+                    color: active ? 'var(--color-text-primary)' : 'var(--color-text-secondary)',
+                    boxShadow: active ? '0 1px 2px rgba(0,0,0,0.06)' : 'none',
+                  }}
+                >
+                  {label}
+                  <span className="ml-1.5" style={{ color: 'var(--color-text-muted)', fontWeight: 500 }}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )}
         {rest.length === 0 && validationQueue.length === 0 ? (
           <EmptyState
             icon={Receipt}
