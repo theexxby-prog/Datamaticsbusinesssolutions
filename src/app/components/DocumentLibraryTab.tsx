@@ -362,7 +362,7 @@ export function DocumentLibraryTab() {
                       const isStarred = starred.includes(doc.id);
 
                       return (
-                        <TableRow key={doc.id} index={index}>
+                        <TableRow key={doc.id} animationDelay={index * 50}>
                           {/* Star */}
                           <td className="px-4 py-3 w-8">
                             <button

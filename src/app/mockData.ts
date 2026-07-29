@@ -87,6 +87,16 @@ export interface TeamMember {
   avatar?: string;
 }
 
+/**
+ * Team members can also be deactivated. The base `TeamMember` status stays
+ * narrow because the seeded roster only ever contains active/away people;
+ * this widened record is what the management screen and its modals pass
+ * around once deactivation is in play.
+ */
+export type TeamMemberRecord = Omit<TeamMember, 'status'> & {
+  status: TeamMember['status'] | 'Inactive';
+};
+
 export const mockTeamMembers: TeamMember[] = [
   {
     id: 'tm_1',

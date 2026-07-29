@@ -193,7 +193,7 @@ export default function InternalDashboard() {
                 </thead>
                 <tbody>
                   {recentCampaigns.map((campaign, index) => (
-                    <TableRow key={campaign.id} index={index}>
+                    <TableRow key={campaign.id} animationDelay={index * 50}>
                       <td className="table-td">
                         <div className="t1">
                           {campaign.name.length > 36 ? `${campaign.name.substring(0, 36)}…` : campaign.name}

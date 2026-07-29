@@ -160,7 +160,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                 <div>
                   <div className="text-sm text-gray-600">Location</div>
                   <div className="text-sm font-medium text-gray-900">
-                    {lead.location}
+                    {lead.country}
                   </div>
                 </div>
               </div>

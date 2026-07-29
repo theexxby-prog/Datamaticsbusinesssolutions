@@ -10,7 +10,6 @@ import {
   AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar, LabelList,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { mockAnalytics, mockCampaigns } from '../mockData';
 import { getCampaignDemographics, getPacing, campaignsForScope, type CampaignStatus } from '../data/demographics';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { UnifiedKpiCard } from '../components/UnifiedKpiCard';

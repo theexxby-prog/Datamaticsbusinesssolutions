@@ -1,0 +1,36 @@
+{
+  // Vite/esbuild strips types without checking them, so `vite build` will
+  // happily ship code that cannot possibly work. This config exists so
+  // `npm run typecheck` (and therefore `npm run build`) actually validates.
+  //
+  // `strict` is deliberately off: this codebase started life as a Figma
+  // export and turning it on would bury real errors under thousands of
+  // implicit-any warnings. The rules kept below are the ones that catch
+  // code which is broken at runtime — undefined identifiers, missing
+  // required props, conflicting declarations.
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "jsx": "react-jsx",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": false,
+    "isolatedModules": true,
+    "allowImportingTsExtensions": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+
+    // Unused locals are left off for now — there is a backlog of ~120 stale
+    // imports from the Figma export. Cleaning those is a separate mechanical
+    // pass; blocking the build on them today would just get the gate disabled.
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+
+    "baseUrl": ".",
+    "paths": { "@/*": ["./src/*"] }
+  },
+  "include": ["src"]
+}

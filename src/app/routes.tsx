@@ -1,7 +1,8 @@
-import { createBrowserRouter } from 'react-router';
+import { createBrowserRouter, type RouteObject } from 'react-router';
 import { lazy, Suspense } from 'react';
 import { RouteLoader } from './components/RouteLoader';
 import { ProtectedRoute } from './components/ProtectedRoute';
+import { RouteErrorBoundary } from './components/RouteErrorBoundary';
 
 // Login is eagerly imported — it is the first thing users see,
 // so it must be in the main bundle with zero extra network round-trip.
@@ -29,7 +30,9 @@ const OpsOverviewPage = lazy(() => import('./pages/OpsOverviewPage'));
 const ManagerDashboardPage = lazy(() => import('./pages/ManagerDashboardPage'));
 const TeamManagementPage = lazy(() => import('./pages/TeamManagementPage'));
 const ClientAssignmentPage = lazy(() => import('./pages/ClientAssignmentPage'));
-const ErrorBoundary = lazy(() => import('./pages/ErrorBoundary'));
+// The 404 page. (Distinct from RouteErrorBoundary, which handles pages that
+// throw — this one handles URLs that don't exist.)
+const NotFound = lazy(() => import('./pages/ErrorBoundary'));
 const CampaignApprovalsPage = lazy(() => import('./pages/CampaignApprovalsPage'));
 const AdminManagementPage = lazy(() => import('./pages/AdminManagementPage'));
 const OpsOverridePage = lazy(() => import('./pages/OpsOverridePage'));
@@ -47,7 +50,7 @@ const withSuspense = (Component: React.LazyExoticComponent<any>) => {
   );
 };
 
-export const router = createBrowserRouter([
+const routes: RouteObject[] = [
   // Login rendered directly — no Suspense needed, no lazy chunk to wait for.
   {
     path: '/',
@@ -180,6 +183,14 @@ export const router = createBrowserRouter([
   },
   {
     path: '*',
-    Component: withSuspense(ErrorBoundary),
+    Component: withSuspense(NotFound),
   },
-]);
+];
+
+// Every route gets an error boundary, applied here rather than per-entry so a
+// route added later cannot silently miss one. Without it, a single page that
+// throws replaces the whole app — sidebar and all — and there is nothing left
+// on screen to navigate with.
+export const router = createBrowserRouter(
+  routes.map(route => ({ ErrorBoundary: RouteErrorBoundary, ...route })),
+);

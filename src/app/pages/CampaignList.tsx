@@ -7,6 +7,7 @@ import {
   MoreVertical, Copy, Eye,
 } from 'lucide-react';
 import type { Campaign, CampaignStatus, CampaignSubmission, ServiceType } from '../types';
+import { mockCampaigns, mockCampaignSubmissions } from '../mockData';
 import { ProgressBar } from '../components/ProgressBar';
 import { TableRow } from '../components/TableRow';
 import { AppLayout } from '../components/AppLayout';
