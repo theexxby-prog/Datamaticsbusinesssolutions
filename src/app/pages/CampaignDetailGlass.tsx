@@ -22,7 +22,8 @@ import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
 import { NewCampaignModal, type CampaignFormData } from '../components/NewCampaignModal';
 import { CampaignHealthBadge, ReplacementTracker } from '../components/CampaignHealthBadge';
-import { CampaignActivityTimeline } from '../components/CampaignActivityTimeline';
+import { CampaignThread } from '../components/thread/CampaignThread';
+import { TalBadge } from '../components/thread/TalBadge';
 import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { allClients } from '../data/mockClients';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
@@ -146,6 +147,7 @@ export default function CampaignDetail() {
                   {campaign.startDate} - {campaign.endDate}
                 </span>
               )}
+              <TalBadge campaignId={campaign.id} />
             </div>
           </div>
           <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
@@ -383,13 +385,13 @@ export default function CampaignDetail() {
               <ConvertrQAStats {...convertrStats} />
             )}
 
-            {/* Activity Timeline */}
-            <div className="glass-card p-6">
-              <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-4">
-                Campaign Activity
-              </h2>
-              <CampaignActivityTimeline activities={activities} />
-            </div>
+            {/* Discussion — comments, documents and change requests, with
+                system activity folded in chronologically. */}
+            <CampaignThread
+              campaignId={campaign.id}
+              campaignName={campaign.name}
+              activities={activities}
+            />
           </div>
 
           {/* Right Column: Metadata & Detailed Trackers (1/3 width) */}
@@ -431,7 +433,7 @@ export default function CampaignDetail() {
                     Account Manager
                   </div>
                   <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
-                    Sarah Johnson
+                    Brijesh Singh
                   </div>
                 </div>
               </div>

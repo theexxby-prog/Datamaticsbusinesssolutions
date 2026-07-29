@@ -7,6 +7,9 @@ import { allClients } from '../data/mockClients';
 import { AnimatedDonutChart } from '../components/AnimatedDonutChart';
 import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
 import { LeadUploadModal } from '../components/LeadUploadModal';
+import { CampaignThread } from '../components/thread/CampaignThread';
+import { TalBadge } from '../components/thread/TalBadge';
+import { getActivitiesForCampaign } from '../data/campaignActivities';
 import { useParams, useNavigate } from 'react-router';
 import { useState } from 'react';
 
@@ -86,6 +89,7 @@ export default function InternalCampaignDetail() {
                   {campaign.startDate} – {campaign.endDate}
                 </span>
               )}
+              <TalBadge campaignId={campaign.id} />
             </div>
           </div>
           <div className="flex flex-wrap gap-2">
@@ -265,6 +269,14 @@ export default function InternalCampaignDetail() {
             </p>
           </div>
         )}
+
+        {/* The client-facing discussion, from this side of it — the campaign
+            manager is the one who acknowledges and closes requests. */}
+        <CampaignThread
+          campaignId={campaign.id}
+          campaignName={campaign.name}
+          activities={getActivitiesForCampaign(campaign.id)}
+        />
       </div>
       <LeadUploadModal
         isOpen={showUploadModal}
