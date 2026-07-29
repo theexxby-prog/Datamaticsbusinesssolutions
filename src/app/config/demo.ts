@@ -3,7 +3,7 @@
  *
  * When the environment variable VITE_CLIENT_DEMO is set to '1' at build time,
  * the app becomes a client-only demo:
- *   - Login offers only the demo client (John Carter / Acme Corp) — no
+ *   - Login offers only the demo client (Renuka Lawless / The Channel Company) — no
  *     internal personas exist.
  *   - Every internal route (/internal/*, ops and manager dashboards)
  *     redirects to the client dashboard.

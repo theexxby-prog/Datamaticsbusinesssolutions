@@ -32,7 +32,7 @@ const DELIVERY_METHODS = [
   { value: 'salesforce', label: '☁️ Salesforce CRM' },
   { value: 'hubspot',    label: '🟠 HubSpot CRM' },
   { value: 'pipedrive',  label: '🟣 Pipedrive CRM' },
-  { value: 'convertr',   label: '⚡ Convertr' },
+  { value: 'convertr',   label: '⚡ Automated Delivery' },
   { value: 'leadbyte',   label: '📦 LeadByte' },
   { value: 'ftp',        label: '🗂️ FTP / SFTP' },
 ];
@@ -477,8 +477,8 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Convertr HTTP POST endpoint URL <span className="text-red-500">*</span></label>
-              <input type="url" value={deliveryConfig.endpointUrl || ''} onChange={e => setDC('endpointUrl', e.target.value)} placeholder="https://convertr.io/post/..." className={inputCls} />
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery endpoint URL <span className="text-red-500">*</span></label>
+              <input type="url" value={deliveryConfig.endpointUrl || ''} onChange={e => setDC('endpointUrl', e.target.value)} placeholder="https://your-endpoint.com/post/..." className={inputCls} />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1.5">Auth token <span className="text-gray-400 font-normal">(optional)</span></label>
@@ -614,7 +614,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
-                  placeholder="e.g., Enterprise IT Security Q1 2026"
+                  placeholder="e.g., Channel Partner Demand Gen Q4 2026"
                 />
                 {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
@@ -1021,7 +1021,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 <h4 className="font-semibold text-blue-900 mb-3">Email Template Example:</h4>
                 <div className="bg-white rounded p-4 text-sm text-gray-700 space-y-2 border border-blue-100">
                   <p><strong>Subject:</strong> New Campaign Request - [Your Campaign Name]</p>
-                  <p><strong>Campaign Name:</strong> Enterprise IT Security Q1 2026</p>
+                  <p><strong>Campaign Name:</strong> Channel Partner Demand Gen Q4 2026</p>
                   <p><strong>Geography:</strong> US (California, Texas, New York)</p>
                   <p><strong>Employee Size:</strong> 500 to 2000</p>
                   <p><strong>Revenue:</strong> $50M to $500M</p>

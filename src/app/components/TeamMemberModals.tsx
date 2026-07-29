@@ -665,7 +665,7 @@ interface ActivityEntry {
 
 const ACTIVITY_BY_MEMBER: Record<string, ActivityEntry[]> = {
   tm_1: [
-    { id: 'a1', type: 'upload', label: 'Uploaded leads batch', detail: 'acme-corp_security_march_batch1.csv · 450 rows', time: 'Mar 2, 2026 · 10:30 AM', status: 'warning' },
+    { id: 'a1', type: 'upload', label: 'Uploaded leads batch', detail: 'tcc_lenovo_fifa_july_batch1.csv · 450 rows', time: 'Mar 2, 2026 · 10:30 AM', status: 'warning' },
     { id: 'a2', type: 'upload', label: 'Uploaded leads batch', detail: 'meridian_uk_bant_batch3.csv · 172 rows', time: 'Feb 28, 2026 · 1:00 PM', status: 'success' },
     { id: 'a3', type: 'campaign', label: 'Created new campaign', detail: 'AI-Powered SaaS Lead Generation Q2 2026', time: 'Feb 28, 2026 · 11:00 AM', status: 'success' },
     { id: 'a4', type: 'approval', label: 'Submitted for approval', detail: 'APAC Cloud Migration Leads – Q1 2026', time: 'Feb 26, 2026 · 9:15 AM', status: 'success' },

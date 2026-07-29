@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Mail, Phone, Building2, MapPin, Calendar, Award, TrendingUp, MessageSquare, Clock, User, ExternalLink, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Lead } from '../mockData';
+import { formatDateLong, formatDateShort } from '../utils/formatDate';
 
 interface LeadDetailDrawerProps {
   lead: Lead | null;
@@ -37,8 +38,8 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
 
   // Mock notes
   const notes = [
-    { date: '2026-02-28', author: 'John Carter', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
-    { date: '2026-02-26', author: 'Anish Akkoat', text: 'Company matches ICP perfectly. High potential for conversion.' },
+    { date: '2026-02-28', author: 'Renuka Lawless', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
+    { date: '2026-02-26', author: 'Brijesh Singh', text: 'Company matches ICP perfectly. High potential for conversion.' },
   ];
 
   const isTerminal = lead.status === 'Accepted' || lead.status === 'Rejected';
@@ -195,7 +196,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                 <div>
                   <div className="text-sm text-gray-600">Delivered</div>
                   <div className="text-sm font-medium text-gray-900">
-                    {new Date(lead.deliveryDate).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
+                    {formatDateLong(lead.deliveryDate)}
                   </div>
                 </div>
               </div>
@@ -219,7 +220,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                         {activity.type}
                       </div>
                       <div className="text-xs text-gray-600">
-                        {new Date(activity.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                        {formatDateShort(activity.date)}
                       </div>
                     </div>
                     <div className="text-sm text-gray-600">
@@ -248,7 +249,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                       {note.author}
                     </span>
                     <span className="text-xs text-gray-600">
-                      • {new Date(note.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                      • {formatDateShort(note.date)}
                     </span>
                   </div>
                   <p className="text-sm text-gray-600">

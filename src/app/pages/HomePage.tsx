@@ -19,6 +19,7 @@ import { mockJobCards } from '../data/mockJobCards';
 import { PersonAvatar } from '../components/PersonAvatar';
 import { getPersonPhoto } from '../data/personPhotos';
 import { getDashPrefs, subscribeDashPrefs, type DashPrefs } from '../data/dashboardPrefs';
+import { formatDateShort } from '../utils/formatDate';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getGreeting() {
@@ -52,7 +53,7 @@ export default function HomePage() {
   const { currentUser } = useAuth();
 
   const accountTeam = getAccountTeam('client_1');
-  const acmeClient = allClients.find(c => c.id === 'client_1');
+  const tccClient = allClients.find(c => c.id === 'client_1');
 
   // ── Email digest modal ──────────────────────────────────────────────────────
   const [showDigest, setShowDigest] = useState(false);
@@ -71,16 +72,22 @@ export default function HomePage() {
   // ── Leads period toggle ─────────────────────────────────────────────────────
   const [leadsPeriod, setLeadsPeriod] = useState<'month' | 'year'>('month');
 
-  // ── Fixed leads values ──────────────────────────────────────────────────────
-  const leadsThisMonth = 1265;
-  const leadsThisYear = 14820;
+  // ── Leads values — derived from the client's seeded campaigns ──────────────
+  const leadsThisMonth = useMemo(
+    () => (tccClient?.campaigns ?? []).reduce((sum, c) => sum + (c.leadsThisMonth ?? 0), 0),
+    [tccClient],
+  );
+  const leadsThisYear = useMemo(
+    () => (tccClient?.campaigns ?? []).reduce((sum, c) => sum + (c.deliveredLeads ?? c.totalLeads ?? 0), 0),
+    [tccClient],
+  );
   const leadsValue = leadsPeriod === 'month' ? leadsThisMonth : leadsThisYear;
   const leadsTrend = leadsPeriod === 'month' ? '+12%' : '+18%';
   const leadsLabel = leadsPeriod === 'month' ? 'This month' : 'Year to date';
 
   // ── Campaign stats ──────────────────────────────────────────────────────────
   const campaignStats = useMemo(() => {
-    const camps = acmeClient?.campaigns ?? [];
+    const camps = tccClient?.campaigns ?? [];
     return {
       total: camps.length,
       live: camps.filter(c => c.status === 'active').length,
@@ -88,26 +95,27 @@ export default function HomePage() {
       paused: camps.filter(c => c.status === 'paused').length,
       completed: camps.filter(c => c.status === 'completed').length,
     };
-  }, [acmeClient]);
+  }, [tccClient]);
 
   // ── Total Business: accepted leads × CPL per campaign ──────────────────────
   const businessData = useMemo(() => {
-    const camps = acmeClient?.campaigns ?? [];
+    const camps = tccClient?.campaigns ?? [];
     let monthlyTotal = 0;
     let yearlyTotal = 0;
     camps.forEach(camp => {
-      const { budget = 0, goalLeads = 0, totalLeads = 0, leadsThisMonth: ltm = 0, acceptanceRate = 0 } = camp;
+      const { budget = 0, goalLeads = 0, deliveredLeads = 0, totalLeads = 0, leadsThisMonth: ltm = 0 } = camp;
       if (!budget || !goalLeads) return;
       const cpl = budget / goalLeads;
-      const af = acceptanceRate / 100;
-      yearlyTotal += Math.round(totalLeads * af) * cpl;
-      monthlyTotal += Math.round(ltm * af) * cpl;
+      // Accepted === delivered for these campaigns, so billable is delivered × CPL
+      // with no gap to explain — this ties exactly to the invoice line items.
+      yearlyTotal += (deliveredLeads || totalLeads) * cpl;
+      monthlyTotal += ltm * cpl;
     });
     return {
       monthly: monthlyTotal, yearly: yearlyTotal,
       monthlyTrend: '+8.4%', yearlyTrend: '+21.2%',
     };
-  }, [acmeClient]);
+  }, [tccClient]);
 
   const bizValue = bizPeriod === 'month' ? businessData.monthly : businessData.yearly;
   const bizTrend = bizPeriod === 'month' ? businessData.monthlyTrend : businessData.yearlyTrend;
@@ -131,16 +139,48 @@ export default function HomePage() {
   const overdueDays = topOverdue?.dueDate
     ? Math.max(1, Math.floor((Date.now() - new Date(topOverdue.dueDate).getTime()) / 86400000))
     : 0;
-  const fmtShortDate = (iso?: string) =>
-    iso ? new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }) : '';
+  const fmtShortDate = (iso?: string) => formatDateShort(iso);
+
+  // ── Campaign Snapshot — derived from the seeded campaigns ──────────────────
+  const campaignSnapshot = useMemo(() => (tccClient?.campaigns ?? []).map((c) => {
+    const target = c.goalLeads ?? c.target ?? 0;
+    const delivered = c.deliveredLeads ?? c.delivered ?? 0;
+    return {
+      id: c.id,
+      name: c.name,
+      status: c.status === 'active' ? 'Live' : c.status === 'completed' ? 'Completed' : 'Scheduled',
+      statusCls: 'bg-emerald-50 text-emerald-700',
+      progress: target > 0 ? Math.round((delivered / target) * 100) : 0,
+      done: `${delivered.toLocaleString('en-US')} / ${target.toLocaleString('en-US')}`,
+    };
+  }), [tccClient]);
 
   // ── Recent Activity — mirrors the current module data ───────────────────────
+  const latestDue = dueInvoices[0];
+  const latestPaid = myInvoices.filter((i) => i.stage === 'paid')[0];
+  const leadCampaign = campaignSnapshot[0];
   const recentActivity = [
-    { id: 1, icon: FileText,    text: `Invoice INV-2026-001313 issued for $6,660 — due Aug 1`, time: '1 hour ago', color: '#6B7280' },
-    { id: 2, icon: FilePenLine, text: 'Job card JC-2026-0047 (Enterprise Data Platform Leads) sent for your signature', time: '3 hours ago', color: '#F59E0B' },
-    { id: 3, icon: Users,       text: 'New lead delivered: David Kim – Director of IT', time: '5 hours ago', color: '#8B5CF6' },
-    { id: 4, icon: Layers,      text: 'APAC Cloud Migration campaign reached 62% completion', time: 'Yesterday', color: '#3B82F6' },
-    { id: 5, icon: CheckCircle2, text: 'Payment received for INV-2026-001271 — $11,250, receipt on file', time: '2 weeks ago', color: '#10B981' },
+    ...(latestDue ? [{
+      id: 1, icon: FileText,
+      text: `Invoice ${latestDue.invoiceNumber} issued for $${latestDue.total.toLocaleString('en-US')} — due ${fmtShortDate(latestDue.dueDate)}`,
+      time: '1 hour ago', color: '#6B7280',
+    }] : []),
+    ...(topSignature ? [{
+      id: 2, icon: FilePenLine,
+      text: `Job card ${topSignature.id} (${topSignature.campaignName}) sent for your signature`,
+      time: '3 hours ago', color: '#F59E0B',
+    }] : []),
+    { id: 3, icon: Users, text: 'New lead delivered: Marcus Whitfield – IT Director, Summit Managed Services', time: '5 hours ago', color: '#8B5CF6' },
+    ...(leadCampaign ? [{
+      id: 4, icon: Layers,
+      text: `${leadCampaign.name} campaign reached ${leadCampaign.progress}% completion`,
+      time: 'Yesterday', color: '#3B82F6',
+    }] : []),
+    ...(latestPaid ? [{
+      id: 5, icon: CheckCircle2,
+      text: `Payment received for ${latestPaid.invoiceNumber} — $${latestPaid.total.toLocaleString('en-US')}, receipt on file`,
+      time: '2 weeks ago', color: '#10B981',
+    }] : []),
   ];
 
   // ── Needs Attention — derived from the Invoices + Documents modules ─────────
@@ -166,7 +206,7 @@ export default function HomePage() {
     {
       id: 4, type: 'info' as const, icon: MessageSquare,
       title: 'Open support ticket',
-      text: 'TKT-001 · Lead verification issue on Healthcare Content Syndication — In Progress',
+      text: 'TKT-001 · Additional lead qualification fields on Lenovo Intel FIFA AI — In Progress',
       cta: 'View Ticket', action: () => navigate('/support'),
     },
   ];
@@ -439,24 +479,33 @@ export default function HomePage() {
                 </div>
               </div>
 
-              {/* Pending invoice */}
+              {/* Invoice status — the whole tile follows the state, so an
+                  account in good standing never renders a red "Overdue" label. */}
               <motion.button
                 onClick={() => navigate('/invoices')}
                 className="w-full flex items-center gap-3 p-3 rounded-xl mb-2 text-left group"
-                style={{ background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.15)' }}
-                whileHover={{ background: 'rgba(239,68,68,0.09)' }}
+                style={topOverdue
+                  ? { background: 'rgba(239,68,68,0.05)', border: '1px solid rgba(239,68,68,0.15)' }
+                  : { background: 'rgba(16,185,129,0.05)', border: '1px solid rgba(16,185,129,0.15)' }}
+                whileHover={{ background: topOverdue ? 'rgba(239,68,68,0.09)' : 'rgba(16,185,129,0.09)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="w-8 h-8 rounded-lg bg-red-50 flex items-center justify-center flex-shrink-0">
-                  <FileText className="w-4 h-4 text-red-500" />
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${topOverdue ? 'bg-red-50' : 'bg-emerald-50'}`}>
+                  <FileText className={`w-4 h-4 ${topOverdue ? 'text-red-500' : 'text-emerald-600'}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-red-600">Overdue Invoice</p>
+                  <p className={`text-xs font-semibold ${topOverdue ? 'text-red-600' : 'text-emerald-700'}`}>
+                    {topOverdue ? 'Overdue Invoice' : 'Invoices in good standing'}
+                  </p>
                   <p className="text-xs text-[#6B7280] mt-0.5 truncate">
-                    {topOverdue ? `${topOverdue.invoiceNumber} · $${topOverdue.total.toLocaleString('en-US')} due` : 'All invoices settled'}
+                    {topOverdue
+                      ? `${topOverdue.invoiceNumber} · $${topOverdue.total.toLocaleString('en-US')} due`
+                      : latestDue
+                        ? `${latestDue.invoiceNumber} · $${latestDue.total.toLocaleString('en-US')} due ${fmtShortDate(latestDue.dueDate)}`
+                        : 'All invoices settled'}
                   </p>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-red-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                <ArrowUpRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ${topOverdue ? 'text-red-400' : 'text-emerald-400'}`} />
               </motion.button>
 
               {/* Awaiting signature */}
@@ -560,11 +609,7 @@ export default function HomePage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-            {[
-              { id: 'camp_1a', name: 'Enterprise IT Security – US Q1 2026',       status: 'Live',             statusCls: 'bg-emerald-50 text-emerald-700', progress: 68, done: '680 / 1,000' },
-              { id: 'camp_1b', name: 'APAC Cloud Migration Leads – Q1 2026',       status: 'Live',             statusCls: 'bg-emerald-50 text-emerald-700', progress: 62, done: '374 / 600'   },
-              { id: 'camp_1d', name: 'AI-Powered SaaS Lead Generation Q2 2026',    status: 'Pending Approval', statusCls: 'bg-red-50 text-[#BA2027]',        progress: 0,  done: '0 / 400'    },
-            ].map(c => (
+            {campaignSnapshot.map(c => (
               <motion.div
                 key={c.id}
                 className="rounded-xl p-4 bg-white border border-[#E5E7EB] cursor-pointer"

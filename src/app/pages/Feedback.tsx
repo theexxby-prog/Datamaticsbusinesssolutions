@@ -65,16 +65,16 @@ const coreAutomations = [
   },
   {
     icon: Upload,
-    title: 'Convertr — Auto-Deliver Leads',
+    title: 'Automated Lead Delivery',
     tagline: 'No spreadsheets. No manual uploads. Ever.',
     description:
-      'When leads are ready for delivery, the platform automatically sends them directly into each client\'s Convertr campaign in real time.',
+      'When leads are ready for delivery, the platform automatically sends them straight into each client\'s delivery pipeline in real time.',
     bullets: [
-      'Convertr validates and dedupes each lead instantly upon receipt',
+      'Each lead is validated and deduped instantly upon receipt',
       'Accepted/rejected status feeds back into the platform automatically',
-      'Rejection reasons visible on the dashboard — full visibility on failed leads',
+      'Delivery status visible on the dashboard — full visibility end to end',
       'Campaign delivery counters update live as leads are accepted',
-      'Leads flow automatically into the client\'s CRM via Convertr\'s 45+ integrations',
+      'Leads flow automatically into the client\'s CRM via 45+ native integrations',
     ],
     saves: '~1–3 hrs/delivery',
     eliminates: 'Spreadsheet prep & manual lead upload',
@@ -558,7 +558,7 @@ export default function Feedback() {
             'Voice Dictation (Mic icon) - Web Speech API; live interim transcript; pulsing stop button.',
             'Submit via EmailJS - loading spinner, success/error states, auto-reset after 3 seconds.',
             '"Why This Platform Matters" - collapsible: 3 problems, 4 strategic pillars, strategic play.',
-            '"Coming Features" - collapsible: Salesforce, DocuSign, Convertr, Tally, Ask Praful AI.',
+            '"Coming Features" - collapsible: Salesforce, DocuSign, automated lead delivery, Tally, Ask Praful AI.',
             'Each automation card is individually expandable: capabilities, build time, what it eliminates.',
           ]},
         ],
@@ -707,7 +707,7 @@ export default function Feedback() {
           { bullets: [
             'Salesforce - Auto-create Opportunities on campaign creation with two-way sync. ETA: Q3 2026.',
             'DocuSign - Auto-generate and email Job Cards for signature on campaign approval. ETA: Q3 2026.',
-            'Convertr - Auto-deliver leads to client Convertr campaigns in real time. ETA: Q4 2026.',
+            'Automated lead delivery - deliver leads into client campaigns in real time. ETA: Q4 2026.',
             'Tally (TallyPrime) - Auto-post invoices, receipts, credit notes, and new client ledgers. ETA: Q4 2026.',
             'Ask Praful AI - Campaign intelligence, lead insights, KPI summaries, overdue payment visibility, and automated actions. ETA: TBD.',
           ]},
@@ -1009,7 +1009,7 @@ export default function Feedback() {
                       The Strategic Play
                     </h5>
                     <p className="t2 leading-relaxed">
-                      Once clients use our platform and we integrate with their tools (Convertr, Salesforce, DocuSign, Tally), switching away doesn't just mean finding a new partner — it means replacing an entire workflow.{' '}
+                      Once clients use our platform and we integrate with their tools (Salesforce, DocuSign, lead delivery, Tally), switching away doesn't just mean finding a new partner — it means replacing an entire workflow.{' '}
                       <strong style={{ color: 'var(--color-text-primary)' }}>We become infrastructure, not just a supplier.</strong> That's the definition of a sticky relationship.
                     </p>
                   </div>
@@ -1054,7 +1054,7 @@ export default function Feedback() {
                       5 features
                     </span>
                   </div>
-                  <p className="t3 mt-0.5">Salesforce · DocuSign · Convertr · Tally · Ask Praful AI</p>
+                  <p className="t3 mt-0.5">Salesforce · DocuSign · Lead Delivery · Tally · Ask Praful AI</p>
                 </div>
               </div>
               <motion.div animate={{ rotate: showComingFeatures ? 180 : 0 }} transition={{ duration: 0.25 }}>

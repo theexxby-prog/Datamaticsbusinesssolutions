@@ -10,6 +10,7 @@ import { TableRow } from './TableRow';
 import { toast } from 'sonner';
 import { AnimatedCounter } from './AnimatedCounter';
 import { EmptyState } from './EmptyState';
+import { formatDate } from '../utils/formatDate';
 
 interface Document {
   id: string;
@@ -28,29 +29,29 @@ const mockDocuments: Document[] = [
     id: '1',
     name: 'Master Service Agreement - Q1 2026.pdf',
     type: 'Contract',
-    uploadedBy: 'Sarah Johnson',
+    uploadedBy: 'Vishal Mehta',
     uploadDate: '2026-01-15',
     size: '2.4 MB',
     status: 'Active',
-    campaign: 'Enterprise IT Security Campaign Q1 2026',
+    campaign: 'Lenovo Intel FIFA AI',
     tags: ['Legal', 'Important'],
   },
   {
     id: '2',
-    name: 'Statement of Work - Healthcare Campaign.pdf',
+    name: 'Statement of Work - Uptime Solutions CRN2.pdf',
     type: 'SOW',
-    uploadedBy: 'Michael Chen',
+    uploadedBy: 'Vishal Mehta',
     uploadDate: '2026-02-01',
     size: '1.8 MB',
     status: 'Active',
-    campaign: 'Healthcare Content Syndication - Feb 2026',
+    campaign: 'Uptime Solutions CRN2 - Lead Gen',
     tags: ['Active', 'Q1'],
   },
   {
     id: '3',
     name: 'Non-Disclosure Agreement.pdf',
     type: 'NDA',
-    uploadedBy: 'Sarah Johnson',
+    uploadedBy: 'Vishal Mehta',
     uploadDate: '2025-12-10',
     size: '980 KB',
     status: 'Active',
@@ -58,7 +59,7 @@ const mockDocuments: Document[] = [
   },
   {
     id: '4',
-    name: 'Campaign Performance Report - Jan 2026.xlsx',
+    name: 'Campaign Performance Report - Jun 2026.xlsx',
     type: 'Report',
     uploadedBy: 'Data Analytics Team',
     uploadDate: '2026-02-05',
@@ -69,7 +70,7 @@ const mockDocuments: Document[] = [
   },
   {
     id: '5',
-    name: 'Invoice #INV-2026-001.pdf',
+    name: 'Invoice INV-2026-001271.pdf',
     type: 'Invoice',
     uploadedBy: 'Billing Department',
     uploadDate: '2026-01-30',
@@ -79,18 +80,18 @@ const mockDocuments: Document[] = [
   },
   {
     id: '6',
-    name: 'SaaS Campaign SOW - Feb 2026.pdf',
+    name: 'Eaton FY2026 Q3 SOW.pdf',
     type: 'SOW',
-    uploadedBy: 'Anish Akkoat',
+    uploadedBy: 'Brijesh Singh',
     uploadDate: '2026-02-10',
     size: '1.1 MB',
     status: 'Active',
-    campaign: 'SaaS Appointment Setting Campaign - Feb 2026',
+    campaign: 'Eaton 2026 Full Year 1_Q3',
     tags: ['Active'],
   },
   {
     id: '7',
-    name: 'Q4 2025 Campaign Completion Report.pdf',
+    name: 'Q2 2026 Campaign Completion Report.pdf',
     type: 'Report',
     uploadedBy: 'Data Analytics Team',
     uploadDate: '2026-01-05',
@@ -117,7 +118,7 @@ const statusConfig: Record<Document['status'], { label: string; color: string; b
 };
 
 function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(dateStr);
 }
 
 export function DocumentLibraryTab() {

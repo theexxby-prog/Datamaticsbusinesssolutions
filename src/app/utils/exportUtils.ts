@@ -1,5 +1,6 @@
 import type { Lead } from '../mockData';
 import type { Invoice } from '../mockInvoices';
+import { formatDate } from './formatDate';
 
 // ─── CSV Export ──────────────────────────────────────────────────────────────
 
@@ -122,10 +123,10 @@ export async function generateInvoicePDF(invoice: Invoice) {
   y += 7;
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(10);
-  doc.text('Acme Corp', 15, y);
+  doc.text('The Channel Company', 15, y);
   y += 5;
   doc.setTextColor(...gray);
-  doc.text('John Carter, VP of Sales', 15, y);
+  doc.text('Renuka Lawless, VP of Sales', 15, y);
   doc.setTextColor(...dark);
 
   // From
@@ -227,7 +228,7 @@ function formatDateForFile() {
 }
 
 function formatDateForDisplay(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(dateStr);
 }
 
 // ─── Reports & Analytics Export (PDF / CSV / XLSX) ───────────────────────────

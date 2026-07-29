@@ -13,7 +13,7 @@ export const mockInvoices: Invoice[] = [
   {
     id: '1',
     invoiceNumber: 'INV-2026-001234',
-    campaignName: 'Healthcare Content Syndication - Feb 2026',
+    campaignName: 'Uptime Solutions CRN2 - Lead Gen',
     issueDate: '2026-03-01',
     dueDate: '2026-03-31',
     amount: 29750,
@@ -22,7 +22,7 @@ export const mockInvoices: Invoice[] = [
   {
     id: '2',
     invoiceNumber: 'INV-2026-001189',
-    campaignName: 'Enterprise IT Security Campaign Q1 2026',
+    campaignName: 'Lenovo Intel FIFA AI',
     issueDate: '2026-02-15',
     dueDate: '2026-03-17',
     amount: 14400,
@@ -40,7 +40,7 @@ export const mockInvoices: Invoice[] = [
   {
     id: '4',
     invoiceNumber: 'INV-2026-001156',
-    campaignName: 'Enterprise IT Security Campaign Q1 2026',
+    campaignName: 'Lenovo Intel FIFA AI',
     issueDate: '2026-01-31',
     dueDate: '2026-03-02',
     amount: 11250,
