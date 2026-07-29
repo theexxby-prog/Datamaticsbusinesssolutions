@@ -12,6 +12,7 @@ import { mockCampaigns } from '../mockData';
 import { allClients } from '../data/mockClients';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { ExportModal } from '../components/ExportModal';
+import type { ReportsPDFData } from '../utils/exportUtils';
 import { toast } from 'sonner';
 import { PersonAvatar } from '../components/PersonAvatar';
 
@@ -94,6 +95,36 @@ export default function InternalReports() {
   const prevMonth = monthlyData[monthlyData.length - 2];
   const leadsGrowth = (((lastMonth.leads - prevMonth.leads) / prevMonth.leads) * 100).toFixed(1);
   const revenueGrowth = (((lastMonth.revenue - prevMonth.revenue) / prevMonth.revenue) * 100).toFixed(1);
+
+  // Export payload — the same shape the client-facing Reports page hands to
+  // ExportModal, built from the figures already on screen. No `pacing`: this
+  // roll-up spans every client and has no single delivery target.
+  const operatorLeads = operatorData.reduce((sum, o) => sum + o.leads, 0);
+  const reportData: ReportsPDFData = {
+    clientName: 'Datamatics Business Solutions',
+    asOf: `${lastMonth.month} 2026`,
+    scope: 'Internal',
+    campaignLabel: `All clients · ${totalClients} accounts`,
+    kpis: [
+      { label: 'Total Leads', value: totalLeads.toLocaleString(), delta: `${Number(leadsGrowth) >= 0 ? '▲' : '▼'} ${Math.abs(Number(leadsGrowth))}%`, up: Number(leadsGrowth) >= 0 },
+      { label: 'Revenue', value: `$${(totalRevenue / 1000).toFixed(0)}K`, delta: `${Number(revenueGrowth) >= 0 ? '▲' : '▼'} ${Math.abs(Number(revenueGrowth))}%`, up: Number(revenueGrowth) >= 0 },
+      { label: 'Avg Acceptance', value: `${avgAcceptance}%` },
+      { label: 'Campaigns', value: String(totalCampaigns) },
+      { label: 'Clients', value: String(totalClients) },
+    ],
+    trend: monthlyData.map(m => ({ label: m.month, current: m.revenue, prev: null })),
+    hasPrevYear: false,
+    demographics: [
+      { title: 'Industry Distribution', rows: industryData.map(i => ({ name: i.name, percentage: i.value })) },
+      { title: 'Leads by Operator', rows: operatorData.map(o => ({ name: o.name, percentage: Math.round((o.leads / operatorLeads) * 100) })) },
+    ],
+    conversion: {
+      sent: totalLeads,
+      accepted: Math.round((totalLeads * avgAcceptance) / 100),
+      acceptedPct: avgAcceptance,
+      rejectedPct: 100 - avgAcceptance,
+    },
+  };
 
   return (
     <AppLayout>
@@ -544,6 +575,7 @@ export default function InternalReports() {
       <ExportModal
         isOpen={showExportModal}
         onClose={() => setShowExportModal(false)}
+        reportData={reportData}
       />
     </AppLayout>
   );

@@ -7,7 +7,7 @@ import {
   ArrowRight, PowerOff, RefreshCw, ChevronDown, ChevronUp,
   AlertCircle, LayoutGrid, Shield,
 } from 'lucide-react';
-import { mockTeamMembers, TeamMember } from '../mockData';
+import { mockTeamMembers, TeamMember, TeamMemberRecord } from '../mockData';
 import { allClients, Client } from '../data/mockClients';
 import { useAuth } from '../context/AuthContext';
 import { AnimatedCounter } from '../components/AnimatedCounter';
@@ -34,9 +34,7 @@ type ModalType =
   | 'bulk-reassign'
   | null;
 
-type ExtendedMember = Omit<TeamMember, 'status'> & {
-  status: 'Active' | 'Away' | 'Inactive';
-};
+type ExtendedMember = TeamMemberRecord;
 
 // ─── Role badge ─────────────────────────────────────────────────────────────────
 

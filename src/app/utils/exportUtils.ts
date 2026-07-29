@@ -244,7 +244,8 @@ export interface ReportsPDFData {
   scope: string;
   campaignLabel: string;
   kpis: ReportsKPI[];
-  pacing: { delivered: number; target: number; pct: number; onTrack: boolean };
+  /** Omitted when the report has no delivery target to pace against. */
+  pacing?: { delivered: number; target: number; pct: number; onTrack: boolean };
   trend: ReportsTrendPoint[];
   hasPrevYear: boolean;
   demographics: ReportsDemoPanel[];
@@ -319,20 +320,23 @@ export async function generateReportsPDF(
   y = kpiTop + kpiRows * (bh + gap) + 2;
 
   // Pacing
-  sectionTitle('This month — target vs delivered');
-  ensure(16);
-  doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(...dark);
-  const delTxt = d.pacing.delivered.toLocaleString();
-  doc.text(delTxt, ML, y);
-  doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...gray);
-  doc.text(` / ${d.pacing.target.toLocaleString()} target · ${d.pacing.pct}%`, ML + doc.getTextWidth(delTxt) + 1, y);
-  doc.setFont('helvetica', 'bold'); doc.setTextColor(...(d.pacing.onTrack ? green : amber));
-  doc.text(d.pacing.onTrack ? 'On track' : 'Behind pace', PW - ML, y, { align: 'right' });
-  y += 3;
-  doc.setFillColor(...track); doc.roundedRect(ML, y, CW, 4, 2, 2, 'F');
-  doc.setFillColor(...(d.pacing.onTrack ? green : amber));
-  doc.roundedRect(ML, y, Math.max(2, Math.min(CW, (d.pacing.pct / 100) * CW)), 4, 2, 2, 'F');
-  y += 12;
+  const pacing = d.pacing;
+  if (pacing) {
+    sectionTitle('This month — target vs delivered');
+    ensure(16);
+    doc.setFont('helvetica', 'bold'); doc.setFontSize(13); doc.setTextColor(...dark);
+    const delTxt = pacing.delivered.toLocaleString();
+    doc.text(delTxt, ML, y);
+    doc.setFont('helvetica', 'normal'); doc.setFontSize(9); doc.setTextColor(...gray);
+    doc.text(` / ${pacing.target.toLocaleString()} target · ${pacing.pct}%`, ML + doc.getTextWidth(delTxt) + 1, y);
+    doc.setFont('helvetica', 'bold'); doc.setTextColor(...(pacing.onTrack ? green : amber));
+    doc.text(pacing.onTrack ? 'On track' : 'Behind pace', PW - ML, y, { align: 'right' });
+    y += 3;
+    doc.setFillColor(...track); doc.roundedRect(ML, y, CW, 4, 2, 2, 'F');
+    doc.setFillColor(...(pacing.onTrack ? green : amber));
+    doc.roundedRect(ML, y, Math.max(2, Math.min(CW, (pacing.pct / 100) * CW)), 4, 2, 2, 'F');
+    y += 12;
+  }
 
   // Billable trend (vector bar chart)
   if (opts.includeCharts) {
@@ -455,10 +459,12 @@ export function exportReportsCSV(d: ReportsPDFData) {
   L.push(['Metric', 'Value', 'Change'].map(csvCell).join(','));
   d.kpis.forEach((k) => L.push([k.label, k.value, k.delta || ''].map(csvCell).join(',')));
   L.push('');
-  L.push('Pacing');
-  L.push(['Delivered', 'Target', 'Percent', 'Status'].map(csvCell).join(','));
-  L.push([d.pacing.delivered, d.pacing.target, `${d.pacing.pct}%`, d.pacing.onTrack ? 'On track' : 'Behind pace'].map(csvCell).join(','));
-  L.push('');
+  if (d.pacing) {
+    L.push('Pacing');
+    L.push(['Delivered', 'Target', 'Percent', 'Status'].map(csvCell).join(','));
+    L.push([d.pacing.delivered, d.pacing.target, `${d.pacing.pct}%`, d.pacing.onTrack ? 'On track' : 'Behind pace'].map(csvCell).join(','));
+    L.push('');
+  }
   L.push('Billing Trend');
   L.push(['Month', 'This Year', d.hasPrevYear ? 'Last Year' : ''].map(csvCell).join(','));
   d.trend.forEach((t) => L.push([t.label, t.current, d.hasPrevYear ? (t.prev ?? '') : ''].map(csvCell).join(',')));

@@ -5,7 +5,7 @@ import {
   Clock, CheckCircle2, Upload, ChevronDown, UserPlus, Building2,
   ArrowRight, Activity, Briefcase, RefreshCw,
 } from 'lucide-react';
-import { TeamMember } from '../mockData';
+import { TeamMember, TeamMemberRecord } from '../mockData';
 import { Client } from '../data/mockClients';
 import { PersonAvatar } from './PersonAvatar';
 
@@ -143,8 +143,8 @@ function GhostButton({ onClick, children }: { onClick: () => void; children: Rea
 export interface EditMemberModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: TeamMember;
-  onSave: (updated: TeamMember) => void;
+  member: TeamMemberRecord;
+  onSave: (updated: TeamMemberRecord) => void;
 }
 
 export function EditMemberModal({ isOpen, onClose, member, onSave }: EditMemberModalProps) {
@@ -239,7 +239,7 @@ export function EditMemberModal({ isOpen, onClose, member, onSave }: EditMemberM
 export interface AssignClientsModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: TeamMember;
+  member: TeamMemberRecord;
   allClients: Client[];
   onSave: (memberId: string, managerClientIds: string[], backupClientIds: string[]) => void;
 }
@@ -362,7 +362,7 @@ export interface SetBackupModalProps {
   isOpen: boolean;
   onClose: () => void;
   manager: TeamMember;
-  allMembers: TeamMember[];
+  allMembers: TeamMemberRecord[];
   onSave: (managerId: string, backupMemberName: string) => void;
 }
 
@@ -566,8 +566,8 @@ export function AddMemberModal({ isOpen, onClose, onSave }: AddMemberModalProps)
 export interface DeactivateModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: TeamMember;
-  allMembers: TeamMember[];
+  member: TeamMemberRecord;
+  allMembers: TeamMemberRecord[];
   isDeactivating: boolean; // true = deactivate, false = reactivate
   onConfirm: (memberId: string, reassignToName: string | null) => void;
 }
@@ -651,7 +651,7 @@ export function DeactivateModal({ isOpen, onClose, member, allMembers, isDeactiv
 export interface ActivityLogModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: TeamMember;
+  member: TeamMemberRecord;
 }
 
 interface ActivityEntry {
@@ -769,8 +769,8 @@ export function ActivityLogModal({ isOpen, onClose, member }: ActivityLogModalPr
 export interface BulkReassignModalProps {
   isOpen: boolean;
   onClose: () => void;
-  member: TeamMember;
-  allMembers: TeamMember[];
+  member: TeamMemberRecord;
+  allMembers: TeamMemberRecord[];
   onSave: (fromId: string, toName: string) => void;
 }
 

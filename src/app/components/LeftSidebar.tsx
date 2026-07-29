@@ -70,8 +70,8 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
   const notifButtonRef = useRef<HTMLButtonElement>(null);
   const { unreadCount } = useNotifications();
 
-  const hoverTimeoutRef = useRef<NodeJS.Timeout>();
-  const tooltipTimeoutRef = useRef<NodeJS.Timeout>();
+  const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const tooltipTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     const interval = setInterval(() => {
