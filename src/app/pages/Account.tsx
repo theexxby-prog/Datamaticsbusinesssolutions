@@ -9,6 +9,7 @@ import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { toast } from 'sonner';
+import { TccWordmark } from '../components/TccWordmark';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { NotificationsTabContent } from '../components/NotificationsTabContent';
 import { DASH_METRICS, getDashPrefs, setDashMetric, type DashMetricKey } from '../data/dashboardPrefs';
@@ -100,7 +101,7 @@ export default function Account() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">First Name</label>
-                  <input type="text" defaultValue="John" className="input-base w-full px-4 py-3" />
+                  <input type="text" defaultValue="Renuka" className="input-base w-full px-4 py-3" />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Last Name</label>
@@ -175,6 +176,12 @@ export default function Account() {
               <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                 Company Information
               </h2>
+              <div className="flex items-center gap-4">
+                <TccWordmark variant="light" />
+                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                  Your company mark, shown on reports and the weekly digest.
+                </p>
+              </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Company Name</label>
