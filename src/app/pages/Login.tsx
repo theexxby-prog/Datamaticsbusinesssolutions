@@ -6,14 +6,8 @@ import { IS_CLIENT_DEMO } from '../config/demo';
 import { DemoRibbon } from '../components/DemoRibbon';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
-// Production login palette (pulse.datamaticsbpm.com)
-const CANVAS_RED = '#B43A34';
-const WORDMARK_RED = '#9E2F29';
-
-
-
-/** Small equaliser-style pulse mark used in the card header. */
-function PulseMark({ size = 26 }: { size?: number }) {
+/** Equaliser-style pulse mark — the product's logo, used at card and panel scale. */
+function PulseMark({ size = 26, color = 'var(--color-primary)' }: { size?: number; color?: string }) {
   const bars = [
     { x: 0, y: 8, h: 10 },
     { x: 5, y: 3, h: 20 },
@@ -24,11 +18,51 @@ function PulseMark({ size = 26 }: { size?: number }) {
   return (
     <svg width={size} height={size} viewBox="0 0 24 26" aria-hidden="true">
       {bars.map((b, i) => (
-        <rect key={i} x={b.x} y={b.y} width="3.2" height={b.h} rx="1.6" fill="var(--color-primary)" />
+        <rect key={i} x={b.x} y={b.y} width="3.2" height={b.h} rx="1.6" fill={color} />
       ))}
     </svg>
   );
 }
+
+/**
+ * The brand panel's hero: the pulse mark blown up into a full waveform.
+ * Heights are fixed rather than random so the silhouette is identical on every
+ * render, and the stagger is derived from the index so the motion reads as a
+ * wave travelling left to right.
+ */
+// A smooth double-peak envelope rather than random spikes — it reads as a
+// signal rising and settling, not as noise.
+const WAVE_HEIGHTS = [
+  16, 22, 30, 40, 54, 70, 86, 100, 92, 76, 60, 46, 38, 48,
+  62, 78, 94, 82, 66, 52, 42, 34, 44, 56, 46, 34, 24, 18,
+];
+
+function PulseWave() {
+  return (
+    <div className="flex items-center gap-[5px] h-24" aria-hidden="true">
+      {WAVE_HEIGHTS.map((h, i) => (
+        <span
+          key={i}
+          className="animate-pulse-bar flex-1 rounded-[2.5px] bg-white"
+          style={{
+            // Floor the height so short bars stay bars instead of collapsing
+            // into dots once the rounded caps meet.
+            height: `${Math.max(h, 14)}%`,
+            opacity: 0.42 + (h / 100) * 0.48,
+            animationDelay: `${i * 90}ms`,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
+const CAPABILITIES = [
+  'Campaign delivery and pacing',
+  'Lead review and export',
+  'Job cards and e-signature',
+  'Invoices and payments',
+];
 
 function useClockGreeting() {
   const [now, setNow] = useState(() => new Date());
@@ -54,7 +88,6 @@ export default function Login() {
   const [showSuccess, setShowSuccess] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const clockGreeting = useClockGreeting();
-
 
   // Enter anywhere submits
   useEffect(() => {
@@ -107,176 +140,211 @@ export default function Login() {
     'Ops Manager';
 
   return (
-    <div className="relative min-h-screen w-screen overflow-hidden flex" style={{ background: CANVAS_RED }}>
+    <div className="min-h-screen w-full flex" style={{ background: 'var(--color-background)' }}>
       <DemoRibbon />
 
-      {/* Top-right clock + greeting */}
-      <div
-        className="absolute top-5 right-8 select-none"
-        style={{ color: 'rgba(255,255,255,0.92)', fontSize: '15px', fontWeight: 500 }}
-      >
-        {clockGreeting}
-      </div>
-
-      {/* PULSE wordmark — SVG, reads bottom-to-top, fills the full height,
-          glyphs flush against the left edge. SVG geometry is deterministic:
-          textLength pins the word to exactly the viewport height. */}
-      <svg
-        aria-hidden="true"
-        className="hidden lg:block absolute left-0 top-0 h-full pointer-events-none select-none"
-        viewBox="0 0 150 1000"
-        preserveAspectRatio="xMinYMid meet"
-      >
-        <text
-          x="0"
-          y="0"
-          transform="translate(140, 998) rotate(-90)"
-          textLength="996"
-          lengthAdjust="spacingAndGlyphs"
-          fontFamily="'Inter', -apple-system, sans-serif"
-          fontSize="190"
-          fontWeight="800"
-          fill={WORDMARK_RED}
-        >
-          PULSE
-        </text>
-      </svg>
-
-      {/* Thin vertical divider to the right of the wordmark */}
-      <div
-        aria-hidden="true"
-        className="hidden lg:block absolute top-0 bottom-0"
-        style={{ left: '17%', width: '1px', background: 'rgba(255,255,255,0.28)' }}
-      />
-
-      {/* Card zone — centred in the space right of the divider */}
-      <div className="flex-1 flex items-center justify-center px-4 lg:pl-[17%]">
+      {/* ── Brand panel ────────────────────────────────────────────────────
+          Carries the product story so the form side can stay quiet. Hidden
+          below lg, where a compact header takes its place. */}
+      <aside className="relative hidden lg:flex lg:w-[46%] xl:w-[44%] flex-col justify-between overflow-hidden p-12 xl:p-16">
+        {/* Gradient base */}
         <div
-          className="w-full max-w-[430px] bg-white animate-fadeIn"
-          style={{ borderRadius: '20px', padding: '36px 34px 28px', boxShadow: '0 24px 64px rgba(0,0,0,0.28)' }}
-        >
-          {/* Brand header */}
-          <div className="flex items-center justify-center gap-2.5 mb-7">
-            <PulseMark />
-            <div>
-              <div style={{ fontSize: '17px', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1.15 }}>
-                Pulse
-              </div>
-              <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
-                by Datamatics Business Solutions
-              </div>
-            </div>
+          className="absolute inset-0"
+          style={{
+            background:
+              'linear-gradient(150deg, var(--color-primary-dark) 0%, var(--color-primary) 52%, var(--color-primary-light) 100%)',
+          }}
+        />
+        {/* Soft highlight for depth — keeps the flat red from looking like a swatch */}
+        <div
+          className="absolute -top-1/4 -right-1/4 w-[70%] aspect-square rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%)' }}
+        />
+        <div
+          className="absolute -bottom-1/3 -left-1/4 w-[80%] aspect-square rounded-full"
+          style={{ background: 'radial-gradient(circle, rgba(0,0,0,0.22) 0%, transparent 70%)' }}
+        />
+
+        {/* Wordmark */}
+        <div className="relative flex items-center gap-3">
+          <PulseMark size={30} color="#FFFFFF" />
+          <div>
+            <div className="text-white font-bold leading-tight text-xl tracking-tight">Pulse</div>
+            <div className="text-white/70 text-xs">by Datamatics Business Solutions</div>
           </div>
-
-          <h1 className="text-center" style={{ fontSize: '28px', fontWeight: 700, color: 'var(--color-text-primary)', marginBottom: '6px' }}>
-            Welcome back
-          </h1>
-          <p className="text-center" style={{ fontSize: '14px', color: 'var(--color-text-secondary)', marginBottom: '26px' }}>
-            Sign in to access your dashboard
-          </p>
-
-          <form ref={formRef} onSubmit={handleLogin}>
-            {/* Email — demo persona selector (mock auth) */}
-            <label htmlFor="login-email" className="block" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '6px' }}>
-              Email
-            </label>
-            <div className="relative mb-4">
-              {IS_CLIENT_DEMO ? (
-                <input
-                  id="login-email"
-                  type="email"
-                  value="rlawless@thechannelcompany.com"
-                  readOnly
-                  className="input-base w-full"
-                  style={{ padding: '11px 14px', fontSize: '14px' }}
-                />
-              ) : (
-                <>
-                  <select
-                    id="login-email"
-                    value={selectedUserId}
-                    onChange={(e) => setSelectedUserId(e.target.value)}
-                    className="input-base w-full appearance-none pr-9"
-                    style={{ padding: '11px 14px', fontSize: '14px' }}
-                  >
-                    {mockUsers.map((user) => (
-                      <option key={user.id} value={user.id}>
-                        {user.name} – {roleLabel(user)}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none" style={{ color: 'var(--color-text-muted)' }} />
-                </>
-              )}
-            </div>
-
-            {/* Password — decorative in the demo build */}
-            <label htmlFor="login-password" className="block" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '6px' }}>
-              Password
-            </label>
-            <div className="relative mb-6">
-              <input
-                id="login-password"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                autoComplete="current-password"
-                className="input-base w-full pr-10"
-                style={{ padding: '11px 14px', fontSize: '14px' }}
-              />
-              <button
-                type="button"
-                onClick={() => setShowPassword((v) => !v)}
-                aria-label={showPassword ? 'Hide password' : 'Show password'}
-                className="absolute right-3 top-1/2 -translate-y-1/2"
-                style={{ color: 'var(--color-text-muted)' }}
-              >
-                {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-              </button>
-            </div>
-
-            <button
-              type="submit"
-              disabled={isLoading || showSuccess}
-              className="btn-primary w-full justify-center"
-              style={{ padding: '13px', fontSize: '15px', borderRadius: '999px' }}
-            >
-              {showSuccess ? (
-                <span className="flex items-center gap-2"><CheckCircle2 className="w-4 h-4" /> Signed in</span>
-              ) : isLoading ? (
-                <span className="flex items-center gap-2"><Loader2 className="w-4 h-4 animate-spin" /> Signing in…</span>
-              ) : (
-                'Sign me in'
-              )}
-            </button>
-
-            <p className="text-center" style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginTop: '14px' }}>
-              Press{' '}
-              <kbd
-                style={{
-                  background: 'var(--color-main-bg)',
-                  border: '1px solid var(--color-border)',
-                  borderRadius: '6px',
-                  padding: '2px 7px',
-                  fontSize: '12px',
-                  fontFamily: 'ui-monospace, monospace',
-                  color: 'var(--color-text-primary)',
-                }}
-              >
-                Enter ↵
-              </kbd>{' '}
-              to login
-            </p>
-          </form>
-
-          <div style={{ borderTop: '1px solid var(--color-border-light)', margin: '22px 0 16px' }} />
-
-          <p className="text-center" style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
-            ISO 27001:2022 · SOC 1 &amp; 2 Type II · GDPR
-          </p>
         </div>
-      </div>
+
+        {/* Wave, label and what the portal covers read as one block, so the
+            panel divides cleanly into wordmark / content / compliance. */}
+        <div className="relative">
+          <PulseWave />
+          <h2 className="mt-10 text-white font-semibold tracking-tight text-2xl">
+            Client portal
+          </h2>
+          <ul className="mt-6 space-y-2.5">
+            {CAPABILITIES.map((item) => (
+              <li key={item} className="flex items-center gap-3 text-white/80 text-sm">
+                <span className="w-1 h-1 rounded-full bg-white/50 flex-shrink-0" />
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <p className="relative text-white/55 text-xs tracking-wide">
+          ISO 27001:2022 · SOC 1 &amp; 2 Type II · GDPR
+        </p>
+      </aside>
+
+      {/* ── Form side ──────────────────────────────────────────────────────── */}
+      <main className="flex-1 flex flex-col min-w-0">
+        {/* Compact brand header, small screens only */}
+        <div
+          className="lg:hidden flex items-center gap-2.5 px-6 py-5"
+          style={{
+            background: 'linear-gradient(120deg, var(--color-primary-dark), var(--color-primary-light))',
+          }}
+        >
+          <PulseMark size={22} color="#FFFFFF" />
+          <div>
+            <div className="text-white font-bold leading-tight text-[15px]">Pulse</div>
+            <div className="text-white/70 text-[11px]">by Datamatics Business Solutions</div>
+          </div>
+        </div>
+
+        {/* Clock — quiet, top right */}
+        <div
+          className="hidden lg:block text-right px-10 pt-8 select-none text-sm font-medium"
+          style={{ color: 'var(--color-text-muted)' }}
+        >
+          {clockGreeting}
+        </div>
+
+        <div className="flex-1 flex items-center justify-center px-6 py-12">
+          <div className="w-full max-w-[400px] animate-fadeIn">
+            <h1
+              className="text-[30px] font-bold tracking-tight leading-tight"
+              style={{ color: 'var(--color-text-primary)' }}
+            >
+              Welcome back
+            </h1>
+            <p className="mt-2 mb-8 text-[15px]" style={{ color: 'var(--color-text-secondary)' }}>
+              Sign in to access your dashboard
+            </p>
+
+            <form ref={formRef} onSubmit={handleLogin}>
+              {/* Email — demo persona selector (mock auth) */}
+              <label
+                htmlFor="login-email"
+                className="block text-sm font-semibold mb-1.5"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Email
+              </label>
+              <div className="relative mb-5">
+                {IS_CLIENT_DEMO ? (
+                  <input
+                    id="login-email"
+                    type="email"
+                    value="rlawless@thechannelcompany.com"
+                    readOnly
+                    className="input-base w-full px-3.5 py-3 text-sm"
+                  />
+                ) : (
+                  <>
+                    <select
+                      id="login-email"
+                      value={selectedUserId}
+                      onChange={(e) => setSelectedUserId(e.target.value)}
+                      className="input-base w-full appearance-none px-3.5 py-3 pr-10 text-sm cursor-pointer"
+                    >
+                      {mockUsers.map((user) => (
+                        <option key={user.id} value={user.id}>
+                          {user.name} – {roleLabel(user)}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown
+                      className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none"
+                      style={{ color: 'var(--color-text-muted)' }}
+                    />
+                  </>
+                )}
+              </div>
+
+              {/* Password — decorative in the demo build */}
+              <label
+                htmlFor="login-password"
+                className="block text-sm font-semibold mb-1.5"
+                style={{ color: 'var(--color-text-primary)' }}
+              >
+                Password
+              </label>
+              <div className="relative mb-7">
+                <input
+                  id="login-password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="Enter your password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  autoComplete="current-password"
+                  className="input-base w-full px-3.5 py-3 pr-11 text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((v) => !v)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 p-1 rounded-md transition-colors hover:bg-[var(--color-main-bg)]"
+                  style={{ color: 'var(--color-text-muted)' }}
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading || showSuccess}
+                className="btn-primary w-full justify-center rounded-full py-3.5 text-[15px]"
+              >
+                {showSuccess ? (
+                  <span className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4" /> Signed in
+                  </span>
+                ) : isLoading ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Signing in…
+                  </span>
+                ) : (
+                  'Sign me in'
+                )}
+              </button>
+
+              <p className="text-center mt-4 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
+                Press{' '}
+                <kbd
+                  className="rounded-md px-1.5 py-0.5 text-xs font-mono"
+                  style={{
+                    background: 'var(--color-main-bg)',
+                    border: '1px solid var(--color-border)',
+                    color: 'var(--color-text-primary)',
+                  }}
+                >
+                  Enter ↵
+                </kbd>{' '}
+                to login
+              </p>
+            </form>
+
+            {/* Compliance line — the brand panel carries this on large screens */}
+            <p
+              className="lg:hidden text-center mt-10 pt-6 text-xs"
+              style={{ borderTop: '1px solid var(--color-border-light)', color: 'var(--color-text-muted)' }}
+            >
+              ISO 27001:2022 · SOC 1 &amp; 2 Type II · GDPR
+            </p>
+          </div>
+        </div>
+      </main>
     </div>
   );
 }

@@ -105,3 +105,22 @@
 .stagger-children > *:nth-child(4) { animation-delay: 180ms; }
 .stagger-children > *:nth-child(5) { animation-delay: 240ms; }
 .stagger-children > *:nth-child(6) { animation-delay: 300ms; }
+/* ─── Login pulse wave ──────────────────────────────────────────────────────
+   Slow, staggered breathing motion for the equaliser bars on the login brand
+   panel. Bars scale from their base, so the wave reads as a living signal. */
+@keyframes pulseBar {
+  0%, 100% { transform: scaleY(0.45); }
+  50%      { transform: scaleY(1); }
+}
+
+.animate-pulse-bar {
+  transform-origin: center;
+  animation: pulseBar 2.8s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-pulse-bar {
+    animation: none;
+    transform: scaleY(0.8);
+  }
+}
