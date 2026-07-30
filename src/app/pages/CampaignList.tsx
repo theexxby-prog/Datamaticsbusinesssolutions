@@ -29,17 +29,17 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
       style={{
         border: '1.5px solid rgba(186,32,39,0.25)',
         boxShadow: '0 4px 20px rgba(186,32,39,0.08)',
-        background: 'rgba(255,255,255,0.95)',
+        background: 'var(--color-surface-raised)',
         backdropFilter: 'blur(16px)',
       }}
     >
       {/* Coloured header banner */}
       <div
         className="px-6 py-4 flex items-center justify-between gap-4 flex-wrap"
-        style={{ background: 'linear-gradient(135deg, #BA2027 0%, #8B1219 100%)' }}
+        style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, #8B1219 100%)' }}
       >
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded-xl bg-[var(--color-surface-raised)] flex items-center justify-center flex-shrink-0">
             <Clock className="w-4 h-4 text-white" />
           </div>
           <div>
@@ -54,12 +54,12 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
         <div className="flex items-center gap-2 flex-shrink-0">
           {pendingCount > 0 && (
             <span
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/20 text-white"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[var(--color-surface-raised)] text-white"
               style={{ fontSize: '12px', fontWeight: 600 }}
             >
               <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[var(--color-surface-raised)] opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-[var(--color-surface-raised)]" />
               </span>
               {pendingCount} Pending
             </span>
@@ -106,15 +106,15 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1.5 flex-wrap">
                     <StatusBadge status={sub.status} />
-                    <span className="text-xs text-[#9CA3AF]">
+                    <span className="text-xs text-[var(--color-text-muted)]">
                       {sub.serviceType} · Submitted {new Date(sub.submittedAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   </div>
-                  <p className="font-semibold text-[#1F2937]" style={{ fontSize: '14px' }}>
+                  <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '14px' }}>
                     {sub.campaignName}
                   </p>
-                  <p className="text-[#6B7280] mt-0.5" style={{ fontSize: '12px' }}>
-                    Assigned to <span className="font-medium text-[#374151]">{sub.assignedManager}</span>
+                  <p className="text-[var(--color-text-secondary)] mt-0.5" style={{ fontSize: '12px' }}>
+                    Assigned to <span className="font-medium text-[var(--color-text-primary)]">{sub.assignedManager}</span>
                   </p>
                 </div>
 
@@ -127,12 +127,12 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
                           className="w-6 h-6 rounded-full flex items-center justify-center"
                           style={{
                             background: step.done
-                              ? '#059669'
+                              ? 'var(--color-success)'
                               : step.active
-                              ? '#BA2027'
+                              ? 'var(--color-primary)'
                               : step.warning
-                              ? '#F59E0B'
-                              : 'rgba(0,0,0,0.08)',
+                              ? 'var(--color-warning)'
+                              : 'var(--color-surface)',
                             boxShadow: (step.active || step.warning)
                               ? `0 0 0 3px ${step.warning ? 'rgba(245,158,11,0.15)' : 'rgba(186,32,39,0.15)'}`
                               : 'none',
@@ -143,7 +143,7 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
                           ) : step.warning ? (
                             <AlertTriangle className="w-3 h-3 text-white" />
                           ) : (
-                            <div className="w-2 h-2 rounded-full bg-white/60" />
+                            <div className="w-2 h-2 rounded-full bg-[var(--color-surface-raised)]" />
                           )}
                         </div>
                         <span
@@ -151,7 +151,7 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
                           style={{
                             fontSize: '10px',
                             fontWeight: 600,
-                            color: step.done ? '#059669' : step.active ? '#BA2027' : step.warning ? '#B45309' : '#9CA3AF',
+                            color: step.done ? 'var(--color-success)' : step.active ? 'var(--color-primary)' : step.warning ? 'var(--color-warning)' : 'var(--color-text-muted)',
                           }}
                         >
                           {step.label}
@@ -160,7 +160,7 @@ function SubmissionTracker({ submissions }: { submissions: CampaignSubmission[] 
                       {i < steps.length - 1 && (
                         <div
                           className="w-8 h-px mb-4"
-                          style={{ background: step.done ? '#D1FAE5' : 'rgba(0,0,0,0.1)' }}
+                          style={{ background: step.done ? '#D1FAE5' : 'var(--color-surface)' }}
                         />
                       )}
                     </div>
@@ -353,7 +353,7 @@ export default function CampaignList() {
           <h1 className="text-2xl md:text-3xl font-semibold text-gray-900">Your Campaigns</h1>
           <button
             onClick={() => setIsNewCampaignModalOpen(true)}
-            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#BA2027] text-white rounded-xl hover:bg-[#9A1A21] active:bg-[#7A1419] transition-all shadow-md hover:shadow-lg font-semibold w-full sm:w-auto"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[var(--color-primary)] text-white rounded-xl hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] transition-all shadow-md hover:shadow-lg font-semibold w-full sm:w-auto"
           >
             <Plus className="w-5 h-5" />
             Submit a Campaign
@@ -413,7 +413,7 @@ export default function CampaignList() {
                 <option value="Paused">Paused</option>
                 <option value="Completed">Completed</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B7280] pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-secondary)] pointer-events-none" />
             </div>
             <div className="relative">
               <select
@@ -426,7 +426,7 @@ export default function CampaignList() {
                 <option value="Last 3 months">Last 3 months</option>
                 <option value="This year">This year</option>
               </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B7280] pointer-events-none" />
+              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[var(--color-text-secondary)] pointer-events-none" />
             </div>
           </div>
         </div>
@@ -456,7 +456,7 @@ export default function CampaignList() {
                       animationDelay={index * 100}
                     >
                       <td className="px-6 py-4">
-                        <div className="font-semibold text-[#1F2937]" style={{ fontSize: '14px' }}>{campaign.name}</div>
+                        <div className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '14px' }}>{campaign.name}</div>
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap table-td">{campaign.serviceType}</td>
                       <td className="px-6 py-4 whitespace-nowrap">
@@ -474,15 +474,15 @@ export default function CampaignList() {
                           {/* Status dot */}
                           {isActive && (
                             <span className="relative flex h-2 w-2 flex-shrink-0">
-                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: '#22c55e' }} />
-                              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#22c55e' }} />
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: 'var(--color-success)' }} />
+                              <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: 'var(--color-success)' }} />
                             </span>
                           )}
                           {isPaused && (
-                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#BA2027' }} />
+                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-primary)' }} />
                           )}
                           {isCompleted && (
-                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: '#6B7280' }} />
+                            <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: 'var(--color-text-secondary)' }} />
                           )}
                           {/* Animated count */}
                           <motion.span
@@ -543,7 +543,7 @@ export default function CampaignList() {
                                   transition={{ duration: 0.14 }}
                                   className="absolute right-0 top-full mt-1 w-40 rounded-xl overflow-hidden z-50"
                                   style={{
-                                    background: 'rgba(255,255,255,0.98)',
+                                    background: 'var(--color-surface-raised)',
                                     border: '1px solid var(--color-border)',
                                     boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
                                   }}
@@ -581,7 +581,7 @@ export default function CampaignList() {
 
         {filteredCampaigns.length === 0 && (
           <div className="glass-card py-16 text-center">
-            <p className="text-[#6B7280]">No campaigns found matching your filters.</p>
+            <p className="text-[var(--color-text-secondary)]">No campaigns found matching your filters.</p>
           </div>
         )}
       </div>

@@ -43,7 +43,7 @@ export function IntroShowcase({ onDone }: { onDone: () => void }) {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-[#F5F5F7] transition-opacity duration-500 ${leaving ? 'opacity-0' : 'opacity-100'}`}
+      className={`fixed inset-0 z-[100] bg-[var(--color-surface)] transition-opacity duration-500 ${leaving ? 'opacity-0' : 'opacity-100'}`}
       role="dialog"
       aria-label="Product showcase"
     >
@@ -57,7 +57,7 @@ export function IntroShowcase({ onDone }: { onDone: () => void }) {
       )}
       <button
         onClick={finish}
-        className="absolute top-5 right-5 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-white/90 hover:bg-white text-gray-800 shadow-lg backdrop-blur transition-colors"
+        className="absolute top-5 right-5 flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-semibold bg-[var(--color-surface-raised)] hover:bg-[var(--color-surface-raised)] text-gray-800 shadow-lg backdrop-blur transition-colors"
       >
         Skip intro <X className="w-4 h-4" />
       </button>

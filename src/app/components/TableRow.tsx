@@ -32,7 +32,7 @@ export function TableRow({
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: animationDelay / 1000, duration: 0.3 }}
       whileHover={showHoverEffect ? { 
-        backgroundColor: 'rgba(0,0,0,0.025)',
+        backgroundColor: 'var(--color-surface)',
         transition: { duration: 0.15 }
       } : undefined}
       className={`

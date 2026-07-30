@@ -36,7 +36,7 @@ function SignModal({ card, onClose, onSigned }: { card: JobCard; onClose: () => 
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="glass-card w-full max-w-[560px] p-6 bg-white/95">
+      <div className="glass-card w-full max-w-[560px] p-6 bg-[var(--color-surface-raised)]">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>Sign Job Card</h2>
@@ -105,7 +105,7 @@ function IntakeModal({ onClose, onCreated }: { onClose: () => void; onCreated: (
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="glass-card w-full max-w-[560px] p-6 bg-white/95">
+      <div className="glass-card w-full max-w-[560px] p-6 bg-[var(--color-surface-raised)]">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>New Job Card Intake</h2>
@@ -143,7 +143,7 @@ function IntakeModal({ onClose, onCreated }: { onClose: () => void; onCreated: (
         ) : (
           <>
             <div className="rounded-xl p-4 mb-4" style={{ background: 'var(--color-success-bg, rgba(15,157,88,0.08))', border: '1px solid rgba(15,157,88,0.2)' }}>
-              <div className="flex items-center gap-2 mb-2" style={{ color: 'var(--color-success, #0F9D58)' }}>
+              <div className="flex items-center gap-2 mb-2" style={{ color: 'var(--color-success)' }}>
                 <CheckCircle2 className="w-4 h-4" />
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>Scope extracted · Salesforce opportunity {oppId} created</span>
               </div>

@@ -51,13 +51,13 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.94, y: 16 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-2xl rounded-2xl bg-white shadow-2xl overflow-hidden z-10 flex flex-col"
+            className="relative w-full max-w-2xl rounded-2xl bg-[var(--color-surface-raised)] shadow-2xl overflow-hidden z-10 flex flex-col"
             style={{ maxHeight: '90vh' }}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Email header bar */}
             <div className="bg-gray-100 border-b border-gray-200 px-6 py-4 flex-shrink-0">
-              <div className="space-y-1" style={{ fontSize: '13px', color: '#374151' }}>
+              <div className="space-y-1" style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}>
                 <div className="flex gap-2">
                   <span className="font-semibold text-gray-500 w-16">From:</span>
                   <span>reports@datamaticsbpm.com</span>
@@ -79,7 +79,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                 {/* Datamatics header */}
                 <div
                   className="rounded-xl px-6 py-5 mb-6 text-center"
-                  style={{ background: '#BA2027' }}
+                  style={{ background: 'var(--color-primary)' }}
                 >
                   <h1 className="text-white font-bold" style={{ fontSize: '20px', letterSpacing: '-0.02em' }}>
                     {digest.clientName}
@@ -90,7 +90,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                 </div>
 
                 {/* Sub-heading */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6 mb-5">
+                <div className="bg-[var(--color-surface-raised)] rounded-xl border border-gray-200 p-6 mb-5">
                   <h2
                     className="font-semibold text-gray-800 mb-1"
                     style={{ fontSize: '17px' }}
@@ -115,7 +115,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                       >
                         <p
                           className="font-bold mb-1"
-                          style={{ fontSize: '20px', color: '#BA2027', lineHeight: 1 }}
+                          style={{ fontSize: '20px', color: 'var(--color-primary)', lineHeight: 1 }}
                         >
                           {stat.value}
                         </p>
@@ -128,7 +128,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                 </div>
 
                 {/* Per-campaign delivery for the week */}
-                <div className="bg-white rounded-xl border border-gray-200 p-6 mb-5">
+                <div className="bg-[var(--color-surface-raised)] rounded-xl border border-gray-200 p-6 mb-5">
                   <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-4">
                     Delivery by campaign
                   </p>
@@ -141,10 +141,10 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                             {c.thisWeek} this week · {c.delivered}/{c.target}
                           </span>
                         </div>
-                        <div className="w-full rounded-full overflow-hidden" style={{ height: '6px', background: '#F1F1F4' }}>
+                        <div className="w-full rounded-full overflow-hidden" style={{ height: '6px', background: 'var(--color-surface)' }}>
                           <div
                             className="h-full rounded-full"
-                            style={{ width: `${c.pct}%`, background: 'linear-gradient(90deg, #D32F2F 0%, #BA2027 100%)' }}
+                            style={{ width: `${c.pct}%`, background: 'linear-gradient(90deg, var(--color-primary-light) 0%, var(--color-primary) 100%)' }}
                           />
                         </div>
                       </div>
@@ -157,7 +157,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                   <a
                     href="#"
                     className="font-semibold text-sm hover:underline"
-                    style={{ color: '#BA2027' }}
+                    style={{ color: 'var(--color-primary)' }}
                     onClick={(e) => e.preventDefault()}
                   >
                     View full report →
@@ -174,7 +174,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
             </div>
 
             {/* Bottom actions */}
-            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-white flex-shrink-0">
+            <div className="flex items-center justify-end gap-3 px-6 py-4 border-t border-gray-200 bg-[var(--color-surface-raised)] flex-shrink-0">
               <button
                 onClick={onClose}
                 className="btn-outline px-5 py-2 text-sm font-medium"

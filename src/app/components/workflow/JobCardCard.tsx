@@ -42,8 +42,8 @@ const TYPE_PROPERTY: Record<JobCard['type'], string> = {
 
 const SITUATION_STYLE = {
   action: { bg: 'rgba(186,32,39,0.07)', border: 'rgba(186,32,39,0.25)', color: 'var(--color-primary)', icon: AlertTriangle },
-  waiting: { bg: 'rgba(217,119,6,0.07)', border: 'rgba(217,119,6,0.25)', color: '#B45309', icon: Clock },
-  blocked: { bg: 'rgba(220,38,38,0.08)', border: 'rgba(220,38,38,0.3)', color: '#DC2626', icon: AlertTriangle },
+  waiting: { bg: 'rgba(217,119,6,0.07)', border: 'rgba(217,119,6,0.25)', color: 'var(--color-warning)', icon: Clock },
+  blocked: { bg: 'rgba(220,38,38,0.08)', border: 'rgba(220,38,38,0.3)', color: 'var(--color-error)', icon: AlertTriangle },
   done: { bg: 'rgba(5,150,105,0.07)', border: 'rgba(5,150,105,0.25)', color: 'var(--color-success)', icon: CheckCircle2 },
 } as const;
 

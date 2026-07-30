@@ -15,14 +15,14 @@ export function DemoRibbon() {
         className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full"
         style={{
           background: 'rgba(28,28,30,0.82)',
-          color: 'rgba(255,255,255,0.92)',
+          color: 'var(--color-surface-raised)',
           fontSize: '12px',
           fontWeight: 500,
           backdropFilter: 'blur(8px)',
           boxShadow: '0 4px 16px rgba(0,0,0,0.25)',
         }}
       >
-        <span className="w-1.5 h-1.5 rounded-full" style={{ background: '#F59E0B' }} />
+        <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--color-warning)' }} />
         Demo environment · Sample data
       </span>
     </div>

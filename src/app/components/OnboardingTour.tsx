@@ -72,7 +72,7 @@ export function OnboardingTour() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.92, y: 16 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-md rounded-2xl bg-white shadow-2xl overflow-hidden z-10"
+            className="relative w-full max-w-md rounded-2xl bg-[var(--color-surface-raised)] shadow-2xl overflow-hidden z-10"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Step content */}
@@ -91,7 +91,7 @@ export function OnboardingTour() {
                     className="w-20 h-20 rounded-full flex items-center justify-center mb-6"
                     style={{ background: 'rgba(186,32,39,0.1)' }}
                   >
-                    <Icon className="w-9 h-9" style={{ color: '#BA2027' }} />
+                    <Icon className="w-9 h-9" style={{ color: 'var(--color-primary)' }} />
                   </div>
 
                   <h2
@@ -116,7 +116,7 @@ export function OnboardingTour() {
                     style={{
                       width: i === step ? '20px' : '8px',
                       height: '8px',
-                      background: i === step ? '#BA2027' : '#E5E7EB',
+                      background: i === step ? 'var(--color-primary)' : 'var(--color-border)',
                     }}
                   />
                 ))}
@@ -126,7 +126,7 @@ export function OnboardingTour() {
             {/* Bottom bar */}
             <div
               className="flex items-center justify-between px-8 py-4 border-t border-gray-100"
-              style={{ background: '#FAFAFA' }}
+              style={{ background: 'var(--color-surface)' }}
             >
               <button
                 onClick={close}
@@ -146,9 +146,9 @@ export function OnboardingTour() {
                   }
                 }}
                 className="px-5 py-2 rounded-xl text-white font-semibold text-sm transition-colors"
-                style={{ background: '#BA2027' }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = '#A01C22')}
-                onMouseLeave={(e) => (e.currentTarget.style.background = '#BA2027')}
+                style={{ background: 'var(--color-primary)' }}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
+                onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-primary)')}
               >
                 {isLast ? 'Get started!' : 'Next →'}
               </button>

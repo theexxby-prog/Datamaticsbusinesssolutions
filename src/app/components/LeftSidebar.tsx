@@ -12,6 +12,8 @@ import {
   Receipt,
   FolderOpen,
   LogOut,
+  Sun,
+  Moon,
   Upload,
   UsersRound,
   Pin,
@@ -27,6 +29,7 @@ import {
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { getAssignedClients, recentUploadBatches, allClients } from '../data/mockClients';
 import { LeadUploadModal } from './LeadUploadModal';
 import { getPendingSubmissions } from '../mockData';
@@ -44,7 +47,8 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, signOut } = useAuth();
-  
+  const { resolved: resolvedTheme, toggle: toggleTheme } = useTheme();
+
   // Hover state management
   const [isHovered, setIsHovered] = useState(false);
   const [isPinned, setIsPinned] = useState(() => {
@@ -184,7 +188,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           path: '/internal/campaigns', 
           section: 'PLATFORM',
           badge: badges.activeCampaigns,
-          badgeColor: 'bg-[#BA2027]'
+          badgeColor: 'bg-[var(--color-primary)]'
         },
         { name: 'Admin Management', icon: UsersRound, path: '/internal/admin', section: 'PLATFORM' },
         { name: 'Metrics Override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
@@ -204,7 +208,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           path: '/internal/campaigns', 
           section: 'PLATFORM',
           badge: badges.activeCampaigns,
-          badgeColor: 'bg-[#BA2027]'
+          badgeColor: 'bg-[var(--color-primary)]'
         },
         {
           name: 'Approvals',
@@ -212,7 +216,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           path: '/internal/approvals',
           section: 'PLATFORM',
           badge: badges.pendingApprovals,
-          badgeColor: 'bg-[#BA2027]',
+          badgeColor: 'bg-[var(--color-primary)]',
         },
         { 
           name: 'Upload Leads', 
@@ -220,7 +224,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           path: '/internal/leads', 
           section: 'PLATFORM',
           badge: badges.processingUploads > 0 ? badges.processingUploads : undefined,
-          badgeColor: 'bg-[#BA2027]',
+          badgeColor: 'bg-[var(--color-primary)]',
           hasQuickAction: true,
           quickActionIcon: Plus,
           quickActionHandler: () => setShowUploadModal(true)
@@ -263,7 +267,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
         path: '/campaigns', 
         section: 'PLATFORM',
         badge: badges.clientActiveCampaigns > 0 ? badges.clientActiveCampaigns : undefined,
-        badgeColor: 'bg-[#BA2027]'
+        badgeColor: 'bg-[var(--color-primary)]'
       },
       // No count badge here: the sidebar total (all leads delivered to date)
       // and the Leads page header (the current lead table) legitimately differ,
@@ -276,7 +280,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
         path: '/invoices', 
         section: 'ORGANIZATION',
         badge: badges.unpaidInvoices,
-        badgeColor: 'bg-[#BA2027]'
+        badgeColor: 'bg-[var(--color-primary)]'
       },
       { name: 'Documents', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
       {
@@ -285,7 +289,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
         path: '/support',
         section: 'ORGANIZATION',
         badge: badges.openSupportTickets > 0 ? badges.openSupportTickets : undefined,
-        badgeColor: 'bg-[#BA2027]',
+        badgeColor: 'bg-[var(--color-primary)]',
       },
       { name: 'Account', icon: UserCircle, path: '/account', section: 'ORGANIZATION' },
       { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
@@ -325,7 +329,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
     <div className="flex flex-col h-full">
       {/* Logo + Pin — single unified header row */}
       <div
-        className={`flex-shrink-0 flex items-center border-b border-[#EEECEC] ${
+        className={`flex-shrink-0 flex items-center border-b border-[var(--color-border)] ${
           isExpanded ? 'justify-between px-5' : 'justify-center px-3'
         }`}
         style={{ paddingTop: '28px', paddingBottom: '20px' }}
@@ -340,12 +344,12 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               exit={{ opacity: 0, scale: 0.8 }}
               transition={{ duration: 0.15 }}
               onClick={togglePin}
-              className="p-1.5 rounded-lg hover:bg-[#F3F4F6] transition-colors flex-shrink-0 ml-3"
+              className="p-1.5 rounded-lg hover:bg-[var(--color-surface)] transition-colors flex-shrink-0 ml-3"
               title={isPinned ? 'Collapse sidebar' : 'Keep sidebar expanded'}
             >
               <Pin
                 className={`w-4 h-4 transition-all ${
-                  isPinned ? 'text-[#BA2027]' : 'text-[#9CA3AF]'
+                  isPinned ? 'text-[var(--color-primary)]' : 'text-[var(--color-text-muted)]'
                 }`}
                 style={{
                   transform: isPinned ? 'rotate(0deg)' : 'rotate(45deg)',
@@ -377,10 +381,10 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                   >
                     <button
                       onClick={() => canCollapse && toggleSection(section)}
-                      className={`flex items-center gap-2 w-full ${canCollapse ? 'cursor-pointer hover:text-[#6B7280]' : 'cursor-default'} transition-colors`}
+                      className={`flex items-center gap-2 w-full ${canCollapse ? 'cursor-pointer hover:text-[var(--color-text-secondary)]' : 'cursor-default'} transition-colors`}
                     >
                       <span 
-                        className="text-[11px] text-[#9CA3AF] uppercase tracking-wider flex-1 text-left"
+                        className="text-[11px] text-[var(--color-text-muted)] uppercase tracking-wider flex-1 text-left"
                         style={{ fontWeight: 600, letterSpacing: '0.08em' }}
                       >
                         {section}
@@ -390,7 +394,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                           animate={{ rotate: isCollapsed ? -90 : 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <ChevronDown className="w-3.5 h-3.5 text-[#9CA3AF]" />
+                          <ChevronDown className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
                         </motion.div>
                       )}
                     </button>
@@ -426,8 +430,8 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                               isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
                             } ${
                               isActive
-                                ? 'bg-[#BA2027]/[0.10] text-[#BA2027] border-l-2 border-[#BA2027]'
-                                : 'text-[#525252] hover:bg-[#BA2027]/[0.09] hover:text-[#BA2027] border-l-2 border-transparent'
+                                ? 'bg-[var(--color-primary)]/[0.10] text-[var(--color-primary)] border-l-2 border-[var(--color-primary)]'
+                                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary)]/[0.09] hover:text-[var(--color-primary)] border-l-2 border-transparent'
                             }`}
                             style={{
                               fontSize: '14px',
@@ -452,8 +456,8 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                               <Icon
                                 className={`w-5 h-5 flex-shrink-0 transition-colors duration-100 ${
                                   isActive
-                                    ? 'text-[#BA2027]'
-                                    : 'text-[#9CA3AF] group-hover:text-[#BA2027]'
+                                    ? 'text-[var(--color-primary)]'
+                                    : 'text-[var(--color-text-muted)] group-hover:text-[var(--color-primary)]'
                                 }`}
                               />
                             </motion.div>
@@ -477,7 +481,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                               <motion.span
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                className="bg-[#BA2027] text-white rounded-full flex items-center justify-center flex-shrink-0"
+                                className="bg-[var(--color-primary)] text-white rounded-full flex items-center justify-center flex-shrink-0"
                                 style={{ fontSize: '11px', fontWeight: 700, minWidth: '20px', height: '20px', padding: '0 6px' }}
                               >
                                 {item.badge}
@@ -495,7 +499,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                                   e.stopPropagation();
                                   item.quickActionHandler?.();
                                 }}
-                                className="w-5 h-5 rounded-md bg-[#BA2027] hover:bg-[#9A1A21] text-white flex items-center justify-center transition-colors ml-1 cursor-pointer flex-shrink-0"
+                                className="w-5 h-5 rounded-md bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white flex items-center justify-center transition-colors ml-1 cursor-pointer flex-shrink-0"
                               >
                                 <QuickActionIcon className="w-3 h-3" />
                               </motion.div>
@@ -509,12 +513,12 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                               animate={{ opacity: 1, x: 0 }}
                               exit={{ opacity: 0 }}
                               transition={{ duration: 0.15 }}
-                              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[#1C1C1E] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+                              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
                               style={{ fontSize: '12px', fontWeight: 500 }}
                             >
                               {item.name}
                               {item.badge && (
-                                <span className="ml-2 bg-[#BA2027] px-1.5 py-0.5 rounded-full" style={{ fontSize: '10px' }}>
+                                <span className="ml-2 bg-[var(--color-primary)] px-1.5 py-0.5 rounded-full" style={{ fontSize: '10px' }}>
                                   {item.badge}
                                 </span>
                               )}
@@ -543,7 +547,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                   className="px-3 mb-3"
                 >
                   <span 
-                    className="text-[11px] text-[#9CA3AF] uppercase tracking-wider"
+                    className="text-[11px] text-[var(--color-text-muted)] uppercase tracking-wider"
                     style={{ fontWeight: 600, letterSpacing: '0.08em' }}
                   >
                     MY CLIENTS
@@ -561,7 +565,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                     }}
                     onMouseEnter={() => handleItemMouseEnter(client.name)}
                     onMouseLeave={handleItemMouseLeave}
-                    className={`w-full flex items-center gap-3 rounded-xl text-[14px] text-[#6B7280] hover:text-[#1F2937] hover:bg-[#F5F5F5] transition-all duration-100 ${
+                    className={`w-full flex items-center gap-3 rounded-xl text-[14px] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-all duration-100 ${
                       isExpanded ? 'px-3 py-3' : 'px-0 py-3 justify-center'
                     }`}
                     style={{ fontWeight: 400 }}
@@ -592,7 +596,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-[#1A1A1A] text-white text-xs font-medium rounded-lg whitespace-nowrap z-50 pointer-events-none"
+                      className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] text-xs font-medium rounded-lg whitespace-nowrap z-50 pointer-events-none"
                     >
                       {client.name}
                     </motion.div>
@@ -605,7 +609,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
       </div>
 
       {/* Bottom Section — Logout + User Profile */}
-      <div className="border-t border-[#EEECEC] px-3 pt-3 pb-3 space-y-1">
+      <div className="border-t border-[var(--color-border)] px-3 pt-3 pb-3 space-y-1">
         {/* Notification Bell — client role only */}
         {currentUser?.role === 'client' && (
           <div className="relative">
@@ -614,17 +618,17 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               onClick={() => setNotifPanelOpen(prev => !prev)}
               onMouseEnter={() => handleItemMouseEnter('Notifications')}
               onMouseLeave={handleItemMouseLeave}
-              className={`w-full flex items-center gap-3 rounded-xl transition-all duration-200 hover:bg-[#F5F5F5] ${
+              className={`w-full flex items-center gap-3 rounded-xl transition-all duration-200 hover:bg-[var(--color-surface)] ${
                 isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
               }`}
-              style={{ fontSize: '14px', fontWeight: 500, color: '#374151' }}
+              style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text-primary)' }}
             >
               <div className="relative flex-shrink-0">
                 <Bell className="w-5 h-5" />
                 {unreadCount > 0 && (
                   <span
                     className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center text-white"
-                    style={{ background: '#BA2027', fontSize: '10px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary)', fontSize: '10px', fontWeight: 700 }}
                   >
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
@@ -665,7 +669,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[#1C1C1E] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+                className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
                 style={{ fontSize: '12px', fontWeight: 500 }}
               >
                 Notifications {unreadCount > 0 ? `(${unreadCount})` : ''}
@@ -673,6 +677,31 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
             )}
           </div>
         )}
+
+        {/* Theme toggle */}
+        <div className="relative">
+          <button
+            onClick={toggleTheme}
+            onMouseEnter={() => handleItemMouseEnter(resolvedTheme === 'dark' ? 'Light mode' : 'Dark mode')}
+            onMouseLeave={handleItemMouseLeave}
+            aria-label="Toggle theme"
+            className={`w-full flex items-center gap-3 rounded-xl transition-all duration-100 hover:bg-[var(--color-primary-tint)] ${
+              isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
+            }`}
+            style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text-secondary)' }}
+          >
+            {resolvedTheme === 'dark'
+              ? <Sun className="w-5 h-5 flex-shrink-0" />
+              : <Moon className="w-5 h-5 flex-shrink-0" />}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  {resolvedTheme === 'dark' ? 'Light mode' : 'Dark mode'}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
 
         {/* Logout */}
         <div className="relative">
@@ -683,10 +712,10 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
             }}
             onMouseEnter={() => handleItemMouseEnter('Log Out')}
             onMouseLeave={handleItemMouseLeave}
-            className={`w-full flex items-center gap-3 rounded-xl transition-all duration-100 hover:bg-[#BA2027]/[0.09] ${
+            className={`w-full flex items-center gap-3 rounded-xl transition-all duration-100 hover:bg-[var(--color-primary)]/[0.09] ${
               isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
             }`}
-            style={{ fontSize: '14px', fontWeight: 500, color: '#BA2027' }}
+            style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-primary)' }}
           >
             <LogOut className="w-5 h-5 flex-shrink-0" />
             <AnimatePresence>
@@ -708,7 +737,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[#1C1C1E] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
               style={{ fontSize: '12px', fontWeight: 500 }}
             >
               Log Out
@@ -724,7 +753,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
             }}
             onMouseEnter={() => handleItemMouseEnter('Account')}
             onMouseLeave={handleItemMouseLeave}
-            className={`w-full flex items-center gap-3 rounded-xl hover:bg-[#F5F5F5] transition-all duration-100 mt-1 pt-3 border-t border-[#F3F4F6] ${
+            className={`w-full flex items-center gap-3 rounded-xl hover:bg-[var(--color-surface)] transition-all duration-100 mt-1 pt-3 border-t border-[var(--color-surface)] ${
               isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
             }`}
           >
@@ -739,10 +768,10 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                   transition={{ duration: 0.22 }}
                   className="flex-1 text-left min-w-0"
                 >
-                  <div className="truncate" style={{ fontSize: '13px', fontWeight: 600, color: '#1F2937' }}>
+                  <div className="truncate" style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                     {currentUser?.name || 'User'}
                   </div>
-                  <div className="truncate" style={{ fontSize: '11px', fontWeight: 400, color: '#9CA3AF' }}>
+                  <div className="truncate" style={{ fontSize: '11px', fontWeight: 400, color: 'var(--color-text-muted)' }}>
                     {currentUser?.role === 'client'
                       ? 'Client'
                       : currentUser?.role === 'campaign_manager'
@@ -765,7 +794,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[#1C1C1E] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
               style={{ fontSize: '12px', fontWeight: 500 }}
             >
               {currentUser?.name || 'Account'}
@@ -788,10 +817,10 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           width: isPinned ? '260px' : (isHovered ? '260px' : '72px'),
           minWidth: isPinned ? '260px' : (isHovered ? '260px' : '72px'),
           transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-          background: 'rgba(255, 255, 255, 0.72)',
+          background: 'var(--color-sidebar-bg)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
-          borderRight: '1px solid rgba(0, 0, 0, 0.06)',
+          borderRight: '1px solid var(--color-sidebar-border)',
           boxShadow: isExpanded ? '4px 0 24px rgba(0,0,0,0.06)' : '2px 0 8px rgba(0,0,0,0.03)',
           willChange: 'width',
           transform: 'translateZ(0)'

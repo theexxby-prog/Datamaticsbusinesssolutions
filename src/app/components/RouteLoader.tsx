@@ -38,7 +38,7 @@ export function RouteLoader() {
             top: 0,
             left: 0,
             height: '100%',
-            backgroundImage: 'linear-gradient(90deg, #BA2027, #D32F2F, #BA2027)',
+            backgroundImage: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light), var(--color-primary))',
             backgroundSize: '400px 100%',
             animation:
               'routeBarSlide 1.8s cubic-bezier(0.4, 0, 0.2, 1) forwards, routeBarShimmer 1s ease-in-out infinite',

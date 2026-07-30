@@ -105,20 +105,20 @@ const mockDocuments: Document[] = [
 ];
 
 const typeConfig: Record<Document['type'], { color: string; bg: string; icon: React.ElementType }> = {
-  Contract: { color: '#0891B2', bg: 'rgba(8,145,178,0.1)', icon: FileText },
-  SOW: { color: '#7C3AED', bg: 'rgba(124,58,237,0.1)', icon: FileText },
-  NDA: { color: '#BA2027', bg: 'rgba(186,32,39,0.1)', icon: Lock },
-  Invoice: { color: '#0F9D58', bg: 'rgba(15,157,88,0.1)', icon: FileText },
-  Report: { color: '#F59E0B', bg: 'rgba(245,158,11,0.1)', icon: FileSpreadsheet },
-  Campaign: { color: '#BA2027', bg: 'rgba(186,32,39,0.1)', icon: FileSpreadsheet },
-  Other: { color: '#6B7280', bg: 'rgba(107,114,128,0.1)', icon: FileText },
+  Contract: { color: 'var(--color-info)', bg: 'rgba(8,145,178,0.1)', icon: FileText },
+  SOW: { color: 'var(--color-accent-purple)', bg: 'rgba(124,58,237,0.1)', icon: FileText },
+  NDA: { color: 'var(--color-primary)', bg: 'rgba(186,32,39,0.1)', icon: Lock },
+  Invoice: { color: 'var(--color-success)', bg: 'rgba(15,157,88,0.1)', icon: FileText },
+  Report: { color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)', icon: FileSpreadsheet },
+  Campaign: { color: 'var(--color-primary)', bg: 'rgba(186,32,39,0.1)', icon: FileSpreadsheet },
+  Other: { color: 'var(--color-text-secondary)', bg: 'rgba(107,114,128,0.1)', icon: FileText },
 };
 
 const statusConfig: Record<Document['status'], { label: string; color: string; bg: string }> = {
-  Active: { label: 'Active', color: '#0F9D58', bg: 'rgba(15,157,88,0.1)' },
-  Expired: { label: 'Expired', color: '#BA2027', bg: 'rgba(186,32,39,0.1)' },
-  Pending: { label: 'Pending', color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
-  Archived: { label: 'Archived', color: '#6B7280', bg: 'rgba(107,114,128,0.1)' },
+  Active: { label: 'Active', color: 'var(--color-success)', bg: 'rgba(15,157,88,0.1)' },
+  Expired: { label: 'Expired', color: 'var(--color-primary)', bg: 'rgba(186,32,39,0.1)' },
+  Pending: { label: 'Pending', color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)' },
+  Archived: { label: 'Archived', color: 'var(--color-text-secondary)', bg: 'rgba(107,114,128,0.1)' },
 };
 
 
@@ -224,8 +224,8 @@ export function DocumentLibraryTab() {
           {[
             { label: 'Total Documents', value: documents.length, icon: FileText, color: 'var(--color-primary)', bg: 'var(--color-primary-tint)' },
             { label: 'Active', value: totalActive, icon: Check, color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
-            { label: 'Contracts & Legal', value: totalContracts, icon: Lock, color: '#7C3AED', bg: 'rgba(124,58,237,0.1)' },
-            { label: 'Reports', value: documents.filter(d => d.type === 'Report').length, icon: FileSpreadsheet, color: '#F59E0B', bg: 'rgba(245,158,11,0.1)' },
+            { label: 'Contracts & Legal', value: totalContracts, icon: Lock, color: 'var(--color-accent-purple)', bg: 'rgba(124,58,237,0.1)' },
+            { label: 'Reports', value: documents.filter(d => d.type === 'Report').length, icon: FileSpreadsheet, color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)' },
           ].map(({ label, value, icon: Icon, color, bg }, i) => (
             <div key={label} className="kpi-card animate-slideInUp" style={{ animationDelay: `${i * 80}ms` }}>
               <div className="flex items-center justify-between mb-3">
@@ -302,23 +302,23 @@ export function DocumentLibraryTab() {
               style={{
                 fontSize: 'var(--font-size-sm)',
                 fontWeight: showStarredOnly ? 600 : 400,
-                borderColor: showStarredOnly ? '#F59E0B' : 'var(--color-border)',
+                borderColor: showStarredOnly ? 'var(--color-warning)' : 'var(--color-border)',
                 background: showStarredOnly ? 'rgba(245,158,11,0.08)' : 'transparent',
-                color: showStarredOnly ? '#B45309' : 'var(--color-text-secondary)',
+                color: showStarredOnly ? 'var(--color-warning)' : 'var(--color-text-secondary)',
               }}
             >
               <Star
                 className="w-4 h-4"
                 style={{
-                  color: showStarredOnly ? '#F59E0B' : '#9CA3AF',
-                  fill: showStarredOnly ? '#F59E0B' : 'transparent',
+                  color: showStarredOnly ? 'var(--color-warning)' : 'var(--color-text-muted)',
+                  fill: showStarredOnly ? 'var(--color-warning)' : 'transparent',
                 }}
               />
               Starred
               {starred.length > 0 && (
                 <span
                   className="inline-flex items-center justify-center w-4 h-4 rounded-full"
-                  style={{ fontSize: '10px', fontWeight: 700, background: '#F59E0B', color: 'white' }}
+                  style={{ fontSize: '10px', fontWeight: 700, background: 'var(--color-warning)', color: 'white' }}
                 >
                   {starred.length}
                 </span>
@@ -414,8 +414,8 @@ export function DocumentLibraryTab() {
                               <Star
                                 className="w-4 h-4 transition-all"
                                 style={{
-                                  color: isStarred ? '#F59E0B' : '#9CA3AF',
-                                  fill: isStarred ? '#F59E0B' : 'transparent',
+                                  color: isStarred ? 'var(--color-warning)' : 'var(--color-text-muted)',
+                                  fill: isStarred ? 'var(--color-warning)' : 'transparent',
                                 }}
                               />
                             </button>
@@ -582,8 +582,8 @@ export function DocumentLibraryTab() {
                         <Star
                           className="w-4 h-4 transition-all"
                           style={{
-                            color: isStarred ? '#F59E0B' : '#9CA3AF',
-                            fill: isStarred ? '#F59E0B' : 'transparent',
+                            color: isStarred ? 'var(--color-warning)' : 'var(--color-text-muted)',
+                            fill: isStarred ? 'var(--color-warning)' : 'transparent',
                           }}
                         />
                       </button>

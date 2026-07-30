@@ -1,524 +1,252 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
-import { motion } from 'motion/react';
 import {
-  TrendingUp,
-  Target,
-  DollarSign,
-  Search,
-  Circle,
-  CheckCircle2,
-  Pause,
-  Clock,
-  FolderOpen,
-  Plus,
-  BarChart2,
-  ChevronDown,
-  X,
-  ChevronUp,
-  Eye,
-  AlertCircle,
+  TrendingUp, DollarSign, CheckCircle2, Layers, Plus, ChevronDown,
+  BarChart2, Building2, Briefcase, Activity, UserRound, Calendar, FolderOpen,
+  Check, Pause, Clock, X,
 } from 'lucide-react';
-import { type Campaign, getAccountTeam, allClients } from '../data/mockClients';
+import { getAccountTeam, allClients } from '../data/mockClients';
 import { AppLayout } from '../components/AppLayout';
-import { TableRow } from '../components/TableRow';
-import { AnimatedCounter } from '../components/AnimatedCounter';
 import { NewCampaignModal, CampaignFormData } from '../components/NewCampaignModal';
-import { EmptyState } from '../components/EmptyState';
 import { AccountTeam } from '../components/AccountTeam';
-import { CampaignHealthBadge } from '../components/CampaignHealthBadge';
-import { getCampaignHealth } from '../utils/campaignHealth';
+import { DataTable, type Column } from '../components/ui/DataTable';
 import { useAuth } from '../context/AuthContext';
-import { useDebounce } from '../hooks/useDebounce';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
-import { TableSkeleton } from '../components/SkeletonLoader';
 import { getPersonPhoto } from '../data/personPhotos';
 
-// Mock sparkline data for trend visualization
-const generateSparklineData = (baseValue: number, trend: 'up' | 'down' = 'up') => {
-  return Array.from({ length: 12 }, (_, i) => ({
-    value: trend === 'up' 
-      ? baseValue * (0.7 + (i * 0.025) + Math.random() * 0.1)
-      : baseValue * (1.3 - (i * 0.025) + Math.random() * 0.1)
-  }));
+type Row = {
+  id: string;
+  name: string;
+  advertiser: string;
+  status: string;
+  delivered: number;
+  target: number;
+  manager: string;
+  endDate: string;
 };
+
+const DOTS = ['var(--color-primary)', 'var(--color-info)', 'var(--color-accent-purple)', 'var(--color-success)', 'var(--color-warning)', 'var(--color-info)'];
+
+// ─── KPI tile — the mockup's compact stat: icon, delta, value, label ─────────
+function Kpi({ icon: Icon, tone, toneBg, value, label, delta, deltaTone }: {
+  icon: typeof TrendingUp; tone: string; toneBg: string; value: string; label: string;
+  delta?: string; deltaTone?: string;
+}) {
+  return (
+    <div className="rounded-2xl border p-5" style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-raised)' }}>
+      <div className="mb-3.5 flex items-center justify-between">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl" style={{ background: toneBg }}>
+          <Icon className="h-[18px] w-[18px]" style={{ color: tone }} />
+        </div>
+        {delta && <span className="text-xs font-bold" style={{ color: deltaTone }}>{delta}</span>}
+      </div>
+      <div className="text-[27px] font-extrabold leading-none tracking-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+        {value}
+      </div>
+      <div className="mt-1.5 text-[13px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>{label}</div>
+    </div>
+  );
+}
+
+function StatusPill({ status }: { status: string }) {
+  const map: Record<string, { label: string; cls: string; Icon: typeof Check }> = {
+    active: { label: 'Active', cls: 'ok', Icon: Check },
+    paused: { label: 'Paused', cls: 'warn', Icon: Pause },
+    completed: { label: 'Completed', cls: 'off', Icon: X },
+    pending_approval: { label: 'Pending', cls: 'brand', Icon: Clock },
+  };
+  const s = map[status] ?? map.paused;
+  const styles: Record<string, { bg: string; fg: string }> = {
+    ok: { bg: 'var(--color-badge-active-bg)', fg: 'var(--color-badge-active-text)' },
+    warn: { bg: 'var(--color-badge-paused-bg)', fg: 'var(--color-badge-paused-text)' },
+    off: { bg: 'var(--color-badge-completed-bg)', fg: 'var(--color-badge-completed-text)' },
+    brand: { bg: 'var(--color-primary-tint)', fg: 'var(--color-primary)' },
+  };
+  const st = styles[s.cls];
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] font-bold" style={{ background: st.bg, color: st.fg }}>
+      <s.Icon className="h-3 w-3" strokeWidth={3} /> {s.label}
+    </span>
+  );
+}
 
 export default function Dashboard() {
   useDocumentTitle('My Campaigns');
-  
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-  const [searchQuery, setSearchQuery] = useState('');
-  const debouncedSearch = useDebounce(searchQuery, 300);
-  const [statusFilter, setStatusFilter] = useState('All');
   const [isNewCampaignModalOpen, setIsNewCampaignModalOpen] = useState(false);
-  
-  // Individual time period states for each card
-  const [campaignsPeriod, setCampaignsPeriod] = useState<'1d' | '1w' | '1m' | '1y'>('1m');
-  const [leadsPeriod, setLeadsPeriod] = useState<'1d' | '1w' | '1m' | '1y'>('1m');
-  const [spendPeriod, setSpendPeriod] = useState<'1d' | '1w' | '1m' | '1y'>('1m');
+  const [statusFilter, setStatusFilter] = useState('All');
 
   const accountTeam = getAccountTeam('client_1');
-
-  // Get all campaigns flattened
-  const allCampaignsFlat = useMemo(() => {
-    const campaigns: Array<import('../data/mockClients').Campaign & { clientName: string }> = [];
-    allClients.forEach(client => {
-      client.campaigns.forEach(campaign => {
-        campaigns.push({ ...campaign, clientName: client.companyName });
-      });
-    });
-    return campaigns;
-  }, []);
-  
-  // For client users, only show their own company's campaigns (The Channel Company = client_1)
-  // NOTE: defined BEFORE baseCampaigns so KPI cards are correctly scoped to this client.
   const isClientRole = currentUser?.role === 'client';
   const tccClient = allClients.find(c => c.id === 'client_1');
+  const managerName = accountTeam?.manager.name ?? 'Brijesh Singh';
 
-  // Base data — scoped to the client's own campaigns when in client role
-  const clientCampaigns = tccClient?.campaigns ?? [];
-  const baseCampaigns = isClientRole
-    ? clientCampaigns.filter((c) => c.status === 'active').length
-    : allCampaignsFlat.filter((c) => c.status === 'active').length;
-  const baseLeadsMonthly = isClientRole
-    ? clientCampaigns.reduce((sum, c) => sum + (c.delivered || 0), 0)
-    : allCampaignsFlat.reduce((sum, c) => sum + (c.delivered || 0), 0);
-  const baseSpendMonthly = 24500;
+  const rows: Row[] = useMemo(() => {
+    const source = isClientRole
+      ? (tccClient?.campaigns ?? [])
+      : allClients.flatMap(c => c.campaigns);
+    return source.map(c => ({
+      id: c.id,
+      name: c.name,
+      advertiser: c.name.split(/[\s_]/)[0],
+      status: c.status,
+      delivered: c.delivered ?? 0,
+      target: c.target ?? 0,
+      manager: managerName,
+      endDate: c.endDate ?? '—',
+    }));
+  }, [isClientRole, tccClient, managerName]);
 
-  // Calculate metrics based on period
-  const getMultiplier = (period: '1d' | '1w' | '1m' | '1y') => {
-    return period === '1d' ? 0.033 : period === '1w' ? 0.25 : period === '1m' ? 1 : 12;
-  };
-  
-  const getPeriodLabel = (period: '1d' | '1w' | '1m' | '1y') => {
-    return period === '1d' ? 'TODAY' : period === '1w' ? 'THIS WEEK' : period === '1m' ? 'THIS MONTH' : 'THIS YEAR';
-  };
+  const shown = statusFilter === 'All' ? rows : rows.filter(r => r.status === statusFilter);
 
-  const activeCampaigns = Math.round(baseCampaigns * getMultiplier(campaignsPeriod));
-  const totalLeadsDelivered = Math.round(baseLeadsMonthly * getMultiplier(leadsPeriod));
-  const totalSpend = Math.round(baseSpendMonthly * getMultiplier(spendPeriod));
+  // KPI figures
+  const active = rows.filter(r => r.status === 'active').length;
+  const leads = rows.reduce((s, r) => s + r.delivered, 0);
+  const billable = leads * 12; // $12 CPL, matches the demo elsewhere
+  const acceptance = 91;
 
-  // Sparkline data — memoized per period to avoid re-rolling Math.random() on unrelated re-renders
-  const campaignsData = useMemo(() => generateSparklineData(activeCampaigns, 'up'), [activeCampaigns]);
-  const leadsData = useMemo(() => generateSparklineData(totalLeadsDelivered / 12, 'up'), [totalLeadsDelivered]);
-  const spendData = useMemo(() => generateSparklineData(totalSpend / 12, 'down'), [totalSpend]);
-
-  // For client users, only show their own company's campaigns (The Channel Company = client_1)
-  const visibleCampaigns = isClientRole
-    ? (tccClient?.campaigns.map(c => ({ ...c, clientName: tccClient.companyName })) ?? [])
-    : allCampaignsFlat;
-
-  const filteredCampaigns = visibleCampaigns.filter((campaign) => {
-    const matchesSearch = campaign.name.toLowerCase().includes(debouncedSearch.toLowerCase());
-    const matchesStatus = statusFilter === 'All' || campaign.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
-
-  // Pending approval campaigns for the banner
-  const pendingApprovalCampaigns = visibleCampaigns.filter(c => c.status === 'pending_approval');
-
-  const getStatusPill = (status: string) => {
-    const config = {
-      'active': {
-        classes: 'badge badge-active',
-        icon: Circle,
-        hasPulse: true,
-      },
-      'completed': {
-        classes: 'badge badge-completed',
-        icon: CheckCircle2,
-        hasPulse: false,
-      },
-      'paused': {
-        classes: 'badge badge-paused',
-        icon: Pause,
-        hasPulse: false,
-      },
-      'pending_approval': {
-        classes: 'badge',
-        icon: Clock,
-        hasPulse: true,
-      },
-    };
-
-    const statusConfig = config[status as keyof typeof config] || config['paused'];
-    const Icon = statusConfig.icon;
-
-    if (status === 'pending_approval') {
-      return (
-        <span
-          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full"
-          style={{
-            background: 'rgba(186,32,39,0.10)',
-            color: '#BA2027',
-            fontSize: '12px',
-            fontWeight: 600,
-          }}
-        >
-          <Icon className="w-3.5 h-3.5 animate-pulse" />
-          Pending Approval
+  const columns: Column<Row>[] = [
+    {
+      key: 'name', header: 'Campaign', icon: BarChart2, primary: true,
+      sortValue: r => r.name, text: r => r.name,
+      render: r => (
+        <div className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.name}</div>
+      ),
+    },
+    {
+      key: 'advertiser', header: 'Advertiser', icon: Building2,
+      sortValue: r => r.advertiser, text: r => r.advertiser,
+      render: r => (
+        <span className="inline-flex items-center gap-2 font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+          <span className="h-2 w-2 flex-none rounded-full" style={{ background: DOTS[r.advertiser.charCodeAt(0) % DOTS.length] }} />
+          {r.advertiser}
         </span>
-      );
-    }
+      ),
+    },
+    {
+      key: 'status', header: 'Status', icon: Briefcase,
+      sortValue: r => r.status, text: r => r.status,
+      render: r => <StatusPill status={r.status} />,
+    },
+    {
+      key: 'delivered', header: 'Delivered', icon: Activity, align: 'right',
+      sortValue: r => r.delivered, text: r => `${r.delivered} / ${r.target}`,
+      render: r => (
+        <span style={{ fontVariantNumeric: 'tabular-nums' }}>
+          <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.delivered.toLocaleString()}</span>
+          <span style={{ color: 'var(--color-text-muted)' }}> / {r.target.toLocaleString()}</span>
+        </span>
+      ),
+    },
+    {
+      key: 'pacing', header: 'Pacing', icon: Activity, sortable: false,
+      render: r => {
+        const pct = r.target ? Math.min(100, Math.round((r.delivered / r.target) * 100)) : 0;
+        return (
+          <div className="flex items-center gap-2.5">
+            <div className="h-1.5 w-[74px] overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
+              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: r.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-primary)' }} />
+            </div>
+            <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums', minWidth: 34 }}>{pct}%</span>
+          </div>
+        );
+      },
+    },
+    {
+      key: 'manager', header: 'Manager', icon: UserRound,
+      sortValue: r => r.manager, text: r => r.manager,
+      render: r => (
+        <span className="inline-flex items-center gap-2.5">
+          <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[11px] font-extrabold text-white" style={{ background: 'var(--color-primary)' }}>
+            {r.manager.split(' ').map(n => n[0]).join('').slice(0, 2)}
+          </span>
+          <span style={{ color: 'var(--color-text-secondary)' }}>{r.manager}</span>
+        </span>
+      ),
+    },
+    {
+      key: 'endDate', header: 'End date', icon: Calendar, align: 'right',
+      sortValue: r => r.endDate, text: r => r.endDate,
+      render: r => <span style={{ color: 'var(--color-text-muted)' }}>{r.endDate}</span>,
+    },
+  ];
 
-    return (
-      <span className={statusConfig.classes}>
-        <Icon className={`w-3.5 h-3.5 ${statusConfig.hasPulse ? 'animate-pulse' : ''}`} />
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </span>
-    );
-  };
+  const statusFilterControl = (
+    <div className="relative">
+      <select
+        value={statusFilter}
+        onChange={e => setStatusFilter(e.target.value)}
+        className="cursor-pointer appearance-none rounded-xl border py-2.5 pl-3.5 pr-9 text-sm font-medium outline-none"
+        style={{ background: 'var(--color-surface-raised)', borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}
+      >
+        <option value="All">All status</option>
+        <option value="active">Active</option>
+        <option value="completed">Completed</option>
+        <option value="paused">Paused</option>
+        <option value="pending_approval">Pending</option>
+      </select>
+      <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2" style={{ color: 'var(--color-text-muted)' }} />
+    </div>
+  );
 
   return (
     <AppLayout>
-      <div className="max-w-[1400px] mx-auto page-content space-y-6">
+      <div className="mx-auto max-w-[1400px] page-content">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start justify-between gap-4">
+        <div className="mb-7 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="flex items-center gap-3 mb-2">
-              <h1>My Campaigns</h1>
+            <div className="mb-1.5 inline-flex items-center gap-2 text-[12.5px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+              <span className="h-2 w-2 rounded-full" style={{ background: 'var(--color-primary)' }} />
+              Client Portal &middot; {tccClient?.companyName ?? 'The Channel Company'}
             </div>
-            <p className="text-sm text-[#6B7280]">
-              Track and manage all your active campaigns
-            </p>
+            <h1 className="text-[30px] font-extrabold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Campaign Dashboard</h1>
+            <p className="mt-1 text-[15px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Every active campaign, pacing, delivery and billing in one place.</p>
           </div>
-          <motion.button
+          <button
             onClick={() => setIsNewCampaignModalOpen(true)}
-            className="btn-primary flex items-center gap-2 px-6 py-3 w-full sm:w-auto justify-center"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+            className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition-colors sm:w-auto"
+            style={{ background: 'var(--color-primary)' }}
+            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
+            onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary)')}
           >
-            <Plus className="w-4 h-4" />
-            Start a Campaign
-          </motion.button>
+            <Plus className="h-4 w-4" strokeWidth={2.6} /> New campaign
+          </button>
         </div>
 
-        {/* KPI Cards - REDESIGNED WITH INTERACTIVITY */}
-        <div className={`grid grid-cols-2 gap-4 md:gap-6 stagger-children ${pendingApprovalCampaigns.length > 0 ? 'md:grid-cols-2 lg:grid-cols-4' : 'md:grid-cols-3'}`}>
-          {/* Active Campaigns Card */}
-          <motion.div 
-            key={`campaigns-${campaignsPeriod}`}
-            initial={{ opacity: 0.8 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="glass-card p-3 sm:p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h5 className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">ACTIVE CAMPAIGNS</h5>
-              <div className="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center">
-                <BarChart2 className="w-5 h-5 text-blue-500" />
-              </div>
-            </div>
-
-            {/* PROMINENT TIME SELECTOR */}
-            <div className="flex items-center gap-0.5 mb-4 p-1 bg-[#F3F4F6] rounded-lg w-full">
-              {(['1d', '1w', '1m', '1y'] as const).map((period) => (
-                <button
-                  key={period}
-                  onClick={() => {
-                    setCampaignsPeriod(period);
-                  }}
-                  className={`flex-1 py-1 rounded-md text-xs font-bold uppercase transition-all text-center ${ campaignsPeriod === period ? 'bg-[#BA2027] text-white shadow-md' : 'bg-transparent text-[#6B7280] hover:bg-[#BA2027] hover:text-white' }`}
-                  style={{ fontSize: '9px' }}
-                >
-                  {period === '1d' ? 'Day' : period === '1w' ? 'Week' : period === '1m' ? 'Month' : 'Year'}
-                </button>
-              ))}
-            </div>
-            
-            <div className="font-bold text-[#1A1A1A] tracking-tight leading-none mb-2" style={{ fontSize: 'clamp(22px, 5vw, 36px)' }}>
-              <AnimatedCounter end={activeCampaigns} duration={1500} />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-[#059669]">
-                <TrendingUp className="w-3 h-3" />+8%
-              </span>
-              <span className="text-xs text-[#6B7280]">vs previous period</span>
-            </div>
-          </motion.div>
-
-          {/* Total Leads Card - WITH INTERACTIVE BUTTONS */}
-          <motion.div 
-            key={`leads-${leadsPeriod}`}
-            initial={{ opacity: 0.8 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="glass-card p-3 sm:p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h5 className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider truncate mr-2">
-                TOTAL LEADS {getPeriodLabel(leadsPeriod)}
-              </h5>
-              <div className="w-10 h-10 rounded-full bg-green-50 flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-green-500" />
-              </div>
-            </div>
-
-            {/* PROMINENT TIME SELECTOR */}
-            <div className="flex items-center gap-0.5 mb-4 p-1 bg-[#F3F4F6] rounded-lg w-full">
-              {(['1d', '1w', '1m', '1y'] as const).map((period) => (
-                <button
-                  key={period}
-                  onClick={() => {
-                    setLeadsPeriod(period);
-                  }}
-                  className={`flex-1 py-1 rounded-md text-xs font-bold uppercase transition-all text-center ${ leadsPeriod === period ? 'bg-[#BA2027] text-white shadow-md' : 'bg-transparent text-[#6B7280] hover:bg-[#BA2027] hover:text-white' }`}
-                  style={{ fontSize: '9px' }}
-                >
-                  {period === '1d' ? 'Day' : period === '1w' ? 'Week' : period === '1m' ? 'Month' : 'Year'}
-                </button>
-              ))}
-            </div>
-            
-            <div className="font-bold text-[#1A1A1A] tracking-tight leading-none mb-2" style={{ fontSize: 'clamp(22px, 5vw, 36px)' }}>
-              <AnimatedCounter end={totalLeadsDelivered} duration={2000} />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-[#059669]">
-                <TrendingUp className="w-3 h-3" />+12%
-              </span>
-              <span className="text-xs text-[#6B7280]">vs previous period</span>
-            </div>
-          </motion.div>
-
-          {/* Total Spend Card */}
-          <motion.div 
-            key={`spend-${spendPeriod}`}
-            initial={{ opacity: 0.8 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.3 }}
-            className="glass-card p-3 sm:p-6"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h5 className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">TOTAL SPEND</h5>
-              <div className="w-10 h-10 rounded-full bg-amber-50 flex items-center justify-center">
-                <DollarSign className="w-5 h-5 text-amber-500" />
-              </div>
-            </div>
-
-            {/* PROMINENT TIME SELECTOR */}
-            <div className="flex items-center gap-0.5 mb-4 p-1 bg-[#F3F4F6] rounded-lg w-full">
-              {(['1d', '1w', '1m', '1y'] as const).map((period) => (
-                <button
-                  key={period}
-                  onClick={() => {
-                    setSpendPeriod(period);
-                  }}
-                  className={`flex-1 py-1 rounded-md text-xs font-bold uppercase transition-all text-center ${ spendPeriod === period ? 'bg-[#BA2027] text-white shadow-md' : 'bg-transparent text-[#6B7280] hover:bg-[#BA2027] hover:text-white' }`}
-                  style={{ fontSize: '9px' }}
-                >
-                  {period === '1d' ? 'Day' : period === '1w' ? 'Week' : period === '1m' ? 'Month' : 'Year'}
-                </button>
-              ))}
-            </div>
-            
-            <div className="font-bold text-[#1A1A1A] tracking-tight leading-none mb-2" style={{ fontSize: 'clamp(22px, 5vw, 36px)' }}>
-              $<AnimatedCounter end={totalSpend} duration={1800} />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="inline-flex items-center gap-0.5 text-xs font-semibold text-[#BA2027]">
-                <TrendingUp className="w-3 h-3 rotate-180" />-3%
-              </span>
-              <span className="text-xs text-[#6B7280]">vs previous period</span>
-            </div>
-          </motion.div>
-
-          {/* Awaiting Approval Card — only shown when pending campaigns exist */}
-          {pendingApprovalCampaigns.length > 0 && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.97 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.35 }}
-              className="glass-card p-3 sm:p-6 flex flex-col"
-              style={{ borderColor: 'rgba(186,32,39,0.18)' }}
-            >
-              {/* Header row */}
-              <div className="flex items-center justify-between mb-4">
-                <h5 className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">AWAITING APPROVAL</h5>
-                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ background: 'rgba(186,32,39,0.08)' }}>
-                  <Clock className="w-5 h-5 text-[#BA2027]" />
-                </div>
-              </div>
-
-              {/* Count */}
-              <div className="flex items-baseline gap-2 mb-1">
-                <span className="font-bold tracking-tight leading-none" style={{ color: '#1A1A1A', fontSize: 'clamp(20px, 5vw, 36px)' }}>
-                  {pendingApprovalCampaigns.length}
-                </span>
-                <span className="text-sm font-semibold" style={{ color: '#BA2027' }}>
-                  pending
-                </span>
-              </div>
-              <p className="text-xs text-[#6B7280] mb-5">Under review by your campaign manager</p>
-
-              {/* Campaign list */}
-              <div className="flex-1 space-y-2">
-                {pendingApprovalCampaigns.map(c => (
-                  <div
-                    key={c.id}
-                    className="flex items-center gap-2 px-3 py-2 rounded-xl"
-                    style={{ background: 'rgba(186,32,39,0.05)', border: '1px solid rgba(186,32,39,0.10)' }}
-                  >
-                    <span
-                      className="relative flex h-2 w-2 flex-shrink-0"
-                    >
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: '#BA2027' }} />
-                      <span className="relative inline-flex rounded-full h-2 w-2" style={{ background: '#BA2027' }} />
-                    </span>
-                    <p className="text-xs font-medium text-[#374151] truncate">{c.name}</p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Submitted date note */}
-              <p className="text-[10px] text-[#9CA3AF] mt-4">Submitted Mar 1, 2026</p>
-            </motion.div>
-          )}
+        {/* KPI strip */}
+        <div className="mb-7 grid grid-cols-2 gap-4 lg:grid-cols-4">
+          <Kpi icon={DollarSign} tone="var(--color-primary)" toneBg="var(--color-primary-tint)" value={`$${(billable / 1000).toFixed(1)}K`} label="Billable this month" delta="▲ 8%" deltaTone="var(--color-success)" />
+          <Kpi icon={TrendingUp} tone="var(--color-info)" toneBg="var(--color-info-bg)" value={leads.toLocaleString()} label="Leads delivered" delta="▲ 12%" deltaTone="var(--color-success)" />
+          <Kpi icon={CheckCircle2} tone="var(--color-success)" toneBg="var(--color-success-bg)" value={`${acceptance}%`} label="Acceptance rate" delta="= stable" deltaTone="var(--color-text-muted)" />
+          <Kpi icon={Layers} tone="var(--color-warning)" toneBg="var(--color-warning-bg)" value={String(rows.length)} label="Campaigns" delta={`${active} active`} deltaTone="var(--color-primary)" />
         </div>
 
-        {/* Search & Filter */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-[#9CA3AF]" />
-            <input
-              type="text"
-              placeholder="Search campaigns..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="input-base w-full pl-12 pr-4 py-3"
-            />
-          </div>
-          <div className="relative">
-            <select
-              value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className="input-base px-4 py-3 pr-10 appearance-none cursor-pointer w-full sm:w-auto"
-            >
-              <option value="All">All Status</option>
-              <option value="pending_approval">Pending Approval</option>
-              <option value="active">In Progress</option>
-              <option value="completed">Completed</option>
-              <option value="paused">Paused</option>
-            </select>
-            <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-[#6B7280] pointer-events-none" />
-          </div>
-        </div>
+        {/* Campaigns table */}
+        <DataTable<Row>
+          columns={columns}
+          rows={shown}
+          getRowId={r => r.id}
+          onRowClick={r => navigate(`/campaigns/${r.id}`)}
+          searchPlaceholder="Search campaigns…"
+          toolbar={statusFilterControl}
+          pageSize={12}
+          countLabel={n => `${n} campaign${n === 1 ? '' : 's'}`}
+          empty={{ icon: FolderOpen, title: 'No campaigns found', description: 'Nothing matches your search or filter yet.' }}
+        />
 
-        {/* Campaign Table */}
-        <div className="glass-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="table-header">
-                <tr>
-                  <th className="table-th">Campaign</th>
-                  <th className="table-th">Type</th>
-                  <th className="table-th">Status</th>
-                  <th className="table-th">Progress</th>
-                  <th className="table-th">Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCampaigns.map((campaign, index) => {
-                  const progress = campaign.target && campaign.delivered 
-                    ? ((campaign.delivered / campaign.target) * 100) 
-                    : 0;
-                  return (
-                    <TableRow
-                      key={campaign.id}
-                      showHoverEffect={true}
-                      animationDelay={index * 50}
-                      onClick={() => navigate(`/campaigns/${campaign.id}`)}
-                    >
-                      <td className="table-td">
-                        <div>
-                          <div className="t1">{campaign.name}</div>
-                          <div className="t3 mt-0.5">{campaign.clientName}</div>
-                        </div>
-                      </td>
-                      <td className="table-td">
-                        <span className="t2">Leads</span>
-                      </td>
-                      <td className="table-td">
-                        <div className="flex flex-col gap-1.5">
-                          {getStatusPill(campaign.status)}
-                          {campaign.status === 'active' && (
-                            <CampaignHealthBadge health={getCampaignHealth(campaign)} />
-                          )}
-                        </div>
-                      </td>
-                      <td className="table-td">
-                        <div className="space-y-1.5">
-                          <div className="flex items-center gap-3">
-                            <div className="progress-bar flex-1">
-                              <div
-                                className="progress-bar__fill"
-                                style={{ width: `${Math.min(progress, 100)}%` }}
-                              />
-                            </div>
-                            <span className="t2" style={{ minWidth: '28px' }}>
-                              {Math.round(progress)}%
-                            </span>
-                          </div>
-                          <div className="t3">
-                            {(campaign.delivered || 0).toLocaleString()} / {(campaign.target || 0).toLocaleString()} leads
-                          </div>
-                        </div>
-                      </td>
-                      <td className="table-td" onClick={(e) => e.stopPropagation()}>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            navigate(`/campaigns/${campaign.id}`);
-                          }}
-                          className="btn-ghost p-2"
-                          title="View details"
-                        >
-                          <Eye className="w-4 h-4" />
-                        </button>
-                      </td>
-                    </TableRow>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-
-          {filteredCampaigns.length === 0 && (
-            <div className="py-16">
-              <EmptyState
-                icon={FolderOpen}
-                title="No campaigns found"
-                description="We couldn't find any campaigns matching your search criteria"
-                actionLabel="Create Campaign"
-                onAction={() => setIsNewCampaignModalOpen(true)}
-              />
-            </div>
-          )}
-        </div>
-
-        {/* Account Team */}
+        {/* Account team */}
         {accountTeam && (
           <div className="mt-8">
             <AccountTeam
               manager={{
-                name: accountTeam.manager.name,
-                role: accountTeam.manager.role,
-                email: accountTeam.manager.email,
-                initials: accountTeam.manager.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join(''),
+                name: accountTeam.manager.name, role: accountTeam.manager.role, email: accountTeam.manager.email,
+                initials: accountTeam.manager.name.split(' ').map(n => n[0]).join(''),
                 photo: getPersonPhoto(accountTeam.manager.name),
               }}
               backup={{
-                name: accountTeam.backup.name,
-                role: accountTeam.backup.role,
-                email: accountTeam.backup.email,
-                initials: accountTeam.backup.name
-                  .split(' ')
-                  .map((n) => n[0])
-                  .join(''),
+                name: accountTeam.backup.name, role: accountTeam.backup.role, email: accountTeam.backup.email,
+                initials: accountTeam.backup.name.split(' ').map(n => n[0]).join(''),
                 photo: getPersonPhoto(accountTeam.backup.name),
               }}
             />
@@ -526,13 +254,10 @@ export default function Dashboard() {
         )}
       </div>
 
-      {/* Modal */}
       <NewCampaignModal
         isOpen={isNewCampaignModalOpen}
         onClose={() => setIsNewCampaignModalOpen(false)}
-        onSubmit={(formData: CampaignFormData) => {
-          setIsNewCampaignModalOpen(false);
-        }}
+        onSubmit={(_formData: CampaignFormData) => setIsNewCampaignModalOpen(false)}
       />
     </AppLayout>
   );

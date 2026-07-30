@@ -22,7 +22,7 @@ function ModalOverlay({ onClose, children }: { onClose: () => void; children: Re
     <AnimatePresence>
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ background: 'rgba(0,0,0,0.55)', backdropFilter: 'blur(6px)' }}
+        style={{ background: 'var(--color-surface)', backdropFilter: 'blur(6px)' }}
         onClick={onClose}
       >
         <motion.div
@@ -102,7 +102,7 @@ function PrimaryButton({ onClick, children, disabled, danger }: { onClick?: () =
       disabled={disabled}
       className="flex items-center gap-2 px-4 py-2 rounded-xl transition-all"
       style={{
-        background: danger ? '#DC2626' : 'var(--color-primary)',
+        background: danger ? 'var(--color-error)' : 'var(--color-primary)',
         color: '#fff',
         fontWeight: 600,
         fontSize: '14px',
@@ -130,7 +130,7 @@ function GhostButton({ onClick, children }: { onClick: () => void; children: Rea
         fontSize: '14px',
         border: '1.5px solid var(--color-border, rgba(186,32,39,0.12))',
       }}
-      onMouseEnter={e => (e.currentTarget.style.background = 'rgba(0,0,0,0.04)')}
+      onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-surface)')}
       onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}
     >
       {children}
@@ -274,7 +274,7 @@ export function AssignClientsModal({ isOpen, onClose, member, allClients, onSave
         <ModalHeader title="Manage Client Assignments" subtitle={`Assign clients to ${member.name}`} icon={<Building2 className="w-5 h-5" />} onClose={onClose} />
         <div className="p-6 flex flex-col gap-4">
           {/* Tab switcher */}
-          <div className="flex rounded-xl p-1 gap-1" style={{ background: 'rgba(0,0,0,0.04)', border: '1px solid var(--color-border)' }}>
+          <div className="flex rounded-xl p-1 gap-1" style={{ background: 'var(--color-surface)', border: '1px solid var(--color-border)' }}>
             {(['manager', 'backup'] as const).map(t => (
               <button
                 key={t}
@@ -318,13 +318,13 @@ export function AssignClientsModal({ isOpen, onClose, member, allClients, onSave
                     border: `1.5px solid ${checked ? 'var(--color-primary)' : 'var(--color-border)'}`,
                     background: checked ? 'rgba(186,32,39,0.04)' : 'transparent',
                   }}
-                  onMouseEnter={e => { if (!checked) e.currentTarget.style.background = 'rgba(0,0,0,0.02)'; }}
+                  onMouseEnter={e => { if (!checked) e.currentTarget.style.background = 'var(--color-surface)'; }}
                   onMouseLeave={e => { if (!checked) e.currentTarget.style.background = 'transparent'; }}
                 >
                   <div
                     className="w-5 h-5 rounded flex items-center justify-center flex-shrink-0 transition-all"
                     style={{
-                      border: `2px solid ${checked ? 'var(--color-primary)' : 'rgba(0,0,0,0.2)'}`,
+                      border: `2px solid ${checked ? 'var(--color-primary)' : 'var(--color-surface)'}`,
                       background: checked ? 'var(--color-primary)' : 'transparent',
                     }}
                   >
@@ -408,17 +408,17 @@ export function SetBackupModal({ isOpen, onClose, manager, allMembers, onSave }:
                     border: `1.5px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-border)'}`,
                     background: isSelected ? 'rgba(186,32,39,0.04)' : 'transparent',
                   }}
-                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'rgba(0,0,0,0.02)'; }}
+                  onMouseEnter={e => { if (!isSelected) e.currentTarget.style.background = 'var(--color-surface)'; }}
                   onMouseLeave={e => { if (!isSelected) e.currentTarget.style.background = 'transparent'; }}
                 >
                   <div
                     className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center"
                     style={{
-                      border: `2px solid ${isSelected ? 'var(--color-primary)' : 'rgba(0,0,0,0.2)'}`,
+                      border: `2px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-surface)'}`,
                       background: isSelected ? 'var(--color-primary)' : 'transparent',
                     }}
                   >
-                    {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                    {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--color-surface-raised)]" />}
                   </div>
                   <PersonAvatar name={m.name} size={36} />
                   <div className="flex-1 min-w-0">
@@ -426,7 +426,7 @@ export function SetBackupModal({ isOpen, onClose, manager, allMembers, onSave }:
                     <div style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{m.role} · {m.clientsAssigned} current clients</div>
                   </div>
                   {m.id === currentBackup?.id && (
-                    <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: 'rgba(5,150,105,0.1)', color: '#059669' }}>Current</span>
+                    <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold" style={{ background: 'rgba(5,150,105,0.1)', color: 'var(--color-success)' }}>Current</span>
                   )}
                 </div>
               );
@@ -498,10 +498,10 @@ export function AddMemberModal({ isOpen, onClose, onSave }: AddMemberModalProps)
               onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
               onFocus={() => setFocused('name')}
               onBlur={() => setFocused(null)}
-              style={{ ...inputStyle(focused === 'name'), borderColor: errors.name ? '#DC2626' : (focused === 'name' ? 'var(--color-primary)' : 'var(--color-border)') }}
+              style={{ ...inputStyle(focused === 'name'), borderColor: errors.name ? 'var(--color-error)' : (focused === 'name' ? 'var(--color-primary)' : 'var(--color-border)') }}
               placeholder="e.g. Priya Sharma"
             />
-            {errors.name && <p style={{ fontSize: '12px', color: '#DC2626', margin: 0 }}>{errors.name}</p>}
+            {errors.name && <p style={{ fontSize: '12px', color: 'var(--color-error)', margin: 0 }}>{errors.name}</p>}
           </FormField>
 
           <FormField label="Work Email">
@@ -510,10 +510,10 @@ export function AddMemberModal({ isOpen, onClose, onSave }: AddMemberModalProps)
               onChange={e => setForm(f => ({ ...f, email: e.target.value }))}
               onFocus={() => setFocused('email')}
               onBlur={() => setFocused(null)}
-              style={{ ...inputStyle(focused === 'email'), borderColor: errors.email ? '#DC2626' : (focused === 'email' ? 'var(--color-primary)' : 'var(--color-border)') }}
+              style={{ ...inputStyle(focused === 'email'), borderColor: errors.email ? 'var(--color-error)' : (focused === 'email' ? 'var(--color-primary)' : 'var(--color-border)') }}
               placeholder="name@datamaticsbpm.com"
             />
-            {errors.email && <p style={{ fontSize: '12px', color: '#DC2626', margin: 0 }}>{errors.email}</p>}
+            {errors.email && <p style={{ fontSize: '12px', color: 'var(--color-error)', margin: 0 }}>{errors.email}</p>}
           </FormField>
 
           <FormField label="Phone">
@@ -522,10 +522,10 @@ export function AddMemberModal({ isOpen, onClose, onSave }: AddMemberModalProps)
               onChange={e => setForm(f => ({ ...f, phone: e.target.value }))}
               onFocus={() => setFocused('phone')}
               onBlur={() => setFocused(null)}
-              style={{ ...inputStyle(focused === 'phone'), borderColor: errors.phone ? '#DC2626' : (focused === 'phone' ? 'var(--color-primary)' : 'var(--color-border)') }}
+              style={{ ...inputStyle(focused === 'phone'), borderColor: errors.phone ? 'var(--color-error)' : (focused === 'phone' ? 'var(--color-primary)' : 'var(--color-border)') }}
               placeholder="+91 22 4040 0000"
             />
-            {errors.phone && <p style={{ fontSize: '12px', color: '#DC2626', margin: 0 }}>{errors.phone}</p>}
+            {errors.phone && <p style={{ fontSize: '12px', color: 'var(--color-error)', margin: 0 }}>{errors.phone}</p>}
           </FormField>
 
           <FormField label="Role">
@@ -544,8 +544,8 @@ export function AddMemberModal({ isOpen, onClose, onSave }: AddMemberModalProps)
           </FormField>
 
           <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.15)' }}>
-            <Activity className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#2563EB' }} />
-            <p style={{ fontSize: '12px', color: '#2563EB', margin: 0, lineHeight: '1.5' }}>
+            <Activity className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-info)' }} />
+            <p style={{ fontSize: '12px', color: 'var(--color-info)', margin: 0, lineHeight: '1.5' }}>
               The new member will be added as <strong>Active</strong>. You can assign clients to them after creation.
             </p>
           </div>
@@ -599,8 +599,8 @@ export function DeactivateModal({ isOpen, onClose, member, allMembers, isDeactiv
           {isDeactivating && member.clientsAssigned > 0 && (
             <>
               <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: 'rgba(220,38,38,0.05)', border: '1px solid rgba(220,38,38,0.15)' }}>
-                <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#DC2626' }} />
-                <p style={{ fontSize: '12px', color: '#DC2626', margin: 0, lineHeight: '1.5' }}>
+                <AlertTriangle className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-error)' }} />
+                <p style={{ fontSize: '12px', color: 'var(--color-error)', margin: 0, lineHeight: '1.5' }}>
                   This member has <strong>{member.clientsAssigned} active client{member.clientsAssigned !== 1 ? 's' : ''}</strong>. Consider reassigning them before deactivating.
                 </p>
               </div>
@@ -623,8 +623,8 @@ export function DeactivateModal({ isOpen, onClose, member, allMembers, isDeactiv
 
           {!isDeactivating && (
             <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: 'rgba(5,150,105,0.05)', border: '1px solid rgba(5,150,105,0.15)' }}>
-              <RefreshCw className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#059669' }} />
-              <p style={{ fontSize: '12px', color: '#059669', margin: 0, lineHeight: '1.5' }}>
+              <RefreshCw className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
+              <p style={{ fontSize: '12px', color: 'var(--color-success)', margin: 0, lineHeight: '1.5' }}>
                 Reactivating <strong>{member.name}</strong> will restore their portal access. You can reassign clients to them afterward.
               </p>
             </div>
@@ -705,9 +705,9 @@ const ACTIVITY_ICONS: Record<ActivityEntry['type'], React.ReactNode> = {
 };
 
 const STATUS_COLORS: Record<string, { bg: string; color: string }> = {
-  success: { bg: 'rgba(5,150,105,0.1)', color: '#059669' },
-  warning: { bg: 'rgba(217,119,6,0.1)', color: '#D97706' },
-  error: { bg: 'rgba(220,38,38,0.1)', color: '#DC2626' },
+  success: { bg: 'rgba(5,150,105,0.1)', color: 'var(--color-success)' },
+  warning: { bg: 'rgba(217,119,6,0.1)', color: 'var(--color-warning)' },
+  error: { bg: 'rgba(220,38,38,0.1)', color: 'var(--color-error)' },
 };
 
 export function ActivityLogModal({ isOpen, onClose, member }: ActivityLogModalProps) {
@@ -811,11 +811,11 @@ export function BulkReassignModal({ isOpen, onClose, member, allMembers, onSave 
                     <div
                       className="w-4 h-4 rounded-full flex-shrink-0 flex items-center justify-center"
                       style={{
-                        border: `2px solid ${isSelected ? 'var(--color-primary)' : 'rgba(0,0,0,0.2)'}`,
+                        border: `2px solid ${isSelected ? 'var(--color-primary)' : 'var(--color-surface)'}`,
                         background: isSelected ? 'var(--color-primary)' : 'transparent',
                       }}
                     >
-                      {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                      {isSelected && <div className="w-2 h-2 rounded-full bg-[var(--color-surface-raised)]" />}
                     </div>
                     <PersonAvatar name={m.name} size={32} />
                     <div>

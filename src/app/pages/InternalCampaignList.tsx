@@ -65,7 +65,7 @@ export default function InternalCampaignList() {
               id="client-select"
               value={clientFilter}
               onChange={(e) => setClientFilter(e.target.value)}
-              className="w-full appearance-none bg-white"
+              className="w-full appearance-none bg-[var(--color-surface-raised)]"
               style={{
                 padding: '11px 14px',
                 fontSize: '14px',

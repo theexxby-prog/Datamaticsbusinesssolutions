@@ -1278,7 +1278,7 @@ export default function Feedback() {
                                           key={i}
                                           className="px-3 py-2 rounded-lg"
                                           style={{
-                                            background: 'rgba(255,255,255,0.6)',
+                                            background: 'var(--color-surface-raised)',
                                             border: '1px solid var(--color-border)',
                                           }}
                                         >
@@ -1295,7 +1295,7 @@ export default function Feedback() {
                                         <div
                                           key={cap.label}
                                           className="flex items-start gap-2.5 p-3 rounded-lg"
-                                          style={{ background: 'rgba(255,255,255,0.6)', border: '1px solid var(--color-border)' }}
+                                          style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}
                                         >
                                           <div
                                             className="w-6 h-6 rounded-md flex items-center justify-center flex-shrink-0"
@@ -1314,7 +1314,7 @@ export default function Feedback() {
                                   <div
                                     className="flex items-start gap-2.5 p-3 rounded-lg"
                                     style={{
-                                      background: 'rgba(255,255,255,0.6)',
+                                      background: 'var(--color-surface-raised)',
                                       border: '1px solid var(--color-border)',
                                       borderLeft: '3px solid var(--color-primary)',
                                     }}
@@ -1507,9 +1507,9 @@ export default function Feedback() {
                     style={{
                       fontSize: '12px',
                       fontWeight: 600,
-                      borderColor: isRecording ? '#DC2626' : 'var(--color-primary)',
+                      borderColor: isRecording ? 'var(--color-error)' : 'var(--color-primary)',
                       background: isRecording ? 'rgba(220,38,38,0.06)' : 'rgba(186,32,39,0.06)',
-                      color: isRecording ? '#DC2626' : 'var(--color-primary)',
+                      color: isRecording ? 'var(--color-error)' : 'var(--color-primary)',
                       cursor: 'pointer',
                     }}
                   >
@@ -1545,7 +1545,7 @@ export default function Feedback() {
                   placeholder={isRecording ? 'Listening… start speaking.' : 'Please provide as much detail as possible, or use Dictate above to speak your feedback…'}
                   className="input-base px-3 py-2.5 resize-none w-full"
                   style={{
-                    borderColor: isRecording ? '#DC2626' : undefined,
+                    borderColor: isRecording ? 'var(--color-error)' : undefined,
                     outline: isRecording ? '2px solid rgba(220,38,38,0.15)' : undefined,
                   }}
                 />
@@ -1566,8 +1566,8 @@ export default function Feedback() {
                       border: '1px solid rgba(220,38,38,0.15)',
                     }}
                   >
-                    <MicOff className="w-3 h-3 flex-shrink-0 mt-0.5" style={{ color: '#DC2626' }} />
-                    <p style={{ fontSize: '12px', color: '#DC2626', fontStyle: 'italic' }}>
+                    <MicOff className="w-3 h-3 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-error)' }} />
+                    <p style={{ fontSize: '12px', color: 'var(--color-error)', fontStyle: 'italic' }}>
                       {interimText || 'Listening… speak clearly into your microphone.'}
                     </p>
                   </motion.div>
@@ -1586,19 +1586,19 @@ export default function Feedback() {
                   >
                     {micError === 'blocked' ? (
                       <div className="flex items-start gap-2">
-                        <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: '#DC2626' }} />
-                        <div style={{ fontSize: '12px', color: '#DC2626' }}>
+                        <AlertCircle className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" style={{ color: 'var(--color-error)' }} />
+                        <div style={{ fontSize: '12px', color: 'var(--color-error)' }}>
                           <p style={{ fontWeight: 600 }}>Microphone access is unavailable here</p>
-                          <p className="mt-0.5" style={{ color: '#B91C1C' }}>
+                          <p className="mt-0.5" style={{ color: 'var(--color-error)' }}>
                             Voice dictation doesn't work inside the Figma app or embedded previews — the webview doesn't have microphone access.
                           </p>
-                          <p className="mt-1.5" style={{ color: '#B91C1C' }}>
+                          <p className="mt-1.5" style={{ color: 'var(--color-error)' }}>
                             To use Dictate, open this portal in <strong>Chrome</strong> or <strong>Edge</strong> directly — then click Dictate and allow microphone access when prompted.
                           </p>
                         </div>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2" style={{ fontSize: '12px', color: '#DC2626' }}>
+                      <div className="flex items-center gap-2" style={{ fontSize: '12px', color: 'var(--color-error)' }}>
                         <AlertCircle className="w-3 h-3 flex-shrink-0" />
                         {micError}
                       </div>

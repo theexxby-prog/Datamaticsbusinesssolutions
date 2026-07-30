@@ -72,10 +72,10 @@ export function MobileTabBar() {
     <nav
       className="mobile-tab-bar md:hidden fixed bottom-0 left-0 right-0 z-50 flex items-end"
       style={{
-        background: 'rgba(255, 255, 255, 0.92)',
+        background: 'var(--color-surface-raised)',
         backdropFilter: 'blur(12px)',
         WebkitBackdropFilter: 'blur(12px)',
-        borderTop: '1px solid rgba(0, 0, 0, 0.08)',
+        borderTop: '1px solid var(--color-border)',
         boxShadow: '0 -4px 24px rgba(0, 0, 0, 0.08)',
       }}
     >
@@ -100,8 +100,8 @@ export function MobileTabBar() {
                   className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg -mt-4"
                   style={{
                     background: isActive
-                      ? '#9A1A21'
-                      : 'linear-gradient(135deg, #BA2027 0%, #D32F2F 100%)',
+                      ? 'var(--color-primary-dark)'
+                      : 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)',
                     boxShadow: '0 4px 16px rgba(186,32,39,0.35)',
                   }}
                 >
@@ -112,7 +112,7 @@ export function MobileTabBar() {
                     fontSize: 10,
                     fontWeight: 600,
                     marginTop: 2,
-                    color: isActive ? '#BA2027' : '#4B5563',
+                    color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)',
                     letterSpacing: '0.02em',
                   }}
                 >
@@ -132,14 +132,14 @@ export function MobileTabBar() {
             >
               <Icon
                 className="w-5 h-5"
-                style={{ color: isActive ? '#BA2027' : '#4B5563' }}
+                style={{ color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)' }}
               />
               <span
                 style={{
                   fontSize: 10,
                   fontWeight: isActive ? 700 : 500,
                   marginTop: 3,
-                  color: isActive ? '#BA2027' : '#4B5563',
+                  color: isActive ? 'var(--color-primary)' : 'var(--color-text-secondary)',
                   letterSpacing: '0.02em',
                 }}
               >
@@ -149,7 +149,7 @@ export function MobileTabBar() {
               {isActive && (
                 <div
                   className="w-1 h-1 rounded-full mt-0.5"
-                  style={{ background: '#BA2027' }}
+                  style={{ background: 'var(--color-primary)' }}
                 />
               )}
             </button>

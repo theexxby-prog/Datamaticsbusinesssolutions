@@ -13,9 +13,9 @@ interface IntegrationChipProps {
 
 const statusConfig: Record<IntegrationSyncStatus, { icon: React.ElementType; color: string; bg: string; label: string; spin?: boolean }> = {
   not_synced: { icon: CircleDashed, color: 'var(--color-text-muted)', bg: 'var(--color-border-light)', label: 'Not synced' },
-  syncing: { icon: Loader2, color: '#D97706', bg: 'rgba(217,119,6,0.1)', label: 'Syncing', spin: true },
-  synced: { icon: CheckCircle2, color: 'var(--color-success, #0F9D58)', bg: 'var(--color-success-bg, rgba(15,157,88,0.1))', label: 'Synced' },
-  failed: { icon: AlertTriangle, color: '#DC2626', bg: 'rgba(220,38,38,0.1)', label: 'Failed' },
+  syncing: { icon: Loader2, color: 'var(--color-warning)', bg: 'rgba(217,119,6,0.1)', label: 'Syncing', spin: true },
+  synced: { icon: CheckCircle2, color: 'var(--color-success)', bg: 'var(--color-success-bg, rgba(15,157,88,0.1))', label: 'Synced' },
+  failed: { icon: AlertTriangle, color: 'var(--color-error)', bg: 'rgba(220,38,38,0.1)', label: 'Failed' },
 };
 
 /** Small chip communicating the sync state of an external system. */

@@ -36,16 +36,16 @@ function ErrorCard({ error }: { error: unknown }) {
 
   return (
     <div className="flex items-center justify-center min-h-[60vh] p-6">
-      <div className="w-full max-w-lg rounded-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 p-8 text-center shadow-sm">
-        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#BA2027]/10">
-          <AlertTriangle className="h-7 w-7 text-[#BA2027]" />
+      <div className="w-full max-w-lg rounded-2xl border border-gray-200 bg-[var(--color-surface-raised)] p-8 text-center shadow-sm">
+        <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[var(--color-primary)]/10">
+          <AlertTriangle className="h-7 w-7 text-[var(--color-primary)]" />
         </div>
 
-        <h2 className="mb-2 text-xl font-bold text-gray-900 dark:text-gray-50">
+        <h2 className="mb-2 text-xl font-bold text-gray-900">
           {stale ? 'This page needs a refresh' : "This page didn't load"}
         </h2>
 
-        <p className="mb-6 text-sm text-gray-600 dark:text-gray-400">
+        <p className="mb-6 text-sm text-gray-600">
           {stale
             ? 'The app was updated while this tab was open. Reloading will pick up the latest version.'
             : 'Something went wrong rendering this page. The rest of the portal is unaffected — you can carry on from anywhere in the menu.'}
@@ -54,14 +54,14 @@ function ErrorCard({ error }: { error: unknown }) {
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#BA2027] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#A01C22] active:bg-[#8A181D] focus:outline-none focus:ring-2 focus:ring-[#BA2027] focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:bg-[#8A181D] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
           >
             <RotateCw className="h-4 w-4" />
             Reload this page
           </button>
           <button
             onClick={() => navigate('/dashboard')}
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 dark:border-gray-600 px-4 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 transition-colors hover:bg-gray-50 dark:hover:bg-gray-800 active:bg-gray-100 dark:active:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-[#BA2027] focus:ring-offset-2 dark:focus:ring-offset-gray-900"
+            className="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-semibold text-gray-700 transition-colors hover:bg-gray-50 active:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
           >
             <LayoutDashboard className="h-4 w-4" />
             Back to dashboard
@@ -70,10 +70,10 @@ function ErrorCard({ error }: { error: unknown }) {
 
         {!stale && (
           <details className="mt-6 text-left">
-            <summary className="cursor-pointer text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200">
+            <summary className="cursor-pointer text-xs text-gray-500 hover:text-gray-700">
               Technical detail
             </summary>
-            <pre className="mt-2 max-h-40 overflow-auto rounded-lg bg-gray-50 dark:bg-gray-800 p-3 text-left text-xs text-gray-700 dark:text-gray-300">
+            <pre className="mt-2 max-h-40 overflow-auto rounded-lg bg-gray-50 p-3 text-left text-xs text-gray-700">
               {describe(error)}
             </pre>
           </details>

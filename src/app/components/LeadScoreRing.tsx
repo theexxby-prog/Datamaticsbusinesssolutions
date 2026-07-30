@@ -17,10 +17,10 @@ export function LeadScoreRing({ score, size = 60, showLabel = true }: LeadScoreR
   }, [score]);
 
   const getColor = (score: number) => {
-    if (score >= 90) return '#0F9D58';
-    if (score >= 75) return '#4285F4';
-    if (score >= 60) return '#F4B400';
-    return '#6B7280';
+    if (score >= 90) return 'var(--color-success)';
+    if (score >= 75) return 'var(--color-info)';
+    if (score >= 60) return 'var(--color-warning)';
+    return 'var(--color-text-secondary)';
   };
 
   const getLabel = (score: number) => {
@@ -46,7 +46,7 @@ export function LeadScoreRing({ score, size = 60, showLabel = true }: LeadScoreR
           fill="none"
           stroke="currentColor"
           strokeWidth="3"
-          className="text-gray-200 dark:text-gray-700"
+          className="text-gray-200"
         />
         {/* Progress circle */}
         <circle
@@ -69,7 +69,7 @@ export function LeadScoreRing({ score, size = 60, showLabel = true }: LeadScoreR
           {score}
         </div>
         {showLabel && (
-          <div className="text-[9px] text-gray-500 dark:text-gray-400 uppercase tracking-wide font-medium">
+          <div className="text-[9px] text-gray-500 uppercase tracking-wide font-medium">
             {getLabel(score)}
           </div>
         )}

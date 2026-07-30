@@ -27,7 +27,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2.5 rounded-lg border transition-all flex items-center gap-2 text-sm font-medium bg-white border-gray-300 text-gray-700 hover:bg-gray-50"
+        className="px-4 py-2.5 rounded-lg border transition-all flex items-center gap-2 text-sm font-medium bg-[var(--color-surface-raised)] border-gray-300 text-gray-700 hover:bg-gray-50"
       >
         <Calendar className="w-4 h-4" />
         <span>{selectedRange.label}</span>
@@ -40,7 +40,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
             className="fixed inset-0 z-40" 
             onClick={() => setIsOpen(false)}
           />
-          <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-2xl border z-50 overflow-hidden animate-slideInUp bg-white border-gray-200">
+          <div className="absolute top-full right-0 mt-2 w-56 rounded-xl shadow-2xl border z-50 overflow-hidden animate-slideInUp bg-[var(--color-surface-raised)] border-gray-200">
             <div className="p-2">
               {DATE_RANGES.map((range) => (
                 <button
@@ -51,7 +51,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-lg text-sm transition-all ${
                     value === range.value
-                      ? 'bg-[#BA2027] text-white'
+                      ? 'bg-[var(--color-primary)] text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >

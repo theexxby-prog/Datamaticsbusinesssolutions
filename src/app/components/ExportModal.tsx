@@ -62,7 +62,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-2xl shadow-2xl border z-50 bg-white border-gray-200"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-md rounded-2xl shadow-2xl border z-50 bg-[var(--color-surface-raised)] border-gray-200"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
@@ -91,13 +91,13 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
                       onClick={() => setSelectedFormat(format.id as any)}
                       className={`w-full p-4 rounded-lg border transition-all text-left ${
                         selectedFormat === format.id
-                          ? 'border-[#BA2027] bg-[#BA2027]/5'
+                          ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5'
                           : 'border-gray-200 hover:bg-gray-50'
                       }`}
                     >
                       <div className="flex items-start gap-3">
                         <format.icon className={`w-5 h-5 mt-0.5 ${
-                          selectedFormat === format.id ? 'text-[#BA2027]' : 'text-gray-400'
+                          selectedFormat === format.id ? 'text-[var(--color-primary)]' : 'text-gray-400'
                         }`} />
                         <div className="flex-1">
                           <div className="font-medium mb-1 text-gray-900">
@@ -108,7 +108,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
                           </div>
                         </div>
                         {selectedFormat === format.id && (
-                          <Check className="w-5 h-5 text-[#BA2027]" />
+                          <Check className="w-5 h-5 text-[var(--color-primary)]" />
                         )}
                       </div>
                     </button>
@@ -127,7 +127,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
                       type="checkbox"
                       checked={includeCharts}
                       onChange={(e) => setIncludeCharts(e.target.checked)}
-                      className="w-5 h-5 rounded cursor-pointer transition-all appearance-none bg-white border-2 border-gray-300 hover:border-gray-400 checked:bg-[#BA2027] checked:border-[#BA2027] focus:ring-2 focus:ring-offset-0 focus:ring-[#BA2027]/50 relative"
+                      className="w-5 h-5 rounded cursor-pointer transition-all appearance-none bg-[var(--color-surface-raised)] border-2 border-gray-300 hover:border-gray-400 checked:bg-[var(--color-primary)] checked:border-[var(--color-primary)] focus:ring-2 focus:ring-offset-0 focus:ring-[var(--color-primary)]/50 relative"
                       style={{
                         backgroundImage: includeCharts
                           ? `url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E")`
@@ -144,7 +144,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
                       type="checkbox"
                       checked={includeData}
                       onChange={(e) => setIncludeData(e.target.checked)}
-                      className="w-5 h-5 rounded cursor-pointer transition-all appearance-none bg-white border-2 border-gray-300 hover:border-gray-400 checked:bg-[#BA2027] checked:border-[#BA2027] focus:ring-2 focus:ring-offset-0 focus:ring-[#BA2027]/50 relative"
+                      className="w-5 h-5 rounded cursor-pointer transition-all appearance-none bg-[var(--color-surface-raised)] border-2 border-gray-300 hover:border-gray-400 checked:bg-[var(--color-primary)] checked:border-[var(--color-primary)] focus:ring-2 focus:ring-offset-0 focus:ring-[var(--color-primary)]/50 relative"
                       style={{
                         backgroundImage: includeData
                           ? `url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E")`
@@ -170,7 +170,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
               </button>
               <button
                 onClick={handleExport}
-                className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[#BA2027] to-[#D32F2F]"
+                className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)]"
               >
                 <Download className="w-4 h-4" />
                 Export

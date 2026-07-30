@@ -95,7 +95,7 @@ export function NotificationsTabContent() {
                     width: '44px',
                     height: '24px',
                     borderRadius: '12px',
-                    background: isOn ? '#BA2027' : '#D1D5DB',
+                    background: isOn ? 'var(--color-primary)' : 'var(--color-border)',
                     border: 'none',
                     cursor: 'pointer',
                     transition: 'background 0.2s ease',
@@ -110,7 +110,7 @@ export function NotificationsTabContent() {
                       width: '18px',
                       height: '18px',
                       borderRadius: '50%',
-                      background: '#ffffff',
+                      background: 'var(--color-surface-raised)',
                       boxShadow: '0 1px 3px rgba(0,0,0,0.25)',
                       transition: 'left 0.2s ease',
                     }}
@@ -127,7 +127,7 @@ export function NotificationsTabContent() {
         className="p-4 rounded-xl flex items-start gap-3"
         style={{ background: 'rgba(186,32,39,0.04)', border: '1px solid rgba(186,32,39,0.12)' }}
       >
-        <Bell className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#BA2027' }} />
+        <Bell className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
         <div>
           <p style={{ fontSize: 'var(--font-size-sm)', fontWeight: 600, color: 'var(--color-text-primary)' }}>
             In-app &amp; Email

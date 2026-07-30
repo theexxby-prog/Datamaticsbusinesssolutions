@@ -51,8 +51,8 @@ export function LeadDistributionChart({ data }: LeadDistributionChartProps) {
             </Pie>
             <Tooltip
               contentStyle={{
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #E5E7EB',
+                backgroundColor: 'var(--color-surface-raised)',
+                border: '1px solid var(--color-border)',
                 borderRadius: '8px',
                 fontSize: '13px'
               }}

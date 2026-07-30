@@ -90,16 +90,16 @@ const URGENCY: Record<UrgencyLevel, {
   badge: string; badgeText: string; label: string;
 }> = {
   high: {
-    dot: '#DC2626', border: '#FCA5A5', rowBg: 'rgba(220,38,38,0.03)',
-    badge: 'rgba(220,38,38,0.10)', badgeText: '#DC2626', label: 'Unprotected',
+    dot: 'var(--color-error)', border: 'var(--color-error)', rowBg: 'rgba(220,38,38,0.03)',
+    badge: 'rgba(220,38,38,0.10)', badgeText: 'var(--color-error)', label: 'Unprotected',
   },
   medium: {
-    dot: '#D97706', border: '#FDE68A', rowBg: 'rgba(217,119,6,0.02)',
-    badge: 'rgba(217,119,6,0.10)', badgeText: '#D97706', label: 'At Risk',
+    dot: 'var(--color-warning)', border: 'var(--color-warning-bg)', rowBg: 'rgba(217,119,6,0.02)',
+    badge: 'rgba(217,119,6,0.10)', badgeText: 'var(--color-warning)', label: 'At Risk',
   },
   ok: {
-    dot: '#059669', border: 'transparent', rowBg: 'transparent',
-    badge: 'rgba(5,150,105,0.10)', badgeText: '#059669', label: 'Covered',
+    dot: 'var(--color-success)', border: 'transparent', rowBg: 'transparent',
+    badge: 'rgba(5,150,105,0.10)', badgeText: 'var(--color-success)', label: 'Covered',
   },
 };
 
@@ -134,7 +134,7 @@ function AssignSelect({
           borderRadius: 10,
           fontSize: 13,
           fontWeight: value ? 500 : 400,
-          color: value ? (danger ? '#DC2626' : 'var(--color-text-primary)') : 'var(--color-text-secondary)',
+          color: value ? (danger ? 'var(--color-error)' : 'var(--color-text-primary)') : 'var(--color-text-secondary)',
           background: 'white',
           border: `1.5px solid ${
             danger    ? 'rgba(220,38,38,0.45)' :
@@ -154,7 +154,7 @@ function AssignSelect({
       </select>
       <ChevronDown
         className="w-3.5 h-3.5 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none"
-        style={{ color: danger ? '#DC2626' : 'var(--color-text-secondary)' }}
+        style={{ color: danger ? 'var(--color-error)' : 'var(--color-text-secondary)' }}
       />
       {modified && (
         <span
@@ -256,7 +256,7 @@ function ClientRow({
         />
         <div
           className="flex items-center gap-1 mt-1.5"
-          style={{ fontSize: 12, color: mgrLoad > 3 ? '#D97706' : 'var(--color-text-secondary)' }}
+          style={{ fontSize: 12, color: mgrLoad > 3 ? 'var(--color-warning)' : 'var(--color-text-secondary)' }}
         >
           {mgrLoad > 3 && <AlertTriangle className="w-3 h-3 flex-shrink-0" />}
           <span>{mgrLoad > 0 ? `${mgrLoad} client${mgrLoad !== 1 ? 's' : ''}` : 'No clients yet'}</span>
@@ -276,7 +276,7 @@ function ClientRow({
         />
         <div className="mt-1.5" style={{ fontSize: 12 }}>
           {urgency.level === 'high' ? (
-            <span className="flex items-center gap-1" style={{ color: '#DC2626', fontWeight: 600 }}>
+            <span className="flex items-center gap-1" style={{ color: 'var(--color-error)', fontWeight: 600 }}>
               <AlertCircle className="w-3 h-3 flex-shrink-0" />
               {!currentBak || currentBak === '—' ? 'No backup set' : 'Same as manager'}
             </span>
@@ -406,7 +406,7 @@ function ClientMobileCard({
             modified={modifiedBak}
           />
           {urgency.level === 'high' && (
-            <div className="flex items-center gap-1 mt-1" style={{ fontSize: 11, color: '#DC2626', fontWeight: 600 }}>
+            <div className="flex items-center gap-1 mt-1" style={{ fontSize: 11, color: 'var(--color-error)', fontWeight: 600 }}>
               <AlertCircle className="w-3 h-3" />
               {!currentBak || currentBak === '—' ? 'No backup set' : 'Same as manager'}
             </div>
@@ -525,7 +525,7 @@ export function ClientCoverageModal({
   // Filter pill helper
   const pillStyle = (f: FilterLevel): React.CSSProperties => {
     const active  = filter === f;
-    const colours = { all: '#BA2027', high: '#DC2626', medium: '#D97706', ok: '#059669' };
+    const colours = { all: 'var(--color-primary)', high: 'var(--color-error)', medium: 'var(--color-warning)', ok: 'var(--color-success)' };
     const c = colours[f];
     return {
       padding: '5px 12px',
@@ -563,7 +563,7 @@ export function ClientCoverageModal({
         exit={{ opacity: 0 }}
         transition={{ duration: 0.2 }}
         className="fixed inset-0 z-50"
-        style={{ background: 'rgba(0,0,0,0.50)', backdropFilter: 'blur(6px)' }}
+        style={{ background: 'var(--color-surface)', backdropFilter: 'blur(6px)' }}
         onClick={onClose}
       />
 
@@ -579,7 +579,7 @@ export function ClientCoverageModal({
           maxWidth: 1000,
           maxHeight: '92vh',
           margin: 'auto',
-          background: '#FFFFFF',
+          background: 'var(--color-surface-raised)',
           border: '1px solid var(--color-border)',
           boxShadow: '0 24px 64px rgba(0,0,0,0.14), 0 8px 24px rgba(0,0,0,0.08)',
         }}
@@ -587,7 +587,7 @@ export function ClientCoverageModal({
         {/* ── HEADER ────────────────────────────────────────────────────────── */}
         <div
           className="flex-shrink-0 px-5 py-4"
-          style={{ borderBottom: '1px solid var(--color-border)', background: '#FAFAFA' }}
+          style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}
         >
           {/* Title row */}
           <div className="flex items-center justify-between gap-3 mb-3">
@@ -610,8 +610,8 @@ export function ClientCoverageModal({
                       className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full flex-shrink-0"
                       style={{ background: 'rgba(220,38,38,0.10)', border: '1px solid rgba(220,38,38,0.25)' }}
                     >
-                      <Zap className="w-3 h-3" style={{ color: '#DC2626' }} />
-                      <span style={{ fontSize: 11, fontWeight: 700, color: '#DC2626' }}>{counts.high} urgent</span>
+                      <Zap className="w-3 h-3" style={{ color: 'var(--color-error)' }} />
+                      <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--color-error)' }}>{counts.high} urgent</span>
                     </motion.span>
                   )}
                 </div>
@@ -641,26 +641,26 @@ export function ClientCoverageModal({
                 border: `1px solid ${healthPct >= 80 ? 'rgba(5,150,105,0.2)' : 'rgba(217,119,6,0.2)'}`,
               }}
             >
-              <span style={{ fontSize: 12, fontWeight: 700, color: healthPct >= 80 ? '#059669' : '#D97706' }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: healthPct >= 80 ? 'var(--color-success)' : 'var(--color-warning)' }}>
                 {healthPct}% healthy
               </span>
             </div>
             {counts.high > 0 && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl" style={{ background: 'rgba(220,38,38,0.08)', border: '1px solid rgba(220,38,38,0.2)' }}>
-                <AlertTriangle className="w-3.5 h-3.5" style={{ color: '#DC2626' }} />
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#DC2626' }}>{counts.high} unprotected</span>
+                <AlertTriangle className="w-3.5 h-3.5" style={{ color: 'var(--color-error)' }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-error)' }}>{counts.high} unprotected</span>
               </div>
             )}
             {counts.medium > 0 && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl" style={{ background: 'rgba(217,119,6,0.08)', border: '1px solid rgba(217,119,6,0.2)' }}>
-                <AlertCircle className="w-3.5 h-3.5" style={{ color: '#D97706' }} />
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#D97706' }}>{counts.medium} at risk</span>
+                <AlertCircle className="w-3.5 h-3.5" style={{ color: 'var(--color-warning)' }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-warning)' }}>{counts.medium} at risk</span>
               </div>
             )}
             {counts.ok > 0 && (
               <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl" style={{ background: 'rgba(5,150,105,0.08)', border: '1px solid rgba(5,150,105,0.2)' }}>
-                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: '#059669' }} />
-                <span style={{ fontSize: 12, fontWeight: 700, color: '#059669' }}>{counts.ok} covered</span>
+                <CheckCircle2 className="w-3.5 h-3.5" style={{ color: 'var(--color-success)' }} />
+                <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-success)' }}>{counts.ok} covered</span>
               </div>
             )}
           </div>
@@ -676,14 +676,14 @@ export function ClientCoverageModal({
               className="flex-shrink-0 flex items-center gap-3 px-5 py-2.5"
               style={{ background: 'rgba(220,38,38,0.05)', borderBottom: '1px solid rgba(220,38,38,0.12)' }}
             >
-              <AlertTriangle className="w-4 h-4 flex-shrink-0" style={{ color: '#DC2626' }} />
-              <span style={{ fontSize: 13, color: '#DC2626', flex: 1 }}>
+              <AlertTriangle className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-error)' }} />
+              <span style={{ fontSize: 13, color: 'var(--color-error)', flex: 1 }}>
                 <strong>{counts.high} client{counts.high !== 1 ? 's are' : ' is'} unprotected</strong> — assign a backup manager immediately to ensure continuity.
               </span>
               <button
                 onClick={() => setFilter('high')}
                 className="flex-shrink-0 px-3 py-1 rounded-lg transition-colors"
-                style={{ fontSize: 12, fontWeight: 700, color: '#DC2626', border: '1px solid rgba(220,38,38,0.3)', background: 'rgba(220,38,38,0.08)', cursor: 'pointer' }}
+                style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.3)', background: 'rgba(220,38,38,0.08)', cursor: 'pointer' }}
                 onMouseEnter={e => (e.currentTarget.style.background = 'rgba(220,38,38,0.14)')}
                 onMouseLeave={e => (e.currentTarget.style.background = 'rgba(220,38,38,0.08)')}
               >
@@ -696,7 +696,7 @@ export function ClientCoverageModal({
         {/* ── FILTER + SEARCH ───────────────────────────────────────────────── */}
         <div
           className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center gap-2.5 px-5 py-3"
-          style={{ borderBottom: '1px solid var(--color-border)', background: '#FAFAFA' }}
+          style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}
         >
           <div className="flex items-center gap-1.5 flex-wrap">
             {(['all', 'high', 'medium', 'ok'] as FilterLevel[]).map(f => (
@@ -705,7 +705,7 @@ export function ClientCoverageModal({
                 {f !== 'all' && (
                   <span
                     className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full"
-                    style={{ fontSize: 10, background: filter === f ? 'rgba(0,0,0,0.12)' : 'rgba(0,0,0,0.07)' }}
+                    style={{ fontSize: 10, background: filter === f ? 'var(--color-surface)' : 'var(--color-surface)' }}
                   >
                     {counts[f as 'high'|'medium'|'ok']}
                   </span>
@@ -761,7 +761,7 @@ export function ClientCoverageModal({
               {/* Desktop table — hidden on mobile */}
               <div className="hidden md:block">
                 <table className="w-full">
-                  <thead style={{ background: '#F9FAFB', borderBottom: '1px solid var(--color-border)', position: 'sticky', top: 0, zIndex: 1 }}>
+                  <thead style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', position: 'sticky', top: 0, zIndex: 1 }}>
                     <tr>
                       {['Client', 'Campaign Manager', 'Backup Manager', 'Coverage'].map(col => (
                         <th
@@ -795,7 +795,7 @@ export function ClientCoverageModal({
         {/* ── FOOTER ────────────────────────────────────────────────────────── */}
         <div
           className="flex-shrink-0 flex flex-col sm:flex-row sm:items-center gap-3 px-5 py-4"
-          style={{ borderTop: '1px solid var(--color-border)', background: '#FAFAFA' }}
+          style={{ borderTop: '1px solid var(--color-border)', background: 'var(--color-surface)' }}
         >
           <div className="flex-1">
             <AnimatePresence mode="wait">

@@ -201,9 +201,9 @@
    ============================================ */
 
 @theme inline {
-  /* Default sans → self-hosted Inter, so Tailwind's font-sans + the global
+  /* Default sans → self-hosted Plus Jakarta Sans, so Tailwind's font-sans + the global
      default both resolve to Inter (no element falls back to system-ui). */
-  --font-sans: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-sans: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   /* Core */
   --color-background:   var(--background);
@@ -275,7 +275,7 @@
 
   body {
     @apply bg-background text-foreground;
-    font-family: 'Inter Variable', 'Inter', -apple-system, BlinkMacSystemFont,
+    font-family: 'Plus Jakarta Sans Variable', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont,
                  'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', sans-serif;
     font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
     -webkit-font-smoothing: antialiased;

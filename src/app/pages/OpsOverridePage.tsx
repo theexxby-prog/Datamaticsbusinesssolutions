@@ -249,7 +249,7 @@ export default function OpsOverridePage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -40, scale: 0.95 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[#1C1C1E]/95 border border-[#BA2027]/40 shadow-2xl backdrop-blur-xl text-white px-6 py-4 rounded-2xl flex items-center gap-3.5 min-w-[320px] max-w-[500px]"
+              className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--color-surface-inverse)]/95 border border-[var(--color-primary)]/40 shadow-2xl backdrop-blur-xl text-[var(--color-text-inverse)] px-6 py-4 rounded-2xl flex items-center gap-3.5 min-w-[320px] max-w-[500px]"
             >
               <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
               <span className="text-xs font-semibold tracking-wide leading-relaxed">{toastMessage}</span>
@@ -368,7 +368,7 @@ export default function OpsOverridePage() {
                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase ${
                           camp.leadAcceptanceMethod === 'convertr' 
                             ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-200/20' 
-                            : 'bg-gray-50 text-gray-700 dark:bg-gray-800/40 dark:text-gray-400'
+                            : 'bg-gray-50 text-gray-700'
                         }`}>
                           {camp.leadAcceptanceMethod === 'convertr' ? '⚡ Convertr' : '📁 Manual'}
                         </span>
@@ -395,7 +395,7 @@ export default function OpsOverridePage() {
                         <button
                           onClick={() => openEditDrawer(camp)}
                           className={`btn-ghost p-2 rounded-lg transition-all ${
-                            isOpsManager ? 'hover:text-[#BA2027] hover:bg-[#BA2027]/10' : 'hover:text-blue-500 hover:bg-blue-500/10'
+                            isOpsManager ? 'hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10' : 'hover:text-blue-500 hover:bg-blue-500/10'
                           }`}
                           title={isOpsManager ? 'Edit Campaign Metrics' : 'View Campaign Metrics'}
                         >
@@ -438,20 +438,20 @@ export default function OpsOverridePage() {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-                className="fixed right-0 top-0 bottom-0 w-full max-w-[550px] bg-white dark:bg-[#1C1C1E] border-l border-[#EEECEC] dark:border-gray-800 z-50 shadow-2xl flex flex-col overflow-hidden"
+                className="fixed right-0 top-0 bottom-0 w-full max-w-[550px] bg-[var(--color-surface-raised)] border-l border-[var(--color-border)] z-50 shadow-2xl flex flex-col overflow-hidden"
               >
                 
                 {/* Header */}
-                <div className="px-6 py-5 border-b border-[#EEECEC] dark:border-gray-800 flex items-center justify-between bg-gray-50/50 dark:bg-gray-900/30">
+                <div className="px-6 py-5 border-b border-[var(--color-border)] flex items-center justify-between bg-gray-50/50">
                   <div>
-                    <span className="text-[10px] font-bold text-[#BA2027] tracking-wider uppercase">{selectedCampaign.clientName}</span>
+                    <span className="text-[10px] font-bold text-[var(--color-primary)] tracking-wider uppercase">{selectedCampaign.clientName}</span>
                     <h2 className="text-lg font-bold truncate pr-4 max-w-[380px] mt-0.5" style={{ color: 'var(--color-text-primary)' }}>
                       {selectedCampaign.name}
                     </h2>
                   </div>
                   <button 
                     onClick={() => setIsDrawerOpen(false)}
-                    className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -490,7 +490,7 @@ export default function OpsOverridePage() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">Target Lead Goal</label>
-                        <span className="text-xs font-bold text-[#BA2027] dark:text-red-400">{liveTarget.toLocaleString()} / 5,000</span>
+                        <span className="text-xs font-bold text-[var(--color-primary)] dark:text-red-400">{liveTarget.toLocaleString()} / 5,000</span>
                       </div>
                       <div className="flex items-center gap-4">
                         {/* Read-only from backend (live API) — production parity */}
@@ -501,7 +501,7 @@ export default function OpsOverridePage() {
                           disabled
                           value={Math.min(liveTarget, 5000)}
                           readOnly
-                          className="flex-1 h-2 rounded-lg appearance-none bg-gray-200 dark:bg-gray-800 accent-[#BA2027] focus:outline-none disabled:opacity-40"
+                          className="flex-1 h-2 rounded-lg appearance-none bg-gray-200 accent-[var(--color-primary)] focus:outline-none disabled:opacity-40"
                         />
                         <input
                           type="number"
@@ -514,7 +514,7 @@ export default function OpsOverridePage() {
                       </div>
                     </div>
 
-                    <div className="border-t border-[#EEECEC] dark:border-gray-800 my-4" />
+                    <div className="border-t border-[var(--color-border)] my-4" />
 
                     {/* Email Outreach Performance Stats */}
                     <div className="space-y-4">
@@ -528,7 +528,7 @@ export default function OpsOverridePage() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <label className="text-[11px] font-semibold text-gray-400">Emails Sent</label>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{liveSent.toLocaleString()} / 100,000</span>
+                            <span className="text-xs font-semibold text-gray-500">{liveSent.toLocaleString()} / 100,000</span>
                           </div>
                           <div className="flex items-center gap-4">
                             <input
@@ -538,7 +538,7 @@ export default function OpsOverridePage() {
                               disabled={!isOpsManager}
                               value={Math.min(liveSent, 100000)}
                               onChange={(e) => setEmailsSent(e.target.value)}
-                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 dark:bg-gray-800 accent-[#BA2027] focus:outline-none"
+                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 accent-[var(--color-primary)] focus:outline-none"
                             />
                             <input
                               type="number"
@@ -554,7 +554,7 @@ export default function OpsOverridePage() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <label className="text-[11px] font-semibold text-gray-400">Emails Opened</label>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{liveOpened.toLocaleString()} / {liveSent.toLocaleString()}</span>
+                            <span className="text-xs font-semibold text-gray-500">{liveOpened.toLocaleString()} / {liveSent.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-4">
                             <input
@@ -564,7 +564,7 @@ export default function OpsOverridePage() {
                               disabled={!isOpsManager || liveSent === 0}
                               value={Math.min(liveOpened, liveSent)}
                               onChange={(e) => setEmailsOpened(e.target.value)}
-                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 dark:bg-gray-800 accent-[#BA2027] focus:outline-none disabled:opacity-40"
+                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 accent-[var(--color-primary)] focus:outline-none disabled:opacity-40"
                             />
                             <input
                               type="number"
@@ -582,7 +582,7 @@ export default function OpsOverridePage() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <label className="text-[11px] font-semibold text-gray-400">Emails Clicked</label>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{liveClicked.toLocaleString()} / {liveOpened.toLocaleString()}</span>
+                            <span className="text-xs font-semibold text-gray-500">{liveClicked.toLocaleString()} / {liveOpened.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-4">
                             <input
@@ -592,7 +592,7 @@ export default function OpsOverridePage() {
                               disabled={!isOpsManager || liveOpened === 0}
                               value={Math.min(liveClicked, liveOpened)}
                               onChange={(e) => setEmailsClicked(e.target.value)}
-                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 dark:bg-gray-800 accent-[#BA2027] focus:outline-none disabled:opacity-40"
+                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 accent-[var(--color-primary)] focus:outline-none disabled:opacity-40"
                             />
                             <input
                               type="number"
@@ -619,7 +619,7 @@ export default function OpsOverridePage() {
                       )}
                     </div>
 
-                    <div className="border-t border-[#EEECEC] dark:border-gray-800 my-4" />
+                    <div className="border-t border-[var(--color-border)] my-4" />
 
                     {/* Lead Validation & Delivery Stats */}
                     <div className="space-y-4">
@@ -633,7 +633,7 @@ export default function OpsOverridePage() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <label className="text-[11px] font-semibold text-gray-400">Uploaded Leads</label>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{liveUploaded.toLocaleString()} / 5,000</span>
+                            <span className="text-xs font-semibold text-gray-500">{liveUploaded.toLocaleString()} / 5,000</span>
                           </div>
                           <div className="flex items-center gap-4">
                             <input
@@ -643,7 +643,7 @@ export default function OpsOverridePage() {
                               disabled
                               value={Math.min(liveUploaded, 5000)}
                               readOnly
-                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 dark:bg-gray-800 accent-[#BA2027] focus:outline-none"
+                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 accent-[var(--color-primary)] focus:outline-none"
                             />
                             <input
                               type="number"
@@ -659,7 +659,7 @@ export default function OpsOverridePage() {
                         <div className="space-y-2">
                           <div className="flex justify-between items-center">
                             <label className="text-[11px] font-semibold text-gray-400">Accepted/Delivered Leads</label>
-                            <span className="text-xs font-semibold text-gray-500 dark:text-gray-400">{liveAccepted.toLocaleString()} / {liveUploaded.toLocaleString()}</span>
+                            <span className="text-xs font-semibold text-gray-500">{liveAccepted.toLocaleString()} / {liveUploaded.toLocaleString()}</span>
                           </div>
                           <div className="flex items-center gap-4">
                             <input
@@ -669,7 +669,7 @@ export default function OpsOverridePage() {
                               disabled
                               value={Math.min(liveAccepted, liveUploaded)}
                               readOnly
-                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 dark:bg-gray-800 accent-[#BA2027] focus:outline-none disabled:opacity-40"
+                              className="flex-1 h-2 rounded-lg appearance-none cursor-pointer bg-gray-200 accent-[var(--color-primary)] focus:outline-none disabled:opacity-40"
                             />
                             <input
                               type="number"
@@ -695,12 +695,12 @@ export default function OpsOverridePage() {
                   </div>
 
                   {/* Real-time Client Dashboard Preview Funnel */}
-                  <div className="p-5 rounded-2xl border border-gray-200 dark:border-gray-800 bg-gray-50/50 dark:bg-gray-900/30 space-y-4">
+                  <div className="p-5 rounded-2xl border border-gray-200 bg-gray-50/50 space-y-4">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
                         <Eye className="w-4 h-4" /> Live Client Funnel Preview
                       </span>
-                      <span className="text-[10px] font-semibold text-gray-400 bg-gray-200/50 dark:bg-gray-800/80 px-2 py-0.5 rounded">
+                      <span className="text-[10px] font-semibold text-gray-400 bg-gray-200/50 px-2 py-0.5 rounded">
                         Calculated
                       </span>
                     </div>
@@ -712,7 +712,7 @@ export default function OpsOverridePage() {
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">1. Sent</div>
                         <div className="flex-1 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border border-blue-500/10 rounded-xl p-3 flex justify-between items-center">
-                          <span className="text-gray-800 dark:text-gray-300">{liveSent.toLocaleString()} emails</span>
+                          <span className="text-gray-800">{liveSent.toLocaleString()} emails</span>
                           <span className="text-indigo-600 dark:text-indigo-400 text-[11px]">100%</span>
                         </div>
                       </div>
@@ -721,7 +721,7 @@ export default function OpsOverridePage() {
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">2. Opened</div>
                         <div className="flex-1 ml-2 bg-gradient-to-r from-purple-600/10 to-pink-600/10 border border-purple-500/10 rounded-xl p-3 flex justify-between items-center">
-                          <span className="text-gray-800 dark:text-gray-300">{liveOpened.toLocaleString()} opens</span>
+                          <span className="text-gray-800">{liveOpened.toLocaleString()} opens</span>
                           <span className="text-purple-600 dark:text-purple-400 text-[11px]">{liveOpenRate}% OR</span>
                         </div>
                       </div>
@@ -730,7 +730,7 @@ export default function OpsOverridePage() {
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">3. Clicked</div>
                         <div className="flex-1 ml-4 bg-gradient-to-r from-emerald-600/10 to-teal-600/10 border border-emerald-500/10 rounded-xl p-3 flex justify-between items-center">
-                          <span className="text-gray-800 dark:text-gray-300">{liveClicked.toLocaleString()} clicks</span>
+                          <span className="text-gray-800">{liveClicked.toLocaleString()} clicks</span>
                           <div className="text-right">
                             <div className="text-emerald-600 dark:text-emerald-400 text-[11px]">{liveCTR}% CTR</div>
                             <div className="text-[10px] text-gray-400 mt-0.5">{liveCTOR}% CTOR</div>
@@ -741,15 +741,15 @@ export default function OpsOverridePage() {
                       {/* Delivered Leads */}
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">4. Leads</div>
-                        <div className="flex-1 ml-6 bg-gradient-to-r from-[#BA2027]/10 to-[#9A1A21]/10 border border-[#BA2027]/15 rounded-xl p-3 flex justify-between items-center">
+                        <div className="flex-1 ml-6 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary-dark)]/10 border border-[var(--color-primary)]/15 rounded-xl p-3 flex justify-between items-center">
                           <div className="flex items-center gap-1.5">
-                            <span className="text-gray-800 dark:text-gray-300">{liveAccepted.toLocaleString()} accepted</span>
-                            <span className="text-[10px] bg-gray-200/40 dark:bg-gray-800/60 text-gray-500 px-1.5 py-0.2 rounded font-normal">
+                            <span className="text-gray-800">{liveAccepted.toLocaleString()} accepted</span>
+                            <span className="text-[10px] bg-gray-200/40 text-gray-500 px-1.5 py-0.2 rounded font-normal">
                               Goal: {liveTarget}
                             </span>
                           </div>
                           <div className="text-right">
-                            <div className="text-[#BA2027] dark:text-red-400 text-[11px]">{liveAcceptanceRate}% Accept</div>
+                            <div className="text-[var(--color-primary)] dark:text-red-400 text-[11px]">{liveAcceptanceRate}% Accept</div>
                             <div className="text-[10px] text-gray-400 mt-0.5">{livePaceRate}% of Goal</div>
                           </div>
                         </div>
@@ -760,19 +760,19 @@ export default function OpsOverridePage() {
                 </div>
 
                 {/* Footer Controls */}
-                <div className="p-6 border-t border-[#EEECEC] dark:border-gray-800 flex gap-3 bg-gray-50/50 dark:bg-gray-900/30">
+                <div className="p-6 border-t border-[var(--color-border)] flex gap-3 bg-gray-50/50">
                   {isOpsManager ? (
                     <>
                       <button
                         onClick={() => setIsDrawerOpen(false)}
-                        className="btn-ghost flex-1 py-3 text-sm font-semibold rounded-xl text-gray-700 dark:text-gray-300 border border-gray-200 dark:border-gray-800"
+                        className="btn-ghost flex-1 py-3 text-sm font-semibold rounded-xl text-gray-700 border border-gray-200"
                       >
                         Cancel
                       </button>
                       <button
                         onClick={handleSave}
                         disabled={hasErrors}
-                        className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-[#BA2027] hover:bg-[#9A1A21] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Save className="w-4 h-4" />
                         Save Changes

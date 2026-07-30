@@ -94,7 +94,7 @@ export function CampaignKpiBand({
       value: `${qaValidPercent}%`,
       sub: 'Automated validation',
       Icon: ShieldCheck,
-      tone: '#6366F1',
+      tone: 'var(--color-accent-purple)',
       toneBg: 'rgba(99,102,241,0.1)',
     });
   }

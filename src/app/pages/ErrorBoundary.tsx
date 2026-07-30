@@ -5,7 +5,7 @@ export default function ErrorBoundary() {
   const error = useRouteError() as any;
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, #BA2027 0%, #ffffff 100%)' }}>
+    <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-main-bg) 100%)' }}>
       <div className="glass-card max-w-md w-full p-8 text-center">
         <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ background: 'var(--color-error-bg)' }}>
           <AlertCircle className="w-8 h-8" style={{ color: 'var(--color-error)' }} />

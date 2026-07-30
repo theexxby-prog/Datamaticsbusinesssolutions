@@ -78,7 +78,7 @@ export default function CampaignDetail() {
   const isConvertr = client?.leadAcceptanceMethod === 'convertr';
 
   const acceptanceMethod = isConvertr
-    ? { label: 'Automated lead delivery', color: '#6366F1' }
+    ? { label: 'Automated lead delivery', color: 'var(--color-accent-purple)' }
     : client?.leadAcceptanceMethod === 'csv_manual'
       ? { label: 'Manual CSV review', color: 'var(--color-warning)' }
       : { label: 'Portal review', color: 'var(--color-success)' };

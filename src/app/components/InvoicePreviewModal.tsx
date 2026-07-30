@@ -36,12 +36,12 @@ export function InvoicePreviewModal({ isOpen, onClose, invoice }: InvoicePreview
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
             transition={{ duration: 0.3, ease: [0.4, 0.0, 0.2, 1] }}
-            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border z-50 bg-white border-gray-200"
+            className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl border z-50 bg-[var(--color-surface-raised)] border-gray-200"
           >
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <div className="flex items-center gap-3">
-                <FileText className="w-6 h-6 text-[#BA2027]" />
+                <FileText className="w-6 h-6 text-[var(--color-primary)]" />
                 <div>
                   <h3 className="text-lg font-semibold text-gray-900">
                     Invoice Preview
@@ -144,7 +144,7 @@ export function InvoicePreviewModal({ isOpen, onClose, invoice }: InvoicePreview
                   </div>
                   <div className="flex justify-between pt-2 border-t border-gray-200">
                     <span className="font-semibold text-gray-900">Total:</span>
-                    <span className="text-lg font-bold text-[#BA2027]">${invoice.amount.toLocaleString()}</span>
+                    <span className="text-lg font-bold text-[var(--color-primary)]">${invoice.amount.toLocaleString()}</span>
                   </div>
                 </div>
               </div>
@@ -181,7 +181,7 @@ export function InvoicePreviewModal({ isOpen, onClose, invoice }: InvoicePreview
               {(invoice.status === 'Pending' || invoice.status === 'Overdue') && (
                 <button
                   onClick={() => alert('Pay now')}
-                  className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[#BA2027] to-[#D32F2F]"
+                  className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)]"
                 >
                   <CreditCard className="w-4 h-4" />
                   Pay Now
