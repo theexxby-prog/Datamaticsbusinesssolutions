@@ -367,9 +367,9 @@ export function DocumentLibraryTab() {
           {filteredDocuments.length} document{filteredDocuments.length !== 1 ? 's' : ''} found
         </p>
 
-        {/* Table View */}
+        {/* Table View (desktop-only; mobile auto-switches to grid) */}
         {viewMode === 'table' && (
-          <div className="glass-card overflow-hidden">
+          <div className="hidden md:block glass-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[700px]">
                 <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>

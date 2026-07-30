@@ -268,13 +268,37 @@ export default function HomePage() {
           </div>
         </motion.div>
 
-        {/* ── 4-Card KPI Row ─────────────────────────────────────────────── */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* ── Page-level Month/Year control — mobile only. On desktop each
+            tile keeps its own toggle; on a phone one control drives both
+            period-aware tiles and the per-tile toggles are hidden. ── */}
+        <div className="md:hidden flex items-center justify-between">
+          <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: 'var(--color-text-muted)' }}>
+            Overview
+          </span>
+          <div className="flex gap-1 rounded-lg p-0.5" style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}>
+            {(['month', 'year'] as const).map(p => {
+              const active = leadsPeriod === p && bizPeriod === p;
+              return (
+                <button
+                  key={p}
+                  onClick={() => { setLeadsPeriod(p); setBizPeriod(p); }}
+                  className={`min-h-[32px] rounded-md px-3 transition-all ${active ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'}`}
+                  style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                >
+                  {p === 'month' ? 'Month' : 'Year'}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* ── KPI Row: horizontal snap-scroll on phones, grid from md up ── */}
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 md:overflow-visible md:px-0 md:pb-0">
 
           {/* 1 — Total Leads This Month */}
           {prefs.totalLeads && (
           <motion.div
-            className="relative overflow-hidden rounded-2xl p-3 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
+            className="relative overflow-hidden rounded-2xl p-4 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)] min-w-[78%] flex-shrink-0 snap-start md:min-w-0 md:flex-shrink"
             whileHover={{ y: -3, boxShadow: '0 16px 48px rgba(0,0,0,0.08)' }}
             transition={{ duration: 0.2 }}
           >
@@ -286,8 +310,8 @@ export default function HomePage() {
                   <TrendingUp className="w-4 h-4 text-[var(--color-success)]" />
                 </div>
               </div>
-              {/* Month / Year toggle */}
-              <div className="flex gap-1 mb-3 bg-[var(--color-surface-raised)] p-0.5 rounded-lg" style={{ width: 'fit-content' }}>
+              {/* Month / Year toggle — desktop only; the page-level control drives mobile */}
+              <div className="hidden md:flex gap-1 mb-3 bg-[var(--color-surface-raised)] p-0.5 rounded-lg" style={{ width: 'fit-content' }}>
                 {(['month', 'year'] as const).map(p => (
                   <button
                     key={p}
@@ -313,7 +337,7 @@ export default function HomePage() {
           {/* 2 — Total Business */}
           {prefs.totalBusiness && (
           <motion.div
-            className="relative overflow-hidden rounded-2xl p-3 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
+            className="relative overflow-hidden rounded-2xl p-4 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)] min-w-[78%] flex-shrink-0 snap-start md:min-w-0 md:flex-shrink"
             whileHover={{ y: -3, boxShadow: '0 16px 48px rgba(0,0,0,0.08)' }}
             transition={{ duration: 0.2 }}
           >
@@ -325,8 +349,8 @@ export default function HomePage() {
                   <Activity className="w-4 h-4 text-[var(--color-accent-purple)]" />
                 </div>
               </div>
-              {/* Month / Year toggle */}
-              <div className="flex gap-1 mb-3 bg-[var(--color-surface-raised)] p-0.5 rounded-lg" style={{ width: 'fit-content' }}>
+              {/* Month / Year toggle — desktop only; the page-level control drives mobile */}
+              <div className="hidden md:flex gap-1 mb-3 bg-[var(--color-surface-raised)] p-0.5 rounded-lg" style={{ width: 'fit-content' }}>
                 {(['month', 'year'] as const).map(p => (
                   <button
                     key={p}
@@ -350,7 +374,7 @@ export default function HomePage() {
           {/* 3 — Campaigns */}
           {prefs.campaigns && (
           <motion.div
-            className="relative overflow-hidden rounded-2xl p-3 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
+            className="relative overflow-hidden rounded-2xl p-4 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)] min-w-[78%] flex-shrink-0 snap-start md:min-w-0 md:flex-shrink"
             whileHover={{ y: -3, boxShadow: '0 16px 48px rgba(0,0,0,0.08)' }}
             transition={{ duration: 0.2 }}
           >
@@ -458,7 +482,7 @@ export default function HomePage() {
           {/* 4 — Pending Invoices & Signatures */}
           {prefs.actionRequired && (
           <motion.div
-            className="relative overflow-hidden rounded-2xl p-3 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)]"
+            className="relative overflow-hidden rounded-2xl p-4 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)] min-w-[78%] flex-shrink-0 snap-start md:min-w-0 md:flex-shrink"
             whileHover={{ y: -3, boxShadow: '0 16px 48px rgba(0,0,0,0.08)' }}
             transition={{ duration: 0.2 }}
           >

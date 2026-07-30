@@ -14,6 +14,7 @@ import { ExportModal } from '../components/ExportModal';
 import type { ReportsPDFData } from '../utils/exportUtils';
 import { toast } from 'sonner';
 import { PersonAvatar } from '../components/PersonAvatar';
+import { MobileCardList } from '../components/ui/MobileCardList';
 
 const CHART_COLORS = ['var(--color-primary)', 'var(--color-primary-light)', 'var(--color-error)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'];
 
@@ -487,7 +488,7 @@ export default function InternalReports() {
               Team Performance
             </h2>
           </div>
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
@@ -567,6 +568,51 @@ export default function InternalReports() {
               </tbody>
             </table>
           </div>
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={operatorData}
+            getRowId={(op) => op.name}
+            title={(op) => (
+              <span className="flex items-center gap-3">
+                <PersonAvatar name={op.name} size={36} />
+                {op.name}
+              </span>
+            )}
+            badge={(op) => (
+              <span
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: op.acceptance >= 92 ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
+                  color: op.acceptance >= 92 ? 'var(--color-success)' : 'var(--color-warning)',
+                }}
+              >
+                {op.acceptance}%
+              </span>
+            )}
+            fields={[
+              { label: 'Leads Delivered', value: (op) => op.leads.toLocaleString() },
+              { label: 'Clients', value: (op) => `${op.clients} assigned` },
+              {
+                label: 'Performance',
+                value: (op) => {
+                  const performanceScore = Math.round((op.leads / 3240) * 100);
+                  return (
+                    <span className="flex w-32 items-center gap-2">
+                      <div className="progress-bar flex-1">
+                        <div className="progress-bar__fill" style={{ width: `${performanceScore}%` }} />
+                      </div>
+                      <span style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
+                        {performanceScore}%
+                      </span>
+                    </span>
+                  );
+                },
+              },
+            ]}
+            emptyMessage="No team members to show."
+          />
         </div>
       </div>
 

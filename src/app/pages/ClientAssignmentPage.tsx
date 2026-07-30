@@ -18,6 +18,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
 import { allClients, Client } from '../data/mockClients';
 import { AnimatedCounter } from '../components/AnimatedCounter';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import { useAuth } from '../context/AuthContext';
 
 // Available team members for assignment
@@ -327,7 +328,7 @@ export default function ClientAssignmentPage() {
 
         {/* Clients Table */}
         <div className="glass-card overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[1000px]">
               <thead
                 style={{
@@ -567,6 +568,95 @@ export default function ClientAssignmentPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile card view */}
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={filteredClients}
+            getRowId={(client) => client.id}
+            title={(client) => (
+              <div>
+                <div>{client.companyName}</div>
+                <div className="text-xs font-normal" style={{ color: 'var(--color-text-secondary)' }}>
+                  {client.industry}
+                </div>
+              </div>
+            )}
+            badge={(client) => (
+              <span
+                className={`badge badge-${client.status === 'active' ? 'active' : client.status === 'paused' ? 'paused' : 'completed'}`}
+              >
+                {client.status.charAt(0).toUpperCase() + client.status.slice(1)}
+              </span>
+            )}
+            fields={[
+              {
+                label: 'Campaign Manager',
+                value: (client) =>
+                  client.campaignManagerEmail ? (
+                    client.campaignManager
+                  ) : (
+                    <span className="badge" style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)' }}>
+                      Unassigned
+                    </span>
+                  ),
+              },
+              {
+                label: 'Backup Manager',
+                value: (client) =>
+                  client.backupManagerEmail ? (
+                    client.backupManager
+                  ) : (
+                    <span className="badge" style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)' }}>
+                      Unassigned
+                    </span>
+                  ),
+              },
+              { label: 'Campaigns', value: (client) => client.campaigns.length },
+              { label: 'Leads', value: (client) => client.totalLeads.toLocaleString() },
+            ]}
+            actions={(client) => (
+              <>
+                {client.campaignManagerEmail && client.backupManagerEmail ? (
+                  <>
+                    <button
+                      onClick={() => handleOpenAssignModal(client, 'transfer')}
+                      className="btn-ghost px-3 py-2 flex items-center gap-1.5"
+                      style={{ fontSize: 'var(--font-size-xs)' }}
+                    >
+                      <RefreshCw className="w-4 h-4" />
+                      Transfer
+                    </button>
+                    <button
+                      onClick={() => handleOpenAssignModal(client, 'revoke')}
+                      className="btn-ghost px-3 py-2 flex items-center gap-1.5 hover:!text-red-600"
+                      style={{ fontSize: 'var(--font-size-xs)' }}
+                    >
+                      <UserMinus className="w-4 h-4" />
+                      Revoke
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => handleOpenAssignModal(client, 'assign')}
+                    className="btn-primary px-3 py-2"
+                    style={{ fontSize: 'var(--font-size-xs)' }}
+                  >
+                    <UserPlus className="w-3.5 h-3.5 mr-1.5" />
+                    Assign Team
+                  </button>
+                )}
+                <button
+                  onClick={() => navigate(`/internal/campaigns/${client.campaigns[0]?.id}`)}
+                  className="btn-ghost px-3 py-2 flex items-center gap-1.5"
+                  style={{ fontSize: 'var(--font-size-xs)' }}
+                >
+                  <Eye className="w-4 h-4" />
+                  View
+                </button>
+              </>
+            )}
+          />
 
           {/* Empty State */}
           {filteredClients.length === 0 && (

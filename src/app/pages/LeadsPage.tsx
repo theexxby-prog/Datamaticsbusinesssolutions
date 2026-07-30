@@ -419,9 +419,9 @@ export default function LeadsPage() {
           </div>
         </div>
 
-        {/* Table View */}
+        {/* Table View — desktop only; below md the bespoke card list renders instead */}
         {viewMode === 'table' && (
-          <div className="glass-card overflow-hidden animate-fadeIn">
+          <div className="hidden md:block glass-card overflow-hidden animate-fadeIn">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[1000px]">
                 <thead className="sticky top-0 z-10 table-header">
@@ -619,6 +619,153 @@ export default function LeadsPage() {
           </div>
         )}
 
+        {/* Mobile lead cards — replaces the table below md. Touch-first: whole
+            card opens the drawer, accept/reject are full-width buttons, the
+            bulk-select checkbox sits top-left. */}
+        {viewMode === 'table' && (
+          <div className="md:hidden flex flex-col gap-3 animate-fadeIn">
+            {isLoading ? (
+              Array.from({ length: 4 }, (_, i) => (
+                <div key={i} className="glass-card h-32 animate-pulse" />
+              ))
+            ) : paginatedLeads.length === 0 ? (
+              <div className="glass-card py-8">
+                <EmptyState
+                  icon={Users}
+                  title="No leads found"
+                  description="No leads match your current filters. Try adjusting your search or filter criteria."
+                  actionLabel="Clear Filters"
+                  onAction={() => { setSearchTerm(''); setStatusFilter('all'); setCampaignFilter('all'); }}
+                />
+              </div>
+            ) : (
+              <>
+                {paginatedLeads.map(lead => (
+                  <div
+                    key={lead.id}
+                    role="button"
+                    tabIndex={0}
+                    onClick={() => handleLeadDetail(lead)}
+                    onKeyDown={e => { if (e.key === 'Enter') handleLeadDetail(lead); }}
+                    className="glass-card p-4 cursor-pointer transition-colors active:opacity-90"
+                  >
+                    <div className="flex items-start gap-3">
+                      <input
+                        type="checkbox"
+                        className="mt-1 h-5 w-5 flex-shrink-0"
+                        checked={selectedLeads.includes(lead.id)}
+                        onChange={() => handleLeadSelection(lead.id)}
+                        onClick={e => e.stopPropagation()}
+                        aria-label={`Select ${lead.firstName} ${lead.lastName}`}
+                      />
+                      <LeadAvatar firstName={lead.firstName} lastName={lead.lastName} size="md" />
+                      <div className="min-w-0 flex-1">
+                        <div className="t1 truncate">{lead.firstName} {lead.lastName}</div>
+                        <div className="t2 truncate">{lead.title}</div>
+                        <div className="t2 mt-1 flex items-center gap-1.5 truncate">
+                          <Building2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+                          <span className="truncate">{lead.company}</span>
+                        </div>
+                      </div>
+                      <div className="flex flex-shrink-0 flex-col items-end gap-2">
+                        <LeadScoreRing score={lead.leadScore} size={44} />
+                        <button
+                          onClick={e => toggleStar(lead.id, e)}
+                          className="btn-ghost p-1.5"
+                          aria-label="Star lead"
+                        >
+                          <Star className={`w-4 h-4 ${starred.includes(lead.id) ? 'fill-yellow-400 text-yellow-400' : ''}`} />
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="mt-3 flex items-center justify-between gap-2">
+                      <div className={getStatusColor(lead.status)}>
+                        {getStatusIcon(lead.status)}
+                        <span>{lead.status}</span>
+                      </div>
+                      <span className="t2 truncate">{lead.industry}</span>
+                    </div>
+
+                    {/* Accept / Reject — manual-review clients, pending leads only */}
+                    {showManualReview && lead.status === 'Pending Review' && (
+                      <div
+                        className="mt-3 border-t pt-3"
+                        style={{ borderColor: 'var(--color-border-light)' }}
+                        onClick={e => e.stopPropagation()}
+                      >
+                        {rejectingLeadId === lead.id ? (
+                          <div className="p-3 rounded-lg" style={{ background: 'var(--color-bg-secondary)', border: '1px solid var(--color-border)' }}>
+                            <select
+                              value={rejectionReason}
+                              onChange={e => setRejectionReason(e.target.value)}
+                              className="input-base w-full mb-2 text-sm"
+                            >
+                              <option value="">Select reason...</option>
+                              {rejectionReasons.map(r => (
+                                <option key={r} value={r}>{r}</option>
+                              ))}
+                            </select>
+                            <div className="flex gap-2">
+                              <button onClick={() => handleRejectLead(lead.id)} className="btn-primary px-3 py-2 text-xs flex-1">
+                                Confirm
+                              </button>
+                              <button
+                                onClick={() => { setRejectingLeadId(null); setRejectionReason(''); }}
+                                className="btn-outline px-3 py-2 text-xs flex-1"
+                              >
+                                Cancel
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleAcceptLead(lead.id)}
+                              className="btn-outline flex-1 min-h-[44px] flex items-center justify-center gap-2"
+                              style={{ borderColor: 'var(--color-success)', color: 'var(--color-success)' }}
+                            >
+                              <ThumbsUp className="w-4 h-4" /> Accept
+                            </button>
+                            <button
+                              onClick={() => setRejectingLeadId(lead.id)}
+                              className="btn-outline flex-1 min-h-[44px] flex items-center justify-center gap-2"
+                              style={{ borderColor: 'var(--color-error)', color: 'var(--color-error)' }}
+                            >
+                              <ThumbsDown className="w-4 h-4" /> Reject
+                            </button>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                ))}
+
+                {/* Compact mobile pagination */}
+                <div className="flex items-center justify-between gap-3 px-1 py-2">
+                  <button
+                    onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                    disabled={currentPage === 1}
+                    className="btn-outline px-4 min-h-[44px] disabled:opacity-50"
+                  >
+                    Previous
+                  </button>
+                  <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                    Page {currentPage} of {totalPages}
+                  </span>
+                  <button
+                    onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                    disabled={currentPage === totalPages}
+                    className="btn-outline px-4 min-h-[44px] disabled:opacity-50"
+                  >
+                    Next
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        )}
+
         {/* Grid View */}
         {viewMode === 'grid' && (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -677,10 +824,12 @@ export default function LeadsPage() {
         )}
       </div>
 
-      {/* Bulk Action Bar */}
+      {/* Bulk Action Bar — sits above the mobile tab bar, centred on desktop */}
       {selectedLeads.length > 0 && (
-        <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-40 animate-slideInUp">
-          <div className="glass-card-strong px-6 py-4 flex items-center gap-4">
+        <div
+          className="fixed left-1/2 z-40 w-[calc(100vw-24px)] max-w-fit -translate-x-1/2 transform animate-slideInUp bottom-[calc(76px+env(safe-area-inset-bottom))] md:bottom-8 md:w-auto"
+        >
+          <div className="glass-card-strong px-4 py-3 md:px-6 md:py-4 flex flex-wrap items-center justify-center gap-3 md:gap-4">
             <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
               {selectedLeads.length} selected
             </span>

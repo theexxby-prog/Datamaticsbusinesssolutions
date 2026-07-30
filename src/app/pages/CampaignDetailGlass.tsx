@@ -13,6 +13,7 @@ import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { useCampaignThread } from '../context/CampaignThreadContext';
+import { useIsMobile } from '../components/ui/use-mobile';
 import { allClients } from '../data/mockClients';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
@@ -26,6 +27,10 @@ export default function CampaignDetail() {
   const [showNewCampaignModal, setShowNewCampaignModal] = useState(false);
   const [clonePrefill, setClonePrefill] = useState<Partial<CampaignFormData> | undefined>(undefined);
   const { openRequestsFor } = useCampaignThread();
+  const isMobile = useIsMobile();
+  // Phones can't fit analytics and the conversation side by side; a segmented
+  // switch shows one at a time instead of stacking a very long page.
+  const [mobileSection, setMobileSection] = useState<'overview' | 'discussion'>('overview');
   
   // Find the campaign across all clients
   let campaign = null;
@@ -191,46 +196,89 @@ export default function CampaignDetail() {
           paceLabel={health.label}
           qaValidPercent={isConvertr ? Math.round((convertrStats.valid / convertrStats.totalProcessed) * 100) : undefined}
           openRequests={openRequestsFor(campaign.id)}
-          onOpenRequests={() => document.getElementById('campaign-discussion')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
+          onOpenRequests={() => {
+            if (isMobile) setMobileSection('discussion');
+            // Defer so the thread exists before scrolling on mobile.
+            requestAnimationFrame(() =>
+              document.getElementById('campaign-discussion')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
+            );
+          }}
         />
 
-        {/* Analytics on the left, the conversation pinned alongside it. */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5 items-start">
-          <div className="lg:col-span-3 space-y-5">
-            <CampaignAnalyticsTabs
-              tabs={[
-                Boolean(campaign.outreachMetrics) && {
-                  key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
-                  content: <OutreachFunnel metrics={campaign.outreachMetrics!} deliveredLeads={deliveredLeads} />,
-                },
-                {
-                  key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
-                  content: <DeliveryScheduleSection campaign={campaign} bare />,
-                },
-                isConvertr && {
-                  key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
-                  content: <ConvertrQAStats {...convertrStats} />,
-                },
-              ]}
-            />
-
-            <ReplacementTracker
-              totalRejected={replacementStats.totalRejected}
-              totalReplaced={replacementStats.totalReplaced}
-              remaining={replacementStats.remaining}
-            />
+        {/* Mobile section switch — Overview | Discussion */}
+        {isMobile && (
+          <div
+            className="mb-4 grid grid-cols-2 gap-1 rounded-xl p-1"
+            style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}
+          >
+            {([['overview', 'Overview'], ['discussion', 'Discussion']] as const).map(([key, label]) => (
+              <button
+                key={key}
+                onClick={() => setMobileSection(key)}
+                className={`min-h-[40px] rounded-lg text-sm font-semibold transition-all ${
+                  mobileSection === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'
+                }`}
+              >
+                {label}
+                {key === 'discussion' && openRequestsFor(campaign.id) > 0 && (
+                  <span
+                    className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold"
+                    style={
+                      mobileSection === key
+                        ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
+                        : { background: 'var(--color-primary)', color: '#fff' }
+                    }
+                  >
+                    {openRequestsFor(campaign.id)}
+                  </span>
+                )}
+              </button>
+            ))}
           </div>
+        )}
+
+        {/* Analytics on the left, the conversation pinned alongside it —
+            or, on mobile, one section at a time via the switch above. */}
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5 items-start">
+          {(!isMobile || mobileSection === 'overview') && (
+            <div className="lg:col-span-3 space-y-5">
+              <CampaignAnalyticsTabs
+                tabs={[
+                  Boolean(campaign.outreachMetrics) && {
+                    key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
+                    content: <OutreachFunnel metrics={campaign.outreachMetrics!} deliveredLeads={deliveredLeads} />,
+                  },
+                  {
+                    key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
+                    content: <DeliveryScheduleSection campaign={campaign} bare />,
+                  },
+                  isConvertr && {
+                    key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
+                    content: <ConvertrQAStats {...convertrStats} />,
+                  },
+                ]}
+              />
+
+              <ReplacementTracker
+                totalRejected={replacementStats.totalRejected}
+                totalReplaced={replacementStats.totalReplaced}
+                remaining={replacementStats.remaining}
+              />
+            </div>
+          )}
 
           {/* The thread scrolls inside itself so the page height no longer
               depends on how much the client and the campaign manager talk. */}
-          <div id="campaign-discussion" className="lg:col-span-2 lg:sticky lg:top-5">
-            <CampaignThread
-              campaignId={campaign.id}
-              campaignName={campaign.name}
-              activities={activities}
-              variant="rail"
-            />
-          </div>
+          {(!isMobile || mobileSection === 'discussion') && (
+            <div id="campaign-discussion" className="lg:col-span-2 lg:sticky lg:top-5">
+              <CampaignThread
+                campaignId={campaign.id}
+                campaignName={campaign.name}
+                activities={activities}
+                variant="rail"
+              />
+            </div>
+          )}
         </div>
       </div>
 

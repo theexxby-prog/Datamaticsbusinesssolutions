@@ -50,6 +50,8 @@ export function MobileCardList<T>({
   return (
     <div className={`flex flex-col gap-3 ${className}`}>
       {rows.map(row => {
+        // Resolve up front so rows whose callback returns null get no action strip.
+        const actionContent = actions?.(row);
         return (
           // A div, not a <button>: the actions slot renders buttons of its
           // own and nested buttons are invalid HTML.
@@ -90,14 +92,14 @@ export function MobileCardList<T>({
               })}
             </div>
 
-            {actions && (
+            {actionContent != null && actionContent !== false && (
               <div
                 className="mt-3 flex items-center gap-2 border-t pt-3"
                 style={{ borderColor: 'var(--color-border-light)' }}
                 // Keep taps on action buttons from also triggering the card's onClick.
                 onClick={e => e.stopPropagation()}
               >
-                {actions(row)}
+                {actionContent}
               </div>
             )}
           </div>

@@ -6,6 +6,7 @@ import {
   Upload, ArrowUpRight, CheckCircle2, Clock, AlertCircle, Eye,
 } from 'lucide-react';
 import { AnimatedCounter } from '../components/AnimatedCounter';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import { allClients, recentUploadBatches } from '../data/mockClients';
 import { LeadUploadModal } from '../components/LeadUploadModal';
 import { useState } from 'react';
@@ -181,7 +182,7 @@ export default function InternalDashboard() {
                 View all <ArrowUpRight className="w-3 h-3" />
               </button>
             </div>
-            <div className="overflow-x-auto">
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full min-w-[700px]">
                 <thead className="table-header">
                   <tr>
@@ -228,6 +229,43 @@ export default function InternalDashboard() {
                 </tbody>
               </table>
             </div>
+            <MobileCardList
+              className="md:hidden p-4"
+              rows={recentCampaigns}
+              getRowId={(campaign) => campaign.id}
+              title={(campaign) => (campaign.name.length > 36 ? `${campaign.name.substring(0, 36)}…` : campaign.name)}
+              badge={(campaign) => (
+                <span className={`badge ${
+                  campaign.status === 'active' ? 'badge-active' :
+                  campaign.status === 'completed' ? 'badge-completed' :
+                  'badge-paused'
+                }`}>
+                  {campaign.status}
+                </span>
+              )}
+              fields={[
+                { label: 'Client', value: (campaign) => campaign.clientName, hideWhenEmpty: true },
+                { label: 'Leads', value: (campaign) => `${campaign.delivered.toLocaleString()} / ${campaign.target.toLocaleString()}` },
+                {
+                  label: 'Progress',
+                  value: (campaign) => {
+                    const pct = campaign.target > 0 ? Math.min(Math.round((campaign.delivered / campaign.target) * 100), 100) : 0;
+                    return (
+                      <span className="flex w-32 items-center gap-2">
+                        <div className="progress-bar flex-1">
+                          <div
+                            className={`progress-bar__fill ${campaign.status === 'completed' ? 'progress-bar__fill--completed' : ''}`}
+                            style={{ width: `${pct}%` }}
+                          />
+                        </div>
+                        <span className="t2">{pct}%</span>
+                      </span>
+                    );
+                  },
+                },
+              ]}
+              emptyMessage="No recent campaigns."
+            />
           </div>
 
           {/* Quick Actions + Performance */}

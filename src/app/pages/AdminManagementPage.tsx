@@ -6,6 +6,7 @@ import { toast } from 'sonner';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { allClients } from '../data/mockClients';
 import { mockTeamMembers } from '../mockData';
+import { MobileCardList } from '../components/ui/MobileCardList';
 
 // Production parity: Admin Management = client onboarding, Convertr configuration,
 // and manager mapping (replaces the old Team Management + Client Assignment split).
@@ -26,6 +27,23 @@ interface AdminClientRow {
 
 function fmtDate(iso: string) {
   return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// Same pill markup the tables render inline — shared by the mobile card views.
+function StatusPill({ status }: { status: string }) {
+  return (
+    <span
+      className="inline-flex items-center px-2.5 py-0.5 rounded-full"
+      style={{
+        fontSize: '11px',
+        fontWeight: 600,
+        background: status === 'Active' ? 'var(--color-badge-active-bg, rgba(5,150,105,0.12))' : 'var(--color-badge-paused-bg, rgba(217,119,6,0.12))',
+        color: status === 'Active' ? 'var(--color-badge-active-text)' : 'var(--color-badge-paused-text)',
+      }}
+    >
+      {status}
+    </span>
+  );
 }
 
 export default function AdminManagementPage() {
@@ -185,7 +203,7 @@ export default function AdminManagementPage() {
               </div>
             </div>
 
-            <div className="overflow-x-auto">
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full" style={{ fontSize: '13px' }}>
                 <thead>
                   <tr style={{ borderTop: '1px solid var(--color-border-light)', borderBottom: '1px solid var(--color-border-light)' }}>
@@ -252,6 +270,77 @@ export default function AdminManagementPage() {
               </table>
             </div>
 
+            {/* Mobile card view */}
+            <MobileCardList
+              className="md:hidden p-4"
+              rows={filteredRows}
+              getRowId={(r) => r.id}
+              title={(r) => r.name}
+              badge={(r) => <StatusPill status={r.status} />}
+              fields={[
+                { label: 'Type', value: (r) => r.type },
+                { label: 'Campaign Manager', value: (r) => r.campaignManager },
+                { label: 'Backup Manager', value: (r) => r.backupManager },
+                { label: 'Updated', value: (r) => fmtDate(r.updated) },
+                {
+                  label: 'Analytics',
+                  value: (r) => (
+                    <button onClick={() => toggleAnalytics(r.id)} className="flex items-center gap-2 py-2" aria-label="Toggle analytics visibility">
+                      <span
+                        className="relative inline-block w-9 h-5 rounded-full transition-colors"
+                        style={{ background: r.analyticsVisible ? 'var(--color-primary)' : 'var(--color-border)' }}
+                      >
+                        <span
+                          className="absolute top-0.5 w-4 h-4 rounded-full bg-[var(--color-surface-raised)] transition-all"
+                          style={{ left: r.analyticsVisible ? '18px' : '2px', boxShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
+                        />
+                      </span>
+                      <span style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
+                        {r.analyticsVisible ? 'Visible' : 'Hidden'}
+                      </span>
+                    </button>
+                  ),
+                },
+              ]}
+              actions={(r) => (
+                <>
+                  <button
+                    aria-label="View client"
+                    onClick={() => toast.info(`${r.name} — client detail coming with backend wiring`)}
+                    className="w-11 h-11 flex items-center justify-center rounded-lg"
+                    style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}
+                  >
+                    <Eye className="w-4 h-4" />
+                  </button>
+                  <button
+                    aria-label="Edit client"
+                    onClick={() => toast.info(`${r.name} — edit flow coming with backend wiring`)}
+                    className="w-11 h-11 flex items-center justify-center rounded-lg"
+                    style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                  <button
+                    aria-label="Toggle client status"
+                    onClick={() => togglePower(r.id)}
+                    className="w-11 h-11 flex items-center justify-center rounded-lg"
+                    style={{ border: '1px solid var(--color-border)', color: 'var(--color-text-muted)' }}
+                  >
+                    <Power className="w-4 h-4" />
+                  </button>
+                  <button
+                    aria-label="Delete client"
+                    onClick={() => toast.error('Delete is disabled in the demo build')}
+                    className="w-11 h-11 flex items-center justify-center rounded-lg"
+                    style={{ border: '1px solid var(--color-border)', color: 'var(--color-error)' }}
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </>
+              )}
+              emptyMessage="No clients match your search."
+            />
+
             <div className="flex items-center justify-between px-4 py-3" style={{ borderTop: '1px solid var(--color-border-light)', fontSize: '13px', color: 'var(--color-text-secondary)' }}>
               <span>Page 1 of 1</span>
               <div className="flex gap-4">
@@ -263,7 +352,7 @@ export default function AdminManagementPage() {
         ) : (
           /* Team Members tab */
           <div className="glass-card overflow-hidden">
-            <div className="overflow-x-auto">
+            <div className="hidden md:block overflow-x-auto">
               <table className="w-full" style={{ fontSize: '13px' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--color-border-light)' }}>
@@ -302,6 +391,22 @@ export default function AdminManagementPage() {
                 </tbody>
               </table>
             </div>
+
+            {/* Mobile card view */}
+            <MobileCardList
+              className="md:hidden p-4"
+              rows={teamMembers}
+              getRowId={(m) => m.id}
+              title={(m) => m.name}
+              badge={(m) => <StatusPill status={m.status} />}
+              fields={[
+                { label: 'Email', value: (m) => <span className="break-all">{m.email}</span> },
+                { label: 'Role', value: (m) => m.role },
+                { label: 'Assigned Clients', value: (m) => m.assignedClients.join(', ') },
+                { label: 'Active Campaigns', value: (m) => m.activeCampaigns },
+              ]}
+              emptyMessage="No team members for this company."
+            />
           </div>
         )}
       </div>
