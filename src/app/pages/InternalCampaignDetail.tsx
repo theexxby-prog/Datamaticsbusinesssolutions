@@ -37,7 +37,7 @@ export default function InternalCampaignDetail() {
   if (!campaign || !client) {
     return (
       <>
-        <div className="max-w-[1440px] mx-auto px-6 py-6">
+        <div className="max-w-[1440px] mx-auto page-content">
           <div className="text-center py-12">
             <h2 style={{ color: 'var(--color-text-primary)' }}>Campaign not found</h2>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-2">

@@ -43,7 +43,7 @@ export default function CampaignDetail() {
   if (!campaign) {
     return (
       <>
-        <div className="max-w-[1440px] mx-auto px-6 py-6">
+        <div className="max-w-[1440px] mx-auto page-content">
           <div className="text-center py-12">
             <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xl)' }}>Campaign not found</h2>
             <button onClick={() => navigate('/dashboard')} className="btn-primary mt-4 px-6 py-3">
@@ -112,7 +112,7 @@ export default function CampaignDetail() {
 
   return (
     <>
-      <div className="max-w-[1440px] mx-auto px-6 py-6 pb-24 md:pb-6">
+      <div className="max-w-[1440px] mx-auto page-content">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
           <button onClick={() => navigate('/dashboard')} className="hover:text-[var(--color-primary)] transition-colors">

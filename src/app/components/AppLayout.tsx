@@ -1,7 +1,8 @@
 import { useEffect, useRef } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import { LeftSidebar } from './LeftSidebar';
-import { MobileTabBar } from './MobileTabBar';
+import { MobileTabBar } from './mobile/MobileTabBar';
+import { MobileAppBar } from './mobile/MobileAppBar';
 import { DemoRibbon } from './DemoRibbon';
 import { IS_CLIENT_DEMO, isInternalPath } from '../config/demo';
 
@@ -52,6 +53,7 @@ export function AppLayout() {
         ref={scrollColumnRef}
         className="flex flex-col min-h-dvh md:flex-1 md:min-w-0 md:h-screen md:min-h-0 md:overflow-y-auto"
       >
+        <MobileAppBar />
         <div className="flex-1">
           <Outlet />
         </div>

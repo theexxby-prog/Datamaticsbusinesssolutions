@@ -2,38 +2,21 @@ import { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useNavigate, useLocation } from 'react-router';
 import {
-  LayoutDashboard,
-  BarChart2,
-  Globe,
-  Users,
-  FileBarChart,
-  MessageCircle,
-  Settings,
-  Receipt,
-  FolderOpen,
   LogOut,
   Sun,
   Moon,
-  Upload,
-  UsersRound,
   Pin,
-  UserCircle,
-  Building2,
-  Layers,
   ChevronDown,
-  ChevronRight,
   Plus,
-  MessageSquare,
-  ClipboardCheck,
   Bell,
+  type LucideIcon,
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { getAssignedClients, recentUploadBatches, allClients } from '../data/mockClients';
+import { getAssignedClients } from '../data/mockClients';
 import { LeadUploadModal } from './LeadUploadModal';
-import { getPendingSubmissions } from '../mockData';
-import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
+import { getNavForRole, useNavBadges, type NavItem } from '../config/navigation';
 import { NotificationPanel } from './NotificationPanel';
 import { useNotifications } from '../context/NotificationContext';
 import { PersonAvatar } from './PersonAvatar';
@@ -136,164 +119,35 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
     .join('')
     .toUpperCase() || 'U';
 
-  // Calculate badges dynamically — memoized since source data is module-level constants.
-  // Without memo, this iterates all clients/uploads on every render (hover, tooltip, jiggle…).
-  const badges = useMemo(() => {
-    const processingUploads = recentUploadBatches.filter(u => u.status === 'processing').length;
-    const failedUploads = recentUploadBatches.filter(u => u.status === 'failed').length;
-    const activeCampaigns = allClients.reduce((sum, c) => sum + c.campaigns.filter(camp => camp.status === 'active').length, 0);
-    const totalLeads = allClients.reduce((sum, c) => sum + c.totalLeads, 0);
-    const pendingApprovals = getPendingSubmissions().length;
+  // Badge counts shared with the mobile shell — see config/navigation.ts.
+  const badges = useNavBadges();
 
-    // Client-scoped: only count campaigns belonging to client_1 (The Channel Company)
-    const clientData = allClients.find(c => c.id === 'client_1');
-    const clientActiveCampaigns = clientData?.campaigns.filter(c => c.status === 'active').length ?? 0;
-    const clientTotalLeads = clientData?.totalLeads ?? 0;
-
-    // Derived rather than hardcoded so the badge can never contradict the
-    // Invoices page.
-    const unpaidInvoices = mockInvoiceRecords.filter(
-      (inv) => inv.clientId === 'client_1' && (inv.stage === 'sent' || inv.stage === 'overdue'),
-    ).length;
-
-    // Matches the Support page's own "Active" count.
-    const openSupportTickets = 1;
-
-    return {
-      processingUploads,
-      failedUploads,
-      activeCampaigns,
-      totalLeads,
-      unpaidInvoices,
-      pendingApprovals,
-      openSupportTickets,
-      clientActiveCampaigns,
-      clientTotalLeads,
-    };
-  }, []); // source arrays are module-level constants — never change at runtime
-
-  // Role-based navigation — memoized on role + badge counts.
-  // Re-computed only when the user's role changes, not on every hover/tooltip re-render.
+  // Role-based navigation from the shared config, decorated with the resolved
+  // badge counts and the sidebar-only upload quick action. Memoized on role so
+  // it doesn't recompute on every hover/tooltip re-render.
+  type SidebarNavItem = NavItem & {
+    badge?: number;
+    badgeColor: string;
+    hasQuickAction?: boolean;
+    quickActionIcon?: LucideIcon;
+    quickActionHandler?: () => void;
+  };
   const navigation = useMemo(() => {
-    const role = currentUser?.role;
-
-    if (role === 'ops_manager') {
-      // Mirrors production nav (pulse.datamaticsbpm.com): Dashboard, All Campaigns,
-      // Admin Management, Metrics Override, Lead Demographics + the new Phase 2 modules.
-      return [
-        { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard/ops', section: 'PLATFORM' },
-        { 
-          name: 'All Campaigns', 
-          icon: Layers, 
-          path: '/internal/campaigns', 
-          section: 'PLATFORM',
-          badge: badges.activeCampaigns,
-          badgeColor: 'bg-[var(--color-primary)]'
-        },
-        { name: 'Admin Management', icon: UsersRound, path: '/internal/admin', section: 'PLATFORM' },
-        { name: 'Metrics Override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
-        { name: 'Lead Demographics', icon: Globe, path: '/internal/demographics', section: 'PLATFORM' },
-        { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
-        { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'PLATFORM' },
-        { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
-      ];
-    }
-
-    if (role === 'campaign_manager' || role === 'campaign_backup') {
-      return [
-        { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard/manager', section: 'PLATFORM' },
-        { 
-          name: 'Campaigns', 
-          icon: BarChart2, 
-          path: '/internal/campaigns', 
-          section: 'PLATFORM',
-          badge: badges.activeCampaigns,
-          badgeColor: 'bg-[var(--color-primary)]'
-        },
-        {
-          name: 'Approvals',
-          icon: ClipboardCheck,
-          path: '/internal/approvals',
-          section: 'PLATFORM',
-          badge: badges.pendingApprovals,
-          badgeColor: 'bg-[var(--color-primary)]',
-        },
-        { 
-          name: 'Upload Leads', 
-          icon: Upload, 
-          path: '/internal/leads', 
-          section: 'PLATFORM',
-          badge: badges.processingUploads > 0 ? badges.processingUploads : undefined,
-          badgeColor: 'bg-[var(--color-primary)]',
-          hasQuickAction: true,
-          quickActionIcon: Plus,
-          quickActionHandler: () => setShowUploadModal(true)
-        },
-        { name: 'Reports', icon: FileBarChart, path: '/internal/reports', section: 'PLATFORM' },
-        { name: 'Metrics Override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
-        { name: 'Lead Demographics', icon: Globe, path: '/internal/demographics', section: 'PLATFORM' },
-        { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
-        { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'ORGANIZATION' },
-        { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
-        { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
-      ];
-    }
-
-    if (role === 'account_manager') {
-      return [
-        { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
-        { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'PLATFORM' },
-        { name: 'Campaigns', icon: BarChart2, path: '/internal/campaigns', section: 'PLATFORM' },
-        { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
-        { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
-      ];
-    }
-
-    if (role === 'accounts') {
-      return [
-        { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'PLATFORM' },
-        { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
-        { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
-        { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
-      ];
-    }
-
-    // Client role
-    return [
-      { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', section: 'PLATFORM' },
-      { 
-        name: 'Campaigns', 
-        icon: BarChart2, 
-        path: '/campaigns', 
-        section: 'PLATFORM',
-        badge: badges.clientActiveCampaigns > 0 ? badges.clientActiveCampaigns : undefined,
-        badgeColor: 'bg-[var(--color-primary)]'
-      },
-      // No count badge here: the sidebar total (all leads delivered to date)
-      // and the Leads page header (the current lead table) legitimately differ,
-      // and showing both side by side reads as a bug.
-      { name: 'Leads', icon: Users, path: '/leads', section: 'PLATFORM' },
-      { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
-      { 
-        name: 'Invoices', 
-        icon: Receipt, 
-        path: '/invoices', 
-        section: 'ORGANIZATION',
-        badge: badges.unpaidInvoices,
-        badgeColor: 'bg-[var(--color-primary)]'
-      },
-      { name: 'Documents', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
-      {
-        name: 'Support',
-        icon: MessageSquare,
-        path: '/support',
-        section: 'ORGANIZATION',
-        badge: badges.openSupportTickets > 0 ? badges.openSupportTickets : undefined,
+    return getNavForRole(currentUser?.role).map((item): SidebarNavItem => {
+      const count = item.badgeKey ? badges[item.badgeKey] : undefined;
+      return {
+        ...item,
+        badge: count && count > 0 ? count : undefined,
         badgeColor: 'bg-[var(--color-primary)]',
-      },
-      { name: 'Account', icon: UserCircle, path: '/account', section: 'ORGANIZATION' },
-      { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
-    ];
+        ...(item.path === '/internal/leads'
+          ? {
+              hasQuickAction: true,
+              quickActionIcon: Plus,
+              quickActionHandler: () => setShowUploadModal(true),
+            }
+          : {}),
+      };
+    });
   }, [currentUser?.role, badges]);
 
   const groupedNav = useMemo(() => navigation.reduce((acc, item) => {
