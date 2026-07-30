@@ -12,6 +12,8 @@ import {
   Receipt,
   FolderOpen,
   LogOut,
+  Sun,
+  Moon,
   Upload,
   UsersRound,
   Pin,
@@ -27,6 +29,7 @@ import {
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { getAssignedClients, recentUploadBatches, allClients } from '../data/mockClients';
 import { LeadUploadModal } from './LeadUploadModal';
 import { getPendingSubmissions } from '../mockData';
@@ -44,7 +47,8 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
   const navigate = useNavigate();
   const location = useLocation();
   const { currentUser, signOut } = useAuth();
-  
+  const { resolved: resolvedTheme, toggle: toggleTheme } = useTheme();
+
   // Hover state management
   const [isHovered, setIsHovered] = useState(false);
   const [isPinned, setIsPinned] = useState(() => {
@@ -674,6 +678,31 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           </div>
         )}
 
+        {/* Theme toggle */}
+        <div className="relative">
+          <button
+            onClick={toggleTheme}
+            onMouseEnter={() => handleItemMouseEnter(resolvedTheme === 'dark' ? 'Light mode' : 'Dark mode')}
+            onMouseLeave={handleItemMouseLeave}
+            aria-label="Toggle theme"
+            className={`w-full flex items-center gap-3 rounded-xl transition-all duration-100 hover:bg-[var(--color-primary-tint)] ${
+              isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
+            }`}
+            style={{ fontSize: '14px', fontWeight: 500, color: 'var(--color-text-secondary)' }}
+          >
+            {resolvedTheme === 'dark'
+              ? <Sun className="w-5 h-5 flex-shrink-0" />
+              : <Moon className="w-5 h-5 flex-shrink-0" />}
+            <AnimatePresence>
+              {isExpanded && (
+                <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  {resolvedTheme === 'dark' ? 'Light mode' : 'Dark mode'}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          </button>
+        </div>
+
         {/* Logout */}
         <div className="relative">
           <button
@@ -788,10 +817,10 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           width: isPinned ? '260px' : (isHovered ? '260px' : '72px'),
           minWidth: isPinned ? '260px' : (isHovered ? '260px' : '72px'),
           transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1), min-width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
-          background: 'rgba(255, 255, 255, 0.72)',
+          background: 'var(--color-sidebar-bg)',
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
-          borderRight: '1px solid rgba(0, 0, 0, 0.06)',
+          borderRight: '1px solid var(--color-sidebar-border)',
           boxShadow: isExpanded ? '4px 0 24px rgba(0,0,0,0.06)' : '2px 0 8px rgba(0,0,0,0.03)',
           willChange: 'width',
           transform: 'translateZ(0)'

@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import App from './app/App';
-import '@fontsource-variable/inter';
+import '@fontsource-variable/plus-jakarta-sans';
 import './styles/index.css';
 
 // Remove the HTML-level splash screen (rendered in index.html before React boots).
