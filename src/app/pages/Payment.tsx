@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import {
   CreditCard, Plus, Trash2, Check, Calendar, Lock, Building2, MapPin, Star, Shield
 } from 'lucide-react';
@@ -68,7 +67,7 @@ export default function Payment() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className={`max-w-[1200px] mx-auto page-content animate-fadeIn`}>
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
@@ -308,6 +307,6 @@ export default function Payment() {
           </div>
         </div>
       )}
-    </AppLayout>
+    </>
   );
 }

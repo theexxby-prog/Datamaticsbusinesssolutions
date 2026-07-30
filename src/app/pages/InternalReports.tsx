@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import {
   BarChart3, Target, DollarSign, Activity, CheckCircle, Users,
   ArrowUpRight, ArrowDownRight, Download, Bookmark, BookmarkCheck,
@@ -127,7 +126,7 @@ export default function InternalReports() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div
         className="max-w-[1440px] mx-auto page-content animate-fadeIn"
       >
@@ -577,6 +576,6 @@ export default function InternalReports() {
         onClose={() => setShowExportModal(false)}
         reportData={reportData}
       />
-    </AppLayout>
+    </>
   );
 }

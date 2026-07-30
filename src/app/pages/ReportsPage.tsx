@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import {
   TrendingUp, TrendingDown, DollarSign, Users, Target, CheckCircle, Download,
@@ -18,10 +17,9 @@ import { ExportModal } from '../components/ExportModal';
 import { ProgressBar } from '../components/ProgressBar';
 import { motion, useReducedMotion } from 'motion/react';
 import { Reveal } from '../components/Reveal';
+import { useIsMobile } from '../components/ui/use-mobile';
 
 const CHART_COLORS = ['var(--color-primary)', 'var(--color-primary-light)', 'var(--color-error)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'];
-const CHART_H = typeof window !== 'undefined' && window.innerWidth < 640 ? 160 : 240;
-const CHART_H_SM = typeof window !== 'undefined' && window.innerWidth < 640 ? 140 : 220;
 
 const TOOLTIP_STYLE = {
   backgroundColor: 'var(--color-surface-raised)',
@@ -109,6 +107,9 @@ function DemoBars({ title, data, chipBg, chipColor, icon: Icon }: any) {
 
 export default function ReportsPage() {
   const { currentUser } = useAuth();
+  const isMobile = useIsMobile();
+  // Responds to rotation/resize, unlike the old module-scope constant.
+  const chartH = isMobile ? 200 : 240;
   const [dateRange, setDateRange] = useState('30days');
   const [showExportModal, setShowExportModal] = useState(false);
   const [selectedCampaign, setSelectedCampaign] = useState<string>('all');
@@ -331,7 +332,7 @@ export default function ReportsPage() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className={`max-w-[1120px] mx-auto page-content animate-fadeIn`}>
         {/* Compact Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-3">
@@ -398,7 +399,7 @@ export default function ReportsPage() {
           <p className="mb-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
             Across all campaigns · last 12 months{hasPrevYear ? ' vs prior year' : ''}
           </p>
-          <ResponsiveContainer width="100%" height={CHART_H}>
+          <ResponsiveContainer width="100%" height={chartH}>
             <BarChart data={billableTrend} barGap={3} barCategoryGap="22%">
               <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
               <XAxis dataKey="label" style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} />
@@ -647,6 +648,6 @@ export default function ReportsPage() {
         onClose={() => setShowExportModal(false)}
         reportData={reportData}
       />
-    </AppLayout>
+    </>
   );
 }

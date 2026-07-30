@@ -5,7 +5,6 @@ import {
   Upload, ChevronRight, TrendingUp, Clock, Users, Target,
   CheckCircle2, Activity, BarChart3, AlertCircle, Eye,
 } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
 import { useAuth } from '../context/AuthContext';
 import { getClientsForUser, Client } from '../data/mockClients';
@@ -62,11 +61,11 @@ export default function ManagerDashboardPage() {
 
   if (!selectedClient) {
     return (
-      <AppLayout>
+      <>
         <div className="flex items-center justify-center h-screen">
           <p style={{ fontSize: 'var(--font-size-base)', color: 'var(--color-text-secondary)' }}>No clients assigned</p>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
@@ -116,7 +115,7 @@ export default function ManagerDashboardPage() {
   );
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
@@ -455,6 +454,6 @@ export default function ManagerDashboardPage() {
             : undefined}
         />
       )}
-    </AppLayout>
+    </>
   );
 }

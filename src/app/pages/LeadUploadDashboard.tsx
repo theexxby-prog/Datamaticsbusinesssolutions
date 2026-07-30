@@ -17,7 +17,6 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
 import { LeadUploadModal } from '../components/LeadUploadModal';
 import { AnimatedCounter } from '../components/AnimatedCounter';
@@ -156,7 +155,7 @@ export default function LeadUploadDashboard() {
     : null;
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1600px] mx-auto page-content">
         {/* Hero Header with Giant Upload Button */}
         <div className="mb-8">
@@ -603,6 +602,6 @@ export default function LeadUploadDashboard() {
         campaignId={selectedCampaignId || undefined}
         campaignName={selectedCampaignData?.name}
       />
-    </AppLayout>
+    </>
   );
 }

@@ -8,7 +8,6 @@ import {
   AlertCircle, FilePenLine, Clock, MessageSquare, FolderOpen,
   Activity, BarChart3, ArrowUpRight, PauseCircle,
 } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { AnimatedNumber } from '../components/AnimatedNumber';
 import { AccountTeam } from '../components/AccountTeam';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -212,7 +211,7 @@ export default function HomePage() {
   }
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1400px] mx-auto page-content space-y-6">
 
         {/* ── Welcome Banner ─────────────────────────────────────────────── */}
@@ -639,6 +638,6 @@ export default function HomePage() {
 
       <EmailDigestModal isOpen={showDigest} onClose={() => setShowDigest(false)} />
       {showIntro && <IntroShowcase onDone={() => { markIntroSeen(); setShowIntro(false); }} />}
-    </AppLayout>
+    </>
   );
 }

@@ -4,7 +4,6 @@ import {
   ClipboardList, X, Loader2, FileUp, PenLine, Download,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { AnimatedCounter } from '../components/AnimatedCounter';
@@ -443,7 +442,7 @@ export default function Documents() {
           : 'Job card pipeline across all clients';
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
@@ -573,6 +572,6 @@ export default function Documents() {
 
       {signCard && <SignModal card={signCard} onClose={() => setSignCard(null)} onSigned={handleSigned} />}
       {showIntake && <IntakeModal onClose={() => setShowIntake(false)} onCreated={handleIntakeCreated} />}
-    </AppLayout>
+    </>
   );
 }

@@ -1,5 +1,4 @@
 import { useState, useMemo, useEffect } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'motion/react';
@@ -238,7 +237,7 @@ export default function OpsOverridePage() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content relative min-h-screen">
         
         {/* Dynamic Toast Message */}
@@ -794,6 +793,6 @@ export default function OpsOverridePage() {
         </AnimatePresence>
 
       </div>
-    </AppLayout>
+    </>
   );
 }

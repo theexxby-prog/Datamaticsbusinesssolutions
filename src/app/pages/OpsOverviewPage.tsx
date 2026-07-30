@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { CheckCircle2, Clock, AlertCircle, TrendingUp, Eye, ChevronsUpDown } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { allClients } from '../data/mockClients';
@@ -56,7 +55,7 @@ export default function OpsOverviewPage() {
   ];
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header — red accent bar, matching production */}
         <div className="mb-6">
@@ -187,6 +186,6 @@ export default function OpsOverviewPage() {
           </div>
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }

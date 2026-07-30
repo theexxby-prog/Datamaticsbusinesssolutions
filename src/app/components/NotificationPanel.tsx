@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import { Bell, X, CheckCheck, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useNotifications, type AppNotification } from '../context/NotificationContext';
+import { useIsMobile } from './ui/use-mobile';
 
 export interface NotificationPanelProps {
   isOpen: boolean;
@@ -137,13 +138,7 @@ export function NotificationPanel({
   }, [isOpen, isMobile, anchorRef]);
 
   // Only render the instance that matches the current viewport
-  const [isMobileViewport, setIsMobileViewport] = useState(() => window.innerWidth < 768);
-  useEffect(() => {
-    const mq = window.matchMedia('(max-width: 767px)');
-    const handler = (e: MediaQueryListEvent) => setIsMobileViewport(e.matches);
-    mq.addEventListener('change', handler);
-    return () => mq.removeEventListener('change', handler);
-  }, []);
+  const isMobileViewport = useIsMobile();
 
   // Skip rendering if this instance doesn't match the viewport
   if (isMobile !== isMobileViewport) return null;

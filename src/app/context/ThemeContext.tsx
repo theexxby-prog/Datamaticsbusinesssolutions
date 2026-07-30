@@ -2,8 +2,8 @@ import { createContext, useContext, useEffect, useState, useCallback, type React
 
 // ─── Theme ───────────────────────────────────────────────────────────────────
 // Applies light/dark by stamping data-theme on <html>, which the token layer in
-// dark.css keys off. Defaults to the OS preference, remembers an explicit
-// choice for the life of the browser, and follows the OS while on "system".
+// dark.css keys off. Defaults to light, remembers an explicit choice for the
+// life of the browser, and follows the OS only when the user picks "system".
 
 type ThemeChoice = 'light' | 'dark' | 'system';
 type Resolved = 'light' | 'dark';
@@ -24,12 +24,12 @@ function systemPref(): Resolved {
 }
 
 function readChoice(): ThemeChoice {
-  if (typeof window === 'undefined') return 'system';
+  if (typeof window === 'undefined') return 'light';
   try {
     const v = window.localStorage.getItem(STORAGE_KEY);
-    return v === 'light' || v === 'dark' || v === 'system' ? v : 'system';
+    return v === 'light' || v === 'dark' || v === 'system' ? v : 'light';
   } catch {
-    return 'system';
+    return 'light';
   }
 }
 
@@ -41,6 +41,12 @@ function apply(resolved: Resolved) {
   // Drive both so the whole app flips, not just the token-based parts.
   root.setAttribute('data-theme', resolved);
   root.classList.toggle('dark', resolved === 'dark');
+  // Keep the browser chrome (mobile URL bar / status bar) on the page
+  // background. Values mirror --color-main-bg in design-system.css / dark.css;
+  // the pre-paint script in index.html must stay in sync.
+  document
+    .querySelector('meta[name="theme-color"]')
+    ?.setAttribute('content', resolved === 'dark' ? '#100E13' : '#F5F5F7');
 }
 
 export function ThemeProvider({ children }: { children: ReactNode }) {

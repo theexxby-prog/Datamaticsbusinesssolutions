@@ -3,7 +3,6 @@ import {
   Building2, Power, Filter, UsersRound, Search, Plus, Eye, Pencil, Trash2, ChevronDown,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { AppLayout } from '../components/AppLayout';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { allClients } from '../data/mockClients';
 import { mockTeamMembers } from '../mockData';
@@ -84,7 +83,7 @@ export default function AdminManagementPage() {
   ];
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-6">
@@ -306,6 +305,6 @@ export default function AdminManagementPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </>
   );
 }

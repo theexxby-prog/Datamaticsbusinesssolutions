@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AppLayout } from '../components/AppLayout';
 import {
   MessageSquare, Send, CheckCircle2, AlertCircle, Lightbulb,
   TrendingUp, Zap, Shield, Users, DollarSign, ChevronDown,
@@ -862,7 +861,7 @@ export default function Feedback() {
   ];
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-4xl mx-auto page-content">
 
         {/* Page Header */}
@@ -1685,6 +1684,6 @@ export default function Feedback() {
           </div>
         </motion.div>
       </div>
-    </AppLayout>
+    </>
   );
 }

@@ -12,7 +12,6 @@ import { allClients, Client } from '../data/mockClients';
 import { useAuth } from '../context/AuthContext';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { PersonAvatar } from '../components/PersonAvatar';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
 import {
   EditMemberModal,
@@ -334,7 +333,7 @@ export default function TeamManagementPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto px-6 py-6">
 
         {/* Page header */}
@@ -692,6 +691,6 @@ export default function TeamManagementPage() {
       {modalType === 'bulk-reassign' && selectedMember && (
         <BulkReassignModal isOpen onClose={closeModal} member={selectedMember} allMembers={members} onSave={handleBulkReassign} />
       )}
-    </AppLayout>
+    </>
   );
 }

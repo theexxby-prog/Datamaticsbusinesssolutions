@@ -10,7 +10,6 @@ import type { Campaign, CampaignStatus, CampaignSubmission, ServiceType } from '
 import { mockCampaigns, mockCampaignSubmissions } from '../mockData';
 import { ProgressBar } from '../components/ProgressBar';
 import { TableRow } from '../components/TableRow';
-import { AppLayout } from '../components/AppLayout';
 import { StatusBadge } from '../components/StatusBadge';
 import { NewCampaignModal, type CampaignFormData } from '../components/NewCampaignModal';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
@@ -346,7 +345,7 @@ export default function CampaignList() {
   );
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-7xl mx-auto page-content">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 md:mb-8 gap-4">
@@ -599,6 +598,6 @@ export default function CampaignList() {
         onClose={() => setCloneModalOpen(false)}
         onConfirm={handleCloneConfirm}
       />
-    </AppLayout>
+    </>
   );
 }

@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
 import { 
   Search, MessageSquare, AlertCircle, CheckCircle, Clock, Plus, User, Calendar, Tag,
@@ -165,7 +164,7 @@ export default function Support() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
@@ -503,6 +502,6 @@ export default function Support() {
           </motion.div>
         </motion.div>
       )}
-    </AppLayout>
+    </>
   );
 }

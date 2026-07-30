@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Search, Eye, ChevronDown, ChevronsUpDown } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { allClients, type Campaign } from '../data/mockClients';
 
@@ -45,7 +44,7 @@ export default function InternalCampaignList() {
   }, [allCampaigns, clientFilter, statusFilter, searchQuery, sortAsc]);
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-6">
@@ -185,6 +184,6 @@ export default function InternalCampaignList() {
           )}
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }

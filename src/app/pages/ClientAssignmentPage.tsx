@@ -16,7 +16,6 @@ import {
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { toast } from 'sonner';
-import { AppLayout } from '../components/AppLayout';
 import { allClients, Client } from '../data/mockClients';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { useAuth } from '../context/AuthContext';
@@ -159,7 +158,7 @@ export default function ClientAssignmentPage() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
         <div className="mb-6">
@@ -840,6 +839,6 @@ export default function ClientAssignmentPage() {
           </>
         )}
       </AnimatePresence>
-    </AppLayout>
+    </>
   );
 }

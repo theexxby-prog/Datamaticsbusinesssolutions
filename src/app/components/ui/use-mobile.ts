@@ -1,21 +1,26 @@
-import * as React from "react";
+import { useEffect, useState } from 'react';
 
-const MOBILE_BREAKPOINT = 768;
+// The single mobile/desktop line for the whole app. Keep in sync with
+// Tailwind's `md:` breakpoint — CSS handles pure-styling differences; this
+// hook is for cases where rendering both trees is expensive (charts, drawers,
+// portals) or a numeric value differs between viewports.
+export const MOBILE_BREAKPOINT = 768;
 
-export function useIsMobile() {
-  const [isMobile, setIsMobile] = React.useState<boolean | undefined>(
-    undefined,
+const QUERY = `(max-width: ${MOBILE_BREAKPOINT - 1}px)`;
+
+export function useIsMobile(): boolean {
+  const [isMobile, setIsMobile] = useState<boolean>(
+    () => typeof window !== 'undefined' && window.matchMedia(QUERY).matches,
   );
 
-  React.useEffect(() => {
-    const mql = window.matchMedia(`(max-width: ${MOBILE_BREAKPOINT - 1}px)`);
-    const onChange = () => {
-      setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    };
-    mql.addEventListener("change", onChange);
-    setIsMobile(window.innerWidth < MOBILE_BREAKPOINT);
-    return () => mql.removeEventListener("change", onChange);
+  useEffect(() => {
+    const mql = window.matchMedia(QUERY);
+    const onChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', onChange);
+    // Re-sync in case the viewport changed between initial render and mount.
+    setIsMobile(mql.matches);
+    return () => mql.removeEventListener('change', onChange);
   }, []);
 
-  return !!isMobile;
+  return isMobile;
 }

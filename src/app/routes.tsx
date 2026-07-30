@@ -3,6 +3,7 @@ import { lazy, Suspense } from 'react';
 import { RouteLoader } from './components/RouteLoader';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { RouteErrorBoundary } from './components/RouteErrorBoundary';
+import { AppLayout } from './components/AppLayout';
 
 // Login is eagerly imported — it is the first thing users see,
 // so it must be in the main bundle with zero extra network round-trip.
@@ -11,7 +12,6 @@ import Login from './pages/Login';
 // All other pages are lazy-loaded (split into separate chunks).
 const HomePage = lazy(() => import('./pages/HomePage'));
 const Dashboard = lazy(() => import('./pages/Dashboard'));
-const CampaignList = lazy(() => import('./pages/CampaignList'));
 const CampaignDetailGlass = lazy(() => import('./pages/CampaignDetailGlass'));
 const Invoices = lazy(() => import('./pages/Invoices'));
 const Payment = lazy(() => import('./pages/Payment'));
@@ -50,12 +50,17 @@ const withSuspense = (Component: React.LazyExoticComponent<any>) => {
   );
 };
 
-const routes: RouteObject[] = [
-  // Login rendered directly — no Suspense needed, no lazy chunk to wait for.
-  {
-    path: '/',
-    Component: Login,
-  },
+// Guarded pages: the suspense wrapper must be created ONCE at module scope.
+// Creating it inside a route's Component body would mint a new component
+// identity per render, remounting (and re-suspending) the page each time.
+const SuspendedAdmin = withSuspense(AdminManagementPage);
+const SuspendedOpsOverride = withSuspense(OpsOverridePage);
+const SuspendedDemographics = withSuspense(DemographicsEntryPage);
+
+// Every app route lives under the AppLayout layout route, so the shell
+// (sidebar, mobile app bar, tab bar) persists across navigations instead of
+// remounting on every page change.
+const appRoutes: RouteObject[] = [
   {
     path: '/dashboard',
     Component: withSuspense(HomePage),
@@ -150,36 +155,27 @@ const routes: RouteObject[] = [
   },
   {
     path: '/internal/admin',
-    Component: () => {
-      const SuspendedPage = withSuspense(AdminManagementPage);
-      return (
-        <ProtectedRoute blockClient={true} requireManager={true}>
-          <SuspendedPage />
-        </ProtectedRoute>
-      );
-    }
+    Component: () => (
+      <ProtectedRoute blockClient={true} requireManager={true}>
+        <SuspendedAdmin />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/internal/ops-override',
-    Component: () => {
-      const SuspendedPage = withSuspense(OpsOverridePage);
-      return (
-        <ProtectedRoute blockClient={true} requireManager={true}>
-          <SuspendedPage />
-        </ProtectedRoute>
-      );
-    }
+    Component: () => (
+      <ProtectedRoute blockClient={true} requireManager={true}>
+        <SuspendedOpsOverride />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '/internal/demographics',
-    Component: () => {
-      const SuspendedPage = withSuspense(DemographicsEntryPage);
-      return (
-        <ProtectedRoute blockClient={true} requireManager={true}>
-          <SuspendedPage />
-        </ProtectedRoute>
-      );
-    }
+    Component: () => (
+      <ProtectedRoute blockClient={true} requireManager={true}>
+        <SuspendedDemographics />
+      </ProtectedRoute>
+    ),
   },
   {
     path: '*',
@@ -187,10 +183,24 @@ const routes: RouteObject[] = [
   },
 ];
 
-// Every route gets an error boundary, applied here rather than per-entry so a
-// route added later cannot silently miss one. Without it, a single page that
-// throws replaces the whole app — sidebar and all — and there is nothing left
-// on screen to navigate with.
-export const router = createBrowserRouter(
-  routes.map(route => ({ ErrorBoundary: RouteErrorBoundary, ...route })),
-);
+const routes: RouteObject[] = [
+  // Login rendered directly — no Suspense needed, no lazy chunk to wait for,
+  // and no app shell (it lives outside the AppLayout layout route).
+  {
+    path: '/',
+    Component: Login,
+    ErrorBoundary: RouteErrorBoundary,
+  },
+  {
+    // Pathless layout route: renders the persistent shell around every page.
+    Component: AppLayout,
+    ErrorBoundary: RouteErrorBoundary,
+    // Every child gets its own error boundary too, applied here rather than
+    // per-entry so a route added later cannot silently miss one. A page that
+    // throws is replaced by the boundary INSIDE the shell — sidebar and tab
+    // bar stay usable.
+    children: appRoutes.map(route => ({ ErrorBoundary: RouteErrorBoundary, ...route })),
+  },
+];
+
+export const router = createBrowserRouter(routes);

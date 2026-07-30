@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import { TableRow } from '../components/TableRow';
 import {
@@ -271,7 +270,7 @@ export default function LeadsPage() {
   ];
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header with Stats */}
         <div className="mb-4 md:mb-6">
@@ -739,6 +738,6 @@ export default function LeadsPage() {
         lead={selectedLead}
         onStatusChange={handleStatusChange}
       />
-    </AppLayout>
+    </>
   );
 }

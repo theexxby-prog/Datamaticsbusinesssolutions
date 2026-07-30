@@ -17,7 +17,6 @@ import {
   AlertTriangle,
   Inbox,
 } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { StatusBadge } from '../components/StatusBadge';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { mockCampaignSubmissions } from '../mockData';
@@ -477,7 +476,7 @@ export default function CampaignApprovalsPage() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1100px] mx-auto page-content">
 
         {/* Page header */}
@@ -574,6 +573,6 @@ export default function CampaignApprovalsPage() {
           />
         )}
       </AnimatePresence>
-    </AppLayout>
+    </>
   );
 }

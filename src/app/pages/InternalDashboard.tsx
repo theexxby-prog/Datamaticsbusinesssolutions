@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router';
 import { motion } from 'motion/react';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
 import {
   TrendingUp, Users, Target, Activity, BarChart3, Briefcase,
@@ -51,7 +50,7 @@ export default function InternalDashboard() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -398,6 +397,6 @@ export default function InternalDashboard() {
         isOpen={showUploadModal}
         onClose={() => setShowUploadModal(false)}
       />
-    </AppLayout>
+    </>
   );
 }

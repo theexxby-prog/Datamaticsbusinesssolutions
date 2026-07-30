@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Datamatics Business Solutions — Campaign management and lead generation platform" />
-    <meta name="theme-color" content="#BA2027" />
+    <meta name="theme-color" content="#F5F5F7" />
     <title>Datamatics Business Solutions</title>
     <script>
       // Stamp the theme before first paint. ThemeContext does this too, but it
@@ -12,11 +12,13 @@
       // to get a full-screen white flash on every load.
       (function () {
         try {
-          var c = localStorage.getItem('pulse-theme') || 'system';
+          var c = localStorage.getItem('pulse-theme') || 'light';
           var d = c === 'dark' || (c === 'system' &&
             window.matchMedia('(prefers-color-scheme: dark)').matches);
           document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
           document.documentElement.classList.toggle('dark', d);
+          var m = document.querySelector('meta[name="theme-color"]');
+          if (m) m.setAttribute('content', d ? '#100E13' : '#F5F5F7');
         } catch (e) {}
       })();
     </script>

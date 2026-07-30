@@ -6,7 +6,6 @@ import {
   Check, Pause, Clock, X,
 } from 'lucide-react';
 import { getAccountTeam, allClients } from '../data/mockClients';
-import { AppLayout } from '../components/AppLayout';
 import { NewCampaignModal, CampaignFormData } from '../components/NewCampaignModal';
 import { AccountTeam } from '../components/AccountTeam';
 import { DataTable, type Column } from '../components/ui/DataTable';
@@ -241,7 +240,7 @@ export default function Dashboard() {
   );
 
   return (
-    <AppLayout>
+    <>
       <div className="mx-auto max-w-[1400px] page-content">
         {/* Header */}
         <div className="mb-7 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -315,6 +314,6 @@ export default function Dashboard() {
         onClose={() => setIsNewCampaignModalOpen(false)}
         onSubmit={(_formData: CampaignFormData) => setIsNewCampaignModalOpen(false)}
       />
-    </AppLayout>
+    </>
   );
 }

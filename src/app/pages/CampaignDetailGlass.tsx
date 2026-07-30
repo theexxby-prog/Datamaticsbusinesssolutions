@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
 import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { JobCardModal } from '../components/JobCardModalGlass';
 import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
@@ -43,7 +42,7 @@ export default function CampaignDetail() {
 
   if (!campaign) {
     return (
-      <AppLayout>
+      <>
         <div className="max-w-[1440px] mx-auto px-6 py-6">
           <div className="text-center py-12">
             <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-xl)' }}>Campaign not found</h2>
@@ -52,7 +51,7 @@ export default function CampaignDetail() {
             </button>
           </div>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
@@ -112,7 +111,7 @@ export default function CampaignDetail() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto px-6 py-6 pb-24 md:pb-6">
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-6" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
@@ -266,6 +265,6 @@ export default function CampaignDetail() {
         }}
         prefill={clonePrefill}
       />
-    </AppLayout>
+    </>
   );
 }

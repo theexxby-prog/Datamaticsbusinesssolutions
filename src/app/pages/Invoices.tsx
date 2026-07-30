@@ -4,7 +4,6 @@ import {
   Download, Loader2, RefreshCw, Send, FileCheck2, Link2, FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { AnimatedCounter } from '../components/AnimatedCounter';
@@ -519,7 +518,7 @@ export default function Invoices() {
         : 'Invoice pipeline across all clients';
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-6">
@@ -633,6 +632,6 @@ export default function Invoices() {
       </div>
     
       <TaxInvoiceModal invoice={viewing} onClose={() => setViewing(null)} />
-    </AppLayout>
+    </>
   );
 }
