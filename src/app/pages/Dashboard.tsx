@@ -27,6 +27,51 @@ type Row = {
 
 const DOTS = ['var(--color-primary)', 'var(--color-info)', 'var(--color-accent-purple)', 'var(--color-success)', 'var(--color-warning)', 'var(--color-info)'];
 
+// ─── Reporting window ────────────────────────────────────────────────────────
+// One control drives the whole KPI strip. The previous dashboard gave each card
+// its own day/week/month/year switcher, which put three identical controls on
+// screen and let the cards disagree about the period they were showing.
+
+type Period = '1d' | '1w' | '1m' | '1y';
+
+const PERIODS: { key: Period; label: string; suffix: string }[] = [
+  { key: '1d', label: 'Day', suffix: 'today' },
+  { key: '1w', label: 'Week', suffix: 'this week' },
+  { key: '1m', label: 'Month', suffix: 'this month' },
+  { key: '1y', label: 'Year', suffix: 'this year' },
+];
+
+const PERIOD_MULTIPLIER: Record<Period, number> = { '1d': 0.033, '1w': 0.25, '1m': 1, '1y': 12 };
+
+function PeriodSwitch({ value, onChange }: { value: Period; onChange: (p: Period) => void }) {
+  return (
+    <div
+      className="inline-flex rounded-xl border p-1"
+      style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-raised)' }}
+      role="group"
+      aria-label="Reporting period"
+    >
+      {PERIODS.map(p => {
+        const on = p.key === value;
+        return (
+          <button
+            key={p.key}
+            onClick={() => onChange(p.key)}
+            aria-pressed={on}
+            className="rounded-lg px-3.5 py-1.5 text-[13px] font-bold transition-colors"
+            style={{
+              background: on ? 'var(--color-primary)' : 'transparent',
+              color: on ? '#FFFFFF' : 'var(--color-text-muted)',
+            }}
+          >
+            {p.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+}
+
 // ─── KPI tile — the mockup's compact stat: icon, delta, value, label ─────────
 function Kpi({ icon: Icon, tone, toneBg, value, label, delta, deltaTone }: {
   icon: typeof TrendingUp; tone: string; toneBg: string; value: string; label: string;
@@ -76,6 +121,8 @@ export default function Dashboard() {
   const { currentUser } = useAuth();
   const [isNewCampaignModalOpen, setIsNewCampaignModalOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState('All');
+  const [period, setPeriod] = useState<Period>('1m');
+  const periodMeta = PERIODS.find(p => p.key === period)!;
 
   const accountTeam = getAccountTeam('client_1');
   const isClientRole = currentUser?.role === 'client';
@@ -102,7 +149,10 @@ export default function Dashboard() {
 
   // KPI figures
   const active = rows.filter(r => r.status === 'active').length;
-  const leads = rows.reduce((s, r) => s + r.delivered, 0);
+  // Volume metrics scale with the selected window; the acceptance rate is a
+  // ratio and the campaign count is a live total, so neither is multiplied.
+  const monthlyLeads = rows.reduce((s, r) => s + r.delivered, 0);
+  const leads = Math.round(monthlyLeads * PERIOD_MULTIPLIER[period]);
   const billable = leads * 12; // $12 CPL, matches the demo elsewhere
   const acceptance = 91;
 
@@ -215,8 +265,14 @@ export default function Dashboard() {
         </div>
 
         {/* KPI strip */}
+        <div className="mb-3.5 flex items-center justify-between gap-3">
+          <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+            Showing {periodMeta.suffix}
+          </span>
+          <PeriodSwitch value={period} onChange={setPeriod} />
+        </div>
         <div className="mb-7 grid grid-cols-2 gap-4 lg:grid-cols-4">
-          <Kpi icon={DollarSign} tone="var(--color-primary)" toneBg="var(--color-primary-tint)" value={`$${(billable / 1000).toFixed(1)}K`} label="Billable this month" delta="▲ 8%" deltaTone="var(--color-success)" />
+          <Kpi icon={DollarSign} tone="var(--color-primary)" toneBg="var(--color-primary-tint)" value={`$${(billable / 1000).toFixed(1)}K`} label={`Billable ${periodMeta.suffix}`} delta="▲ 8%" deltaTone="var(--color-success)" />
           <Kpi icon={TrendingUp} tone="var(--color-info)" toneBg="var(--color-info-bg)" value={leads.toLocaleString()} label="Leads delivered" delta="▲ 12%" deltaTone="var(--color-success)" />
           <Kpi icon={CheckCircle2} tone="var(--color-success)" toneBg="var(--color-success-bg)" value={`${acceptance}%`} label="Acceptance rate" delta="= stable" deltaTone="var(--color-text-muted)" />
           <Kpi icon={Layers} tone="var(--color-warning)" toneBg="var(--color-warning-bg)" value={String(rows.length)} label="Campaigns" delta={`${active} active`} deltaTone="var(--color-primary)" />

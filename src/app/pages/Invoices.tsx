@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import {
   Receipt, CheckCircle2, AlertCircle, Clock, ChevronDown, ChevronUp,
-  Download, CreditCard, Loader2, RefreshCw, Send, FileCheck2, Link2, FileText,
+  Download, Loader2, RefreshCw, Send, FileCheck2, Link2, FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { AppLayout } from '../components/AppLayout';
@@ -19,7 +19,7 @@ import type { TaxInvoice } from '../types';
 import {
   INVOICE_STAGE_ORDER, INVOICE_STAGE_META, GROUPING_META, stageIndex,
   formatBillingPeriod, formatUSD, validateInvoice, syncInvoiceToTally,
-  sendInvoice, initiatePayment, syncPaymentToTally,
+  sendInvoice,
 } from '../utils/invoiceWorkflow';
 import type { InvoiceRecord } from '../types';
 import { formatDate } from '../utils/formatDate';
@@ -45,14 +45,13 @@ const stageChipStyles: Record<string, string> = {
 
 function InvoiceCard({
   invoice, perspective, busy,
-  onValidate, onRetryTally, onPay,
+  onValidate, onRetryTally,
 }: {
   invoice: InvoiceRecord;
   perspective: InvoicePerspective;
   busy: boolean;
   onValidate: (inv: InvoiceRecord) => void;
   onRetryTally: (inv: InvoiceRecord) => void;
-  onPay: (inv: InvoiceRecord) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -63,7 +62,6 @@ function InvoiceCard({
 
   const canValidate = perspective === 'accounts' && (invoice.stage === 'draft' || invoice.stage === 'pending_validation');
   const canRetryTally = perspective === 'accounts' && tallyFailed;
-  const canPay = perspective === 'client' && (invoice.stage === 'sent' || invoice.stage === 'overdue');
 
   const groupingLabel = invoice.grouping === 'geo_split' && invoice.geo
     ? `Geo Split · ${invoice.geo}`
@@ -126,12 +124,6 @@ function InvoiceCard({
 
       {/* Actions */}
       <div className="flex flex-wrap items-center gap-2">
-        {canPay && (
-          <button onClick={() => onPay(invoice)} disabled={busy} className="btn-primary px-4 py-2 flex items-center gap-2">
-            {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
-            {busy ? 'Processing…' : 'Pay Now'}
-          </button>
-        )}
         {canValidate && (
           <button onClick={() => onValidate(invoice)} disabled={busy} className="btn-primary px-4 py-2 flex items-center gap-2">
             {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <FileCheck2 className="w-4 h-4" />}
@@ -239,10 +231,9 @@ function ageingDays(issueDate?: string): number | null {
   return Math.max(0, Math.floor((now.getTime() - issued.getTime()) / 86400000));
 }
 
-function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
+function ClientInvoiceCard({ invoice, busy, onView }: {
   invoice: InvoiceRecord;
   busy: boolean;
-  onPay: (inv: InvoiceRecord) => void;
   onView: (invoiceNumber: string) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -288,12 +279,6 @@ function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mt-4">
-        {status !== 'paid' && (
-          <button onClick={() => onPay(invoice)} disabled={busy} className="btn-primary px-4 py-2 flex items-center gap-2">
-            {busy ? <Loader2 className="w-4 h-4 animate-spin" /> : <CreditCard className="w-4 h-4" />}
-            {busy ? 'Processing…' : 'Pay Now'}
-          </button>
-        )}
         <button onClick={() => onView(invoice.invoiceNumber)} className="btn-secondary px-4 py-2 flex items-center gap-2">
           <FileText className="w-4 h-4" />
           View invoice
@@ -485,31 +470,6 @@ export default function Invoices() {
     }
   };
 
-  // ─── Client: pay (gateway stubbed) → Tally receipt voucher ───
-  const handlePay = async (invoice: InvoiceRecord) => {
-    setBusyId(invoice.id);
-    try {
-      const { reference, paidAt } = await initiatePayment(invoice);
-      patchInvoice(invoice.id, (inv) => ({
-        ...inv,
-        stage: 'paid',
-        payment: { method: 'Portal payment', reference, paidAt },
-        tally: { ...inv.tally, paymentEntry: 'syncing' },
-        history: [...inv.history, { at: now(), actor: currentUser.name, action: `Payment received (${reference})` }],
-      }));
-      toast.success(`Payment confirmed — ${reference}`);
-
-      await syncPaymentToTally(invoice);
-      patchInvoice(invoice.id, (inv) => ({
-        ...inv,
-        tally: { ...inv.tally, paymentEntry: 'synced' },
-        history: [...inv.history, { at: now(), actor: 'System', action: 'Receipt voucher created in Tally' }],
-      }));
-    } finally {
-      setBusyId(null);
-    }
-  };
-
   // ─── KPIs per perspective ───
   const outstanding = visibleInvoices.filter((i) => i.stage === 'sent' || i.stage === 'overdue').reduce((s, i) => s + i.total, 0);
   const paidTotal = visibleInvoices.filter((i) => i.stage === 'paid').reduce((s, i) => s + i.total, 0);
@@ -554,7 +514,7 @@ export default function Invoices() {
       ];
 
   const subtitle =
-    perspective === 'client' ? 'Your monthly invoices — pay securely and download copies for your records'
+    perspective === 'client' ? 'Your monthly invoices — view the detail and download copies for your records'
       : perspective === 'accounts' ? 'Validate amounts, sync to Tally, and track collections'
         : 'Invoice pipeline across all clients';
 
@@ -598,7 +558,6 @@ export default function Invoices() {
                   busy={busyId === inv.id}
                   onValidate={handleValidate}
                   onRetryTally={handleRetryTally}
-                  onPay={handlePay}
                 />
               ))}
             </div>
@@ -657,7 +616,7 @@ export default function Invoices() {
           <div className="space-y-4">
             {rest.map((inv) => (
               perspective === 'client' ? (
-                <ClientInvoiceCard key={inv.id} invoice={inv} busy={busyId === inv.id} onPay={handlePay} onView={openInvoice} />
+                <ClientInvoiceCard key={inv.id} invoice={inv} busy={busyId === inv.id} onView={openInvoice} />
               ) : (
                 <InvoiceCard
                   key={inv.id}
@@ -666,7 +625,6 @@ export default function Invoices() {
                   busy={busyId === inv.id}
                   onValidate={handleValidate}
                   onRetryTally={handleRetryTally}
-                  onPay={handlePay}
                 />
               )
             ))}
