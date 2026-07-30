@@ -17,8 +17,8 @@ import {
   AlertTriangle,
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import { LeadUploadModal } from '../components/LeadUploadModal';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { allClients, recentUploadBatches, type LeadUploadBatch } from '../data/mockClients';
@@ -156,7 +156,7 @@ export default function LeadUploadDashboard() {
     : null;
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1600px] mx-auto page-content">
         {/* Hero Header with Giant Upload Button */}
         <div className="mb-8">
@@ -427,7 +427,7 @@ export default function LeadUploadDashboard() {
             </div>
           </div>
           
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[1200px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
@@ -578,8 +578,72 @@ export default function LeadUploadDashboard() {
             </table>
           </div>
 
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={filteredUploads}
+            getRowId={(upload) => upload.id}
+            title={(upload) => (
+              <span className="flex items-center gap-2">
+                <FileText className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+                <span className="min-w-0 break-all">{upload.fileName}</span>
+              </span>
+            )}
+            badge={(upload) => (
+              <span className={`px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 ${getStatusBadge(upload.status)}`}>
+                {getStatusIcon(upload.status)}
+                {upload.status.charAt(0).toUpperCase() + upload.status.slice(1)}
+              </span>
+            )}
+            fields={[
+              { label: 'Client', value: (upload) => upload.clientName },
+              { label: 'Campaign', value: (upload) => upload.campaignName },
+              { label: 'Rows', value: (upload) => `${upload.processedRows} / ${upload.totalRows}` },
+              {
+                label: 'Success / Errors',
+                value: (upload) => (
+                  <span>
+                    <span style={{ color: 'var(--color-success)', fontWeight: 'var(--font-weight-bold)' }}>
+                      {upload.successCount}
+                    </span>
+                    {' / '}
+                    <span style={{ color: 'var(--color-error)', fontWeight: 'var(--font-weight-bold)' }}>
+                      {upload.errorCount}
+                    </span>
+                  </span>
+                ),
+              },
+              { label: 'Uploaded', value: (upload) => `${formatTimeAgo(upload.uploadedAt)} · ${upload.uploadedBy}` },
+            ]}
+            actions={(upload) =>
+              upload.status === 'failed' || (upload.errorDetails && upload.errorDetails.length > 0) ? (
+                <>
+                  {upload.status === 'failed' && (
+                    <button
+                      onClick={() => handleQuickUpload(upload.clientId, upload.campaignId)}
+                      className="btn-primary px-4 py-2.5 min-h-[44px]"
+                      style={{ fontSize: 'var(--font-size-xs)' }}
+                    >
+                      Retry
+                    </button>
+                  )}
+                  {upload.errorDetails && upload.errorDetails.length > 0 && (
+                    <button
+                      className="btn-ghost px-3 py-2.5 min-h-[44px] flex items-center gap-1.5"
+                      style={{ fontSize: 'var(--font-size-xs)' }}
+                      title="View errors"
+                    >
+                      <Eye className="w-4 h-4" />
+                      View errors
+                    </button>
+                  )}
+                </>
+              ) : null
+            }
+            emptyMessage="No uploads found. Try adjusting your filters."
+          />
+
           {filteredUploads.length === 0 && (
-            <div className="text-center py-16" style={{ color: 'var(--color-text-secondary)' }}>
+            <div className="hidden md:block text-center py-16" style={{ color: 'var(--color-text-secondary)' }}>
               <FileText className="w-16 h-16 mx-auto mb-4 opacity-30" />
               <p style={{ fontSize: 'var(--font-size-base)' }}>No uploads found</p>
               <p style={{ fontSize: 'var(--font-size-sm)' }} className="mt-2">
@@ -603,6 +667,6 @@ export default function LeadUploadDashboard() {
         campaignId={selectedCampaignId || undefined}
         campaignName={selectedCampaignData?.name}
       />
-    </AppLayout>
+    </>
   );
 }

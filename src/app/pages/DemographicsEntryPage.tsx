@@ -1,5 +1,4 @@
 import { useState, useEffect, useMemo } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { Globe, Building2, Users, IdCard, Save, AlertTriangle, CheckCircle2, Target, ChevronDown, Users2 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -116,7 +115,7 @@ export default function DemographicsEntryPage() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1100px] mx-auto page-content animate-fadeIn">
         {/* Client + Campaign selectors */}
         <div className="glass-card p-4 mb-4">
@@ -283,6 +282,6 @@ export default function DemographicsEntryPage() {
           </div>
         )}
       </div>
-    </AppLayout>
+    </>
   );
 }

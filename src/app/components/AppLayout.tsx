@@ -1,17 +1,23 @@
-import { ReactNode, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router';
+import { useEffect, useRef } from 'react';
+import { Outlet, useLocation, useNavigate } from 'react-router';
 import { LeftSidebar } from './LeftSidebar';
-import { MobileTabBar } from './MobileTabBar';
+import { MobileTabBar } from './mobile/MobileTabBar';
+import { MobileAppBar } from './mobile/MobileAppBar';
 import { DemoRibbon } from './DemoRibbon';
 import { IS_CLIENT_DEMO, isInternalPath } from '../config/demo';
 
-interface AppLayoutProps {
-  children: ReactNode;
-}
-
-export function AppLayout({ children }: AppLayoutProps) {
+// The persistent app shell, mounted once as a router layout route. Pages
+// render into <Outlet/>; the sidebar, mobile app bar, and tab bar survive
+// navigation instead of remounting on every page change.
+//
+// Scroll model is hybrid: on mobile the document itself scrolls (so the
+// browser URL bar can collapse and momentum scroll works), while desktop
+// keeps the fixed h-screen shell with the inner column scrolling so the
+// sidebar stays put.
+export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const scrollColumnRef = useRef<HTMLDivElement>(null);
 
   // Client demo mode: internal routes do not exist — hard-redirect to the
   // client dashboard even on direct URL entry.
@@ -21,23 +27,35 @@ export function AppLayout({ children }: AppLayoutProps) {
     }
   }, [location.pathname, navigate]);
 
+  // With a persistent shell the scroll position no longer resets via remount;
+  // reset both scroll containers (document on mobile, inner column on desktop)
+  // whenever the route changes.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    scrollColumnRef.current?.scrollTo(0, 0);
+  }, [location.pathname]);
+
   if (IS_CLIENT_DEMO && isInternalPath(location.pathname)) {
     return null; // guard against a flash of internal content before redirect
   }
 
   return (
     <div
-      className="flex h-screen w-screen overflow-hidden"
+      className="min-h-dvh md:flex md:h-screen md:w-screen md:overflow-hidden"
       style={{ background: 'var(--color-main-bg)' }}
     >
-      {/* Desktop sidebar — hidden on mobile, replaced by MobileTabBar */}
+      {/* Desktop sidebar — hidden on mobile, replaced by MobileAppBar + MobileTabBar */}
       <LeftSidebar />
       <DemoRibbon />
 
       {/* Main Content Area */}
-      <div className="flex-1 min-w-0 overflow-y-auto h-screen flex flex-col">
+      <div
+        ref={scrollColumnRef}
+        className="flex flex-col min-h-dvh md:flex-1 md:min-w-0 md:h-screen md:min-h-0 md:overflow-y-auto"
+      >
+        <MobileAppBar />
         <div className="flex-1">
-          {children}
+          <Outlet />
         </div>
         {/* Footer watermark + disclaimer — hidden on mobile */}
         <div className="hidden sm:flex flex-col items-center justify-center py-3 gap-1 flex-shrink-0" style={{ borderTop: '1px solid var(--color-border-light)' }}>

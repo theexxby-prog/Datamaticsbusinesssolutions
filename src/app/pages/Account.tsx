@@ -5,7 +5,6 @@ import {
   Smartphone, Monitor, Users, UserPlus, Trash2, Edit, Check, X,
   Key, Activity, Chrome, Calendar, CreditCard, Eye, EyeOff, Save, LayoutDashboard
 } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { toast } from 'sonner';
@@ -38,7 +37,7 @@ export default function Account() {
   ];
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1200px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="flex items-start justify-between mb-6">
@@ -299,6 +298,6 @@ export default function Account() {
           {activeTab === 'notifications' && <NotificationsTabContent />}
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }

@@ -4,7 +4,6 @@ import {
   Download, Loader2, RefreshCw, Send, FileCheck2, Link2, FileText,
 } from 'lucide-react';
 import { toast } from 'sonner';
-import { AppLayout } from '../components/AppLayout';
 import { useAuth } from '../context/AuthContext';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { AnimatedCounter } from '../components/AnimatedCounter';
@@ -104,11 +103,12 @@ function InvoiceCard({
         </div>
       </div>
 
-      {/* Stepper */}
-      <div className="mb-4 overflow-x-auto">
-        <div style={{ minWidth: 420 }}>
-          <WorkflowStepper steps={steps} currentIndex={stageIndex(invoice)} allDone={isPaid} size="sm" />
-        </div>
+      {/* Stepper — horizontal on desktop, stacked vertically on phones */}
+      <div className="mb-4 hidden md:block">
+        <WorkflowStepper steps={steps} currentIndex={stageIndex(invoice)} allDone={isPaid} size="sm" />
+      </div>
+      <div className="mb-4 md:hidden">
+        <WorkflowStepper steps={steps} currentIndex={stageIndex(invoice)} allDone={isPaid} size="sm" orientation="vertical" />
       </div>
 
       {/* Tally + payment chips */}
@@ -156,7 +156,7 @@ function InvoiceCard({
       {/* Line items — billable leads × CPL, never Delivered */}
       {expanded && (
         <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--color-border-light)' }}>
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full" style={{ fontSize: '12px' }}>
               <thead>
                 <tr style={{ color: 'var(--color-text-muted)', textAlign: 'left' }}>
@@ -192,6 +192,48 @@ function InvoiceCard({
               </tbody>
             </table>
           </div>
+
+          {/* Mobile: each line item as a label/value block instead of a 6-column table */}
+          <div className="md:hidden flex flex-col gap-3">
+            {invoice.lineItems.map((li) => (
+              <div
+                key={`${li.campaignId}-${li.geo}`}
+                className="rounded-xl border p-3"
+                style={{ borderColor: 'var(--color-border-light)', fontSize: '13px' }}
+              >
+                <div className="mb-2 font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  {li.campaignName}
+                </div>
+                <div className="flex flex-col gap-1.5" style={{ color: 'var(--color-text-primary)' }}>
+                  <div className="flex justify-between gap-3">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Job Card</span>
+                    {li.jobCardId ? (
+                      <span className="inline-flex items-center gap-1" style={{ color: 'var(--color-primary)' }}>
+                        <Link2 className="w-3 h-3" />{li.jobCardId}
+                      </span>
+                    ) : '—'}
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Geo</span>
+                    <span>{li.geo}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Billable Leads × CPL</span>
+                    <span>{li.billableLeads.toLocaleString('en-US')} × {formatUSD(li.cpl)}</span>
+                  </div>
+                  <div className="flex justify-between gap-3 font-semibold">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Amount</span>
+                    <span>{formatUSD(li.amount)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-between px-1 font-bold" style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}>
+              <span>Total</span>
+              <span>{formatUSD(invoice.total)}</span>
+            </div>
+          </div>
+
           <p className="mt-2" style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
             Amounts are calculated from billable leads only.
           </p>
@@ -311,7 +353,7 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
 
       {expanded && (
         <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--color-border-light)' }}>
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full" style={{ fontSize: '12px' }}>
               <thead>
                 <tr style={{ color: 'var(--color-text-muted)', textAlign: 'left' }}>
@@ -339,6 +381,40 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile: label/value blocks instead of a 5-column table */}
+          <div className="md:hidden flex flex-col gap-3">
+            {invoice.lineItems.map((li) => (
+              <div
+                key={`${li.campaignId}-${li.geo}`}
+                className="rounded-xl border p-3"
+                style={{ borderColor: 'var(--color-border-light)', fontSize: '13px' }}
+              >
+                <div className="mb-2 font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  {li.campaignName}
+                </div>
+                <div className="flex flex-col gap-1.5" style={{ color: 'var(--color-text-primary)' }}>
+                  <div className="flex justify-between gap-3">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Job Card</span>
+                    <span>{li.jobCardId ?? '—'}</span>
+                  </div>
+                  <div className="flex justify-between gap-3">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Billable Leads × CPL</span>
+                    <span>{li.billableLeads.toLocaleString('en-US')} × {formatUSD(li.cpl)}</span>
+                  </div>
+                  <div className="flex justify-between gap-3 font-semibold">
+                    <span style={{ color: 'var(--color-text-muted)' }}>Amount</span>
+                    <span>{formatUSD(li.amount)}</span>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="flex justify-between px-1 font-bold" style={{ fontSize: '13px', color: 'var(--color-text-primary)' }}>
+              <span>Total</span>
+              <span>{formatUSD(invoice.total)}</span>
+            </div>
+          </div>
+
           <p className="mt-2" style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
             You are only ever billed for accepted, billable leads.
           </p>
@@ -519,7 +595,7 @@ export default function Invoices() {
         : 'Invoice pipeline across all clients';
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-6">
@@ -633,6 +709,6 @@ export default function Invoices() {
       </div>
     
       <TaxInvoiceModal invoice={viewing} onClose={() => setViewing(null)} />
-    </AppLayout>
+    </>
   );
 }

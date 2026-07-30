@@ -1,11 +1,11 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { Search, Eye, ChevronDown, ChevronsUpDown } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import { allClients, type Campaign } from '../data/mockClients';
 
-type FlatCampaign = Campaign & { clientId: string; clientName: string };
+type FlatCampaign = Campaign & { clientId: string; clientName: string; manager: string };
 
 function fmtDate(iso?: string) {
   if (!iso) return null;
@@ -29,7 +29,7 @@ export default function InternalCampaignList() {
   const [sortAsc, setSortAsc] = useState(true);
 
   const allCampaigns: FlatCampaign[] = useMemo(
-    () => allClients.flatMap((c) => c.campaigns.map((cp) => ({ ...cp, clientId: c.id, clientName: c.companyName }))),
+    () => allClients.flatMap((c) => c.campaigns.map((cp) => ({ ...cp, clientId: c.id, clientName: c.companyName, manager: c.campaignManager }))),
     [],
   );
 
@@ -45,7 +45,7 @@ export default function InternalCampaignList() {
   }, [allCampaigns, clientFilter, statusFilter, searchQuery, sortAsc]);
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-6">
@@ -114,7 +114,7 @@ export default function InternalCampaignList() {
 
         {/* Table */}
         <div className="glass-card overflow-hidden">
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full" style={{ fontSize: '13px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--color-border-light)' }}>
@@ -179,12 +179,53 @@ export default function InternalCampaignList() {
             </table>
           </div>
           {filtered.length === 0 && (
-            <div className="px-5 py-10 text-center" style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
+            <div className="hidden md:block px-5 py-10 text-center" style={{ color: 'var(--color-text-muted)', fontSize: '14px' }}>
               No campaigns match your filters.
             </div>
           )}
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={filtered}
+            getRowId={(c) => c.id}
+            title={(c) => c.name}
+            badge={(c) => (
+              <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>
+                {statusLabel[c.status]}
+              </span>
+            )}
+            fields={[
+              { label: 'Client', value: (c) => c.clientName },
+              {
+                label: 'Delivered',
+                value: (c) => {
+                  const target = c.target ?? c.goalLeads ?? 0;
+                  const delivered = c.delivered ?? c.deliveredLeads ?? 0;
+                  return `${delivered.toLocaleString('en-US')} / ${target.toLocaleString('en-US')}`;
+                },
+              },
+              {
+                label: 'Progress',
+                value: (c) => {
+                  const target = c.target ?? c.goalLeads ?? 0;
+                  const delivered = c.delivered ?? c.deliveredLeads ?? 0;
+                  const pct = target > 0 ? Math.round((delivered / target) * 100) : 0;
+                  return (
+                    <span className="flex w-32 items-center gap-2">
+                      <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--color-border-light)' }}>
+                        <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: 'var(--color-primary)' }} />
+                      </div>
+                      <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{pct}%</span>
+                    </span>
+                  );
+                },
+              },
+              { label: 'Manager', value: (c) => c.manager, hideWhenEmpty: true },
+            ]}
+            onClick={(c) => navigate(`/internal/campaigns/${c.id}`)}
+            emptyMessage="No campaigns match your filters."
+          />
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }

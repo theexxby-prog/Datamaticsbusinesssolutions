@@ -2,9 +2,11 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
 
 interface LeadDistributionChartProps {
   data: Array<{ name: string; value: number; color: string }>;
+  /** Chart height in px — pass a smaller value on phones. */
+  height?: number;
 }
 
-export function LeadDistributionChart({ data }: LeadDistributionChartProps) {
+export function LeadDistributionChart({ data, height = 220 }: LeadDistributionChartProps) {
   const RADIAN = Math.PI / 180;
   const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, percent }: any) => {
     const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
@@ -31,7 +33,7 @@ export function LeadDistributionChart({ data }: LeadDistributionChartProps) {
     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
       {/* Pie Chart */}
       <div className="flex justify-center">
-        <ResponsiveContainer width="100%" height={220}>
+        <ResponsiveContainer width="100%" height={height}>
           <PieChart>
             <Pie
               data={data}

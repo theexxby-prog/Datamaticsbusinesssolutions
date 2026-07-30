@@ -5,8 +5,8 @@ import {
   Upload, ChevronRight, TrendingUp, Clock, Users, Target,
   CheckCircle2, Activity, BarChart3, AlertCircle, Eye,
 } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import { useAuth } from '../context/AuthContext';
 import { getClientsForUser, Client } from '../data/mockClients';
 import { LeadUploadModal } from '../components/LeadUploadModal';
@@ -62,11 +62,11 @@ export default function ManagerDashboardPage() {
 
   if (!selectedClient) {
     return (
-      <AppLayout>
+      <>
         <div className="flex items-center justify-center h-screen">
           <p style={{ fontSize: 'var(--font-size-base)', color: 'var(--color-text-secondary)' }}>No clients assigned</p>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
@@ -116,7 +116,7 @@ export default function ManagerDashboardPage() {
   );
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
@@ -290,7 +290,7 @@ export default function ManagerDashboardPage() {
             </div>
           </div>
 
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[900px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
@@ -431,8 +431,109 @@ export default function ManagerDashboardPage() {
             </table>
           </div>
 
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={sortedCampaigns}
+            getRowId={(campaign) => campaign.id}
+            title={(campaign) => (
+              <span>
+                {campaign.name}
+                {campaign.startDate && (
+                  <span className="block text-xs font-normal" style={{ color: 'var(--color-text-muted)' }}>
+                    {campaign.startDate}
+                    {campaign.endDate ? ` → ${campaign.endDate}` : ''}
+                  </span>
+                )}
+              </span>
+            )}
+            badge={(campaign) => getStatusBadge(campaign.status)}
+            fields={[
+              {
+                label: 'Progress',
+                value: (campaign) => {
+                  const delivered = campaign.delivered || campaign.deliveredLeads || 0;
+                  const target = campaign.target || campaign.goalLeads || 0;
+                  const progress = target > 0 ? Math.min(Math.round((delivered / target) * 100), 100) : 0;
+                  return target > 0 ? (
+                    <span className="inline-block w-40 space-y-1.5">
+                      <span className="flex items-center gap-3">
+                        <div className="progress-bar flex-1">
+                          <div
+                            className={`progress-bar__fill ${campaign.status === 'completed' ? 'progress-bar__fill--completed' : ''}`}
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
+                        <span style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-secondary)', minWidth: '28px' }}>
+                          {progress}%
+                        </span>
+                      </span>
+                      <span className="block" style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
+                        {delivered.toLocaleString()} / {target.toLocaleString()} leads
+                      </span>
+                    </span>
+                  ) : (
+                    <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>—</span>
+                  );
+                },
+              },
+              { label: 'Total Leads', value: (campaign) => campaign.totalLeads.toLocaleString() },
+              {
+                label: 'Acceptance',
+                value: (campaign) => (
+                  <span
+                    className="inline-flex items-center px-2 py-0.5 rounded-full"
+                    style={{
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      background: campaign.acceptanceRate >= 90
+                        ? 'var(--color-success-bg)'
+                        : campaign.acceptanceRate >= 75
+                        ? 'var(--color-warning-bg)'
+                        : 'var(--color-error-bg)',
+                      color: campaign.acceptanceRate >= 90
+                        ? 'var(--color-success)'
+                        : campaign.acceptanceRate >= 75
+                        ? 'var(--color-warning)'
+                        : 'var(--color-error)',
+                    }}
+                  >
+                    {campaign.acceptanceRate}%
+                  </span>
+                ),
+              },
+            ]}
+            actions={(campaign) => (
+              <>
+                {canUploadLeads() && campaign.status === 'active' && (
+                  <button
+                    onClick={() => {
+                      setUploadCampaignId(campaign.id);
+                      setShowUploadModal(true);
+                    }}
+                    className="btn-primary px-4 py-2.5 min-h-[44px] flex items-center gap-1.5"
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)' }}
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    Upload
+                  </button>
+                )}
+                <button
+                  onClick={() => navigate(`/internal/campaigns/${campaign.id}`)}
+                  className="btn-ghost px-3 py-2.5 min-h-[44px] flex items-center gap-1.5"
+                  style={{ fontSize: 'var(--font-size-xs)' }}
+                  title="View campaign"
+                >
+                  <Eye className="w-4 h-4" />
+                  View
+                </button>
+              </>
+            )}
+            onClick={(campaign) => navigate(`/internal/campaigns/${campaign.id}`)}
+            emptyMessage="No campaigns found for this client"
+          />
+
           {sortedCampaigns.length === 0 && (
-            <div className="text-center py-12">
+            <div className="hidden md:block text-center py-12">
               <Target className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                 No campaigns found for this client
@@ -455,6 +556,6 @@ export default function ManagerDashboardPage() {
             : undefined}
         />
       )}
-    </AppLayout>
+    </>
   );
 }

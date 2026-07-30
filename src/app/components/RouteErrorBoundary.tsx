@@ -1,7 +1,5 @@
-import { Component, type ReactNode } from 'react';
 import { useRouteError, useLocation, useNavigate, isRouteErrorResponse } from 'react-router';
 import { AlertTriangle, RotateCw, LayoutDashboard } from 'lucide-react';
-import { AppLayout } from './AppLayout';
 
 // ─── Route-level error boundary ──────────────────────────────────────────────
 // Without one of these, any error thrown inside a page bubbles all the way to
@@ -9,9 +7,12 @@ import { AppLayout } from './AppLayout';
 // included. A single broken component then reads as "the whole portal is
 // dead", with nothing left on screen to click.
 //
-// Attached per route (see routes.tsx), the damage is contained: the page is
-// replaced by the card below, the shell keeps rendering, and navigation still
-// works.
+// Attached per child route (see routes.tsx), the damage is contained: the
+// boundary renders in place of the page, INSIDE the persistent AppLayout
+// shell, so the sidebar/tab bar keep rendering and navigation still works.
+// The layout route and `/` carry their own boundary too; when those throw the
+// bare card renders with no shell — which is exactly right, since the shell
+// itself is what failed.
 
 /**
  * A failed dynamic `import()` — the usual cause is a tab left open across a
@@ -83,21 +84,6 @@ function ErrorCard({ error }: { error: unknown }) {
   );
 }
 
-/**
- * Guards the shell itself. If `AppLayout` is what threw, wrapping the error
- * card in `AppLayout` would throw again and leave a blank screen — so fall
- * back to the bare card.
- */
-class ShellGuard extends Component<{ fallback: ReactNode; children: ReactNode }, { failed: boolean }> {
-  state = { failed: false };
-  static getDerivedStateFromError() {
-    return { failed: true };
-  }
-  render() {
-    return this.state.failed ? this.props.fallback : this.props.children;
-  }
-}
-
 export function RouteErrorBoundary() {
   const error = useRouteError();
   const location = useLocation();
@@ -105,14 +91,5 @@ export function RouteErrorBoundary() {
   // Surface it — the card deliberately hides the stack from the client.
   console.error('[route error]', location.pathname, error);
 
-  const card = <ErrorCard error={error} />;
-
-  // Login and any other pre-auth route has no shell to preserve.
-  if (location.pathname === '/') return card;
-
-  return (
-    <ShellGuard fallback={card}>
-      <AppLayout>{card}</AppLayout>
-    </ShellGuard>
-  );
+  return <ErrorCard error={error} />;
 }

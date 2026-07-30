@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useIsMobile } from './ui/use-mobile';
 import {
   Search, Plus, FileText, Filter, Grid3x3, List, Download, Trash2,
   Eye, Star, Calendar, User, FolderOpen, Upload, X, Check,
@@ -151,12 +152,18 @@ function attachmentsAsDocuments(entries: CampaignThreadEntry[]): Document[] {
 }
 
 export function DocumentLibraryTab() {
+  const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('All');
   const [statusFilter, setStatusFilter] = useState<string>('All');
   const [viewMode, setViewMode] = useState<'table' | 'grid'>(() =>
-    typeof window !== 'undefined' && window.innerWidth < 640 ? 'grid' : 'table'
+    isMobile ? 'grid' : 'table'
   );
+  // Follow the viewport when it changes (rotate, resize) — grid is the only
+  // usable mode on a phone; table is the natural default on desktop.
+  useEffect(() => {
+    setViewMode(isMobile ? 'grid' : 'table');
+  }, [isMobile]);
   const [starred, setStarred] = useState<string[]>([]);
   const [showStarredOnly, setShowStarredOnly] = useState(false);
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
@@ -360,9 +367,9 @@ export function DocumentLibraryTab() {
           {filteredDocuments.length} document{filteredDocuments.length !== 1 ? 's' : ''} found
         </p>
 
-        {/* Table View */}
+        {/* Table View (desktop-only; mobile auto-switches to grid) */}
         {viewMode === 'table' && (
-          <div className="glass-card overflow-hidden">
+          <div className="hidden md:block glass-card overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[700px]">
                 <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>

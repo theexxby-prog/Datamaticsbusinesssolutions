@@ -6,7 +6,6 @@ import {
   Check, Pause, Clock, X,
 } from 'lucide-react';
 import { getAccountTeam, allClients } from '../data/mockClients';
-import { AppLayout } from '../components/AppLayout';
 import { NewCampaignModal, CampaignFormData } from '../components/NewCampaignModal';
 import { AccountTeam } from '../components/AccountTeam';
 import { DataTable, type Column } from '../components/ui/DataTable';
@@ -204,7 +203,7 @@ export default function Dashboard() {
       },
     },
     {
-      key: 'manager', header: 'Manager', icon: UserRound,
+      key: 'manager', header: 'Manager', icon: UserRound, mobileHidden: true,
       sortValue: r => r.manager, text: r => r.manager,
       render: r => (
         <span className="inline-flex items-center gap-2.5">
@@ -216,7 +215,7 @@ export default function Dashboard() {
       ),
     },
     {
-      key: 'endDate', header: 'End date', icon: Calendar, align: 'right',
+      key: 'endDate', header: 'End date', icon: Calendar, align: 'right', mobileHidden: true,
       sortValue: r => r.endDate, text: r => r.endDate,
       render: r => <span style={{ color: 'var(--color-text-muted)' }}>{r.endDate}</span>,
     },
@@ -241,7 +240,7 @@ export default function Dashboard() {
   );
 
   return (
-    <AppLayout>
+    <>
       <div className="mx-auto max-w-[1400px] page-content">
         {/* Header */}
         <div className="mb-7 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
@@ -315,6 +314,6 @@ export default function Dashboard() {
         onClose={() => setIsNewCampaignModalOpen(false)}
         onSubmit={(_formData: CampaignFormData) => setIsNewCampaignModalOpen(false)}
       />
-    </AppLayout>
+    </>
   );
 }

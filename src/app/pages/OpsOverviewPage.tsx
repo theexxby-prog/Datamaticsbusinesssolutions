@@ -1,9 +1,9 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { CheckCircle2, Clock, AlertCircle, TrendingUp, Eye, ChevronsUpDown } from 'lucide-react';
-import { AppLayout } from '../components/AppLayout';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { AnimatedCounter } from '../components/AnimatedCounter';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import { allClients } from '../data/mockClients';
 
 type Period = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
@@ -56,7 +56,7 @@ export default function OpsOverviewPage() {
   ];
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header — red accent bar, matching production */}
         <div className="mb-6">
@@ -137,7 +137,7 @@ export default function OpsOverviewPage() {
           <div className="px-5 pt-5 pb-3">
             <h2 style={{ fontSize: '16px', fontWeight: 700, color: 'var(--color-text-primary)' }}>Clients &amp; Campaigns</h2>
           </div>
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full" style={{ fontSize: '13px' }}>
               <thead>
                 <tr style={{ background: 'var(--color-main-bg)' }}>
@@ -185,8 +185,25 @@ export default function OpsOverviewPage() {
               </tbody>
             </table>
           </div>
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={clients}
+            getRowId={(c) => c.id}
+            title={(c) => c.name}
+            badge={(c) => (
+              <span style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{c.source}</span>
+            )}
+            fields={[
+              { label: 'Campaigns', value: (c) => `${c.total} total · ${c.active} active` },
+              { label: 'Leads Delivered', value: (c) => c.leadsDelivered.toLocaleString('en-US') },
+              { label: 'This Month', value: (c) => c.thisMonth.toLocaleString('en-US') },
+              { label: 'Manager', value: (c) => c.manager, hideWhenEmpty: true },
+            ]}
+            onClick={() => navigate('/internal/campaigns')}
+            emptyMessage="No clients to show."
+          />
         </div>
       </div>
-    </AppLayout>
+    </>
   );
 }

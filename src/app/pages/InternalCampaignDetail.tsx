@@ -1,4 +1,3 @@
-import { AppLayout } from '../components/AppLayout';
 import {
   Target, TrendingUp, CheckCircle, DollarSign, ArrowLeft,
   Calendar, Users, BarChart3, Upload, Activity,
@@ -37,8 +36,8 @@ export default function InternalCampaignDetail() {
 
   if (!campaign || !client) {
     return (
-      <AppLayout>
-        <div className="max-w-[1440px] mx-auto px-6 py-6">
+      <>
+        <div className="max-w-[1440px] mx-auto page-content">
           <div className="text-center py-12">
             <h2 style={{ color: 'var(--color-text-primary)' }}>Campaign not found</h2>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-2">
@@ -49,7 +48,7 @@ export default function InternalCampaignDetail() {
             </button>
           </div>
         </div>
-      </AppLayout>
+      </>
     );
   }
 
@@ -75,7 +74,7 @@ export default function InternalCampaignDetail() {
     campaign.status;
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6 gap-4">
@@ -194,6 +193,6 @@ export default function InternalCampaignDetail() {
         campaignId={campaign.id}
         campaignName={campaign.name}
       />
-    </AppLayout>
+    </>
   );
 }

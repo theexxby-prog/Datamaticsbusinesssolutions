@@ -12,8 +12,8 @@ import { allClients, Client } from '../data/mockClients';
 import { useAuth } from '../context/AuthContext';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { PersonAvatar } from '../components/PersonAvatar';
-import { AppLayout } from '../components/AppLayout';
 import { TableRow } from '../components/TableRow';
+import { MobileCardList } from '../components/ui/MobileCardList';
 import {
   EditMemberModal,
   AddMemberModal,
@@ -107,7 +107,7 @@ function ActionMenu({ member, isSelf, onAction }: ActionMenuProps) {
     <div ref={ref} className="relative" onClick={e => e.stopPropagation()}>
       <button
         onClick={() => setOpen(v => !v)}
-        className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
+        className="w-11 h-11 md:w-8 md:h-8 rounded-lg flex items-center justify-center transition-all"
         style={{
           border:     open ? '1.5px solid var(--color-primary)' : '1.5px solid var(--color-border)',
           background: open ? 'rgba(186,32,39,0.06)' : 'transparent',
@@ -334,7 +334,7 @@ export default function TeamManagementPage() {
   // ── Render ──────────────────────────────────────────────────────────────────
 
   return (
-    <AppLayout>
+    <>
       <div className="max-w-[1440px] mx-auto px-6 py-6">
 
         {/* Page header */}
@@ -459,7 +459,7 @@ export default function TeamManagementPage() {
           className="rounded-2xl overflow-hidden"
           style={{ background: 'var(--glass-bg)', border: '1px solid var(--glass-border)', boxShadow: 'var(--card-shadow)' }}
         >
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[820px]">
               <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
                 <tr>
@@ -551,6 +551,54 @@ export default function TeamManagementPage() {
             </table>
           </div>
 
+          {/* Mobile card view */}
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={sortedMembers}
+            getRowId={(m) => m.id}
+            title={(member) => {
+              const isSelf = currentUser.name === member.name;
+              const isInactive = (member.status as string) === 'Inactive';
+              return (
+                <div className="flex items-center gap-3">
+                  <div className="relative flex-shrink-0">
+                    <PersonAvatar name={member.name} size={36} />
+                    {isInactive && (
+                      <div className="absolute inset-0 rounded-xl" style={{ background: 'var(--color-surface-raised)' }} />
+                    )}
+                  </div>
+                  <span className="flex items-center gap-2 min-w-0">
+                    <span className="truncate" style={{ color: isInactive ? 'var(--color-text-secondary)' : 'var(--color-text-primary)' }}>
+                      {member.name}
+                    </span>
+                    {isSelf && (
+                      <span className="px-1.5 py-0.5 rounded flex-shrink-0" style={{ fontSize: '10px', fontWeight: 700, background: 'rgba(186,32,39,0.1)', color: 'var(--color-primary)' }}>YOU</span>
+                    )}
+                  </span>
+                </div>
+              );
+            }}
+            badge={(member) => <StatusDot status={member.status} />}
+            fields={[
+              { label: 'Role', value: (m) => <RoleBadge role={m.role} /> },
+              { label: 'Email', icon: Mail, value: (m) => <span className="break-all">{m.email}</span> },
+              { label: 'Phone', icon: Phone, value: (m) => m.phone },
+              { label: 'Clients', value: (m) => `${m.clientsAssigned} assigned` },
+              { label: 'Campaigns', value: (m) => `${m.activeCampaigns} active` },
+            ]}
+            actions={
+              isOpsManager
+                ? (member) => (
+                    <ActionMenu
+                      member={member}
+                      isSelf={currentUser.name === member.name}
+                      onAction={type => openModal(type, member)}
+                    />
+                  )
+                : undefined
+            }
+          />
+
           {isOpsManager && (
             <div className="px-6 py-3 flex flex-wrap items-center gap-3" style={{ borderTop: '1px solid var(--color-border)' }}>
               <span style={{ fontSize: '11px', color: 'var(--color-text-secondary)' }}>
@@ -587,7 +635,7 @@ export default function TeamManagementPage() {
               </button>
             )}
           </div>
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
                 <tr>
@@ -650,6 +698,63 @@ export default function TeamManagementPage() {
               </tbody>
             </table>
           </div>
+
+          {/* Mobile card view */}
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={clients}
+            getRowId={(c) => c.id}
+            title={(client) => client.companyName}
+            badge={(client) => {
+              const noBackup = !client.backupManager || client.backupManager === '—' || client.backupManager === client.campaignManager;
+              return noBackup ? (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Unprotected
+                </span>
+              ) : (
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: 'var(--color-success)', border: '1px solid rgba(16,185,129,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                  Covered
+                </span>
+              );
+            }}
+            fields={[
+              { label: 'Industry', value: (c) => c.industry },
+              {
+                label: 'Campaign Manager',
+                value: (c) => (
+                  <span className="inline-flex items-center gap-2">
+                    <PersonAvatar name={c.campaignManager} size={26} />
+                    <span style={{ fontWeight: 600 }}>{c.campaignManager}</span>
+                  </span>
+                ),
+              },
+              {
+                label: 'Backup',
+                value: (c) => {
+                  const noBackup = !c.backupManager || c.backupManager === '—' || c.backupManager === c.campaignManager;
+                  return noBackup ? (
+                    <span className="inline-flex items-center gap-1.5" style={{ color: 'var(--color-error)', fontWeight: 600 }}>
+                      <AlertCircle className="w-3.5 h-3.5" /> No backup
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center gap-2">
+                      <PersonAvatar name={c.backupManager} size={26} />
+                      <span style={{ fontWeight: 600 }}>{c.backupManager}</span>
+                    </span>
+                  );
+                },
+              },
+              {
+                label: 'Active Campaigns',
+                value: (c) => (
+                  <>
+                    <span style={{ fontWeight: 700 }}>{c.campaigns.filter(x => x.status === 'active').length}</span>
+                    <span style={{ color: 'var(--color-text-secondary)' }}> / {c.campaigns.length}</span>
+                  </>
+                ),
+              },
+            ]}
+          />
         </motion.div>
       </div>
 
@@ -692,6 +797,6 @@ export default function TeamManagementPage() {
       {modalType === 'bulk-reassign' && selectedMember && (
         <BulkReassignModal isOpen onClose={closeModal} member={selectedMember} allMembers={members} onSave={handleBulkReassign} />
       )}
-    </AppLayout>
+    </>
   );
 }

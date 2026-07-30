@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { AppLayout } from '../components/AppLayout';
 import {
   BarChart3, Target, DollarSign, Activity, CheckCircle, Users,
   ArrowUpRight, ArrowDownRight, Download, Bookmark, BookmarkCheck,
@@ -15,6 +14,8 @@ import { ExportModal } from '../components/ExportModal';
 import type { ReportsPDFData } from '../utils/exportUtils';
 import { toast } from 'sonner';
 import { PersonAvatar } from '../components/PersonAvatar';
+import { MobileCardList } from '../components/ui/MobileCardList';
+import { useIsMobile } from '../components/ui/use-mobile';
 
 const CHART_COLORS = ['var(--color-primary)', 'var(--color-primary-light)', 'var(--color-error)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'];
 
@@ -71,6 +72,9 @@ function ChartCard({ title, children, actions }: { title: string; children: Reac
 }
 
 export default function InternalReports() {
+  const isMobile = useIsMobile();
+  // Chart heights track the viewport so phones aren't dominated by charts.
+  const chartH = { main: isMobile ? 200 : 260, mid: isMobile ? 180 : 220, small: isMobile ? 170 : 200 };
   const [showExportModal, setShowExportModal] = useState(false);
   const [savedReports, setSavedReports] = useState<string[]>([]);
   const [activeMetric, setActiveMetric] = useState<'leads' | 'revenue' | 'campaigns' | 'acceptance'>('leads');
@@ -127,7 +131,7 @@ export default function InternalReports() {
   };
 
   return (
-    <AppLayout>
+    <>
       <div
         className="max-w-[1440px] mx-auto page-content animate-fadeIn"
       >
@@ -258,7 +262,7 @@ export default function InternalReports() {
               ))}
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={chartH.main}>
             <AreaChart data={monthlyData}>
               <defs>
                 <linearGradient id="metricGradient" x1="0" y1="0" x2="0" y2="1">
@@ -307,7 +311,7 @@ export default function InternalReports() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
           {/* Monthly Revenue Bar Chart */}
           <ChartCard title="Monthly Revenue">
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={chartH.mid}>
               <BarChart data={monthlyData} barCategoryGap="25%">
                 <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
                 <XAxis
@@ -338,7 +342,7 @@ export default function InternalReports() {
 
           {/* Acceptance Rate Trend */}
           <ChartCard title="Acceptance Rate Trend">
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={chartH.mid}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
                 <XAxis
@@ -379,7 +383,7 @@ export default function InternalReports() {
               <BarChart3 className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
               Client Industry Mix
             </h3>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={chartH.small}>
               <PieChart>
                 <Pie
                   data={industryData}
@@ -412,7 +416,7 @@ export default function InternalReports() {
               <BarChart3 className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
               Campaign Status
             </h3>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={chartH.small}>
               <PieChart>
                 <Pie
                   data={[
@@ -488,7 +492,7 @@ export default function InternalReports() {
               Team Performance
             </h2>
           </div>
-          <div className="overflow-x-auto">
+          <div className="hidden md:block overflow-x-auto">
             <table className="w-full min-w-[600px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
@@ -568,6 +572,51 @@ export default function InternalReports() {
               </tbody>
             </table>
           </div>
+          <MobileCardList
+            className="md:hidden p-4"
+            rows={operatorData}
+            getRowId={(op) => op.name}
+            title={(op) => (
+              <span className="flex items-center gap-3">
+                <PersonAvatar name={op.name} size={36} />
+                {op.name}
+              </span>
+            )}
+            badge={(op) => (
+              <span
+                className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
+                style={{
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  background: op.acceptance >= 92 ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
+                  color: op.acceptance >= 92 ? 'var(--color-success)' : 'var(--color-warning)',
+                }}
+              >
+                {op.acceptance}%
+              </span>
+            )}
+            fields={[
+              { label: 'Leads Delivered', value: (op) => op.leads.toLocaleString() },
+              { label: 'Clients', value: (op) => `${op.clients} assigned` },
+              {
+                label: 'Performance',
+                value: (op) => {
+                  const performanceScore = Math.round((op.leads / 3240) * 100);
+                  return (
+                    <span className="flex w-32 items-center gap-2">
+                      <div className="progress-bar flex-1">
+                        <div className="progress-bar__fill" style={{ width: `${performanceScore}%` }} />
+                      </div>
+                      <span style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
+                        {performanceScore}%
+                      </span>
+                    </span>
+                  );
+                },
+              },
+            ]}
+            emptyMessage="No team members to show."
+          />
         </div>
       </div>
 
@@ -577,6 +626,6 @@ export default function InternalReports() {
         onClose={() => setShowExportModal(false)}
         reportData={reportData}
       />
-    </AppLayout>
+    </>
   );
 }
