@@ -39,9 +39,8 @@ const OpsOverridePage = lazy(() => import('./pages/OpsOverridePage'));
 const DemographicsEntryPage = lazy(() => import('./pages/DemographicsEntryPage'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
-// The full SplashLoader is intentionally NOT used here — it is too intrusive
-// for route-to-route navigation. RouteLoader is a 2px brand-coloured bar
-// that's barely noticeable and doesn't disrupt the user's context.
+// RouteLoader is a 2px brand-coloured bar that's barely noticeable and
+// doesn't disrupt the user's context during route-to-route navigation.
 const withSuspense = (Component: React.LazyExoticComponent<any>) => {
   return () => (
     <Suspense fallback={<RouteLoader />}>
