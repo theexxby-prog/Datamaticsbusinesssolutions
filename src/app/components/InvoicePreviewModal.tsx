@@ -1,4 +1,4 @@
-import { X, Download, CreditCard, FileText } from 'lucide-react';
+import { X, Download, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { formatDate } from '../utils/formatDate';
 
@@ -178,15 +178,6 @@ export function InvoicePreviewModal({ isOpen, onClose, invoice }: InvoicePreview
                 <Download className="w-4 h-4" />
                 Download PDF
               </button>
-              {(invoice.status === 'Pending' || invoice.status === 'Overdue') && (
-                <button
-                  onClick={() => alert('Pay now')}
-                  className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all flex items-center justify-center gap-2 bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)]"
-                >
-                  <CreditCard className="w-4 h-4" />
-                  Pay Now
-                </button>
-              )}
             </div>
           </motion.div>
         </>

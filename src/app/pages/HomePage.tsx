@@ -182,7 +182,7 @@ export default function HomePage() {
       id: 1, type: 'error' as const, icon: AlertCircle,
       title: 'Overdue invoice',
       text: `${topOverdue.invoiceNumber} is overdue by ${overdueDays} days — $${topOverdue.total.toLocaleString('en-US')} outstanding`,
-      cta: 'Pay Now', action: () => navigate('/invoices'),
+      cta: 'View invoice', action: () => navigate('/invoices'),
     }] : []),
     ...(topSignature ? [{
       id: 2, type: 'warning' as const, icon: FilePenLine,

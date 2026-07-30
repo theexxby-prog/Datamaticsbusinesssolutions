@@ -486,7 +486,6 @@ export default function Feedback() {
             'Select all checkbox and per-row checkboxes for multi-select.',
             'Preview (Eye icon) - opens Invoice Preview Modal: full branded invoice + Download PDF.',
             'Download icon per row - triggers a download toast notification.',
-            '"Pay Now" button on overdue or pending invoices - links to /payment/:invoiceId.',
           ]},
         ],
       },
