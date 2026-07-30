@@ -22,8 +22,12 @@ export interface Column<T> {
   render: (row: T) => ReactNode;
   /** Plain text for search + the mobile card label; defaults to render output when a string. */
   text?: (row: T) => string;
-  /** Hide below md — for secondary columns on the card view. */
+  /** Marks the column whose value becomes the mobile card's title. Defaults to the first column. */
   primary?: boolean;
+  /** Omit this column from the mobile card entirely (dates, IDs, low-value cells). */
+  mobileHidden?: boolean;
+  /** Card-specific cell content; falls back to `render`. */
+  mobileRender?: (row: T) => ReactNode;
   widthClass?: string;
 }
 
@@ -195,18 +199,27 @@ export function DataTable<T>({
                 className="w-full rounded-2xl border p-4 text-left transition-colors active:opacity-90"
                 style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-raised)' }}
               >
-                <div className="mb-3 text-[15px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                  {primaryCol.render(row)}
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <div className="min-w-0 text-[15px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                    {(primaryCol.mobileRender ?? primaryCol.render)(row)}
+                  </div>
+                  {onRowClick && (
+                    <ChevronRight className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+                  )}
                 </div>
                 <div className="flex flex-col gap-2">
-                  {columns.filter(c => c.key !== primaryCol.key).map(col => (
-                    <div key={col.key} className="flex items-center justify-between gap-3">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-                        {col.icon && <col.icon className="h-3.5 w-3.5" />}{col.header}
-                      </span>
-                      <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>{col.render(row)}</span>
-                    </div>
-                  ))}
+                  {columns
+                    .filter(c => c.key !== primaryCol.key && !c.mobileHidden)
+                    .map(col => (
+                      <div key={col.key} className="flex min-h-[24px] items-center justify-between gap-3">
+                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+                          {col.icon && <col.icon className="h-3.5 w-3.5" />}{col.header}
+                        </span>
+                        <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                          {(col.mobileRender ?? col.render)(row)}
+                        </span>
+                      </div>
+                    ))}
                 </div>
               </button>
             ))}

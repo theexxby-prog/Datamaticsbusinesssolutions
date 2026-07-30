@@ -203,7 +203,7 @@ export default function Dashboard() {
       },
     },
     {
-      key: 'manager', header: 'Manager', icon: UserRound,
+      key: 'manager', header: 'Manager', icon: UserRound, mobileHidden: true,
       sortValue: r => r.manager, text: r => r.manager,
       render: r => (
         <span className="inline-flex items-center gap-2.5">
@@ -215,7 +215,7 @@ export default function Dashboard() {
       ),
     },
     {
-      key: 'endDate', header: 'End date', icon: Calendar, align: 'right',
+      key: 'endDate', header: 'End date', icon: Calendar, align: 'right', mobileHidden: true,
       sortValue: r => r.endDate, text: r => r.endDate,
       render: r => <span style={{ color: 'var(--color-text-muted)' }}>{r.endDate}</span>,
     },
