@@ -15,7 +15,7 @@ export function SplashLoader() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #ffffff 0%, var(--color-error-bg) 40%, var(--color-error-bg) 100%)',
+        background: 'linear-gradient(135deg, var(--color-main-bg) 0%, var(--color-error-bg) 40%, var(--color-error-bg) 100%)',
         zIndex: 9999,
         animation: 'splashFadeIn 200ms ease forwards',
       }}

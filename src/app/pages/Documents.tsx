@@ -143,7 +143,7 @@ function IntakeModal({ onClose, onCreated }: { onClose: () => void; onCreated: (
         ) : (
           <>
             <div className="rounded-xl p-4 mb-4" style={{ background: 'var(--color-success-bg, rgba(15,157,88,0.08))', border: '1px solid rgba(15,157,88,0.2)' }}>
-              <div className="flex items-center gap-2 mb-2" style={{ color: 'var(--color-success, var(--color-success))' }}>
+              <div className="flex items-center gap-2 mb-2" style={{ color: 'var(--color-success)' }}>
                 <CheckCircle2 className="w-4 h-4" />
                 <span style={{ fontSize: '13px', fontWeight: 600 }}>Scope extracted · Salesforce opportunity {oppId} created</span>
               </div>

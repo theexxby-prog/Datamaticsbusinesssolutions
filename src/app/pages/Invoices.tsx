@@ -99,7 +99,7 @@ function InvoiceCard({
             {formatUSD(invoice.total)}
           </div>
           {isPaid && invoice.payment?.paidAt && (
-            <div className="flex items-center gap-1 justify-end" style={{ fontSize: '11px', color: 'var(--color-success, var(--color-success))' }}>
+            <div className="flex items-center gap-1 justify-end" style={{ fontSize: '11px', color: 'var(--color-success)' }}>
               <CheckCircle2 className="w-3 h-3" /> Paid {fmtDate(invoice.payment.paidAt)}
             </div>
           )}
@@ -223,7 +223,7 @@ function clientStatus(inv: InvoiceRecord): ClientStatus {
 
 const CLIENT_STATUS_META: Record<ClientStatus, { label: string; bg: string; color: string }> = {
   // 'due' here is the ageing statement's "Not Due" — issued, still within terms.
-  due: { label: 'Not due', bg: 'rgba(100,116,139,0.12)', color: '#475569' },
+  due: { label: 'Not due', bg: 'rgba(100,116,139,0.12)', color: 'var(--color-badge-completed-text)' },
   overdue: { label: 'Due', bg: 'rgba(217,119,6,0.14)', color: 'var(--color-warning)' },
   paid: { label: 'Paid', bg: 'rgba(5,150,105,0.12)', color: 'var(--color-badge-active-text)' },
 };

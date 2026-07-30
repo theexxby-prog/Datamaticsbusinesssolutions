@@ -6,6 +6,20 @@
     <meta name="description" content="Datamatics Business Solutions — Campaign management and lead generation platform" />
     <meta name="theme-color" content="#BA2027" />
     <title>Datamatics Business Solutions</title>
+    <script>
+      // Stamp the theme before first paint. ThemeContext does this too, but it
+      // runs in an effect after React mounts — long enough for a dark-mode user
+      // to get a full-screen white flash on every load.
+      (function () {
+        try {
+          var c = localStorage.getItem('pulse-theme') || 'system';
+          var d = c === 'dark' || (c === 'system' &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches);
+          document.documentElement.setAttribute('data-theme', d ? 'dark' : 'light');
+          document.documentElement.classList.toggle('dark', d);
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

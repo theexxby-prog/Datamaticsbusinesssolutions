@@ -52,7 +52,7 @@ export function Tooltip({ content, children, delay = 300 }: TooltipProps) {
       </div>
       {isVisible && (
         <div
-          className="fixed z-[9999] px-2 py-1 text-xs font-medium text-white bg-gray-900 rounded shadow-lg pointer-events-none whitespace-nowrap"
+          className="fixed z-[9999] px-2 py-1 text-xs font-medium text-[var(--color-text-inverse)] bg-[var(--color-surface-inverse)] rounded shadow-lg pointer-events-none whitespace-nowrap"
           style={{
             top: `${position.top}px`,
             left: `${position.left}px`,
@@ -61,7 +61,7 @@ export function Tooltip({ content, children, delay = 300 }: TooltipProps) {
         >
           {content}
           <div
-            className="absolute w-2 h-2 bg-gray-900 transform rotate-45"
+            className="absolute w-2 h-2 bg-[var(--color-surface-inverse)] transform rotate-45"
             style={{
               bottom: '-4px',
               left: '50%',

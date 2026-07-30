@@ -249,7 +249,7 @@ export default function OpsOverridePage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -40, scale: 0.95 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--color-text-primary)]/95 border border-[var(--color-primary)]/40 shadow-2xl backdrop-blur-xl text-white px-6 py-4 rounded-2xl flex items-center gap-3.5 min-w-[320px] max-w-[500px]"
+              className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--color-surface-inverse)]/95 border border-[var(--color-primary)]/40 shadow-2xl backdrop-blur-xl text-[var(--color-text-inverse)] px-6 py-4 rounded-2xl flex items-center gap-3.5 min-w-[320px] max-w-[500px]"
             >
               <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
               <span className="text-xs font-semibold tracking-wide leading-relaxed">{toastMessage}</span>
@@ -438,7 +438,7 @@ export default function OpsOverridePage() {
                 animate={{ x: 0 }}
                 exit={{ x: '100%' }}
                 transition={{ type: 'spring', damping: 25, stiffness: 220 }}
-                className="fixed right-0 top-0 bottom-0 w-full max-w-[550px] bg-[var(--color-surface-raised)] dark:bg-[var(--color-text-primary)] border-l border-[var(--color-border)] z-50 shadow-2xl flex flex-col overflow-hidden"
+                className="fixed right-0 top-0 bottom-0 w-full max-w-[550px] bg-[var(--color-surface-raised)] border-l border-[var(--color-border)] z-50 shadow-2xl flex flex-col overflow-hidden"
               >
                 
                 {/* Header */}
@@ -451,7 +451,7 @@ export default function OpsOverridePage() {
                   </div>
                   <button 
                     onClick={() => setIsDrawerOpen(false)}
-                    className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 hover:text-gray-800 dark:hover:text-white transition-colors"
+                    className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500 hover:text-gray-800 transition-colors"
                   >
                     <X className="w-5 h-5" />
                   </button>

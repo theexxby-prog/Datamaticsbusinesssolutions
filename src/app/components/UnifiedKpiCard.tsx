@@ -47,7 +47,7 @@ export const UnifiedKpiCard = memo(function UnifiedKpiCard({
         transition: { duration: 0.2 }
       }}
       whileTap={{ scale: 0.98 }}
-      className="rounded-xl p-5 border flex flex-col gap-3 cursor-default bg-gradient-to-br from-white to-gray-50/50 border-[var(--color-primary)]/10 shadow-lg hover:shadow-2xl"
+      className="rounded-xl p-5 border flex flex-col gap-3 cursor-default bg-gradient-to-br from-[var(--color-surface-raised)] to-[var(--color-surface)] border-[var(--color-primary)]/10 shadow-lg hover:shadow-2xl"
     >
       <div className="flex items-center justify-between">
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${iconBg}`}>

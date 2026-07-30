@@ -431,7 +431,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                             } ${
                               isActive
                                 ? 'bg-[var(--color-primary)]/[0.10] text-[var(--color-primary)] border-l-2 border-[var(--color-primary)]'
-                                : 'text-[#525252] hover:bg-[var(--color-primary)]/[0.09] hover:text-[var(--color-primary)] border-l-2 border-transparent'
+                                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary)]/[0.09] hover:text-[var(--color-primary)] border-l-2 border-transparent'
                             }`}
                             style={{
                               fontSize: '14px',
@@ -513,7 +513,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                               animate={{ opacity: 1, x: 0 }}
                               exit={{ opacity: 0 }}
                               transition={{ duration: 0.15 }}
-                              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-text-primary)] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+                              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
                               style={{ fontSize: '12px', fontWeight: 500 }}
                             >
                               {item.name}
@@ -596,7 +596,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0 }}
                       transition={{ duration: 0.15 }}
-                      className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-[var(--color-text-primary)] text-white text-xs font-medium rounded-lg whitespace-nowrap z-50 pointer-events-none"
+                      className="absolute left-full top-1/2 -translate-y-1/2 ml-2 px-3 py-2 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] text-xs font-medium rounded-lg whitespace-nowrap z-50 pointer-events-none"
                     >
                       {client.name}
                     </motion.div>
@@ -669,7 +669,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
-                className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-text-primary)] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+                className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
                 style={{ fontSize: '12px', fontWeight: 500 }}
               >
                 Notifications {unreadCount > 0 ? `(${unreadCount})` : ''}
@@ -737,7 +737,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-text-primary)] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
               style={{ fontSize: '12px', fontWeight: 500 }}
             >
               Log Out
@@ -794,7 +794,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.15 }}
-              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-text-primary)] text-white rounded-lg whitespace-nowrap z-50 pointer-events-none"
+              className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
               style={{ fontSize: '12px', fontWeight: 500 }}
             >
               {currentUser?.name || 'Account'}

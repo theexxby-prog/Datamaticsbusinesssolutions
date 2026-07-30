@@ -32,6 +32,10 @@
   --color-border: rgba(255, 255, 255, 0.11);
   --color-border-light: rgba(255, 255, 255, 0.06);
 
+  /* Inverse surface — a light pill with dark text, the mirror of light mode. */
+  --color-surface-inverse: #E8E4EC;
+  --color-text-inverse: #17141A;
+
   /* Semantic — brightened for dark */
   --color-success: #34D399;
   --color-success-bg: rgba(52, 211, 153, 0.15);

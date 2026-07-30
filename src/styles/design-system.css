@@ -25,6 +25,13 @@
 --color-border: rgba(0, 0, 0, 0.08);
 --color-border-light: rgba(0, 0, 0, 0.04);
 
+/* Inverse surface — for chrome that deliberately contrasts against the page:
+   tooltips, toasts. It must flip *opposite* to the page, so it can't be built
+   from a text token (a near-black text colour is only accidentally the right
+   background in light mode, and inverts into a white pill in dark). */
+--color-surface-inverse: #1C1C1E;
+--color-text-inverse: #FFFFFF;
+
 --color-success: #059669;
 --color-success-bg: rgba(5, 150, 105, 0.10);
 --color-warning: #D97706;
@@ -363,7 +370,9 @@
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: var(--color-surface);
+  /* The track must read against the card it sits on, so it follows the gray
+     ramp (which mirrors) rather than a surface token (which matches the card). */
+  background: var(--color-gray-200);
   border-radius: 999px;
   overflow: hidden;
 }
