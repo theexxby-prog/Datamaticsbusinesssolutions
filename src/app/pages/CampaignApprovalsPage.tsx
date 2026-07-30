@@ -490,7 +490,7 @@ export default function CampaignApprovalsPage() {
         </div>
 
         {/* Summary stat strip */}
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
           {[
             { label: 'Pending Review', value: pendingCount, color: 'var(--color-warning)', bg: 'rgba(194,65,12,0.06)', border: 'rgba(194,65,12,0.15)' },
             { label: 'Changes Sent', value: changesCount, color: 'var(--color-warning)', bg: 'rgba(180,83,9,0.06)', border: 'rgba(180,83,9,0.15)' },

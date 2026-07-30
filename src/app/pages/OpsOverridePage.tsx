@@ -249,7 +249,7 @@ export default function OpsOverridePage() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: -40, scale: 0.95 }}
               transition={{ duration: 0.3, ease: 'easeOut' }}
-              className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--color-surface-inverse)]/95 border border-[var(--color-primary)]/40 shadow-2xl backdrop-blur-xl text-[var(--color-text-inverse)] px-6 py-4 rounded-2xl flex items-center gap-3.5 min-w-[320px] max-w-[500px]"
+              className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--color-surface-inverse)]/95 border border-[var(--color-primary)]/40 shadow-2xl backdrop-blur-xl text-[var(--color-text-inverse)] px-6 py-4 rounded-2xl flex items-center gap-3.5 w-[calc(100vw-32px)] max-w-[500px] sm:w-auto sm:min-w-[320px]"
             >
               <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
               <span className="text-xs font-semibold tracking-wide leading-relaxed">{toastMessage}</span>

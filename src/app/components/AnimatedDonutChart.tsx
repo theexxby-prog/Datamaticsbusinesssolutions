@@ -36,8 +36,10 @@ export function AnimatedDonutChart({
   const center = size / 2;
 
   return (
-    <div className="relative" style={{ width: size, height: size }}>
-      <svg className="transform -rotate-90" width={size} height={size}>
+    // `size` acts as a max — the donut shrinks with its container on narrow
+    // screens while the viewBox keeps the geometry intact.
+    <div className="relative w-full" style={{ maxWidth: size, aspectRatio: '1 / 1' }}>
+      <svg className="transform -rotate-90 w-full h-full" viewBox={`0 0 ${size} ${size}`}>
         {/* Background circle */}
         <circle
           cx={center}

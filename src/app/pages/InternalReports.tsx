@@ -15,6 +15,7 @@ import type { ReportsPDFData } from '../utils/exportUtils';
 import { toast } from 'sonner';
 import { PersonAvatar } from '../components/PersonAvatar';
 import { MobileCardList } from '../components/ui/MobileCardList';
+import { useIsMobile } from '../components/ui/use-mobile';
 
 const CHART_COLORS = ['var(--color-primary)', 'var(--color-primary-light)', 'var(--color-error)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'];
 
@@ -71,6 +72,9 @@ function ChartCard({ title, children, actions }: { title: string; children: Reac
 }
 
 export default function InternalReports() {
+  const isMobile = useIsMobile();
+  // Chart heights track the viewport so phones aren't dominated by charts.
+  const chartH = { main: isMobile ? 200 : 260, mid: isMobile ? 180 : 220, small: isMobile ? 170 : 200 };
   const [showExportModal, setShowExportModal] = useState(false);
   const [savedReports, setSavedReports] = useState<string[]>([]);
   const [activeMetric, setActiveMetric] = useState<'leads' | 'revenue' | 'campaigns' | 'acceptance'>('leads');
@@ -258,7 +262,7 @@ export default function InternalReports() {
               ))}
             </div>
           </div>
-          <ResponsiveContainer width="100%" height={260}>
+          <ResponsiveContainer width="100%" height={chartH.main}>
             <AreaChart data={monthlyData}>
               <defs>
                 <linearGradient id="metricGradient" x1="0" y1="0" x2="0" y2="1">
@@ -307,7 +311,7 @@ export default function InternalReports() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-5">
           {/* Monthly Revenue Bar Chart */}
           <ChartCard title="Monthly Revenue">
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={chartH.mid}>
               <BarChart data={monthlyData} barCategoryGap="25%">
                 <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
                 <XAxis
@@ -338,7 +342,7 @@ export default function InternalReports() {
 
           {/* Acceptance Rate Trend */}
           <ChartCard title="Acceptance Rate Trend">
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={chartH.mid}>
               <LineChart data={monthlyData}>
                 <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
                 <XAxis
@@ -379,7 +383,7 @@ export default function InternalReports() {
               <BarChart3 className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
               Client Industry Mix
             </h3>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={chartH.small}>
               <PieChart>
                 <Pie
                   data={industryData}
@@ -412,7 +416,7 @@ export default function InternalReports() {
               <BarChart3 className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
               Campaign Status
             </h3>
-            <ResponsiveContainer width="100%" height={200}>
+            <ResponsiveContainer width="100%" height={chartH.small}>
               <PieChart>
                 <Pie
                   data={[
