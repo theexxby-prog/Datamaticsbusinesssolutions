@@ -45,7 +45,7 @@ export function PersonAvatar({ name, photoUrl, size = 40, className = '' }: Pers
             target.style.display = 'none';
             const parent = target.parentElement;
             if (parent) {
-              parent.style.background = 'linear-gradient(135deg, #BA2027 0%, #D32F2F 100%)';
+              parent.style.background = 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)';
               parent.style.display = 'flex';
               parent.style.alignItems = 'center';
               parent.style.justifyContent = 'center';
@@ -64,7 +64,7 @@ export function PersonAvatar({ name, photoUrl, size = 40, className = '' }: Pers
     <div
       style={{
         ...style,
-        background: 'linear-gradient(135deg, #BA2027 0%, #D32F2F 100%)',
+        background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',

@@ -418,7 +418,7 @@ export default function Support() {
               </h2>
               <button
                 onClick={() => setShowNewTicketModal(false)}
-                className="p-1 hover:bg-[#BA2027]/10 rounded-lg transition-colors"
+                className="p-1 hover:bg-[var(--color-primary)]/10 rounded-lg transition-colors"
               >
                 <X className="w-5 h-5" style={{ color: 'var(--color-text-secondary)' }} />
               </button>
@@ -427,7 +427,7 @@ export default function Support() {
             <div className="space-y-4">
               <div>
                 <label className="block mb-2" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                  Title <span className="text-[#BA2027]">*</span>
+                  Title <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <input
                   type="text"
@@ -440,7 +440,7 @@ export default function Support() {
 
               <div>
                 <label className="block mb-2" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
-                  Description <span className="text-[#BA2027]">*</span>
+                  Description <span className="text-[var(--color-primary)]">*</span>
                 </label>
                 <textarea
                   placeholder="Please provide detailed information about your issue..."

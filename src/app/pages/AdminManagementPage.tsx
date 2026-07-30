@@ -128,7 +128,7 @@ export default function AdminManagementPage() {
 
         {/* Tabs + Add Client */}
         <div className="flex items-center justify-between mb-4 gap-3 flex-wrap">
-          <div className="flex gap-1 p-1 rounded-full" style={{ background: '#fff', border: '1px solid var(--color-border-light)', boxShadow: 'var(--shadow-sm)' }}>
+          <div className="flex gap-1 p-1 rounded-full" style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border-light)', boxShadow: 'var(--shadow-sm)' }}>
             {([
               { key: 'clients', label: 'Clients' },
               { key: 'team', label: 'Team Members' },
@@ -216,7 +216,7 @@ export default function AdminManagementPage() {
                             fontSize: '11px',
                             fontWeight: 600,
                             background: r.status === 'Active' ? 'var(--color-badge-active-bg, rgba(5,150,105,0.12))' : 'var(--color-badge-paused-bg, rgba(217,119,6,0.12))',
-                            color: r.status === 'Active' ? 'var(--color-badge-active-text, #065F46)' : 'var(--color-badge-paused-text, #78350F)',
+                            color: r.status === 'Active' ? 'var(--color-badge-active-text, var(--color-badge-active-text))' : 'var(--color-badge-paused-text, var(--color-badge-paused-text))',
                           }}
                         >
                           {r.status}
@@ -230,7 +230,7 @@ export default function AdminManagementPage() {
                             style={{ background: r.analyticsVisible ? 'var(--color-primary)' : 'var(--color-border)' }}
                           >
                             <span
-                              className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
+                              className="absolute top-0.5 w-4 h-4 rounded-full bg-[var(--color-surface-raised)] transition-all"
                               style={{ left: r.analyticsVisible ? '18px' : '2px', boxShadow: '0 1px 2px rgba(0,0,0,0.2)' }}
                             />
                           </span>
@@ -292,7 +292,7 @@ export default function AdminManagementPage() {
                             fontSize: '11px',
                             fontWeight: 600,
                             background: m.status === 'Active' ? 'var(--color-badge-active-bg, rgba(5,150,105,0.12))' : 'var(--color-badge-paused-bg, rgba(217,119,6,0.12))',
-                            color: m.status === 'Active' ? 'var(--color-badge-active-text, #065F46)' : 'var(--color-badge-paused-text, #78350F)',
+                            color: m.status === 'Active' ? 'var(--color-badge-active-text, var(--color-badge-active-text))' : 'var(--color-badge-paused-text, var(--color-badge-paused-text))',
                           }}
                         >
                           {m.status}

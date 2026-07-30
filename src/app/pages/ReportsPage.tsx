@@ -19,12 +19,12 @@ import { ProgressBar } from '../components/ProgressBar';
 import { motion, useReducedMotion } from 'motion/react';
 import { Reveal } from '../components/Reveal';
 
-const CHART_COLORS = ['#BA2027', '#D32F2F', '#E57373', '#0891B2', '#0F9D58', '#F4B400'];
+const CHART_COLORS = ['var(--color-primary)', 'var(--color-primary-light)', 'var(--color-error)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'];
 const CHART_H = typeof window !== 'undefined' && window.innerWidth < 640 ? 160 : 240;
 const CHART_H_SM = typeof window !== 'undefined' && window.innerWidth < 640 ? 140 : 220;
 
 const TOOLTIP_STYLE = {
-  backgroundColor: '#FFFFFF',
+  backgroundColor: 'var(--color-surface-raised)',
   border: '1px solid var(--color-border)',
   borderRadius: '8px',
   fontSize: '12px',
@@ -91,7 +91,7 @@ function DemoBars({ title, data, chipBg, chipColor, icon: Icon }: any) {
               <div className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--background-muted)' }}>
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: i === 0 ? '#BA2027' : '#3E5C8A' }}
+                  style={{ background: i === 0 ? 'var(--color-primary)' : '#3E5C8A' }}
                   initial={reduce ? false : { width: 0 }}
                   whileInView={{ width: `${Math.max(3, Math.round((d.percentage / maxPct) * 100))}%` }}
                   viewport={{ once: true, amount: 0.5 }}
@@ -376,7 +376,7 @@ export default function ReportsPage() {
                 color: 'var(--color-text-primary)',
               }}
             >
-              <BarChart3 className="w-4 h-4" style={{ color: '#BA2027' }} />
+              <BarChart3 className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
               Billing Trend
             </h3>
             <div
@@ -390,7 +390,7 @@ export default function ReportsPage() {
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#BA2027', display: 'inline-block' }} />
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--color-primary)', display: 'inline-block' }} />
                 This year
               </span>
             </div>
@@ -411,7 +411,7 @@ export default function ReportsPage() {
               />
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: any, name: any) => [`$${Number(v).toLocaleString()}`, name]} />
               {hasPrevYear && <Bar dataKey="prev" name="Last year" fill="#E0A8AB" radius={[4, 4, 0, 0]} maxBarSize={22} />}
-              <Bar dataKey="current" name="This year" fill="#BA2027" radius={[4, 4, 0, 0]} maxBarSize={22} />
+              <Bar dataKey="current" name="This year" fill="var(--color-primary)" radius={[4, 4, 0, 0]} maxBarSize={22} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -429,7 +429,7 @@ export default function ReportsPage() {
                     onClick={() => { setScope(s); setSelectedCampaign('all'); }}
                     className="px-4 py-2 text-sm font-semibold capitalize transition-colors"
                     style={{
-                      background: scope === s ? '#BA2027' : 'transparent',
+                      background: scope === s ? 'var(--color-primary)' : 'transparent',
                       color: scope === s ? '#fff' : 'var(--color-text-secondary)',
                     }}
                   >
@@ -472,7 +472,7 @@ export default function ReportsPage() {
                     onClick={() => setPeriod(p)}
                     className="px-4 py-2 text-sm font-semibold capitalize transition-colors"
                     style={{
-                      background: period === p ? '#BA2027' : 'transparent',
+                      background: period === p ? 'var(--color-primary)' : 'transparent',
                       color: period === p ? '#fff' : 'var(--color-text-secondary)',
                     }}
                   >
@@ -496,7 +496,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.totalLeads.toLocaleString()}</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Total Leads</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: leadDelta >= 0 ? '#0F9D58' : '#BA2027' }}>{leadDelta >= 0 ? '▲' : '▼'} {Math.abs(leadDelta)}% vs last mo</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: leadDelta >= 0 ? 'var(--color-success)' : 'var(--color-primary)' }}>{leadDelta >= 0 ? '▲' : '▼'} {Math.abs(leadDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -505,7 +505,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.acceptance}%</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Acceptance</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: '#0F9D58' }}>▲ 2 pts</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--color-success)' }}>▲ 2 pts</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -514,7 +514,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.conversions}</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Conversions</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: convDelta >= 0 ? '#0F9D58' : '#BA2027' }}>{convDelta >= 0 ? '▲' : '▼'} {Math.abs(convDelta)}% vs last mo</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: convDelta >= 0 ? 'var(--color-success)' : 'var(--color-primary)' }}>{convDelta >= 0 ? '▲' : '▼'} {Math.abs(convDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -523,7 +523,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>${(currentMetrics.revenue / 1000).toFixed(0)}K</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Billable</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: revDelta >= 0 ? '#0F9D58' : '#BA2027' }}>{revDelta >= 0 ? '▲' : '▼'} {Math.abs(revDelta)}% vs last mo</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: revDelta >= 0 ? 'var(--color-success)' : 'var(--color-primary)' }}>{revDelta >= 0 ? '▲' : '▼'} {Math.abs(revDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -546,13 +546,13 @@ export default function ReportsPage() {
             <div className="glass-card p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="flex items-center gap-2" style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                  <Target className="w-4 h-4 text-[#BA2027]" /> Monthly Pacing
+                  <Target className="w-4 h-4 text-[var(--color-primary)]" /> Monthly Pacing
                 </h3>
                 <span
                   className="text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1"
                   style={{
                     background: pacingPct >= 60 ? 'rgba(16,163,127,0.12)' : 'rgba(245,158,11,0.14)',
-                    color: pacingPct >= 60 ? '#0F9D58' : '#B45309',
+                    color: pacingPct >= 60 ? 'var(--color-success)' : 'var(--color-warning)',
                   }}
                 >
                   <CheckCircle className="w-3.5 h-3.5" /> {pacingPct >= 60 ? 'On track' : 'Behind pace'}
@@ -569,7 +569,7 @@ export default function ReportsPage() {
               <div className="w-full h-3.5 rounded-full overflow-hidden mt-auto" style={{ background: 'var(--background-muted)' }}>
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: '#BA2027' }}
+                  style={{ background: 'var(--color-primary)' }}
                   initial={reduce ? false : { width: 0 }}
                   whileInView={{ width: `${Math.min(100, pacingPct)}%` }}
                   viewport={{ once: true, amount: 0.4 }}
@@ -577,7 +577,7 @@ export default function ReportsPage() {
                 />
               </div>
               <div className="flex gap-5 mt-2.5" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: '#BA2027' }} />Delivered {pacingPct}%</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: 'var(--color-primary)' }} />Delivered {pacingPct}%</span>
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm border" style={{ background: 'var(--background-muted)', borderColor: 'var(--color-border)' }} />Remaining {Math.max(0, 100 - pacingPct)}%</span>
               </div>
             </div>
@@ -586,13 +586,13 @@ export default function ReportsPage() {
             <div className="glass-card p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="flex items-center gap-2" style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                  <CheckCircle className="w-4 h-4 text-[#BA2027]" /> Conversion
+                  <CheckCircle className="w-4 h-4 text-[var(--color-primary)]" /> Conversion
                 </h3>
                 <span
                   className="text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1"
                   style={{
                     background: acceptedPct >= 80 ? 'rgba(16,163,127,0.12)' : 'rgba(245,158,11,0.14)',
-                    color: acceptedPct >= 80 ? '#0F9D58' : '#B45309',
+                    color: acceptedPct >= 80 ? 'var(--color-success)' : 'var(--color-warning)',
                   }}
                 >
                   <CheckCircle className="w-3.5 h-3.5" /> {acceptedPct >= 80 ? 'Healthy' : 'Needs review'}
@@ -609,7 +609,7 @@ export default function ReportsPage() {
               <div className="w-full h-3.5 rounded-full overflow-hidden mt-auto" style={{ background: 'var(--background-muted)' }}>
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: '#1D9E75' }}
+                  style={{ background: 'var(--color-success)' }}
                   initial={reduce ? false : { width: 0 }}
                   whileInView={{ width: `${acceptedPct}%` }}
                   viewport={{ once: true, amount: 0.4 }}
@@ -617,7 +617,7 @@ export default function ReportsPage() {
                 />
               </div>
               <div className="flex gap-5 mt-2.5" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: '#1D9E75' }} />Accepted {acceptedPct}%</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: 'var(--color-success)' }} />Accepted {acceptedPct}%</span>
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm border" style={{ background: 'var(--background-muted)', borderColor: 'var(--color-border)' }} />Not accepted {rejectedPct}%</span>
               </div>
             </div>
@@ -631,10 +631,10 @@ export default function ReportsPage() {
             Lead Demographics
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DemoBars title="Geographic Distribution" data={demographics.geo} icon={Globe} chipBg="#EEF0FE" chipColor="#4F46E5" />
-            <DemoBars title="Industry Distribution" data={demographics.industry} icon={Building2} chipBg="#E2F5F1" chipColor="#0F9488" />
-            <DemoBars title="Title Distribution" data={demographics.title} icon={IdCard} chipBg="#FBF0DD" chipColor="#C2790B" />
-            <DemoBars title="Company Size" data={demographics.size} icon={Users} chipBg="#FBE7EC" chipColor="#BE123C" />
+            <DemoBars title="Geographic Distribution" data={demographics.geo} icon={Globe} chipBg="var(--color-accent-purple-bg)" chipColor="var(--color-accent-purple)" />
+            <DemoBars title="Industry Distribution" data={demographics.industry} icon={Building2} chipBg="var(--color-success-bg)" chipColor="var(--color-success)" />
+            <DemoBars title="Title Distribution" data={demographics.title} icon={IdCard} chipBg="var(--color-warning-bg)" chipColor="var(--color-warning)" />
+            <DemoBars title="Company Size" data={demographics.size} icon={Users} chipBg="var(--color-error-bg)" chipColor="var(--color-error)" />
           </div>
         </div>
         </Reveal>

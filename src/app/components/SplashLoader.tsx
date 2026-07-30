@@ -15,7 +15,7 @@ export function SplashLoader() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #ffffff 0%, #fdf2f2 40%, #fff5f5 100%)',
+        background: 'linear-gradient(135deg, #ffffff 0%, var(--color-error-bg) 40%, var(--color-error-bg) 100%)',
         zIndex: 9999,
         animation: 'splashFadeIn 200ms ease forwards',
       }}
@@ -59,7 +59,7 @@ export function SplashLoader() {
           }}
         >
           <path
-            fill="#BA2027"
+            fill="var(--color-primary)"
             d="M10,9.86H41A31.05,31.05,0,0,1,72.08,40.91v0A31.05,31.05,0,0,1,41,72H10a0,0,0,0,1,0,0V9.86a0,0,0,0,1,0,0Z"
           />
           <path
@@ -75,7 +75,7 @@ export function SplashLoader() {
           fontFamily: 'Inter, system-ui, sans-serif',
           fontSize: '15px',
           fontWeight: 600,
-          color: '#1E1E1E',
+          color: 'var(--color-text-primary)',
           letterSpacing: '0.01em',
           margin: '0 0 4px 0',
         }}
@@ -87,7 +87,7 @@ export function SplashLoader() {
           fontFamily: 'Inter, system-ui, sans-serif',
           fontSize: '11px',
           fontWeight: 500,
-          color: '#9CA3AF',
+          color: 'var(--color-text-muted)',
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
           margin: '0 0 36px 0',
@@ -115,7 +115,7 @@ export function SplashLoader() {
             top: 0,
             height: '100%',
             borderRadius: '99px',
-            background: 'linear-gradient(90deg, #BA2027, #D32F2F)',
+            background: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light))',
             animation: 'splashBarGrow 2.5s cubic-bezier(0.4, 0, 0.2, 1) forwards',
           }}
         />
@@ -142,7 +142,7 @@ export function SplashLoader() {
               width: '5px',
               height: '5px',
               borderRadius: '50%',
-              background: '#BA2027',
+              background: 'var(--color-primary)',
               animation: `splashDotPulse 1.2s ease-in-out ${i * 0.18}s infinite`,
             }}
           />

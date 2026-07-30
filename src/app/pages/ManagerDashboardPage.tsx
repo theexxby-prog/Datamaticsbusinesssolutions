@@ -201,7 +201,7 @@ export default function ManagerDashboardPage() {
           <div className="kpi-card animate-slideInUp">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(16,185,129,0.1)' }}>
-                <CheckCircle2 className="w-5 h-5" style={{ color: '#10B981' }} />
+                <CheckCircle2 className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
               </div>
             </div>
             <div className="kpi-card__number">{avgAcceptance}%</div>

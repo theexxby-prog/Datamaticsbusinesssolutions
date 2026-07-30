@@ -113,7 +113,7 @@ export default function Account() {
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Company</label>
-                  <input type="text" defaultValue="The Channel Company" className="input-base w-full px-4 py-3" disabled style={{ background: '#F5F5F5' }} />
+                  <input type="text" defaultValue="The Channel Company" className="input-base w-full px-4 py-3" disabled style={{ background: 'var(--color-surface)' }} />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Email Address</label>
@@ -160,9 +160,9 @@ export default function Account() {
                         aria-checked={on}
                         aria-label={`Toggle ${m.label}`}
                         className="relative rounded-full transition-colors flex-shrink-0"
-                        style={{ width: 44, height: 24, background: on ? '#BA2027' : 'var(--color-border)' }}
+                        style={{ width: 44, height: 24, background: on ? 'var(--color-primary)' : 'var(--color-border)' }}
                       >
-                        <span className="absolute rounded-full bg-white shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: on ? 'translateX(20px)' : 'translateX(0)' }} />
+                        <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: on ? 'translateX(20px)' : 'translateX(0)' }} />
                       </button>
                     </div>
                   );

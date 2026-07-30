@@ -185,7 +185,7 @@ export default function LeadUploadDashboard() {
           <div 
             className="mb-6 p-4 rounded-xl border flex items-center justify-between gap-4 animate-slideInUp"
             style={{
-              backgroundColor: uploadMetrics.failed > 0 ? '#FEF2F2' : '#FFFBEB',
+              backgroundColor: uploadMetrics.failed > 0 ? 'var(--color-error-bg)' : 'var(--color-warning-bg)',
               borderColor: uploadMetrics.failed > 0 ? 'rgba(239,68,68,0.2)' : 'rgba(217,119,6,0.2)',
             }}
           >
@@ -199,12 +199,12 @@ export default function LeadUploadDashboard() {
                 <AlertTriangle className={`w-5 h-5 ${uploadMetrics.failed > 0 ? 'text-red-600' : 'text-orange-500'}`} />
               </div>
               <div>
-                <p className="font-semibold text-sm mb-1" style={{ color: uploadMetrics.failed > 0 ? '#991B1B' : '#92400e' }}>
+                <p className="font-semibold text-sm mb-1" style={{ color: uploadMetrics.failed > 0 ? 'var(--color-error)' : 'var(--color-badge-paused-text)' }}>
                   {uploadMetrics.failed > 0 && `${uploadMetrics.failed} failed upload${uploadMetrics.failed > 1 ? 's' : ''} need${uploadMetrics.failed === 1 ? 's' : ''} attention`}
                   {uploadMetrics.failed > 0 && uploadMetrics.pending > 0 && ' • '}
                   {uploadMetrics.pending > 0 && `${uploadMetrics.pending} upload${uploadMetrics.pending > 1 ? 's' : ''} pending`}
                 </p>
-                <p className="text-sm" style={{ color: uploadMetrics.failed > 0 ? '#991B1B' : '#92400e' }}>
+                <p className="text-sm" style={{ color: uploadMetrics.failed > 0 ? 'var(--color-error)' : 'var(--color-badge-paused-text)' }}>
                   Review and retry failed uploads to ensure all leads are delivered
                 </p>
               </div>

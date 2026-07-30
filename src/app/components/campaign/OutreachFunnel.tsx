@@ -31,7 +31,7 @@ export function OutreachFunnel({ metrics, deliveredLeads }: OutreachFunnelProps)
       width: metrics.openRate,
       gradient: 'from-indigo-400 to-purple-500',
       rate: metrics.openRate,
-      rateColor: '#6366F1',
+      rateColor: 'var(--color-accent-purple)',
     },
     {
       label: 'Clicks (CTR)',
@@ -39,7 +39,7 @@ export function OutreachFunnel({ metrics, deliveredLeads }: OutreachFunnelProps)
       width: Math.min(100, metrics.clickRate * 5),
       gradient: 'from-emerald-400 to-teal-500',
       rate: metrics.clickRate,
-      rateColor: '#10B981',
+      rateColor: 'var(--color-success)',
     },
     {
       label: 'Delivered Leads',
@@ -52,10 +52,10 @@ export function OutreachFunnel({ metrics, deliveredLeads }: OutreachFunnelProps)
   ];
 
   const ratios = [
-    { label: 'CTOR', value: `${pct(metrics.emailsClicked, metrics.emailsOpened)}%`, note: 'Excellent', noteColor: '#10B981' },
+    { label: 'CTOR', value: `${pct(metrics.emailsClicked, metrics.emailsOpened)}%`, note: 'Excellent', noteColor: 'var(--color-success)' },
     { label: 'Open to Lead', value: `${pct(deliveredLeads, metrics.emailsOpened)}%`, note: 'Conversion', noteColor: 'var(--color-text-secondary)' },
     { label: 'Click to Lead', value: `${pct(deliveredLeads, metrics.emailsClicked)}%`, note: 'Action Rate', noteColor: 'var(--color-text-secondary)' },
-    { label: 'Bounce Rate', value: '0.8%', note: 'Healthy (<2%)', noteColor: '#10B981' },
+    { label: 'Bounce Rate', value: '0.8%', note: 'Healthy (<2%)', noteColor: 'var(--color-success)' },
   ];
 
   return (

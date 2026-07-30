@@ -46,7 +46,7 @@ export default function InternalDashboard() {
       case 'processing': return { bg: 'var(--color-warning-bg)', text: 'var(--color-warning)', label: 'Processing' };
       case 'completed': return { bg: 'var(--color-success-bg)', text: 'var(--color-success)', label: 'Completed' };
       case 'failed': return { bg: 'var(--color-error-bg)', text: 'var(--color-error)', label: 'Failed' };
-      default: return { bg: 'rgba(107,114,128,0.1)', text: '#6B7280', label: 'Pending' };
+      default: return { bg: 'rgba(107,114,128,0.1)', text: 'var(--color-text-secondary)', label: 'Pending' };
     }
   };
 
@@ -138,7 +138,7 @@ export default function InternalDashboard() {
           <div
             className="mb-6 p-4 rounded-xl border flex items-center gap-4 animate-slideInUp cursor-pointer"
             style={{
-              backgroundColor: failedUploads > 0 ? '#FEF2F2' : '#FFFBEB',
+              backgroundColor: failedUploads > 0 ? 'var(--color-error-bg)' : 'var(--color-warning-bg)',
               borderColor: failedUploads > 0 ? 'rgba(239,68,68,0.2)' : 'rgba(217,119,6,0.2)',
             }}
             onClick={() => navigate('/internal/leads')}
@@ -153,12 +153,12 @@ export default function InternalDashboard() {
               }
             </div>
             <div className="flex-1">
-              <p className="font-semibold" style={{ fontSize: 'var(--font-size-sm)', color: failedUploads > 0 ? '#991B1B' : '#92400E' }}>
+              <p className="font-semibold" style={{ fontSize: 'var(--font-size-sm)', color: failedUploads > 0 ? 'var(--color-error)' : 'var(--color-badge-paused-text)' }}>
                 {failedUploads > 0 && `${failedUploads} failed upload${failedUploads > 1 ? 's' : ''} need attention`}
                 {failedUploads > 0 && processingUploads > 0 && ' • '}
                 {processingUploads > 0 && `${processingUploads} upload${processingUploads > 1 ? 's' : ''} currently processing`}
               </p>
-              <p style={{ fontSize: 'var(--font-size-xs)', color: failedUploads > 0 ? '#991B1B' : '#92400E' }}>
+              <p style={{ fontSize: 'var(--font-size-xs)', color: failedUploads > 0 ? 'var(--color-error)' : 'var(--color-badge-paused-text)' }}>
                 Click to view details in the Lead Upload Center
               </p>
             </div>
@@ -244,7 +244,7 @@ export default function InternalDashboard() {
                   { label: 'View All Campaigns', path: '/internal/campaigns', icon: BarChart3, color: 'var(--color-info)' },
                   { label: 'Internal Reports', path: '/internal/reports', icon: TrendingUp, color: 'var(--color-success)' },
                   { label: 'Client Assignments', path: '/internal/client-assignment', icon: Users, color: 'var(--color-warning)' },
-                  { label: 'Team Management', path: '/dashboard/ops/team', icon: Briefcase, color: '#8B5CF6' },
+                  { label: 'Team Management', path: '/dashboard/ops/team', icon: Briefcase, color: 'var(--color-accent-purple)' },
                 ].map((action) => {
                   const Icon = action.icon;
                   return (
@@ -321,7 +321,7 @@ export default function InternalDashboard() {
                   <div key={client.id} className="flex items-center gap-3">
                     <div
                       className="w-7 h-7 rounded-full flex items-center justify-center text-white flex-shrink-0"
-                      style={{ background: ['#BA2027', '#0891B2', '#0F9D58', '#F4B400'][index], fontSize: '11px', fontWeight: 700 }}
+                      style={{ background: ['var(--color-primary)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'][index], fontSize: '11px', fontWeight: 700 }}
                     >
                       {index + 1}
                     </div>

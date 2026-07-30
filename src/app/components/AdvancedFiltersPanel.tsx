@@ -27,11 +27,11 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
       />
 
       {/* Panel */}
-      <div className="fixed right-0 top-0 bottom-0 w-full max-w-md z-50 shadow-2xl animate-slideInRight bg-white">
+      <div className="fixed right-0 top-0 bottom-0 w-full max-w-md z-50 shadow-2xl animate-slideInRight bg-[var(--color-surface-raised)]">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
-            <Filter className="w-5 h-5 text-[#BA2027]" />
+            <Filter className="w-5 h-5 text-[var(--color-primary)]" />
             <h2 className="text-lg font-semibold text-gray-900">Advanced Filters</h2>
           </div>
           <button 
@@ -78,7 +78,7 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
             <select
               value={filters.dateRange}
               onChange={(e) => onFilterChange({ ...filters, dateRange: e.target.value })}
-              className="w-full px-4 py-2.5 rounded-lg border transition-all bg-white border-gray-300 text-gray-900"
+              className="w-full px-4 py-2.5 rounded-lg border transition-all bg-[var(--color-surface-raised)] border-gray-300 text-gray-900"
             >
               <option value="all">All Time</option>
               <option value="today">Today</option>
@@ -106,7 +106,7 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
                   }}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     filters.industry.includes(industry)
-                      ? 'bg-[#BA2027] text-white'
+                      ? 'bg-[var(--color-primary)] text-white'
                       : 'bg-gray-100 text-gray-600 border border-gray-300'
                   }`}
                 >
@@ -134,7 +134,7 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
                   }}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     filters.tags.includes(tag)
-                      ? 'bg-[#4285F4] text-white'
+                      ? 'bg-[var(--color-info)] text-white'
                       : 'bg-gray-100 text-gray-600 border border-gray-300'
                   }`}
                 >
@@ -163,7 +163,7 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
             </button>
             <button
               onClick={onClose}
-              className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all bg-gradient-to-r from-[#BA2027] to-[#D32F2F]"
+              className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)]"
             >
               Apply Filters
             </button>

@@ -36,18 +36,18 @@ export function ProgressBar({
   }, [targetWidth, animationDelay]);
 
   const getBadgeColor = () => {
-    if (percentage >= badgeColorThresholds.high) return 'bg-[#0F9D58]/20 text-[#0F9D58]';
-    if (percentage >= badgeColorThresholds.medium) return 'bg-[#F4B400]/20 text-[#F4B400]';
-    return 'bg-[#EA4335]/20 text-[#EA4335]';
+    if (percentage >= badgeColorThresholds.high) return 'bg-[var(--color-success)]/20 text-[var(--color-success)]';
+    if (percentage >= badgeColorThresholds.medium) return 'bg-[var(--color-warning)]/20 text-[var(--color-warning)]';
+    return 'bg-[var(--color-error)]/20 text-[var(--color-error)]';
   };
 
-  const defaultValueColor = valueColor || 'text-[#0891B2]';
+  const defaultValueColor = valueColor || 'text-[var(--color-info)]';
 
   return (
     <div className="animate-slideInUp" style={{ animationDelay: `${animationDelay}ms` }}>
       {/* Label and Value Row */}
       <div className="flex items-center justify-between mb-2">
-        <span className="text-sm font-medium text-[#64748B]">{label}</span>
+        <span className="text-sm font-medium text-[var(--color-text-secondary)]">{label}</span>
         <div className="flex items-center gap-2">
           <span className={`text-sm font-medium ${defaultValueColor}`}>
             {typeof value === 'number' ? value.toLocaleString() : value}
@@ -70,7 +70,7 @@ export function ProgressBar({
             height: '100%',
             width: `${displayWidth}%`,
             borderRadius: '9999px',
-            background: 'linear-gradient(90deg, #BA2027, #D32F2F)',
+            background: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light))',
             transition: 'width 0.75s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
@@ -112,12 +112,12 @@ export function SimpleProgressBar({
           height: '100%',
           width: `${displayWidth}%`,
           borderRadius: '9999px',
-          background: 'linear-gradient(90deg, #BA2027, #D32F2F)',
+          background: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light))',
           transition: 'width 0.75s cubic-bezier(0.4, 0, 0.2, 1)',
         }}
       />
       {showPercentageText && (
-        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-[#1F2937]">
+        <span className="absolute right-2 top-1/2 -translate-y-1/2 text-xs font-bold text-[var(--color-text-primary)]">
           {percentage}%
         </span>
       )}

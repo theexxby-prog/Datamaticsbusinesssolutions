@@ -68,9 +68,9 @@ function ChangesModal({
         transition={{ duration: 0.2 }}
         className="relative w-full max-w-lg rounded-2xl p-6 z-10"
         style={{
-          background: 'rgba(255,255,255,0.97)',
+          background: 'var(--color-surface-raised)',
           backdropFilter: 'blur(20px)',
-          border: '1px solid rgba(255,255,255,0.6)',
+          border: '1px solid var(--glass-border)',
           boxShadow: '0 24px 64px rgba(0,0,0,0.15)',
         }}
       >
@@ -79,22 +79,22 @@ function ChangesModal({
             <MessageSquareDiff className="w-5 h-5 text-amber-600" />
           </div>
           <div>
-            <h3 className="font-semibold text-[#111]" style={{ fontSize: '16px' }}>
+            <h3 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px' }}>
               Request Changes
             </h3>
-            <p className="text-[#6B7280] mt-0.5" style={{ fontSize: '13px' }}>
+            <p className="text-[var(--color-text-secondary)] mt-0.5" style={{ fontSize: '13px' }}>
               {submission.campaignName}
             </p>
           </div>
         </div>
 
-        <p className="text-[#374151] mb-3" style={{ fontSize: '13px' }}>
+        <p className="text-[var(--color-text-primary)] mb-3" style={{ fontSize: '13px' }}>
           Describe what needs to be changed or clarified before this campaign can be approved.
           This message will be visible to the client.
         </p>
 
         <textarea
-          className="w-full rounded-xl border border-[#E5E7EB] p-3 text-[#111] resize-none focus:outline-none focus:ring-2 focus:ring-[#BA2027]/40 focus:border-[#BA2027]"
+          className="w-full rounded-xl border border-[var(--color-border)] p-3 text-[var(--color-text-primary)] resize-none focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]/40 focus:border-[var(--color-primary)]"
           style={{ fontSize: '14px', minHeight: '120px' }}
           placeholder="e.g. Please clarify the target geography, or adjust the CPL to match our current capacity for this segment..."
           value={notes}
@@ -104,7 +104,7 @@ function ChangesModal({
         <div className="flex gap-3 mt-4">
           <button
             onClick={onClose}
-            className="flex-1 py-2.5 rounded-xl border border-[#E5E7EB] text-[#6B7280] hover:bg-[#F9FAFB] transition-colors font-medium"
+            className="flex-1 py-2.5 rounded-xl border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-surface)] transition-colors font-medium"
             style={{ fontSize: '14px' }}
           >
             Cancel
@@ -148,19 +148,19 @@ function SubmissionCard({
       transition={{ duration: 0.25 }}
       className="rounded-2xl overflow-hidden"
       style={{
-        background: 'rgba(255,255,255,0.85)',
+        background: 'var(--color-surface-raised)',
         backdropFilter: 'blur(16px)',
         border: submission.status === 'Pending Approval'
           ? '1px solid rgba(194,65,12,0.2)'
           : submission.status === 'Changes Requested'
           ? '1px solid rgba(180,83,9,0.2)'
-          : '1px solid rgba(255,255,255,0.6)',
+          : '1px solid var(--glass-border)',
         boxShadow: '0 2px 12px rgba(0,0,0,0.05)',
       }}
     >
       {/* Priority stripe */}
       {submission.status === 'Pending Approval' && (
-        <div className="h-1 w-full bg-gradient-to-r from-[#BA2027] to-[#F97316]" />
+        <div className="h-1 w-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-warning)]" />
       )}
       {submission.status === 'Changes Requested' && (
         <div className="h-1 w-full bg-gradient-to-r from-amber-500 to-yellow-400" />
@@ -172,16 +172,16 @@ function SubmissionCard({
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <StatusBadge status={submission.status} />
-              <span className="text-xs text-[#9CA3AF]">
+              <span className="text-xs text-[var(--color-text-muted)]">
                 Submitted {daysSince(submission.submittedAt)} · {fmtDate(submission.submittedAt)}
               </span>
             </div>
-            <h3 className="font-semibold text-[#111] leading-snug" style={{ fontSize: '16px' }}>
+            <h3 className="font-semibold text-[var(--color-text-primary)] leading-snug" style={{ fontSize: '16px' }}>
               {submission.campaignName}
             </h3>
             <div className="flex items-center gap-1.5 mt-1">
-              <Building2 className="w-3.5 h-3.5 text-[#9CA3AF]" />
-              <span className="text-[#6B7280]" style={{ fontSize: '13px' }}>
+              <Building2 className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
+              <span className="text-[var(--color-text-secondary)]" style={{ fontSize: '13px' }}>
                 {submission.clientCompany} · submitted by {submission.submittedBy}
               </span>
             </div>
@@ -191,12 +191,12 @@ function SubmissionCard({
           {submission.status === 'Pending Approval' && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full flex-shrink-0"
               style={{ background: 'rgba(194,65,12,0.08)' }}>
-              <Clock className="w-3.5 h-3.5 text-[#C2410C]" />
-              <span className="text-xs font-semibold text-[#C2410C]">Awaiting Review</span>
+              <Clock className="w-3.5 h-3.5 text-[var(--color-warning)]" />
+              <span className="text-xs font-semibold text-[var(--color-warning)]">Awaiting Review</span>
             </div>
           )}
           {isReviewed && (
-            <div className="flex items-center gap-1.5 text-xs text-[#9CA3AF] flex-shrink-0">
+            <div className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] flex-shrink-0">
               Reviewed {submission.reviewedAt ? fmtDate(submission.reviewedAt) : ''}
             </div>
           )}
@@ -204,30 +204,30 @@ function SubmissionCard({
 
         {/* Key specs — quick glance row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
-          <div className="rounded-xl p-3" style={{ background: 'rgba(0,0,0,0.03)' }}>
-            <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider mb-1">Type</p>
-            <p className="font-semibold text-[#111]" style={{ fontSize: '13px' }}>{submission.serviceType}</p>
+          <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
+            <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Type</p>
+            <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.serviceType}</p>
           </div>
-          <div className="rounded-xl p-3" style={{ background: 'rgba(0,0,0,0.03)' }}>
+          <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
             <div className="flex items-center gap-1 mb-1">
-              <MapPin className="w-3 h-3 text-[#9CA3AF]" />
-              <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">Geo</p>
+              <MapPin className="w-3 h-3 text-[var(--color-text-muted)]" />
+              <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Geo</p>
             </div>
-            <p className="font-semibold text-[#111]" style={{ fontSize: '13px' }}>{submission.geography}</p>
+            <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.geography}</p>
           </div>
-          <div className="rounded-xl p-3" style={{ background: 'rgba(0,0,0,0.03)' }}>
+          <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
             <div className="flex items-center gap-1 mb-1">
-              <Target className="w-3 h-3 text-[#9CA3AF]" />
-              <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">Target</p>
+              <Target className="w-3 h-3 text-[var(--color-text-muted)]" />
+              <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Target</p>
             </div>
-            <p className="font-semibold text-[#111]" style={{ fontSize: '13px' }}>{submission.targetLeads.toLocaleString()} leads</p>
+            <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.targetLeads.toLocaleString()} leads</p>
           </div>
-          <div className="rounded-xl p-3" style={{ background: 'rgba(0,0,0,0.03)' }}>
+          <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
             <div className="flex items-center gap-1 mb-1">
-              <DollarSign className="w-3 h-3 text-[#9CA3AF]" />
-              <p className="text-[10px] font-semibold text-[#9CA3AF] uppercase tracking-wider">Est. Value</p>
+              <DollarSign className="w-3 h-3 text-[var(--color-text-muted)]" />
+              <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Est. Value</p>
             </div>
-            <p className="font-semibold text-[#111]" style={{ fontSize: '13px' }}>
+            <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>
               ${(submission.targetLeads * submission.cpl).toLocaleString()}
             </p>
           </div>
@@ -236,7 +236,7 @@ function SubmissionCard({
         {/* Expandable details */}
         <button
           onClick={() => setExpanded(!expanded)}
-          className="flex items-center gap-1.5 text-[#BA2027] hover:text-[#9A1A21] transition-colors mb-3"
+          className="flex items-center gap-1.5 text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors mb-3"
           style={{ fontSize: '13px', fontWeight: 600 }}
         >
           {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
@@ -252,16 +252,16 @@ function SubmissionCard({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <div className="pt-3 border-t border-[#F3F4F6] space-y-4 mb-4">
+              <div className="pt-3 border-t border-[var(--color-surface)] space-y-4 mb-4">
                 {/* Job titles */}
                 <div>
                   <div className="flex items-center gap-1.5 mb-2">
-                    <Users className="w-3.5 h-3.5 text-[#9CA3AF]" />
-                    <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider">Target Job Titles</p>
+                    <Users className="w-3.5 h-3.5 text-[var(--color-text-muted)]" />
+                    <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Target Job Titles</p>
                   </div>
                   <div className="flex flex-wrap gap-1.5">
                     {submission.jobTitles.map(t => (
-                      <span key={t} className="px-2.5 py-1 rounded-full text-xs font-medium bg-[#F3F4F6] text-[#374151]">
+                      <span key={t} className="px-2.5 py-1 rounded-full text-xs font-medium bg-[var(--color-surface)] text-[var(--color-text-primary)]">
                         {t}
                       </span>
                     ))}
@@ -271,30 +271,30 @@ function SubmissionCard({
                 {/* Locations + employee size */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">Locations</p>
-                    <p className="text-[#374151]" style={{ fontSize: '13px' }}>
+                    <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Locations</p>
+                    <p className="text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>
                       {submission.locations.join(', ')}
                     </p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">Company Size</p>
-                    <p className="text-[#374151]" style={{ fontSize: '13px' }}>{submission.employeeSize} employees</p>
+                    <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Company Size</p>
+                    <p className="text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.employeeSize} employees</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">Industry</p>
-                    <p className="text-[#374151]" style={{ fontSize: '13px' }}>{submission.industry}</p>
+                    <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Industry</p>
+                    <p className="text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.industry}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">CPL</p>
-                    <p className="text-[#374151]" style={{ fontSize: '13px' }}>${submission.cpl} per lead</p>
+                    <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">CPL</p>
+                    <p className="text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>${submission.cpl} per lead</p>
                   </div>
                 </div>
 
                 {/* Additional info */}
                 {submission.additionalInfo && (
                   <div>
-                    <p className="text-xs font-semibold text-[#9CA3AF] uppercase tracking-wider mb-2">Client Notes</p>
-                    <p className="text-[#374151] leading-relaxed" style={{ fontSize: '13px' }}>
+                    <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-2">Client Notes</p>
+                    <p className="text-[var(--color-text-primary)] leading-relaxed" style={{ fontSize: '13px' }}>
                       {submission.additionalInfo}
                     </p>
                   </div>
@@ -364,7 +364,7 @@ function SubmissionCard({
           <div className="flex gap-2 flex-wrap pt-1">
             <button
               onClick={() => onApprove(submission.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[#059669] text-white hover:bg-[#047857] active:bg-[#065F46] transition-colors font-semibold"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-success)] text-white hover:bg-[#047857] active:bg-[var(--color-badge-active-text)] transition-colors font-semibold"
               style={{ fontSize: '13px' }}
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -380,7 +380,7 @@ function SubmissionCard({
             </button>
             <button
               onClick={() => onDecline(submission.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#E5E7EB] text-[#6B7280] hover:bg-red-50 hover:text-red-700 hover:border-red-200 active:bg-red-100 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-red-50 hover:text-red-700 hover:border-red-200 active:bg-red-100 transition-colors font-medium"
               style={{ fontSize: '13px' }}
             >
               <XCircle className="w-4 h-4" />
@@ -482,10 +482,10 @@ export default function CampaignApprovalsPage() {
 
         {/* Page header */}
         <div className="mb-6">
-          <h1 className="text-[#1F2937] mb-1" style={{ fontSize: '24px', fontWeight: 700 }}>
+          <h1 className="text-[var(--color-text-primary)] mb-1" style={{ fontSize: '24px', fontWeight: 700 }}>
             Campaign Approvals
           </h1>
-          <p style={{ fontSize: '14px', color: '#6B7280' }}>
+          <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
             Review and action campaign requests submitted by clients before they go live.
           </p>
         </div>
@@ -493,9 +493,9 @@ export default function CampaignApprovalsPage() {
         {/* Summary stat strip */}
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Pending Review', value: pendingCount, color: '#C2410C', bg: 'rgba(194,65,12,0.06)', border: 'rgba(194,65,12,0.15)' },
-            { label: 'Changes Sent', value: changesCount, color: '#B45309', bg: 'rgba(180,83,9,0.06)', border: 'rgba(180,83,9,0.15)' },
-            { label: 'Approved This Month', value: approvedCount, color: '#059669', bg: 'rgba(5,150,105,0.06)', border: 'rgba(5,150,105,0.15)' },
+            { label: 'Pending Review', value: pendingCount, color: 'var(--color-warning)', bg: 'rgba(194,65,12,0.06)', border: 'rgba(194,65,12,0.15)' },
+            { label: 'Changes Sent', value: changesCount, color: 'var(--color-warning)', bg: 'rgba(180,83,9,0.06)', border: 'rgba(180,83,9,0.15)' },
+            { label: 'Approved This Month', value: approvedCount, color: 'var(--color-success)', bg: 'rgba(5,150,105,0.06)', border: 'rgba(5,150,105,0.15)' },
           ].map(stat => (
             <div
               key={stat.label}
@@ -519,9 +519,9 @@ export default function CampaignApprovalsPage() {
               className="px-4 py-2 rounded-xl font-semibold transition-all"
               style={{
                 fontSize: '13px',
-                background: filter === tab ? '#BA2027' : 'rgba(255,255,255,0.8)',
-                color: filter === tab ? '#fff' : '#6B7280',
-                border: filter === tab ? 'none' : '1px solid rgba(0,0,0,0.08)',
+                background: filter === tab ? 'var(--color-primary)' : 'var(--color-surface-raised)',
+                color: filter === tab ? '#fff' : 'var(--color-text-secondary)',
+                border: filter === tab ? 'none' : '1px solid var(--color-border)',
                 boxShadow: filter === tab ? '0 2px 8px rgba(186,32,39,0.25)' : 'none',
               }}
             >
@@ -538,10 +538,10 @@ export default function CampaignApprovalsPage() {
         {/* Submission list */}
         {filtered.length === 0 ? (
           <div className="rounded-2xl p-12 text-center"
-            style={{ background: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.5)' }}>
-            <Inbox className="w-12 h-12 text-[#D1D5DB] mx-auto mb-4" />
-            <p className="font-semibold text-[#374151]" style={{ fontSize: '16px' }}>No submissions here</p>
-            <p className="text-[#9CA3AF] mt-1" style={{ fontSize: '14px' }}>
+            style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--glass-border)' }}>
+            <Inbox className="w-12 h-12 text-[var(--color-border)] mx-auto mb-4" />
+            <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px' }}>No submissions here</p>
+            <p className="text-[var(--color-text-muted)] mt-1" style={{ fontSize: '14px' }}>
               {filter === 'All'
                 ? 'No campaign submissions have been made yet.'
                 : `No campaigns with status "${filter}".`}

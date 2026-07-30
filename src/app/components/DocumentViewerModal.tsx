@@ -19,11 +19,11 @@ export function DocumentViewerModal({ isOpen, onClose, document }: DocumentViewe
         className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 animate-fadeIn"
         onClick={onClose}
       />
-      <div className="fixed inset-4 md:inset-8 rounded-2xl shadow-2xl border z-50 flex flex-col animate-scaleIn bg-white border-gray-200">
+      <div className="fixed inset-4 md:inset-8 rounded-2xl shadow-2xl border z-50 flex flex-col animate-scaleIn bg-[var(--color-surface-raised)] border-gray-200">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
           <div className="flex items-center gap-3 flex-1 min-w-0">
-            <FileText className="w-5 h-5 flex-shrink-0 text-[#BA2027]" />
+            <FileText className="w-5 h-5 flex-shrink-0 text-[var(--color-primary)]" />
             <div className="min-w-0">
               <h3 className="text-sm font-semibold truncate text-gray-900">
                 {document.name}
@@ -68,7 +68,7 @@ export function DocumentViewerModal({ isOpen, onClose, document }: DocumentViewe
             {(document.type === 'SOW' || document.type === 'Contract') && (
               <button
                 onClick={() => toast.info('DocuSign integration coming soon')}
-                className="px-3 py-2 rounded-lg transition-all flex items-center gap-2 text-sm font-medium bg-[#BA2027] hover:bg-[#A01C22] text-white"
+                className="px-3 py-2 rounded-lg transition-all flex items-center gap-2 text-sm font-medium bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
                 title="Sign with DocuSign"
               >
                 <Pen className="w-4 h-4" />
@@ -87,7 +87,7 @@ export function DocumentViewerModal({ isOpen, onClose, document }: DocumentViewe
         {/* Document Preview */}
         <div className="flex-1 overflow-auto p-8 bg-gray-50">
           <div 
-            className="mx-auto shadow-2xl rounded-lg overflow-hidden bg-white"
+            className="mx-auto shadow-2xl rounded-lg overflow-hidden bg-[var(--color-surface-raised)]"
             style={{ 
               width: `${zoom}%`,
               maxWidth: '210mm',

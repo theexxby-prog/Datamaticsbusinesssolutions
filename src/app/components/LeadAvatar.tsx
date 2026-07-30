@@ -16,7 +16,7 @@ export function LeadAvatar({ firstName, lastName, size = 'md', className = '' }:
 
   return (
     <div 
-      className={`${sizeClasses[size]} rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center text-gray-700 dark:text-gray-300 font-medium ${className}`}
+      className={`${sizeClasses[size]} rounded-full bg-gray-200 flex items-center justify-center text-gray-700 font-medium ${className}`}
     >
       {initials}
     </div>

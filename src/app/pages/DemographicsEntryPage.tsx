@@ -20,10 +20,10 @@ const ALL = '__ALL__';
 
 const DIM_ICON: Record<DimensionKey, any> = { geo: Globe, industry: Building2, size: Users, title: IdCard };
 const DIM_CHIP: Record<DimensionKey, { bg: string; color: string }> = {
-  geo: { bg: '#EEF0FE', color: '#4F46E5' },
-  industry: { bg: '#E2F5F1', color: '#0F9488' },
-  size: { bg: '#FBE7EC', color: '#BE123C' },
-  title: { bg: '#FBF0DD', color: '#C2790B' },
+  geo: { bg: 'var(--color-accent-purple-bg)', color: 'var(--color-accent-purple)' },
+  industry: { bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+  size: { bg: 'var(--color-error-bg)', color: 'var(--color-error)' },
+  title: { bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
 };
 
 function pct(value: number, total: number) {
@@ -127,7 +127,7 @@ export default function DemographicsEntryPage() {
                 <select
                   value={clientId}
                   onChange={(e) => setClientId(e.target.value)}
-                  className="w-full appearance-none bg-white"
+                  className="w-full appearance-none bg-[var(--color-surface-raised)]"
                   style={{ padding: '10px 14px', fontSize: '14px', fontWeight: 500, color: 'var(--color-text-primary)', border: '1.5px solid var(--color-primary)', borderRadius: 'var(--radius-lg)' }}
                 >
                   {allClients.map((c) => (
@@ -205,7 +205,7 @@ export default function DemographicsEntryPage() {
         {/* Pacing */}
         <div className="glass-card p-5 mb-4">
           <h3 className="flex items-center gap-2 mb-3" style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-            <Target className="w-4 h-4 text-[#BA2027]" /> {isCombined ? 'Combined pacing' : 'This Month — Pacing'}
+            <Target className="w-4 h-4 text-[var(--color-primary)]" /> {isCombined ? 'Combined pacing' : 'This Month — Pacing'}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -234,7 +234,7 @@ export default function DemographicsEntryPage() {
               borderColor: consistent ? 'rgba(16,163,127,0.3)' : 'rgba(186,32,39,0.3)',
             }}
           >
-            {consistent ? <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5 text-green-600" /> : <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-[#BA2027]" />}
+            {consistent ? <CheckCircle2 className="w-5 h-5 flex-shrink-0 mt-0.5 text-green-600" /> : <AlertTriangle className="w-5 h-5 flex-shrink-0 mt-0.5 text-[var(--color-primary)]" />}
             <div className="text-[13px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
               {consistent ? (
                 <span>All four dimensions total <strong>{reference.toLocaleString()}</strong> leads — consistent and ready to save.</span>

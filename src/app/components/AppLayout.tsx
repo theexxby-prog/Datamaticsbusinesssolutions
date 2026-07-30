@@ -43,7 +43,7 @@ export function AppLayout({ children }: AppLayoutProps) {
         <div className="hidden sm:flex flex-col items-center justify-center py-3 gap-1 flex-shrink-0" style={{ borderTop: '1px solid var(--color-border-light)' }}>
           <div className="flex items-center gap-1.5">
             <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', letterSpacing: '0.02em' }}>Powered by</span>
-            <span style={{ fontSize: '11px', fontWeight: 700, color: '#BA2027', letterSpacing: '0.04em' }}>Datamatics</span>
+            <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-primary)', letterSpacing: '0.04em' }}>Datamatics</span>
             <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', letterSpacing: '0.02em' }}>Business Solutions</span>
           </div>
           <div className="flex items-center gap-2 flex-wrap justify-center">
@@ -53,7 +53,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <span style={{ fontSize: '10px', color: 'var(--color-border)' }}>·</span>
             <a
               href="mailto:support@datamaticsbpm.com?subject=Datamatics Business Solutions Client Portal"
-              style={{ fontSize: '10px', color: '#BA2027', opacity: 0.6, textDecoration: 'none' }}
+              style={{ fontSize: '10px', color: 'var(--color-primary)', opacity: 0.6, textDecoration: 'none' }}
               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
               onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}
             >

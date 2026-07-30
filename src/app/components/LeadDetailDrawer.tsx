@@ -15,10 +15,10 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
   if (!lead) return null;
 
   const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-[#0F9D58] bg-[#0F9D58]/10 border-[#0F9D58]/20';
-    if (score >= 75) return 'text-[#4285F4] bg-[#4285F4]/10 border-[#4285F4]/20';
-    if (score >= 60) return 'text-[#F4B400] bg-[#F4B400]/10 border-[#F4B400]/20';
-    return 'text-[#EA4335] bg-[#EA4335]/10 border-[#EA4335]/20';
+    if (score >= 90) return 'text-[var(--color-success)] bg-[var(--color-success)]/10 border-[var(--color-success)]/20';
+    if (score >= 75) return 'text-[var(--color-info)] bg-[var(--color-info)]/10 border-[var(--color-info)]/20';
+    if (score >= 60) return 'text-[var(--color-warning)] bg-[var(--color-warning)]/10 border-[var(--color-warning)]/20';
+    return 'text-[var(--color-error)] bg-[var(--color-error)]/10 border-[var(--color-error)]/20';
   };
 
   const getScoreLabel = (score: number) => {
@@ -58,10 +58,10 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
       <div
         className={`fixed top-0 right-0 h-full w-full sm:w-[90vw] md:w-[600px] lg:w-[700px] xl:max-w-2xl z-50 transform transition-transform duration-300 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
-        } bg-white shadow-2xl flex flex-col`}
+        } bg-[var(--color-surface-raised)] shadow-2xl flex flex-col`}
       >
         {/* Header */}
-        <div className="sticky top-0 z-10 px-4 py-4 md:px-6 border-b bg-white border-gray-200">
+        <div className="sticky top-0 z-10 px-4 py-4 md:px-6 border-b bg-[var(--color-surface-raised)] border-gray-200">
           <div className="flex items-start justify-between">
             <div className="flex-1">
               <h2 className="text-xl font-semibold text-gray-900">
@@ -103,9 +103,9 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
             <div className="mt-3 h-2 bg-black/10 rounded-full overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  lead.leadScore >= 90 ? 'bg-[#0F9D58]' :
-                  lead.leadScore >= 75 ? 'bg-[#4285F4]' :
-                  lead.leadScore >= 60 ? 'bg-[#F4B400]' : 'bg-[#EA4335]'
+                  lead.leadScore >= 90 ? 'bg-[var(--color-success)]' :
+                  lead.leadScore >= 75 ? 'bg-[var(--color-info)]' :
+                  lead.leadScore >= 60 ? 'bg-[var(--color-warning)]' : 'bg-[var(--color-error)]'
                 }`}
                 style={{ width: `${lead.leadScore}%` }}
               />
@@ -122,7 +122,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                 <Mail className="w-5 h-5 flex-shrink-0 text-gray-600" />
                 <div>
                   <div className="text-sm text-gray-600">Email</div>
-                  <a href={`mailto:${lead.email}`} className="text-sm font-medium text-[#BA2027] hover:text-[#A01C22] flex items-center gap-1">
+                  <a href={`mailto:${lead.email}`} className="text-sm font-medium text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] flex items-center gap-1">
                     {lead.email}
                     <ExternalLink className="w-3 h-3" />
                   </a>
@@ -211,8 +211,8 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
             <div className="space-y-4">
               {activityHistory.map((activity, index) => (
                 <div key={index} className="flex gap-3">
-                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[#BA2027]/10">
-                    <Clock className="w-4 h-4 text-[#BA2027]" />
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-[var(--color-primary)]/10">
+                    <Clock className="w-4 h-4 text-[var(--color-primary)]" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center justify-between mb-1">
@@ -242,7 +242,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
             </h3>
             <div className="space-y-4 mb-4">
               {notes.map((note, index) => (
-                <div key={index} className="p-4 rounded-lg bg-white border border-gray-100">
+                <div key={index} className="p-4 rounded-lg bg-[var(--color-surface-raised)] border border-gray-100">
                   <div className="flex items-center gap-2 mb-2">
                     <User className="w-4 h-4 text-gray-600" />
                     <span className="text-sm font-medium text-gray-900">
@@ -263,10 +263,10 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
             <div>
               <textarea
                 placeholder="Add a note..."
-                className="w-full px-4 py-3 rounded-lg border resize-none bg-white border-gray-200 text-gray-900 placeholder-gray-500 outline-none focus:border-[#BA2027] transition-colors"
+                className="w-full px-4 py-3 rounded-lg border resize-none bg-[var(--color-surface-raised)] border-gray-200 text-gray-900 placeholder-gray-500 outline-none focus:border-[var(--color-primary)] transition-colors"
                 rows={3}
               />
-              <button className="mt-3 px-4 py-2 bg-[#BA2027] hover:bg-[#A01C22] text-white rounded-lg transition-colors text-sm font-medium">
+              <button className="mt-3 px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white rounded-lg transition-colors text-sm font-medium">
                 Add Note
               </button>
             </div>
@@ -274,7 +274,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
         </div>
 
         {/* Sticky Action Bar */}
-        <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 flex gap-3">
+        <div className="sticky bottom-0 bg-[var(--color-surface-raised)] border-t border-gray-200 p-4 flex gap-3">
           {isTerminal ? (
             lead.status === 'Accepted' ? (
               <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 font-medium text-sm">

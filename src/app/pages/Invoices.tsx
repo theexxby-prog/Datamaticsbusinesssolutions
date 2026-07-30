@@ -32,13 +32,13 @@ function fmtDate(iso?: string) {
 }
 
 const stageChipStyles: Record<string, string> = {
-  draft: 'bg-[#F5F3FF] text-[#7C3AED]',
-  pending_validation: 'bg-[#FFF7ED] text-[#C2410C]',
-  approved: 'bg-[#EFF6FF] text-[#2563EB]',
-  sent: 'bg-[#FFFBEB] text-[#D97706]',
-  paid: 'bg-[#ECFDF5] text-[#059669]',
-  overdue: 'bg-[#FEF2F2] text-[#DC2626]',
-  void: 'bg-[#F3F4F6] text-[#6B7280]',
+  draft: 'bg-[var(--color-accent-purple-bg)] text-[var(--color-accent-purple)]',
+  pending_validation: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)]',
+  approved: 'bg-[var(--color-info-bg)] text-[var(--color-info)]',
+  sent: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)]',
+  paid: 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
+  overdue: 'bg-[var(--color-error-bg)] text-[var(--color-error)]',
+  void: 'bg-[var(--color-surface)] text-[var(--color-text-secondary)]',
 };
 
 // ─── Single invoice card ──────────────────────────────────────────────────────
@@ -95,11 +95,11 @@ function InvoiceCard({
           </p>
         </div>
         <div className="text-right flex-shrink-0">
-          <div style={{ fontSize: '20px', fontWeight: 700, color: isOverdue ? '#DC2626' : 'var(--color-text-primary)' }}>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: isOverdue ? 'var(--color-error)' : 'var(--color-text-primary)' }}>
             {formatUSD(invoice.total)}
           </div>
           {isPaid && invoice.payment?.paidAt && (
-            <div className="flex items-center gap-1 justify-end" style={{ fontSize: '11px', color: 'var(--color-success, #0F9D58)' }}>
+            <div className="flex items-center gap-1 justify-end" style={{ fontSize: '11px', color: 'var(--color-success, var(--color-success))' }}>
               <CheckCircle2 className="w-3 h-3" /> Paid {fmtDate(invoice.payment.paidAt)}
             </div>
           )}
@@ -118,7 +118,7 @@ function InvoiceCard({
         <IntegrationChip system="Tally · Invoice" status={invoice.tally.invoiceEntry} detail={invoice.tally.voucherId} error={invoice.tally.error} />
         <IntegrationChip system="Tally · Payment" status={invoice.tally.paymentEntry} />
         {isOverdue && (
-          <span className="inline-flex items-center gap-1" style={{ fontSize: '11px', fontWeight: 600, color: '#DC2626' }}>
+          <span className="inline-flex items-center gap-1" style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-error)' }}>
             <AlertCircle className="w-3.5 h-3.5" /> Past due — {fmtDate(invoice.dueDate)}
           </span>
         )}
@@ -224,8 +224,8 @@ function clientStatus(inv: InvoiceRecord): ClientStatus {
 const CLIENT_STATUS_META: Record<ClientStatus, { label: string; bg: string; color: string }> = {
   // 'due' here is the ageing statement's "Not Due" — issued, still within terms.
   due: { label: 'Not due', bg: 'rgba(100,116,139,0.12)', color: '#475569' },
-  overdue: { label: 'Due', bg: 'rgba(217,119,6,0.14)', color: '#B45309' },
-  paid: { label: 'Paid', bg: 'rgba(5,150,105,0.12)', color: '#065F46' },
+  overdue: { label: 'Due', bg: 'rgba(217,119,6,0.14)', color: 'var(--color-warning)' },
+  paid: { label: 'Paid', bg: 'rgba(5,150,105,0.12)', color: 'var(--color-badge-active-text)' },
 };
 
 /** Days since the invoice was issued — the ageing column on the AR statement. */
@@ -272,11 +272,11 @@ function ClientInvoiceCard({ invoice, busy, onPay, onView }: {
             {ageingDays(invoice.issueDate) !== null && <> · {ageingDays(invoice.issueDate)} days</>}
             {status === 'paid' && invoice.payment?.paidAt
               ? <> · Paid {fmtDate(invoice.payment.paidAt)}{invoice.payment.reference ? <span style={{ color: 'var(--color-text-muted)' }}> · Ref {invoice.payment.reference}</span> : null}</>
-              : invoice.dueDate ? <> · Due <strong style={{ color: status === 'overdue' ? '#DC2626' : 'var(--color-text-primary)' }}>{fmtDate(invoice.dueDate)}</strong></> : null}
+              : invoice.dueDate ? <> · Due <strong style={{ color: status === 'overdue' ? 'var(--color-error)' : 'var(--color-text-primary)' }}>{fmtDate(invoice.dueDate)}</strong></> : null}
           </p>
         </div>
         <div className="text-right flex-shrink-0">
-          <div style={{ fontSize: '22px', fontWeight: 700, color: status === 'overdue' ? '#DC2626' : 'var(--color-text-primary)' }}>
+          <div style={{ fontSize: '22px', fontWeight: 700, color: status === 'overdue' ? 'var(--color-error)' : 'var(--color-text-primary)' }}>
             {formatUSD(invoice.total)}
           </div>
           {status === 'paid' && (

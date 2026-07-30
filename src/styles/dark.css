@@ -41,6 +41,8 @@
   --color-error-bg: rgba(248, 113, 113, 0.15);
   --color-info: #60A5FA;
   --color-info-bg: rgba(96, 165, 250, 0.15);
+  --color-accent-purple: #A78BFA;
+  --color-accent-purple-bg: rgba(167, 139, 250, 0.15);
 
   --color-badge-active-bg: rgba(52, 211, 153, 0.16);
   --color-badge-active-text: #6EE7B7;
@@ -69,6 +71,52 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
 
   color-scheme: dark;
+
+  /* Tailwind's neutral ramp, mirrored.
+     Utilities compile to `color: var(--color-gray-700)`, so redefining the ramp
+     here flips every `text-gray-*` / `bg-gray-*` / `border-gray-*` in the app at
+     once — no class rewriting, and nothing can be missed. Step n takes the
+     lightness of step (950 - n), tinted to match our surfaces, so intent is
+     preserved: light-mode body text stays body text, a light surface stays a
+     surface. */
+  --color-gray-50:  #16131A;
+  --color-gray-100: #1C1922;
+  --color-gray-200: #272330;
+  --color-gray-300: #383341;
+  --color-gray-400: #6E6878;
+  --color-gray-500: #8B8490;
+  --color-gray-600: #A8A1B0;
+  --color-gray-700: #C9C3D0;
+  --color-gray-800: #E0DBE6;
+  --color-gray-900: #F2EFF4;
+  --color-gray-950: #FAF8FC;
+
+  /* KPI card tokens — the light values are a near-black number on a pale label. */
+  --kpi-number-color: #F2EFF4;
+  --kpi-label-color: #8B8490;
+  --kpi-sublabel-color: #8B8490;
+
+  /* The shadcn/Radix layer in theme.css has its own dark block, but on a
+     blue-tinted ground that reads as a different product next to our warm
+     surfaces. Re-point the ones that show, so both layers agree. */
+  --background: #100E13;
+  --background-muted: #17141A;
+  --card: #201D25;
+  --card-hover: #2A2631;
+  --popover: #201D25;
+  --sidebar: #17141A;
+  --foreground: #F2EFF4;
+  --card-foreground: #F2EFF4;
+  --popover-foreground: #F2EFF4;
+  --sidebar-foreground: #ABA4B0;
+  --muted-foreground: #8B8490;
+  --muted: rgba(255, 255, 255, 0.06);
+  --border: rgba(255, 255, 255, 0.11);
+  --input: rgba(255, 255, 255, 0.11);
+  --primary: #E5484D;
+  --primary-hover: #F16A6F;
+  --brand-red: #E5484D;
+  --brand-red-light: #F16A6F;
 }
 
 /* Make the page ground follow the theme even before app chrome mounts. */

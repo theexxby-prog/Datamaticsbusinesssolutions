@@ -33,6 +33,8 @@
 --color-error-bg: rgba(220, 38, 38, 0.10);
 --color-info: #2563EB;
 --color-info-bg: rgba(37, 99, 235, 0.10);
+--color-accent-purple: #7C3AED;
+--color-accent-purple-bg: rgba(124, 58, 237, 0.10);
 
 --color-badge-active-bg: rgba(5, 150, 105, 0.12);
 --color-badge-active-text: #065F46;
@@ -192,10 +194,10 @@
 
 /* KPI Cards - Strict standardized design */
 .kpi-card {
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--color-surface-raised);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
@@ -205,7 +207,7 @@
 .kpi-card__icon {
   width: 20px;
   height: 20px;
-  color: #9CA3AF;
+  color: var(--color-text-muted);
   margin-left: auto;
   flex-shrink: 0;
 }
@@ -213,7 +215,7 @@
 .kpi-card__number {
   font-size: 32px;
   font-weight: 700;
-  color: #1A1A1A;
+  color: var(--color-text-primary);
   letter-spacing: -0.03em;
   line-height: 1.2;
   margin-top: 12px;
@@ -223,23 +225,23 @@
 .kpi-card__label {
   font-size: 11px;
   font-weight: 600;
-  color: #9CA3AF;
+  color: var(--color-text-muted);
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 
 .kpi-card__sublabel {
   font-size: 12px;
-  color: #6B7280;
+  color: var(--color-text-secondary);
   margin-top: 4px;
 }
 
 /* Glass Cards */
 .glass-card {
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--color-surface-raised);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid var(--glass-border);
   border-radius: 20px;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
 }
@@ -273,12 +275,12 @@
 
 .badge-high-priority {
   background: var(--color-error-bg);
-  color: #991B1B;
+  color: var(--color-error);
 }
 
 .badge-info {
   background: var(--color-info-bg);
-  color: #1E40AF;
+  color: var(--color-info);
 }
 
 /* Buttons */
@@ -342,7 +344,7 @@
 
 /* Input Fields */
 .input-base {
-  background: white;
+  background: var(--color-surface-raised);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   font-size: var(--font-size-sm);
@@ -361,7 +363,7 @@
 .progress-bar {
   width: 100%;
   height: 6px;
-  background: #F3F4F6;
+  background: var(--color-surface);
   border-radius: 999px;
   overflow: hidden;
 }
@@ -375,7 +377,7 @@
 
 .progress-percentage {
   font-size: 13px;
-  color: #374151;
+  color: var(--color-text-primary);
   font-weight: 600;
 }
 
@@ -391,8 +393,8 @@ input[type="checkbox"] {
   min-height: 18px;
   max-width: 18px;
   max-height: 18px;
-  background: #FFFFFF;
-  border: 2px solid #D1D5DB;
+  background: var(--color-surface-raised);
+  border: 2px solid var(--color-border);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -402,7 +404,7 @@ input[type="checkbox"] {
 }
 
 input[type="checkbox"]:hover {
-  border-color: #9CA3AF;
+  border-color: var(--color-text-muted);
 }
 
 input[type="checkbox"]:checked {
@@ -432,28 +434,9 @@ input[type="checkbox"]:disabled {
   cursor: not-allowed;
 }
 
-/* ============================================
-   GLOBAL TEXT COLOR OVERRIDES
-   Force standardized colors across all text
-   ============================================ */
-
-/* Override all grey text colors to use standard secondary color */
-.text-gray-400, 
-.text-gray-500,
-.text-gray-600,
-[class*="text-[#4A4A4A]"],
-[class*="text-[#374151]"],
-[class*="text-[#64748B]"],
-[class*="text-[#94A3B8]"],
-[class*="text-[#9CA3AF]"],
-[class*="text-[#9E9E9E]"],
-[class*="text-[#757575]"] {
-  color: #6B7280 !important;
-}
-
-/* Ensure black text is truly black */
-[class*="text-[#1E1E1E]"],
-[class*="text-[#1A1A1A]"],
-[class*="text-[#1F2937]"] {
-  color: #000000 !important;
-}
+/* The global `!important` text-colour overrides that used to live here were a
+   pre-token workaround: they pinned greys to one secondary colour and forced
+   near-black text to pure black. Both fight the theme now — a hardcoded black
+   is invisible on a dark ground, and the selectors matched the very token
+   classes that replaced them. Text colour comes from the tokens, and
+   `.text-gray-*` flips with the mirrored ramp in dark.css. */

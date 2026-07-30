@@ -43,7 +43,7 @@ function PulseWave() {
       {WAVE_HEIGHTS.map((h, i) => (
         <span
           key={i}
-          className="animate-pulse-bar flex-1 rounded-[2.5px] bg-white"
+          className="animate-pulse-bar flex-1 rounded-[2.5px] bg-[var(--color-surface-raised)]"
           style={{
             // Floor the height so short bars stay bars instead of collapsing
             // into dots once the rounded caps meet.
@@ -184,7 +184,7 @@ export default function Login() {
           <ul className="mt-6 space-y-2.5">
             {CAPABILITIES.map((item) => (
               <li key={item} className="flex items-center gap-3 text-white/80 text-sm">
-                <span className="w-1 h-1 rounded-full bg-white/50 flex-shrink-0" />
+                <span className="w-1 h-1 rounded-full bg-[var(--color-surface-raised)] flex-shrink-0" />
                 <span>{item}</span>
               </li>
             ))}

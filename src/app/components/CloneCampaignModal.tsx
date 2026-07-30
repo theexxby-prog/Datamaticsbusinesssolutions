@@ -30,7 +30,7 @@ export function CloneCampaignModal({ isOpen, campaignName, onClose, onConfirm }:
             transition={{ type: 'spring', damping: 28, stiffness: 320 }}
             className="fixed inset-0 sm:inset-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 z-[101] flex flex-col sm:block sm:w-[480px] sm:rounded-2xl overflow-hidden"
             style={{
-              background: 'rgba(255,255,255,0.98)',
+              background: 'var(--color-surface-raised)',
               backdropFilter: 'blur(24px)',
               boxShadow: '0 32px 80px rgba(0,0,0,0.18)',
               border: '1px solid rgba(186,32,39,0.15)',
@@ -46,7 +46,7 @@ export function CloneCampaignModal({ isOpen, campaignName, onClose, onConfirm }:
                   className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
                   style={{ background: 'rgba(186,32,39,0.08)' }}
                 >
-                  <Copy className="w-4 h-4" style={{ color: '#BA2027' }} />
+                  <Copy className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
                 </div>
                 <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                   Clone this campaign?
@@ -67,7 +67,7 @@ export function CloneCampaignModal({ isOpen, campaignName, onClose, onConfirm }:
                 className="mt-4 p-4 rounded-xl flex items-start gap-3"
                 style={{ background: 'rgba(186,32,39,0.05)', border: '1px solid rgba(186,32,39,0.12)' }}
               >
-                <Copy className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#BA2027' }} />
+                <Copy className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
                 <div>
                   <p style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }} className="mb-1">
                     New campaign name

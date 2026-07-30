@@ -33,7 +33,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
       className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4"
       onClick={handleBackdropClick}
     >
-      <div className="bg-white/95 backdrop-blur-lg rounded-2xl w-full max-w-[800px] max-h-[90vh] overflow-y-auto shadow-2xl">
+      <div className="bg-[var(--color-surface-raised)] backdrop-blur-lg rounded-2xl w-full max-w-[800px] max-h-[90vh] overflow-y-auto shadow-2xl">
         {/* Header */}
         <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6 rounded-t-2xl relative">
           <button
@@ -204,7 +204,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
             </button>
             <button
               onClick={handleDownloadPDF}
-              className="bg-white hover:bg-gray-50 border-2 border-gray-300 text-gray-700 px-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
+              className="bg-[var(--color-surface-raised)] hover:bg-gray-50 border-2 border-gray-300 text-gray-700 px-6 py-4 rounded-xl font-semibold transition-all flex items-center justify-center gap-2"
             >
               <Download className="w-5 h-5" />
               Download PDF

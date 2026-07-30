@@ -329,9 +329,9 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
     </div>
   );
 
-  const inputCls = "w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#BA2027] focus:border-transparent outline-none transition-all";
-  const selectCls = "w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#BA2027] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-white";
-  const btnPrimary = "px-5 py-2.5 bg-[#BA2027] text-white rounded-xl hover:bg-[#9A1A21] active:bg-[#7A1419] transition-all font-semibold";
+  const inputCls = "w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all";
+  const selectCls = "w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-[var(--color-surface-raised)]";
+  const btnPrimary = "px-5 py-2.5 bg-[var(--color-primary)] text-white rounded-xl hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] transition-all font-semibold";
   const btnOutline = "px-5 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold";
 
   const maskedInput = (fieldKey: string, placeholder: string, label: string, required = false) => (
@@ -454,7 +454,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               Connect HubSpot via OAuth
             </button>
             {deliveryConfig.hubspotConnected && (
-              <div className="flex items-center gap-2" style={{ color: '#059669', fontSize: '13px', fontWeight: 600 }}>
+              <div className="flex items-center gap-2" style={{ color: 'var(--color-success)', fontSize: '13px', fontWeight: 600 }}>
                 <Wifi className="w-4 h-4" /> HubSpot connected successfully
               </div>
             )}
@@ -547,13 +547,13 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
 
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
+      <div className="bg-[var(--color-surface-raised)] rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="bg-gradient-to-r from-[#BA2027] to-[#BA2027]/80 px-6 py-4 flex items-center justify-between">
+        <div className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary)]/80 px-6 py-4 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-white">Submit New Campaign</h2>
           <button
             onClick={onClose}
-            className="text-white hover:bg-white/20 rounded-lg p-2 transition-colors"
+            className="text-white hover:bg-[var(--color-surface-raised)] rounded-lg p-2 transition-colors"
           >
             <X className="w-6 h-6" />
           </button>
@@ -566,7 +566,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               onClick={() => setActiveTab('manual')}
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
                 activeTab === 'manual'
-                  ? 'border-[#BA2027] text-[#BA2027]'
+                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -577,7 +577,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               onClick={() => setActiveTab('email')}
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
                 activeTab === 'email'
-                  ? 'border-[#BA2027] text-[#BA2027]'
+                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -588,7 +588,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               onClick={() => setActiveTab('parse')}
               className={`px-4 py-3 font-medium border-b-2 transition-colors ${
                 activeTab === 'parse'
-                  ? 'border-[#BA2027] text-[#BA2027]'
+                  ? 'border-[var(--color-primary)] text-[var(--color-primary)]'
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
@@ -611,7 +611,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent ${
+                  className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent ${
                     errors.name ? 'border-red-500' : 'border-gray-300'
                   }`}
                   placeholder="e.g., Channel Partner Demand Gen Q4 2026"
@@ -628,7 +628,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   <select
                     value={formData.type}
                     onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
                   >
                     {CAMPAIGN_TYPES.map(type => (
                       <option key={type} value={type}>{type}</option>
@@ -646,7 +646,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       type="number"
                       value={formData.cpl}
                       onChange={(e) => setFormData(prev => ({ ...prev, cpl: e.target.value }))}
-                      className={`w-full pl-8 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent ${
+                      className={`w-full pl-8 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent ${
                         errors.cpl ? 'border-red-500' : 'border-gray-300'
                       }`}
                       placeholder="45"
@@ -674,7 +674,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                           geography: e.target.value as 'US' | 'APAC' | 'EMEA',
                           locations: [] // Reset locations when changing geography
                         }))}
-                        className="w-4 h-4 text-[#BA2027] focus:ring-[#BA2027]"
+                        className="w-4 h-4 text-[var(--color-primary)] focus:ring-[var(--color-primary)]"
                       />
                       <span className="ml-2 text-gray-700">{geo}</span>
                     </label>
@@ -688,12 +688,12 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 <div className="border border-gray-300 rounded-lg p-3 max-h-44 overflow-y-auto bg-gray-50">
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5">
                     {getLocationOptions().map(location => (
-                      <label key={location} className="flex items-center cursor-pointer hover:bg-white px-2 py-1 rounded">
+                      <label key={location} className="flex items-center cursor-pointer hover:bg-[var(--color-surface-raised)] px-2 py-1 rounded">
                         <input
                           type="checkbox"
                           checked={formData.locations.includes(location)}
                           onChange={() => handleLocationToggle(location)}
-                          className={`w-4 h-4 rounded cursor-pointer transition-all appearance-none bg-white border-2 border-gray-300 hover:border-gray-400 checked:bg-[#BA2027] checked:border-[#BA2027] focus:ring-2 focus:ring-offset-0 focus:ring-[#BA2027]/50 relative`}
+                          className={`w-4 h-4 rounded cursor-pointer transition-all appearance-none bg-[var(--color-surface-raised)] border-2 border-gray-300 hover:border-gray-400 checked:bg-[var(--color-primary)] checked:border-[var(--color-primary)] focus:ring-2 focus:ring-offset-0 focus:ring-[var(--color-primary)]/50 relative`}
                           style={{
                             backgroundImage: formData.locations.includes(location)
                               ? `url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z'/%3E%3C/svg%3E\")`
@@ -725,7 +725,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     <select
                       value={formData.employeeSizeMin}
                       onChange={(e) => setFormData(prev => ({ ...prev, employeeSizeMin: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
                     >
                       {EMPLOYEE_SIZES.map(size => (
                         <option key={size} value={size}>{size}</option>
@@ -737,7 +737,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     <select
                       value={formData.employeeSizeMax}
                       onChange={(e) => setFormData(prev => ({ ...prev, employeeSizeMax: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
                     >
                       {EMPLOYEE_SIZES.map(size => (
                         <option key={size} value={size}>{size}</option>
@@ -759,7 +759,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       type="text"
                       value={formData.revenueSizeMin}
                       onChange={(e) => setFormData(prev => ({ ...prev, revenueSizeMin: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
                       placeholder="$10M"
                     />
                   </div>
@@ -769,7 +769,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       type="text"
                       value={formData.revenueSizeMax}
                       onChange={(e) => setFormData(prev => ({ ...prev, revenueSizeMax: e.target.value }))}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent"
+                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
                       placeholder="$500M"
                     />
                   </div>
@@ -787,7 +787,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     value={titleInput}
                     onChange={(e) => setTitleInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTitle())}
-                    className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent ${
+                    className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent ${
                       errors.titles ? 'border-red-500' : 'border-gray-300'
                     }`}
                     placeholder="Type title and press Enter"
@@ -795,7 +795,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   <button
                     type="button"
                     onClick={handleAddTitle}
-                    className="px-4 py-2 bg-[#BA2027] text-white rounded-lg hover:bg-[#BA2027]/90 transition-colors"
+                    className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors"
                   >
                     Add
                   </button>
@@ -818,7 +818,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                         className={`px-2.5 py-1 text-xs rounded-full border transition-colors ${
                           formData.titles.includes(title)
                             ? 'bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed'
-                            : 'bg-white text-gray-700 border-gray-300 hover:border-[#BA2027] hover:text-[#BA2027]'
+                            : 'bg-[var(--color-surface-raised)] text-gray-700 border-gray-300 hover:border-[var(--color-primary)] hover:text-[var(--color-primary)]'
                         }`}
                       >
                         {title}
@@ -833,13 +833,13 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     {formData.titles.map(title => (
                       <span
                         key={title}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#BA2027] text-white rounded-full text-xs"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--color-primary)] text-white rounded-full text-xs"
                       >
                         {title}
                         <button
                           type="button"
                           onClick={() => handleRemoveTitle(title)}
-                          className="hover:bg-white/20 rounded-full p-0.5"
+                          className="hover:bg-[var(--color-surface-raised)] rounded-full p-0.5"
                         >
                           <X className="w-3 h-3" />
                         </button>
@@ -855,7 +855,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Suppression List <span className="text-gray-400 font-normal text-xs">(Optional)</span>
                 </label>
-                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-[#BA2027] transition-colors">
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-[var(--color-primary)] transition-colors">
                   <Upload className="w-5 h-5 text-gray-400 mx-auto mb-1.5" />
                   <p className="text-xs text-gray-500 mb-2">Drag and drop your file here, or click to browse</p>
                   <input
@@ -867,7 +867,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   />
                   <label
                     htmlFor="suppression-upload"
-                    className="inline-block px-3 py-1.5 bg-white border border-gray-300 rounded-lg text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
+                    className="inline-block px-3 py-1.5 bg-[var(--color-surface-raised)] border border-gray-300 rounded-lg text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
                   >
                     Choose File
                   </label>
@@ -883,7 +883,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               {/* ── Lead Delivery Preferences — placed above Additional Requirements ── */}
               <div className="rounded-2xl overflow-hidden" style={{ border: '1.5px solid rgba(0,0,0,0.08)', boxShadow: '0 2px 12px rgba(0,0,0,0.05)' }}>
                 {/* Section header */}
-                <div className="px-5 py-3" style={{ background: 'linear-gradient(135deg, #fafafa 0%, #f3f4f6 100%)', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+                <div className="px-5 py-3" style={{ background: 'linear-gradient(135deg, var(--color-surface) 0%, var(--color-surface) 100%)', borderBottom: '1px solid var(--color-border)' }}>
                   <div className="flex items-center justify-between gap-3">
                     <div>
                       <h3 className="font-semibold text-gray-900" style={{ fontSize: '14px' }}>
@@ -895,13 +895,13 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     </div>
                     <div className="flex-shrink-0">
                       {isDeliveryConfigured() ? (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'rgba(5,150,105,0.10)', color: '#059669', fontSize: '12px', fontWeight: 600 }}>
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'rgba(5,150,105,0.10)', color: 'var(--color-success)', fontSize: '12px', fontWeight: 600 }}>
                           <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
                           Connected
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'rgba(186,32,39,0.08)', color: '#BA2027', fontSize: '12px', fontWeight: 600 }}>
-                          <span className="w-2 h-2 rounded-full bg-[#BA2027] inline-block" />
+                        <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'rgba(186,32,39,0.08)', color: 'var(--color-primary)', fontSize: '12px', fontWeight: 600 }}>
+                          <span className="w-2 h-2 rounded-full bg-[var(--color-primary)] inline-block" />
                           Not configured
                         </span>
                       )}
@@ -910,7 +910,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 </div>
 
                 {/* Section body */}
-                <div className="px-5 py-4 space-y-4 bg-white">
+                <div className="px-5 py-4 space-y-4 bg-[var(--color-surface-raised)]">
                   {/* Delivery method dropdown */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -925,7 +925,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                           setShowSecrets({});
                           if (e.target.value) setDeliveryError('');
                         }}
-                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[#BA2027] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-white ${deliveryError ? 'border-red-400 ring-1 ring-red-300' : 'border-gray-300'}`}
+                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-[var(--color-surface-raised)] ${deliveryError ? 'border-red-400 ring-1 ring-red-300' : 'border-gray-300'}`}
                       >
                         <option value="">Select a delivery method...</option>
                         {DELIVERY_METHODS.map(m => (
@@ -946,7 +946,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       style={{
                         animation: 'fadeInDelivery 0.22s ease-out',
                         background: 'rgba(249,250,251,0.9)',
-                        border: '1px solid rgba(0,0,0,0.07)',
+                        border: '1px solid var(--color-border)',
                         borderRadius: '14px',
                         padding: '16px',
                       }}
@@ -967,7 +967,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   value={formData.additionalInfo}
                   onChange={(e) => setFormData(prev => ({ ...prev, additionalInfo: e.target.value }))}
                   rows={3}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent"
                   placeholder="Any other specifications or requirements for this campaign..."
                 />
               </div>
@@ -978,7 +978,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
           {activeTab === 'email' && (
             <div className="space-y-6 py-8">
               <div className="text-center">
-                <Mail className="w-16 h-16 text-[#BA2027] mx-auto mb-4" />
+                <Mail className="w-16 h-16 text-[var(--color-primary)] mx-auto mb-4" />
                 <h3 className="text-xl font-semibold text-gray-900 mb-2">
                   Submit via Email
                 </h3>
@@ -996,11 +996,11 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     type="text"
                     value={personalizedEmail}
                     readOnly
-                    className="flex-1 px-4 py-3 bg-white border border-gray-300 rounded-lg font-mono text-sm"
+                    className="flex-1 px-4 py-3 bg-[var(--color-surface-raised)] border border-gray-300 rounded-lg font-mono text-sm"
                   />
                   <button
                     onClick={copyEmailToClipboard}
-                    className="px-4 py-3 bg-[#BA2027] text-white rounded-lg hover:bg-[#BA2027]/90 transition-colors flex items-center gap-2"
+                    className="px-4 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors flex items-center gap-2"
                   >
                     {emailCopied ? (
                       <>
@@ -1019,7 +1019,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
 
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
                 <h4 className="font-semibold text-blue-900 mb-3">Email Template Example:</h4>
-                <div className="bg-white rounded p-4 text-sm text-gray-700 space-y-2 border border-blue-100">
+                <div className="bg-[var(--color-surface-raised)] rounded p-4 text-sm text-gray-700 space-y-2 border border-blue-100">
                   <p><strong>Subject:</strong> New Campaign Request - [Your Campaign Name]</p>
                   <p><strong>Campaign Name:</strong> Channel Partner Demand Gen Q4 2026</p>
                   <p><strong>Geography:</strong> US (California, Texas, New York)</p>
@@ -1053,7 +1053,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     <p className="text-sm text-blue-700 mb-3">
                       Copy this sample email and paste it below to see how the parser works:
                     </p>
-                    <div className="bg-white rounded p-3 text-xs font-mono text-gray-700 space-y-1 border border-blue-100 max-h-40 overflow-y-auto">
+                    <div className="bg-[var(--color-surface-raised)] rounded p-3 text-xs font-mono text-gray-700 space-y-1 border border-blue-100 max-h-40 overflow-y-auto">
                       <p>Campaign Name: Enterprise Cloud Security Initiative 2026</p>
                       <p>Geography: EMEA</p>
                       <p>Countries: United Kingdom, Germany, France, Netherlands</p>
@@ -1091,7 +1091,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                       value={pastedEmail}
                       onChange={(e) => setPastedEmail(e.target.value)}
                       rows={12}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#BA2027] focus:border-transparent font-mono text-sm"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent font-mono text-sm"
                       placeholder="Paste your email content here. Include details like campaign name, geography, employee size, revenue, titles, CPL, campaign type, etc."
                     />
                   </div>
@@ -1099,7 +1099,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                   <button
                     onClick={parseEmailContent}
                     disabled={!pastedEmail.trim()}
-                    className="w-full px-6 py-3 bg-[#BA2027] text-white rounded-lg hover:bg-[#BA2027]/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <Sparkles className="w-5 h-5" />
                     Parse Email & Extract Campaign Details
@@ -1163,7 +1163,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                   <div className="flex gap-3">
                     <button
                       onClick={handleUseParsedData}
-                      className="flex-1 px-6 py-3 bg-[#BA2027] text-white rounded-lg hover:bg-[#BA2027]/90 transition-colors"
+                      className="flex-1 px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors"
                     >
                       Edit in Form
                     </button>
@@ -1201,7 +1201,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                 title={!isDeliveryConfigured() ? 'Please configure a lead delivery method first' : ''}
                 className={`px-6 py-2 rounded-lg transition-colors font-semibold ${
                   isDeliveryConfigured()
-                    ? 'bg-[#BA2027] text-white hover:bg-[#9A1A21] active:bg-[#7A1419] cursor-pointer'
+                    ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] cursor-pointer'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >

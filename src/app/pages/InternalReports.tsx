@@ -16,14 +16,14 @@ import type { ReportsPDFData } from '../utils/exportUtils';
 import { toast } from 'sonner';
 import { PersonAvatar } from '../components/PersonAvatar';
 
-const CHART_COLORS = ['#BA2027', '#D32F2F', '#E57373', '#0891B2', '#0F9D58', '#F4B400'];
+const CHART_COLORS = ['var(--color-primary)', 'var(--color-primary-light)', 'var(--color-error)', 'var(--color-info)', 'var(--color-success)', 'var(--color-warning)'];
 
 const TOOLTIP_STYLE = {
-  backgroundColor: '#FFFFFF',
-  border: '1px solid rgba(0,0,0,0.08)',
+  backgroundColor: 'var(--color-surface-raised)',
+  border: '1px solid var(--color-border)',
   borderRadius: '8px',
   fontSize: '12px',
-  color: '#1F2937',
+  color: 'var(--color-text-primary)',
   boxShadow: '0 4px 16px rgba(0,0,0,0.08)',
   padding: '8px',
 };
@@ -82,10 +82,10 @@ export default function InternalReports() {
   const totalClients = allClients.length;
 
   const metricConfig = {
-    leads: { label: 'Total Leads', color: '#BA2027', dataKey: 'leads' },
-    revenue: { label: 'Revenue', color: '#0891B2', dataKey: 'revenue' },
-    campaigns: { label: 'Campaigns', color: '#0F9D58', dataKey: 'campaigns' },
-    acceptance: { label: 'Acceptance Rate', color: '#F4B400', dataKey: 'acceptance' },
+    leads: { label: 'Total Leads', color: 'var(--color-primary)', dataKey: 'leads' },
+    revenue: { label: 'Revenue', color: 'var(--color-info)', dataKey: 'revenue' },
+    campaigns: { label: 'Campaigns', color: 'var(--color-success)', dataKey: 'campaigns' },
+    acceptance: { label: 'Acceptance Rate', color: 'var(--color-warning)', dataKey: 'acceptance' },
   };
 
   const isSaved = savedReports.includes('internal-report');
@@ -210,7 +210,7 @@ export default function InternalReports() {
           <div className="kpi-card animate-slideInUp">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(16, 185, 129, 0.1)' }}>
-                <CheckCircle className="w-5 h-5" style={{ color: '#10B981' }} />
+                <CheckCircle className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
               </div>
             </div>
             <div className="kpi-card__number">{avgAcceptance}%</div>
@@ -240,7 +240,7 @@ export default function InternalReports() {
               </p>
             </div>
             {/* Metric Toggle */}
-            <div className="flex items-center gap-2 p-1 rounded-lg" style={{ background: 'rgba(0,0,0,0.04)' }}>
+            <div className="flex items-center gap-2 p-1 rounded-lg" style={{ background: 'var(--color-surface)' }}>
               {(['leads', 'revenue', 'campaigns', 'acceptance'] as const).map((metric) => (
                 <button
                   key={metric}
@@ -249,7 +249,7 @@ export default function InternalReports() {
                   style={{
                     fontSize: '12px',
                     fontWeight: activeMetric === metric ? 600 : 400,
-                    background: activeMetric === metric ? '#BA2027' : 'transparent',
+                    background: activeMetric === metric ? 'var(--color-primary)' : 'transparent',
                     color: activeMetric === metric ? 'white' : 'var(--color-text-secondary)',
                   }}
                 >
@@ -266,15 +266,15 @@ export default function InternalReports() {
                   <stop offset="95%" stopColor={metricConfig[activeMetric].color} stopOpacity={0} />
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="0" stroke="#F5F5F5" vertical={false} />
+              <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
               <XAxis
                 dataKey="month"
-                style={{ fontSize: 11, fill: '#9CA3AF' }}
+                style={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
                 stroke="none"
                 tickLine={false}
               />
               <YAxis
-                style={{ fontSize: 11, fill: '#9CA3AF' }}
+                style={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
                 stroke="none"
                 tickLine={false}
                 tickFormatter={(v) => activeMetric === 'revenue' ? `$${(v / 1000).toFixed(0)}K` : String(v)}
@@ -309,15 +309,15 @@ export default function InternalReports() {
           <ChartCard title="Monthly Revenue">
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={monthlyData} barCategoryGap="25%">
-                <CartesianGrid strokeDasharray="0" stroke="#F5F5F5" vertical={false} />
+                <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
                 <XAxis
                   dataKey="month"
-                  style={{ fontSize: 11, fill: '#9CA3AF' }}
+                  style={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
                   stroke="none"
                   tickLine={false}
                 />
                 <YAxis
-                  style={{ fontSize: 11, fill: '#9CA3AF' }}
+                  style={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
                   stroke="none"
                   tickLine={false}
                   tickFormatter={(v) => `$${(v / 1000).toFixed(0)}K`}
@@ -340,16 +340,16 @@ export default function InternalReports() {
           <ChartCard title="Acceptance Rate Trend">
             <ResponsiveContainer width="100%" height={220}>
               <LineChart data={monthlyData}>
-                <CartesianGrid strokeDasharray="0" stroke="#F5F5F5" vertical={false} />
+                <CartesianGrid strokeDasharray="0" stroke="var(--color-surface)" vertical={false} />
                 <XAxis
                   dataKey="month"
-                  style={{ fontSize: 11, fill: '#9CA3AF' }}
+                  style={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
                   stroke="none"
                   tickLine={false}
                 />
                 <YAxis
                   domain={[80, 100]}
-                  style={{ fontSize: 11, fill: '#9CA3AF' }}
+                  style={{ fontSize: 11, fill: 'var(--color-text-muted)' }}
                   stroke="none"
                   tickLine={false}
                   tickFormatter={(v) => `${v}%`}
@@ -361,9 +361,9 @@ export default function InternalReports() {
                 <Line
                   type="monotone"
                   dataKey="acceptance"
-                  stroke="#0891B2"
+                  stroke="var(--color-info)"
                   strokeWidth={2.5}
-                  dot={{ fill: '#0891B2', r: 4, strokeWidth: 0 }}
+                  dot={{ fill: 'var(--color-info)', r: 4, strokeWidth: 0 }}
                   activeDot={{ r: 6, strokeWidth: 0 }}
                 />
               </LineChart>
@@ -427,7 +427,7 @@ export default function InternalReports() {
                   outerRadius={70}
                   label={({ value }) => value > 0 ? value : ''}
                 >
-                  {['#0891B2', '#0F9D58', '#F4B400'].map((color, index) => (
+                  {['var(--color-info)', 'var(--color-success)', 'var(--color-warning)'].map((color, index) => (
                     <Cell key={`cell-${index}`} fill={color} />
                   ))}
                 </Pie>

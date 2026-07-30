@@ -164,9 +164,9 @@ export function LeadUploadModal({
                   <div
                     className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                       i === visualStepIndex
-                        ? 'bg-[#BA2027] text-white'
+                        ? 'bg-[var(--color-primary)] text-white'
                         : i < visualStepIndex
-                        ? 'bg-[#0F9D58] text-white'
+                        ? 'bg-[var(--color-success)] text-white'
                         : 'bg-muted text-muted-foreground'
                     }`}
                   >
@@ -176,9 +176,9 @@ export function LeadUploadModal({
                     className="text-xs"
                     style={{
                       color: i === visualStepIndex
-                        ? '#BA2027'
+                        ? 'var(--color-primary)'
                         : i < visualStepIndex
-                        ? '#0F9D58'
+                        ? 'var(--color-success)'
                         : 'var(--color-text-muted)',
                       fontWeight: i === visualStepIndex ? 600 : 400,
                     }}
@@ -188,7 +188,7 @@ export function LeadUploadModal({
                 </div>
                 {i < visualSteps.length - 1 && (
                   <div
-                    className={`w-10 h-0.5 mx-1 mb-4 ${i < visualStepIndex ? 'bg-[#0F9D58]' : 'bg-muted'}`}
+                    className={`w-10 h-0.5 mx-1 mb-4 ${i < visualStepIndex ? 'bg-[var(--color-success)]' : 'bg-muted'}`}
                   />
                 )}
               </div>
@@ -216,7 +216,7 @@ export function LeadUploadModal({
                 {/* Client selector — locked if clientId was passed in */}
                 <div>
                   <label className="block text-sm font-semibold text-foreground mb-2">
-                    <Building2 className="inline w-4 h-4 mr-1.5 mb-0.5" style={{ color: '#BA2027' }} />
+                    <Building2 className="inline w-4 h-4 mr-1.5 mb-0.5" style={{ color: 'var(--color-primary)' }} />
                     Company
                   </label>
                   {clientId ? (
@@ -237,7 +237,7 @@ export function LeadUploadModal({
                           setInternalCampaignId(''); // reset campaign when client changes
                         }}
                         className="w-full px-4 py-3 text-sm bg-input-background border border-border rounded-lg appearance-none pr-10 focus:outline-none focus:ring-2"
-                        style={{ '--tw-ring-color': '#BA2027' } as React.CSSProperties}
+                        style={{ '--tw-ring-color': 'var(--color-primary)' } as React.CSSProperties}
                       >
                         <option value="">— Select a company —</option>
                         {allClients.map(c => (
@@ -252,7 +252,7 @@ export function LeadUploadModal({
                 {/* Campaign selector */}
                 <div>
                   <label className="block text-sm font-semibold text-foreground mb-2">
-                    <Target className="inline w-4 h-4 mr-1.5 mb-0.5" style={{ color: '#BA2027' }} />
+                    <Target className="inline w-4 h-4 mr-1.5 mb-0.5" style={{ color: 'var(--color-primary)' }} />
                     Campaign
                   </label>
                   <div className="relative">
@@ -261,7 +261,7 @@ export function LeadUploadModal({
                       onChange={e => setInternalCampaignId(e.target.value)}
                       disabled={!resolvedClientId}
                       className="w-full px-4 py-3 text-sm bg-input-background border border-border rounded-lg appearance-none pr-10 focus:outline-none focus:ring-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                      style={{ '--tw-ring-color': '#BA2027' } as React.CSSProperties}
+                      style={{ '--tw-ring-color': 'var(--color-primary)' } as React.CSSProperties}
                     >
                       <option value="">
                         {resolvedClientId ? '— Select a campaign —' : '— Select a company first —'}
@@ -287,7 +287,7 @@ export function LeadUploadModal({
                     className="p-4 rounded-lg border flex items-center gap-3"
                     style={{ borderColor: 'rgba(186,32,39,0.2)', background: 'rgba(186,32,39,0.04)' }}
                   >
-                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: '#0F9D58' }} />
+                    <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
                     <div>
                       <p className="text-sm font-semibold text-foreground">
                         {resolvedClient?.companyName}
@@ -326,14 +326,14 @@ export function LeadUploadModal({
                   className="flex items-center gap-3 px-4 py-3 rounded-lg border"
                   style={{ borderColor: 'rgba(186,32,39,0.2)', background: 'rgba(186,32,39,0.04)' }}
                 >
-                  <Target className="w-4 h-4 flex-shrink-0" style={{ color: '#BA2027' }} />
+                  <Target className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
                   <div className="flex-1 min-w-0">
                     <span className="text-xs text-muted-foreground">Uploading to: </span>
                     <span className="text-sm font-semibold text-foreground">
                       {displayClientName}
                     </span>
                     <span className="text-xs text-muted-foreground mx-1">·</span>
-                    <span className="text-sm font-semibold" style={{ color: '#BA2027' }}>
+                    <span className="text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>
                       {displayCampaignName}
                     </span>
                   </div>
@@ -353,8 +353,8 @@ export function LeadUploadModal({
                   onDrop={handleDrop}
                   className={`border-2 border-dashed rounded-lg p-12 text-center transition-all ${
                     isDragOver
-                      ? 'border-[#BA2027] bg-[#BA2027]/5'
-                      : 'border-border hover:border-[#BA2027]/50 hover:bg-muted/30'
+                      ? 'border-[var(--color-primary)] bg-[var(--color-primary)]/5'
+                      : 'border-border hover:border-[var(--color-primary)]/50 hover:bg-muted/30'
                   }`}
                 >
                   <div className="flex flex-col items-center gap-4">
@@ -401,10 +401,10 @@ export function LeadUploadModal({
                   className="flex items-center gap-3 px-4 py-3 rounded-lg border"
                   style={{ borderColor: 'rgba(186,32,39,0.2)', background: 'rgba(186,32,39,0.04)' }}
                 >
-                  <Target className="w-4 h-4 flex-shrink-0" style={{ color: '#BA2027' }} />
+                  <Target className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
                   <span className="text-sm font-semibold text-foreground">{displayClientName}</span>
                   <span className="text-xs text-muted-foreground">·</span>
-                  <span className="text-sm font-semibold" style={{ color: '#BA2027' }}>{displayCampaignName}</span>
+                  <span className="text-sm font-semibold" style={{ color: 'var(--color-primary)' }}>{displayCampaignName}</span>
                 </div>
 
                 <div className="flex items-center gap-3 p-4 bg-muted/30 rounded-lg border border-border">
@@ -510,8 +510,8 @@ export function LeadUploadModal({
                   transition={{ type: 'spring', stiffness: 200, damping: 15 }}
                   className="inline-flex"
                 >
-                  <div className="w-20 h-20 rounded-full bg-[#0F9D58]/10 flex items-center justify-center">
-                    <CheckCircle2 className="w-12 h-12 text-[#0F9D58]" />
+                  <div className="w-20 h-20 rounded-full bg-[var(--color-success)]/10 flex items-center justify-center">
+                    <CheckCircle2 className="w-12 h-12 text-[var(--color-success)]" />
                   </div>
                 </motion.div>
 
@@ -523,7 +523,7 @@ export function LeadUploadModal({
                     {displayCampaignName && (
                       <>
                         {' '}·{' '}
-                        <span className="font-semibold" style={{ color: '#BA2027' }}>{displayCampaignName}</span>
+                        <span className="font-semibold" style={{ color: 'var(--color-primary)' }}>{displayCampaignName}</span>
                       </>
                     )}
                   </p>

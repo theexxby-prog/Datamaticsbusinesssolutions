@@ -47,7 +47,7 @@ export const UnifiedKpiCard = memo(function UnifiedKpiCard({
         transition: { duration: 0.2 }
       }}
       whileTap={{ scale: 0.98 }}
-      className="rounded-xl p-5 border flex flex-col gap-3 cursor-default bg-gradient-to-br from-white to-gray-50/50 border-[#BA2027]/10 shadow-lg hover:shadow-2xl"
+      className="rounded-xl p-5 border flex flex-col gap-3 cursor-default bg-gradient-to-br from-white to-gray-50/50 border-[var(--color-primary)]/10 shadow-lg hover:shadow-2xl"
     >
       <div className="flex items-center justify-between">
         <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-lg ${iconBg}`}>
@@ -55,9 +55,9 @@ export const UnifiedKpiCard = memo(function UnifiedKpiCard({
         </div>
         
         {trend === 'live' ? (
-          <span className="flex items-center gap-1.5 text-sm font-medium text-[#0F9D58]">
+          <span className="flex items-center gap-1.5 text-sm font-medium text-[var(--color-success)]">
             <motion.span 
-              className="w-2.5 h-2.5 rounded-full bg-[#0F9D58]"
+              className="w-2.5 h-2.5 rounded-full bg-[var(--color-success)]"
               animate={{ opacity: [1, 0.3, 1] }}
               transition={{ duration: 2, repeat: Infinity }}
             />
@@ -65,7 +65,7 @@ export const UnifiedKpiCard = memo(function UnifiedKpiCard({
           </span>
         ) : trend !== 'none' ? (
           <span className={`flex items-center gap-1.5 text-base font-bold ${
-            isPositive ? 'text-[#0F9D58]' : 'text-[#EA4335]'
+            isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
           }`}>
             {isPositive ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
             {Math.abs(trendValue)}%
@@ -74,7 +74,7 @@ export const UnifiedKpiCard = memo(function UnifiedKpiCard({
       </div>
 
       <div>
-        <div className="text-3xl font-bold tracking-tight leading-none text-[#1E1E1E]">
+        <div className="text-3xl font-bold tracking-tight leading-none text-[var(--color-text-primary)]">
           {typeof value === 'string' && value.includes('$') ? (
             <>
               $<AnimatedCounter end={numericValue} duration={2000} />
@@ -91,13 +91,13 @@ export const UnifiedKpiCard = memo(function UnifiedKpiCard({
             value
           )}
         </div>
-        <div className="text-sm font-medium mt-2 text-[#64748B]">
+        <div className="text-sm font-medium mt-2 text-[var(--color-text-secondary)]">
           {label}
         </div>
       </div>
 
       {footer && (
-        <div className="text-xs pt-3 border-t text-[#94A3B8] border-gray-200">
+        <div className="text-xs pt-3 border-t text-[var(--color-text-muted)] border-gray-200">
           {footer}
         </div>
       )}

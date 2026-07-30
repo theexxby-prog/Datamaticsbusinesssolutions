@@ -40,9 +40,9 @@ type ExtendedMember = TeamMemberRecord;
 
 function RoleBadge({ role }: { role: string }) {
   const styles: Record<string, React.CSSProperties> = {
-    'Campaign Manager':  { background: 'rgba(37,99,235,0.08)',  color: '#2563EB', border: '1px solid rgba(37,99,235,0.2)'  },
-    'Campaign Backup':   { background: 'rgba(124,58,237,0.08)', color: '#7C3AED', border: '1px solid rgba(124,58,237,0.2)' },
-    'Operations Manager':{ background: 'rgba(186,32,39,0.08)',  color: '#BA2027', border: '1px solid rgba(186,32,39,0.2)'  },
+    'Campaign Manager':  { background: 'rgba(37,99,235,0.08)',  color: 'var(--color-info)', border: '1px solid rgba(37,99,235,0.2)'  },
+    'Campaign Backup':   { background: 'rgba(124,58,237,0.08)', color: 'var(--color-accent-purple)', border: '1px solid rgba(124,58,237,0.2)' },
+    'Operations Manager':{ background: 'rgba(186,32,39,0.08)',  color: 'var(--color-primary)', border: '1px solid rgba(186,32,39,0.2)'  },
   };
   return (
     <span
@@ -55,7 +55,7 @@ function RoleBadge({ role }: { role: string }) {
 }
 
 function StatusDot({ status }: { status: string }) {
-  const colour = status === 'Active' ? '#10B981' : status === 'Inactive' ? '#9CA3AF' : '#F59E0B';
+  const colour = status === 'Active' ? 'var(--color-success)' : status === 'Inactive' ? 'var(--color-text-muted)' : 'var(--color-warning)';
   return (
     <span className="inline-flex items-center gap-1.5" style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
       <span className="w-1.5 h-1.5 rounded-full" style={{ background: colour, display: 'inline-block' }} />
@@ -99,7 +99,7 @@ function ActionMenu({ member, isSelf, onAction }: ActionMenuProps) {
       label:  isInactive ? 'Reactivate Member' : 'Deactivate Member',
       icon:   isInactive ? <RefreshCw className="w-4 h-4" /> : <PowerOff className="w-4 h-4" />,
       show:   !isSelf,
-      colour: isInactive ? '#059669' : '#DC2626',
+      colour: isInactive ? 'var(--color-success)' : 'var(--color-error)',
     },
   ].filter(i => i.show);
 
@@ -293,10 +293,10 @@ export default function TeamManagementPage() {
   const activeMembers = members.filter(m => (m.status as string) !== 'Inactive');
 
   const stats = [
-    { label: 'Team Members',  value: members.length,                                                   icon: <Users className="w-5 h-5" />,    colour: '#2563EB', bg: 'rgba(37,99,235,0.08)'   },
-    { label: 'Managers',       value: activeMembers.filter(m => m.role === 'Campaign Manager').length,  icon: <BarChart3 className="w-5 h-5" />, colour: '#059669', bg: 'rgba(5,150,105,0.08)'   },
-    { label: 'Backups',        value: activeMembers.filter(m => m.role === 'Campaign Backup').length,   icon: <Shield className="w-5 h-5" />,    colour: '#BA2027', bg: 'rgba(186,32,39,0.08)'   },
-    { label: 'Ops',            value: activeMembers.filter(m => m.role === 'Operations Manager').length,icon: <Settings className="w-5 h-5" />,  colour: '#D97706', bg: 'rgba(217,119,6,0.08)'   },
+    { label: 'Team Members',  value: members.length,                                                   icon: <Users className="w-5 h-5" />,    colour: 'var(--color-info)', bg: 'rgba(37,99,235,0.08)'   },
+    { label: 'Managers',       value: activeMembers.filter(m => m.role === 'Campaign Manager').length,  icon: <BarChart3 className="w-5 h-5" />, colour: 'var(--color-success)', bg: 'rgba(5,150,105,0.08)'   },
+    { label: 'Backups',        value: activeMembers.filter(m => m.role === 'Campaign Backup').length,   icon: <Shield className="w-5 h-5" />,    colour: 'var(--color-primary)', bg: 'rgba(186,32,39,0.08)'   },
+    { label: 'Ops',            value: activeMembers.filter(m => m.role === 'Operations Manager').length,icon: <Settings className="w-5 h-5" />,  colour: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)'   },
   ];
 
   // ── Quick coverage health (for banner cue) ──────────────────────────────────
@@ -357,11 +357,11 @@ export default function TeamManagementPage() {
                 onClick={() => openModal('coverage')}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl relative"
                 style={{
-                  background: uncoveredClients.length > 0 ? '#DC2626' : 'rgba(186,32,39,0.08)',
+                  background: uncoveredClients.length > 0 ? 'var(--color-error)' : 'rgba(186,32,39,0.08)',
                   color:      uncoveredClients.length > 0 ? '#fff'    : 'var(--color-primary)',
                   fontWeight: 600,
                   fontSize:   '14px',
-                  border:     `1.5px solid ${uncoveredClients.length > 0 ? '#DC2626' : 'rgba(186,32,39,0.2)'}`,
+                  border:     `1.5px solid ${uncoveredClients.length > 0 ? 'var(--color-error)' : 'rgba(186,32,39,0.2)'}`,
                   cursor:     'pointer',
                 }}
               >
@@ -372,7 +372,7 @@ export default function TeamManagementPage() {
                     animate={{ scale: [1, 1.15, 1] }}
                     transition={{ repeat: Infinity, duration: 1.8 }}
                     className="ml-1 inline-flex items-center justify-center w-5 h-5 rounded-full"
-                    style={{ background: 'rgba(255,255,255,0.25)', fontSize: '11px', fontWeight: 800 }}
+                    style={{ background: 'var(--color-surface-raised)', fontSize: '11px', fontWeight: 800 }}
                   >
                     {uncoveredClients.length}
                   </motion.span>
@@ -432,9 +432,9 @@ export default function TeamManagementPage() {
               onClick={() => openModal('coverage')}
             >
               <motion.div animate={{ scale: [1, 1.2, 1] }} transition={{ repeat: Infinity, duration: 1.5 }}>
-                <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#DC2626' }} />
+                <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-error)' }} />
               </motion.div>
-              <span style={{ fontSize: '13px', color: '#DC2626' }}>
+              <span style={{ fontSize: '13px', color: 'var(--color-error)' }}>
                 <strong>{uncoveredClients.length} client{uncoveredClients.length !== 1 ? 's' : ''}</strong> {uncoveredClients.length !== 1 ? 'have' : 'has'} no backup coverage —{' '}
                 <span style={{ textDecoration: 'underline', fontWeight: 600 }}>open Coverage Manager to fix</span>
               </span>
@@ -444,8 +444,8 @@ export default function TeamManagementPage() {
 
         {members.some(m => (m.status as string) === 'Inactive') && (
           <div className="flex items-center gap-2 mb-4 px-4 py-3 rounded-xl" style={{ background: 'rgba(217,119,6,0.05)', border: '1px solid rgba(217,119,6,0.2)' }}>
-            <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: '#D97706' }} />
-            <span style={{ fontSize: '13px', color: '#D97706' }}>
+            <AlertCircle className="w-4 h-4 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
+            <span style={{ fontSize: '13px', color: 'var(--color-warning)' }}>
               {members.filter(m => (m.status as string) === 'Inactive').length} inactive member(s) — review client assignments.
             </span>
           </div>
@@ -461,7 +461,7 @@ export default function TeamManagementPage() {
         >
           <div className="overflow-x-auto">
             <table className="w-full min-w-[820px]">
-              <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'rgba(0,0,0,0.02)' }}>
+              <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
                 <tr>
                   <SortTh field="name" label="Name" />
                   <PlainTh label="Contact" />
@@ -485,7 +485,7 @@ export default function TeamManagementPage() {
                           <div className="relative">
                             <PersonAvatar name={member.name} size={42} />
                             {isInactive && (
-                              <div className="absolute inset-0 rounded-xl" style={{ background: 'rgba(255,255,255,0.5)' }} />
+                              <div className="absolute inset-0 rounded-xl" style={{ background: 'var(--color-surface-raised)' }} />
                             )}
                           </div>
                           <div>
@@ -589,7 +589,7 @@ export default function TeamManagementPage() {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full min-w-[600px]">
-              <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'rgba(0,0,0,0.02)' }}>
+              <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
                 <tr>
                   {['Client', 'Industry', 'Campaign Manager', 'Backup', 'Coverage', 'Active Campaigns'].map(h => (
                     <th key={h} className="text-left px-6 py-3" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
@@ -616,7 +616,7 @@ export default function TeamManagementPage() {
                       <td className="px-6 py-3.5">
                         <div className="flex items-center gap-2">
                           {noBackup ? (
-                            <span className="flex items-center gap-1.5" style={{ fontSize: '13px', color: '#DC2626', fontWeight: 600 }}>
+                            <span className="flex items-center gap-1.5" style={{ fontSize: '13px', color: 'var(--color-error)', fontWeight: 600 }}>
                               <AlertCircle className="w-3.5 h-3.5" /> No backup
                             </span>
                           ) : (
@@ -629,11 +629,11 @@ export default function TeamManagementPage() {
                       </td>
                       <td className="px-6 py-3.5">
                         {noBackup ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: '#DC2626', border: '1px solid rgba(220,38,38,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             Unprotected
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: '#059669', border: '1px solid rgba(16,185,129,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: 'var(--color-success)', border: '1px solid rgba(16,185,129,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                             Covered
                           </span>
                         )}

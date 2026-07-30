@@ -260,13 +260,13 @@ export default function LeadsPage() {
       icon: <FileText className="w-5 h-5 text-white" />,
       label: 'Import CSV',
       onClick: () => toast.info('CSV import coming soon'),
-      color: '#4285F4'
+      color: 'var(--color-info)'
     },
     {
       icon: <Download className="w-5 h-5 text-white" />,
       label: 'Export my leads',
       onClick: handleExportLeads,
-      color: '#1E3A5F'
+      color: 'var(--color-info)'
     }
   ];
 

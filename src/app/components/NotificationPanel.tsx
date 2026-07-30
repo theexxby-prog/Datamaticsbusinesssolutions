@@ -57,11 +57,11 @@ function NotificationItem({
     >
       <div
         className="mt-1.5 flex-shrink-0 w-2 h-2 rounded-full"
-        style={{ background: notif.read ? 'transparent' : '#BA2027' }}
+        style={{ background: notif.read ? 'transparent' : 'var(--color-primary)' }}
       />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span style={{ fontSize: '11px', fontWeight: 700, color: '#BA2027' }}>
+          <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-primary)' }}>
             {eventLabel(notif.event)}
           </span>
         </div>
@@ -70,7 +70,7 @@ function NotificationItem({
         </p>
         <div className="flex items-center justify-between gap-2">
           <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{timeAgo(notif.timestamp)}</span>
-          <span className="flex items-center gap-0.5" style={{ fontSize: '11px', color: '#BA2027', fontWeight: 600 }}>
+          <span className="flex items-center gap-0.5" style={{ fontSize: '11px', color: 'var(--color-primary)', fontWeight: 600 }}>
             View <ChevronRight className="w-3 h-3" />
           </span>
         </div>
@@ -89,7 +89,7 @@ export function NotificationBell() {
       {unreadCount > 0 && (
         <span
           className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center"
-          style={{ background: '#BA2027', fontSize: '10px', fontWeight: 700, color: '#fff' }}
+          style={{ background: 'var(--color-primary)', fontSize: '10px', fontWeight: 700, color: '#fff' }}
         >
           {unreadCount > 9 ? '9+' : unreadCount}
         </span>
@@ -177,10 +177,10 @@ export function NotificationPanel({
               style={{ borderBottom: '1px solid var(--color-border)' }}
             >
               <div className="flex items-center gap-2">
-                <Bell className="w-5 h-5" style={{ color: '#BA2027' }} />
+                <Bell className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
                 <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--color-text-primary)' }}>Notifications</span>
                 {unreadCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-white" style={{ background: '#BA2027', fontSize: '12px', fontWeight: 700 }}>
+                  <span className="px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--color-primary)', fontSize: '12px', fontWeight: 700 }}>
                     {unreadCount}
                   </span>
                 )}
@@ -244,7 +244,7 @@ export function NotificationPanel({
               top: pos.top,
               left: pos.left,
               zIndex: 499,
-              background: 'rgba(255,255,255,0.98)',
+              background: 'var(--color-surface-raised)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
               border: '1px solid var(--color-border)',
@@ -257,14 +257,14 @@ export function NotificationPanel({
               style={{ borderBottom: '1px solid var(--color-border)' }}
             >
               <div className="flex items-center gap-2">
-                <Bell className="w-4 h-4" style={{ color: '#BA2027' }} />
+                <Bell className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
                 <span style={{ fontWeight: 700, fontSize: '14px', color: 'var(--color-text-primary)' }}>
                   Notifications
                 </span>
                 {unreadCount > 0 && (
                   <span
                     className="px-1.5 py-0.5 rounded-full text-white"
-                    style={{ background: '#BA2027', fontSize: '11px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary)', fontSize: '11px', fontWeight: 700 }}
                   >
                     {unreadCount}
                   </span>

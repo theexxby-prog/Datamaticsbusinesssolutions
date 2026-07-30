@@ -84,7 +84,7 @@ export function BatchUpload({ campaignKey, onMerge }: Props) {
     <div className="glass-card p-4 mb-4" style={{ border: '1px dashed var(--color-border)' }}>
       <div className="flex items-start justify-between gap-3 flex-wrap">
         <div className="flex items-start gap-3">
-          <span className="flex items-center justify-center rounded-lg flex-shrink-0" style={{ width: 36, height: 36, background: '#EEF0FE', color: '#4F46E5' }}>
+          <span className="flex items-center justify-center rounded-lg flex-shrink-0" style={{ width: 36, height: 36, background: 'var(--color-accent-purple-bg)', color: 'var(--color-accent-purple)' }}>
             <Sparkles className="w-4 h-4" />
           </span>
           <div>
@@ -94,7 +94,7 @@ export function BatchUpload({ campaignKey, onMerge }: Props) {
             <p style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
               Drop the ops Excel for <strong>{campaignKey}</strong> — recognised values are counted automatically and added to the totals below. You can still edit anything by hand.
               {learnedCount() + learned > 0 && (
-                <> · <span style={{ color: '#4F46E5', fontWeight: 600 }}>{learnedCount() + learned} learned mapping(s)</span></>
+                <> · <span style={{ color: 'var(--color-accent-purple)', fontWeight: 600 }}>{learnedCount() + learned} learned mapping(s)</span></>
               )}
             </p>
           </div>
@@ -118,7 +118,7 @@ export function BatchUpload({ campaignKey, onMerge }: Props) {
           <div className="flex flex-wrap gap-2 mb-3" style={{ fontSize: 'var(--font-size-xs)' }}>
             {(Object.keys(result.detected) as DimensionKey[]).map((d) => (
               <span key={d} className="px-2 py-1 rounded-md flex items-center gap-1.5"
-                style={{ background: result.detected[d] ? '#E2F5F1' : 'var(--background-muted)', color: result.detected[d] ? '#0F9488' : 'var(--color-text-secondary)' }}>
+                style={{ background: result.detected[d] ? 'var(--color-success-bg)' : 'var(--background-muted)', color: result.detected[d] ? 'var(--color-success)' : 'var(--color-text-secondary)' }}>
                 {result.detected[d] ? <Check className="w-3 h-3" /> : <X className="w-3 h-3" />}
                 {DIM_LABEL[d]}: {result.detected[d] || 'not found'}
               </span>
@@ -149,8 +149,8 @@ export function BatchUpload({ campaignKey, onMerge }: Props) {
 
           {/* Unmapped review — the learning loop */}
           {unmappedTotal > 0 && (
-            <div className="rounded-lg p-3 mb-3" style={{ background: '#FBF0DD' }}>
-              <div className="flex items-center gap-1.5 mb-2" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 700, color: '#C2790B' }}>
+            <div className="rounded-lg p-3 mb-3" style={{ background: 'var(--color-warning-bg)' }}>
+              <div className="flex items-center gap-1.5 mb-2" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 700, color: 'var(--color-warning)' }}>
                 <AlertTriangle className="w-3.5 h-3.5" /> {unmappedTotal} value(s) not recognised — map once and they're remembered
               </div>
               <div className="space-y-1.5">

@@ -47,7 +47,7 @@ export function WorkflowStepper({ steps, currentIndex, allDone = false, failed =
                 className={`${dot} rounded-full flex items-center justify-center flex-shrink-0 ${isCurrent && !isFailed ? 'animate-pulse' : ''}`}
                 style={{
                   background: isFailed
-                    ? 'var(--color-error, #DC2626)'
+                    ? 'var(--color-error, var(--color-error))'
                     : isDone
                       ? 'var(--color-primary)'
                       : isCurrent
@@ -74,7 +74,7 @@ export function WorkflowStepper({ steps, currentIndex, allDone = false, failed =
                 fontSize: size === 'sm' ? '10px' : '11px',
                 fontWeight: isCurrent ? 600 : 500,
                 color: isFailed
-                  ? 'var(--color-error, #DC2626)'
+                  ? 'var(--color-error, var(--color-error))'
                   : isCurrent
                     ? 'var(--color-primary)'
                     : isDone

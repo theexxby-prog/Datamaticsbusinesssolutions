@@ -25,7 +25,7 @@ type Row = {
   endDate: string;
 };
 
-const DOTS = ['#BA2027', '#2563EB', '#7C3AED', '#059669', '#D97706', '#0891B2'];
+const DOTS = ['var(--color-primary)', 'var(--color-info)', 'var(--color-accent-purple)', 'var(--color-success)', 'var(--color-warning)', 'var(--color-info)'];
 
 // ─── KPI tile — the mockup's compact stat: icon, delta, value, label ─────────
 function Kpi({ icon: Icon, tone, toneBg, value, label, delta, deltaTone }: {

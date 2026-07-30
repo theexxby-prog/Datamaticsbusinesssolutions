@@ -289,7 +289,7 @@ export default function Payment() {
 
       {/* Add Payment Method Modal */}
       {showAddMethodModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.5)' }}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'var(--color-surface)' }}>
           <div className="glass-card-strong p-6 max-w-md w-full">
             <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-4">
               Add Payment Method

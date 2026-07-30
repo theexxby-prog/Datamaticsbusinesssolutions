@@ -44,14 +44,14 @@ export function TaxInvoiceModal({ invoice, onClose }: TaxInvoiceModalProps) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 16 }}
             transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-            className="relative z-10 w-full max-w-4xl bg-white rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+            className="relative z-10 w-full max-w-4xl bg-[var(--color-surface-raised)] rounded-2xl shadow-2xl overflow-hidden flex flex-col"
             style={{ maxHeight: '92vh' }}
             role="dialog"
             aria-modal="true"
             aria-label={`Invoice ${invoice.invoiceNumber}`}
           >
             {/* Toolbar */}
-            <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-gray-200 flex-shrink-0 bg-white">
+            <div className="flex items-center justify-between gap-4 px-5 py-3 border-b border-gray-200 flex-shrink-0 bg-[var(--color-surface-raised)]">
               <div className="min-w-0">
                 <div className="font-semibold text-[14px] text-gray-900 truncate">
                   Invoice {invoice.invoiceNumber}
@@ -81,7 +81,7 @@ export function TaxInvoiceModal({ invoice, onClose }: TaxInvoiceModalProps) {
             </div>
 
             {/* The document */}
-            <div className="flex-1 overflow-y-auto" style={{ background: '#F1F2F4' }}>
+            <div className="flex-1 overflow-y-auto" style={{ background: 'var(--color-surface)' }}>
               <div className="mx-auto my-6 max-w-3xl shadow-sm rounded-lg overflow-hidden">
                 <TaxInvoiceDocument invoice={invoice} />
               </div>
