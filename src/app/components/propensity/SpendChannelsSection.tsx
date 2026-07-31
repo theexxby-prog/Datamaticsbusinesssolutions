@@ -5,16 +5,13 @@ import { Wallet, GitMerge } from 'lucide-react';
 import { ChartCard, TOOLTIP_STYLE } from '../ChartCard';
 import { useIsMobile } from '../ui/use-mobile';
 import { getPdnSpend, getBlendedSpend } from '../../data/propensity';
+import { formatMoney as fmtMoney } from '../../utils/format';
+import { formatDateShort } from '../../utils/formatDate';
 
 // Daily PDN Spend by channel, and the blended view the crosswalk unlocks:
 // programmatic (PDN) spend next to content-syndication spend with blended ROI.
 
-const fmtMoney = (n: number) => '$' + n.toLocaleString('en-US');
 
-function fmtShortDate(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 const CHANNELS = [
   { key: 'display', label: 'Display', color: 'var(--color-primary)' },
@@ -43,7 +40,7 @@ export function SpendChannelsSection() {
               stroke="none"
               tickLine={false}
               interval="preserveStartEnd"
-              tickFormatter={fmtShortDate}
+              tickFormatter={formatDateShort}
             />
             <YAxis
               style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
@@ -55,7 +52,7 @@ export function SpendChannelsSection() {
             <Tooltip
               contentStyle={TOOLTIP_STYLE}
               formatter={(v: number, name: string) => [fmtMoney(v), CHANNELS.find(c => c.key === name)?.label ?? name]}
-              labelFormatter={(v: string) => fmtShortDate(v)}
+              labelFormatter={(v: string) => formatDateShort(v)}
             />
             <Legend wrapperStyle={{ fontSize: 11 }} formatter={(v: string) => CHANNELS.find(c => c.key === v)?.label ?? v} />
             {CHANNELS.map((c, i) => (

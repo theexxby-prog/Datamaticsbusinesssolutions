@@ -8,6 +8,7 @@ import { SpendChannelsSection } from '../components/propensity/SpendChannelsSect
 import { SyndicationInfluenceSection } from '../components/propensity/SyndicationInfluenceSection';
 import { getAbmSummary, getBlendedSpend, PROPENSITY_SYNC_LABEL } from '../data/propensity';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { formatMoney as fmtMoney } from '../utils/format';
 
 // ─── Programmatic ABM ────────────────────────────────────────────────────────
 // Client-facing preview of the Propensity integration: mock data shaped like
@@ -15,7 +16,6 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 // production epics describe. Visible only to the UNION preview login (see
 // config/demo.ts showFutureModules; AppLayout enforces the route).
 
-const fmtMoney = (n: number) => '$' + n.toLocaleString('en-US');
 
 export default function ProgrammaticPage() {
   useDocumentTitle('Programmatic');

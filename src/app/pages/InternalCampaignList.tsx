@@ -4,13 +4,10 @@ import { Search, Eye, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { MobileCardList } from '../components/ui/MobileCardList';
 import { allClients, type Campaign } from '../data/mockClients';
+import { formatDate } from '../utils/formatDate';
 
 type FlatCampaign = Campaign & { clientId: string; clientName: string; manager: string };
 
-function fmtDate(iso?: string) {
-  if (!iso) return null;
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
 
 const statusLabel: Record<string, string> = {
   active: 'Active',
@@ -139,8 +136,8 @@ export default function InternalCampaignList() {
                   const target = c.target ?? c.goalLeads ?? 0;
                   const delivered = c.delivered ?? c.deliveredLeads ?? 0;
                   const pct = target > 0 ? Math.round((delivered / target) * 100) : 0;
-                  const start = fmtDate(c.startDate);
-                  const end = fmtDate(c.endDate);
+                  const start = formatDate(c.startDate);
+                  const end = formatDate(c.endDate);
                   return (
                     <tr key={c.id} style={{ background: i % 2 === 1 ? 'var(--color-main-bg)' : 'transparent', borderTop: '1px solid var(--color-border-light)' }}>
                       <td className="px-5 py-3">

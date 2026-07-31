@@ -14,6 +14,7 @@ import {
 import { getAbmSummary, getBlendedSpend } from '../data/propensity';
 import { formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
+import { formatMoney as fmtMoney } from '../utils/format';
 
 // ─── UNION dashboard ─────────────────────────────────────────────────────────
 // One compact view of the whole relationship: what needs attention right now,
@@ -22,7 +23,6 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 // its module. Dense by design; nothing here should need a second screen on
 // desktop beyond the signals feed.
 
-const fmtMoney = (n: number) => '$' + n.toLocaleString('en-US');
 
 export default function UnionDashboard() {
   useDocumentTitle('Dashboard');

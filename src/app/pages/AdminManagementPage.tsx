@@ -7,6 +7,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { allClients } from '../data/mockClients';
 import { mockTeamMembers } from '../mockData';
 import { MobileCardList } from '../components/ui/MobileCardList';
+import { formatDate } from '../utils/formatDate';
 
 // Production parity: Admin Management = client onboarding, Convertr configuration,
 // and manager mapping (replaces the old Team Management + Client Assignment split).
@@ -25,9 +26,6 @@ interface AdminClientRow {
   analyticsVisible: boolean;
 }
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
 
 // Same pill markup the tables render inline — shared by the mobile card views.
 function StatusPill({ status }: { status: string }) {
@@ -239,7 +237,7 @@ export default function AdminManagementPage() {
                           {r.status}
                         </span>
                       </td>
-                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)', whiteSpace: 'nowrap' }}>{fmtDate(r.updated)}</td>
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)', whiteSpace: 'nowrap' }}>{formatDate(r.updated)}</td>
                       <td className="px-4 py-3">
                         <button onClick={() => toggleAnalytics(r.id)} className="flex items-center gap-2" aria-label="Toggle analytics visibility">
                           <span
@@ -281,7 +279,7 @@ export default function AdminManagementPage() {
                 { label: 'Type', value: (r) => r.type },
                 { label: 'Campaign Manager', value: (r) => r.campaignManager },
                 { label: 'Backup Manager', value: (r) => r.backupManager },
-                { label: 'Updated', value: (r) => fmtDate(r.updated) },
+                { label: 'Updated', value: (r) => formatDate(r.updated) },
                 {
                   label: 'Analytics',
                   value: (r) => (

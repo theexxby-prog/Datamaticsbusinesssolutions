@@ -1,5 +1,6 @@
 import { Truck, XCircle, RefreshCw, Flag, Edit, MessageSquare } from 'lucide-react';
 import type { CampaignActivity } from '../data/campaignActivities';
+import { parseDate } from '../utils/formatDate';
 
 interface CampaignActivityTimelineProps {
   activities: CampaignActivity[];
@@ -25,7 +26,7 @@ const typeColors: Record<CampaignActivity['type'], { bg: string; fg: string }> =
 };
 
 function formatTimestamp(iso: string) {
-  const d = new Date(iso);
+  const d = parseDate(iso);
   const now = new Date();
   const diff = now.getTime() - d.getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));

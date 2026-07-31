@@ -4,6 +4,7 @@ import { ChartCard, TOOLTIP_STYLE } from '../ChartCard';
 import { DataTable, type Column } from '../ui/DataTable';
 import { useIsMobile } from '../ui/use-mobile';
 import { getAccountEngagement, getWebsiteTrend, type AccountEngagement, type AccountWarmth } from '../../data/propensity';
+import { formatDateShort } from '../../utils/formatDate';
 
 // Account Engagement + Website Analytics: which target accounts are warming
 // up, and how much of the web traffic Propensity's tracking script sees is
@@ -15,10 +16,6 @@ const WARMTH_META: Record<AccountWarmth, { label: string; bg: string; color: str
   cool: { label: 'Cool', bg: 'rgba(100,116,139,0.12)', color: 'var(--color-text-secondary)' },
 };
 
-function fmtShortDate(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-}
 
 function WarmthPill({ warmth }: { warmth: AccountWarmth }) {
   const meta = WARMTH_META[warmth];
@@ -106,7 +103,7 @@ export function AccountsSection() {
       key: 'last', header: 'Last activity', align: 'right', mobileHidden: true,
       widthClass: 'hidden lg:table-cell lg:w-[16%] xl:w-[15%]',
       sortValue: a => a.lastActivity, text: a => a.lastActivity,
-      render: a => <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>{fmtShortDate(a.lastActivity)}</span>,
+      render: a => <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>{formatDateShort(a.lastActivity)}</span>,
     },
   ];
 
@@ -158,10 +155,10 @@ export function AccountsSection() {
               stroke="none"
               tickLine={false}
               interval="preserveStartEnd"
-              tickFormatter={fmtShortDate}
+              tickFormatter={formatDateShort}
             />
             <YAxis style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} width={34} />
-            <Tooltip contentStyle={TOOLTIP_STYLE} labelFormatter={(v: string) => fmtShortDate(v)} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} labelFormatter={(v: string) => formatDateShort(v)} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Area type="monotone" dataKey="totalVisitors" name="All visitors" stroke="#3E5C8A" strokeWidth={1.5} fill="transparent" />
             <Area type="monotone" dataKey="icpVisitors" name="ICP visitors" stroke="var(--color-primary)" strokeWidth={2} fill="url(#icpFill)" />

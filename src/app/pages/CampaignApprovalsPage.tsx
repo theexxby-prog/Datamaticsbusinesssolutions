@@ -21,14 +21,8 @@ import { StatusBadge } from '../components/StatusBadge';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { mockCampaignSubmissions } from '../mockData';
 import type { CampaignSubmission, SubmissionStatus } from '../types';
+import { formatDate } from '../utils/formatDate';
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
 
 function daysSince(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -172,7 +166,7 @@ function SubmissionCard({
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <StatusBadge status={submission.status} />
               <span className="text-xs text-[var(--color-text-muted)]">
-                Submitted {daysSince(submission.submittedAt)} · {fmtDate(submission.submittedAt)}
+                Submitted {daysSince(submission.submittedAt)} · {formatDate(submission.submittedAt)}
               </span>
             </div>
             <h3 className="font-semibold text-[var(--color-text-primary)] leading-snug" style={{ fontSize: '16px' }}>
@@ -196,7 +190,7 @@ function SubmissionCard({
           )}
           {isReviewed && (
             <div className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] flex-shrink-0">
-              Reviewed {submission.reviewedAt ? fmtDate(submission.reviewedAt) : ''}
+              Reviewed {submission.reviewedAt ? formatDate(submission.reviewedAt) : ''}
             </div>
           )}
         </div>
@@ -320,7 +314,7 @@ function SubmissionCard({
                 </p>
                 {submission.reviewedBy && (
                   <p className="text-amber-600 mt-2" style={{ fontSize: '12px' }}>
-                    — {submission.reviewedBy}{submission.reviewedAt ? `, ${fmtDate(submission.reviewedAt)}` : ''}
+                    — {submission.reviewedBy}{submission.reviewedAt ? `, ${formatDate(submission.reviewedAt)}` : ''}
                   </p>
                 )}
               </div>
@@ -337,7 +331,7 @@ function SubmissionCard({
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
               <p className="font-semibold text-emerald-800" style={{ fontSize: '13px' }}>
-                Approved by {submission.reviewedBy}{submission.reviewedAt ? ` on ${fmtDate(submission.reviewedAt)}` : ''} — Campaign is now live
+                Approved by {submission.reviewedBy}{submission.reviewedAt ? ` on ${formatDate(submission.reviewedAt)}` : ''} — Campaign is now live
               </p>
             </div>
           </div>

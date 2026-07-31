@@ -20,6 +20,7 @@ import { allClients, Client } from '../data/mockClients';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { MobileCardList } from '../components/ui/MobileCardList';
 import { useAuth } from '../context/AuthContext';
+import { formatDate } from '../utils/formatDate';
 
 // Available team members for assignment
 interface TeamMember {
@@ -151,11 +152,6 @@ export default function ClientAssignmentPage() {
       );
     }
     handleCloseModal();
-  };
-
-  const formatDate = (isoDate: string) => {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
   };
 
   return (

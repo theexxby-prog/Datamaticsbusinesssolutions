@@ -1,5 +1,6 @@
 import type { IntentType, RoleClass } from '../../data/signalRoom';
 import { INTENT_TYPE_LABEL } from '../../data/signalRoom';
+import { formatDate } from '../../utils/formatDate';
 
 // Shared colour + chip vocabulary for the Signal Room surfaces. Intent types
 // and influence roles each get one token-backed colour used consistently on
@@ -44,7 +45,5 @@ export function RoleDot({ roleClass }: { roleClass: RoleClass }) {
 }
 
 export function fmtSignalDate(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  if (!y || !m || !d) return iso;
-  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  return formatDate(iso) || iso;
 }

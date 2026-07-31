@@ -11,18 +11,15 @@ import {
   getCrosswalkForAbm,
   type AbmCampaign,
 } from '../../data/propensity';
+import { formatMoney as fmtMoney } from '../../utils/format';
+import { formatDate, formatDateShort } from '../../utils/formatDate';
 
 // Executive ABM overview: roster of unarchived campaigns (Campaign Summary
 // endpoint), day-over-day ROI (ROI Analytics), and pacing (Campaign Pacing) —
 // each roster row carries the syndication campaign it supports via the
 // crosswalk, tap-through to that campaign's detail page.
 
-const fmtMoney = (n: number) => '$' + n.toLocaleString('en-US');
 
-function fmtShortDate(iso: string): string {
-  const [y, m, d] = iso.split('-').map(Number);
-  return new Date(y, m - 1, d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
 
 export function ExecutiveOverviewSection() {
   const navigate = useNavigate();
@@ -111,7 +108,7 @@ export function ExecutiveOverviewSection() {
       sortValue: c => c.endDate, text: c => c.endDate,
       render: c => (
         <span style={{ color: 'var(--color-text-muted)', fontSize: '13px' }}>
-          {fmtShortDate(c.startDate)} – {fmtShortDate(c.endDate)}
+          {formatDate(c.startDate)} – {formatDate(c.endDate)}
         </span>
       ),
     },
@@ -138,7 +135,7 @@ export function ExecutiveOverviewSection() {
               stroke="none"
               tickLine={false}
               interval="preserveStartEnd"
-              tickFormatter={(v: string) => fmtShortDate(v).replace(/, \d{4}$/, '')}
+              tickFormatter={(v: string) => formatDateShort(v)}
             />
             <YAxis
               style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
@@ -151,7 +148,7 @@ export function ExecutiveOverviewSection() {
               contentStyle={TOOLTIP_STYLE}
               formatter={(v: number, name: string) =>
                 name === 'roi' ? [`${v}×`, 'ROI'] : [fmtMoney(v), name === 'spend' ? 'Spend' : 'Pipeline']}
-              labelFormatter={(v: string) => fmtShortDate(v)}
+              labelFormatter={(v: string) => formatDate(v)}
             />
             <Area type="monotone" dataKey="roi" stroke="var(--color-primary)" strokeWidth={2} fill="url(#roiFill)" />
           </AreaChart>

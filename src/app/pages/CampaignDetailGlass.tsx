@@ -18,6 +18,7 @@ import { allClients } from '../data/mockClients';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
 import { toast } from 'sonner';
+import { formatMoney as fmtMoney } from '../utils/format';
 
 export default function CampaignDetail() {
   const { id } = useParams();
@@ -74,8 +75,7 @@ export default function CampaignDetail() {
   // CPL derives from the agreed budget ÷ target when not set explicitly.
   const cpl = (campaign as any).cpl ?? (campaign.budget && targetLeads ? Math.round(campaign.budget / targetLeads) : 50);
   const totalBillable = cpl * deliveredLeads;
-  const fmtMoney = (n: number) => '$' + n.toLocaleString('en-US');
-
+  
   const health = getCampaignHealth(campaign);
   const activities = getActivitiesForCampaign(campaign.id);
   const replacementStats = getReplacementStats(campaign.id);

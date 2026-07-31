@@ -1,4 +1,5 @@
 import { RouterProvider } from 'react-router';
+import { Toaster } from 'sonner';
 import { router } from './routes';
 import { AuthProvider } from './context/AuthContext';
 import { NotificationProvider } from './context/NotificationContext';
@@ -15,6 +16,17 @@ export default function App() {
             after switching to the campaign manager's view. */}
         <CampaignThreadProvider>
           <RouterProvider router={router} />
+          {/* Inverse-surface toast chrome so it contrasts in both themes */}
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              style: {
+                background: 'var(--color-surface-inverse)',
+                color: 'var(--color-text-inverse)',
+                border: 'none',
+              },
+            }}
+          />
         </CampaignThreadProvider>
       </NotificationProvider>
     </AuthProvider>
