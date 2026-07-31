@@ -208,9 +208,11 @@ const DETAIL_ROUTES: Array<{ pattern: RegExp; meta: PageMeta }> = [
   { pattern: /^\/internal\/dashboard$/, meta: { title: 'Dashboard', showBack: false } },
   { pattern: /^\/internal\/uploads$/, meta: { title: 'Upload Leads', showBack: false } },
   { pattern: /^\/internal\/client-assignment$/, meta: { title: 'Client Assignment', showBack: false } },
-  // Explicit entry so the mobile app-bar title never depends on whether the
-  // nav item is visible (the route itself is gated in AppLayout).
+  // Explicit entries so the mobile app-bar title never depends on whether the
+  // nav item is visible (the routes themselves are gated in AppLayout).
   { pattern: /^\/programmatic$/, meta: { title: 'Programmatic', showBack: false } },
+  { pattern: /^\/leads\/account\/[^/]+$/, meta: { title: 'Account briefing', showBack: true } },
+  { pattern: /^\/leads\/[^/]+$/, meta: { title: 'Lead briefing', showBack: true } },
 ];
 
 export function getPageMeta(pathname: string, role: UserRole | undefined): PageMeta {

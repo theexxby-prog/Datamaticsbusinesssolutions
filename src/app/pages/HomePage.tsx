@@ -19,6 +19,8 @@ import { PersonAvatar } from '../components/PersonAvatar';
 import { getPersonPhoto } from '../data/personPhotos';
 import { getDashPrefs, subscribeDashPrefs, type DashPrefs } from '../data/dashboardPrefs';
 import { formatDateShort } from '../utils/formatDate';
+import { showFutureModules } from '../config/demo';
+import UnionDashboard from './UnionDashboard';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getGreeting() {
@@ -45,7 +47,15 @@ function formatBusinessValue(value: number): string {
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
+// The UNION preview login gets the reimagined compact dashboard; everyone
+// else keeps this page exactly as it is. Split into two components so each
+// owns its hooks (no conditional hook order).
 export default function HomePage() {
+  const { currentUser } = useAuth();
+  return showFutureModules(currentUser) ? <UnionDashboard /> : <StandardHomePage />;
+}
+
+function StandardHomePage() {
   useDocumentTitle('Dashboard');
 
   const navigate = useNavigate();
