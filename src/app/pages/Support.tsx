@@ -151,13 +151,13 @@ export default function Support() {
   const getPriorityColor = (priority: string) => {
     switch (priority) {
       case 'Urgent':
-        return 'text-red-600 bg-red-50 border border-red-100';
+        return 'text-[var(--color-error)] bg-[var(--color-error-bg)] border border-[var(--color-error)]/20';
       case 'High':
-        return 'text-orange-600 bg-orange-50 border border-orange-100';
+        return 'text-[var(--color-warning)] bg-[var(--color-warning-bg)] border border-[var(--color-warning)]/20';
       case 'Medium':
-        return 'text-yellow-600 bg-yellow-50 border border-yellow-100';
+        return 'text-[var(--color-warning)] bg-[var(--color-warning)]/5 border border-[var(--color-warning)]/15';
       case 'Low':
-        return 'text-blue-600 bg-blue-50 border border-blue-100';
+        return 'text-[var(--color-info)] bg-[var(--color-info-bg)] border border-[var(--color-info)]/20';
       default:
         return 'text-gray-600 bg-gray-50 border border-gray-100';
     }

@@ -323,9 +323,9 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
     setShowSecrets(prev => ({ ...prev, [key]: !prev[key] }));
 
   const infoBanner = (text: string) => (
-    <div className="flex items-start gap-3 px-4 py-3 rounded-xl" style={{ background: 'rgba(59,130,246,0.08)', border: '1px solid rgba(59,130,246,0.18)' }}>
-      <Info className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-      <p className="text-blue-700" style={{ fontSize: '13px' }}>{text}</p>
+    <div className="flex items-start gap-3 px-4 py-3 rounded-xl bg-[var(--color-info-bg)] border border-[var(--color-info)]/20">
+      <Info className="w-4 h-4 text-[var(--color-info)] flex-shrink-0 mt-0.5" />
+      <p className="text-[var(--color-info)]" style={{ fontSize: '13px' }}>{text}</p>
     </div>
   );
 
@@ -337,7 +337,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
   const maskedInput = (fieldKey: string, placeholder: string, label: string, required = false) => (
     <div>
       <label className="block text-sm font-medium text-gray-700 mb-1.5">
-        {label} {required && <span className="text-red-500">*</span>}
+        {label} {required && <span className="text-[var(--color-error)]">*</span>}
       </label>
       <div className="relative">
         <input
@@ -364,12 +364,12 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Recipient email address(es) <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Recipient email address(es) <span className="text-[var(--color-error)]">*</span></label>
               <input type="text" value={deliveryConfig.email || ''} onChange={e => setDC('email', e.target.value)} placeholder="e.g., leads@yourcompany.com" className={inputCls} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery frequency <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery frequency <span className="text-[var(--color-error)]">*</span></label>
                 <select value={deliveryConfig.frequency || ''} onChange={e => setDC('frequency', e.target.value)} className={selectCls}>
                   <option value="">Select frequency...</option>
                   <option value="realtime">Real-time</option>
@@ -379,7 +379,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 <ChevronDown className="absolute right-3 top-[38px] w-4 h-4 text-gray-400 pointer-events-none" />
               </div>
               <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">File format <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">File format <span className="text-[var(--color-error)]">*</span></label>
                 <select value={deliveryConfig.format || ''} onChange={e => setDC('format', e.target.value)} className={selectCls}>
                   <option value="">Select format...</option>
                   <option value="csv">CSV</option>
@@ -395,7 +395,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Google Sheet URL <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Google Sheet URL <span className="text-[var(--color-error)]">*</span></label>
               <input type="url" value={deliveryConfig.sheetUrl || ''} onChange={e => setDC('sheetUrl', e.target.value)} placeholder="https://docs.google.com/spreadsheets/d/..." className={inputCls} />
             </div>
             {infoBanner('Click Connect to authorise access via Google. You will be redirected to complete the OAuth flow.')}
@@ -407,12 +407,12 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Webhook endpoint URL <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Webhook endpoint URL <span className="text-[var(--color-error)]">*</span></label>
               <input type="url" value={deliveryConfig.endpointUrl || ''} onChange={e => setDC('endpointUrl', e.target.value)} placeholder="https://your-endpoint.com/leads" className={inputCls} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="relative">
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Method <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Method <span className="text-[var(--color-error)]">*</span></label>
                 <select value={deliveryConfig.method || 'POST'} onChange={e => setDC('method', e.target.value)} className={selectCls}>
                   <option value="POST">POST</option>
                   <option value="PUT">PUT</option>
@@ -432,12 +432,12 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Salesforce Instance URL <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Salesforce Instance URL <span className="text-[var(--color-error)]">*</span></label>
               <input type="url" value={deliveryConfig.instanceUrl || ''} onChange={e => setDC('instanceUrl', e.target.value)} placeholder="https://yourorg.salesforce.com" className={inputCls} />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Client ID <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Client ID <span className="text-[var(--color-error)]">*</span></label>
                 <input type="text" value={deliveryConfig.clientId || ''} onChange={e => setDC('clientId', e.target.value)} placeholder="Connected App Client ID" className={inputCls} />
               </div>
               {maskedInput('clientSecret', 'Connected App Client Secret', 'Client Secret', true)}
@@ -477,7 +477,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery endpoint URL <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery endpoint URL <span className="text-[var(--color-error)]">*</span></label>
               <input type="url" value={deliveryConfig.endpointUrl || ''} onChange={e => setDC('endpointUrl', e.target.value)} placeholder="https://your-endpoint.com/post/..." className={inputCls} />
             </div>
             <div>
@@ -497,7 +497,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
         return (
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">LeadByte Postback URL <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">LeadByte Postback URL <span className="text-[var(--color-error)]">*</span></label>
               <input type="url" value={deliveryConfig.postbackUrl || ''} onChange={e => setDC('postbackUrl', e.target.value)} placeholder="https://app.leadbyte.co.uk/api/..." className={inputCls} />
             </div>
             <div>
@@ -513,11 +513,11 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
           <div className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Host / Server address <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Host / Server address <span className="text-[var(--color-error)]">*</span></label>
                 <input type="text" value={deliveryConfig.host || ''} onChange={e => setDC('host', e.target.value)} placeholder="ftp.yourserver.com" className={inputCls} />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1.5">Username <span className="text-red-500">*</span></label>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">Username <span className="text-[var(--color-error)]">*</span></label>
                 <input type="text" value={deliveryConfig.username || ''} onChange={e => setDC('username', e.target.value)} placeholder="ftp_username" className={inputCls} />
               </div>
             </div>
@@ -529,7 +529,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               </div>
             </div>
             <div className="relative w-full md:w-1/2">
-              <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery frequency <span className="text-red-500">*</span></label>
+              <label className="block text-sm font-medium text-gray-700 mb-1.5">Delivery frequency <span className="text-[var(--color-error)]">*</span></label>
               <select value={deliveryConfig.frequency || ''} onChange={e => setDC('frequency', e.target.value)} className={selectCls}>
                 <option value="">Select frequency...</option>
                 <option value="daily">Daily</option>
@@ -605,25 +605,25 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               {/* Campaign Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Campaign Name <span className="text-red-500">*</span>
+                  Campaign Name <span className="text-[var(--color-error)]">*</span>
                 </label>
                 <input
                   type="text"
                   value={formData.name}
                   onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                   className={`w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent ${
-                    errors.name ? 'border-red-500' : 'border-gray-300'
+                    errors.name ? 'border-[var(--color-error)]' : 'border-gray-300'
                   }`}
                   placeholder="e.g., Channel Partner Demand Gen Q4 2026"
                 />
-                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
+                {errors.name && <p className="text-[var(--color-error)] text-sm mt-1">{errors.name}</p>}
               </div>
 
               {/* Campaign Type & CPL */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Campaign Type <span className="text-red-500">*</span>
+                    Campaign Type <span className="text-[var(--color-error)]">*</span>
                   </label>
                   <select
                     value={formData.type}
@@ -638,7 +638,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    Cost Per Lead (CPL) <span className="text-red-500">*</span>
+                    Cost Per Lead (CPL) <span className="text-[var(--color-error)]">*</span>
                   </label>
                   <div className="relative">
                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
@@ -647,19 +647,19 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       value={formData.cpl}
                       onChange={(e) => setFormData(prev => ({ ...prev, cpl: e.target.value }))}
                       className={`w-full pl-8 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent ${
-                        errors.cpl ? 'border-red-500' : 'border-gray-300'
+                        errors.cpl ? 'border-[var(--color-error)]' : 'border-gray-300'
                       }`}
                       placeholder="45"
                     />
                   </div>
-                  {errors.cpl && <p className="text-red-500 text-sm mt-1">{errors.cpl}</p>}
+                  {errors.cpl && <p className="text-[var(--color-error)] text-sm mt-1">{errors.cpl}</p>}
                 </div>
               </div>
 
               {/* Geography */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Geography <span className="text-red-500">*</span>
+                  Geography <span className="text-[var(--color-error)]">*</span>
                 </label>
                 <div className="flex gap-4 mb-2">
                   {(['US', 'APAC', 'EMEA'] as const).map(geo => (
@@ -683,7 +683,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
 
                 {/* Location Multi-select */}
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Select {formData.geography === 'US' ? 'States' : 'Countries'} <span className="text-red-500">*</span>
+                  Select {formData.geography === 'US' ? 'States' : 'Countries'} <span className="text-[var(--color-error)]">*</span>
                 </label>
                 <div className="border border-gray-300 rounded-lg p-3 max-h-44 overflow-y-auto bg-gray-50">
                   <div className="grid grid-cols-2 md:grid-cols-3 gap-1.5">
@@ -711,7 +711,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 {formData.locations.length > 0 && (
                   <p className="text-sm text-gray-600 mt-1">{formData.locations.length} location(s) selected</p>
                 )}
-                {errors.locations && <p className="text-red-500 text-sm mt-1">{errors.locations}</p>}
+                {errors.locations && <p className="text-[var(--color-error)] text-sm mt-1">{errors.locations}</p>}
               </div>
 
               {/* Employee Size Range */}
@@ -779,7 +779,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               {/* Job Titles */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Job Titles <span className="text-red-500">*</span>
+                  Job Titles <span className="text-[var(--color-error)]">*</span>
                 </label>
                 <div className="flex gap-2 mb-2">
                   <input
@@ -788,7 +788,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     onChange={(e) => setTitleInput(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTitle())}
                     className={`flex-1 px-4 py-2 border rounded-lg focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent ${
-                      errors.titles ? 'border-red-500' : 'border-gray-300'
+                      errors.titles ? 'border-[var(--color-error)]' : 'border-gray-300'
                     }`}
                     placeholder="Type title and press Enter"
                   />
@@ -847,7 +847,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     ))}
                   </div>
                 )}
-                {errors.titles && <p className="text-red-500 text-sm mt-1">{errors.titles}</p>}
+                {errors.titles && <p className="text-[var(--color-error)] text-sm mt-1">{errors.titles}</p>}
               </div>
 
               {/* Suppression List */}
@@ -873,7 +873,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   </label>
                   <p className="text-xs text-gray-400 mt-1.5">Accepts CSV or Excel files</p>
                   {formData.suppressionList && (
-                    <p className="text-xs text-green-600 mt-1.5 font-medium">
+                    <p className="text-xs text-[var(--color-success)] mt-1.5 font-medium">
                       ✓ {formData.suppressionList.name}
                     </p>
                   )}
@@ -896,7 +896,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     <div className="flex-shrink-0">
                       {isDeliveryConfigured() ? (
                         <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full" style={{ background: 'rgba(5,150,105,0.10)', color: 'var(--color-success)', fontSize: '12px', fontWeight: 600 }}>
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                          <span className="w-2 h-2 rounded-full bg-[var(--color-success)] inline-block" />
                           Connected
                         </span>
                       ) : (
@@ -914,7 +914,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   {/* Delivery method dropdown */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Lead Delivery Method <span className="text-red-500">*</span>
+                      Lead Delivery Method <span className="text-[var(--color-error)]">*</span>
                     </label>
                     <div className="relative">
                       <select
@@ -925,7 +925,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                           setShowSecrets({});
                           if (e.target.value) setDeliveryError('');
                         }}
-                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-[var(--color-surface-raised)] ${deliveryError ? 'border-red-400 ring-1 ring-red-300' : 'border-gray-300'}`}
+                        className={`w-full px-4 py-2.5 border rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-[var(--color-surface-raised)] ${deliveryError ? 'border-[var(--color-error)] ring-1 ring-[var(--color-error)]/30' : 'border-gray-300'}`}
                       >
                         <option value="">Select a delivery method...</option>
                         {DELIVERY_METHODS.map(m => (
@@ -935,7 +935,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                     </div>
                     {deliveryError && (
-                      <p className="text-red-500 mt-1.5" style={{ fontSize: '13px' }}>{deliveryError}</p>
+                      <p className="text-[var(--color-error)] mt-1.5" style={{ fontSize: '13px' }}>{deliveryError}</p>
                     )}
                   </div>
 
@@ -945,7 +945,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                       key={deliveryMethod}
                       style={{
                         animation: 'fadeInDelivery 0.22s ease-out',
-                        background: 'rgba(249,250,251,0.9)',
+                        background: 'var(--color-surface)',
                         border: '1px solid var(--color-border)',
                         borderRadius: '14px',
                         padding: '16px',
@@ -1017,9 +1017,9 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                 </div>
               </div>
 
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
-                <h4 className="font-semibold text-blue-900 mb-3">Email Template Example:</h4>
-                <div className="bg-[var(--color-surface-raised)] rounded p-4 text-sm text-gray-700 space-y-2 border border-blue-100">
+              <div className="bg-[var(--color-info-bg)] border border-[var(--color-info)]/20 rounded-lg p-6">
+                <h4 className="font-semibold text-[var(--color-info)] mb-3">Email Template Example:</h4>
+                <div className="bg-[var(--color-surface-raised)] rounded p-4 text-sm text-gray-700 space-y-2 border border-[var(--color-info)]/10">
                   <p><strong>Subject:</strong> New Campaign Request - [Your Campaign Name]</p>
                   <p><strong>Campaign Name:</strong> Channel Partner Demand Gen Q4 2026</p>
                   <p><strong>Geography:</strong> US (California, Texas, New York)</p>
@@ -1045,15 +1045,15 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               {!parsedData ? (
                 <>
                   {/* Sample Email Template for Demo */}
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    <h4 className="font-semibold text-blue-900 mb-2 flex items-center gap-2">
+                  <div className="bg-[var(--color-info-bg)] border border-[var(--color-info)]/20 rounded-lg p-4">
+                    <h4 className="font-semibold text-[var(--color-info)] mb-2 flex items-center gap-2">
                       <Sparkles className="w-4 h-4" />
                       Try the Demo!
                     </h4>
-                    <p className="text-sm text-blue-700 mb-3">
+                    <p className="text-sm text-[var(--color-info)] mb-3">
                       Copy this sample email and paste it below to see how the parser works:
                     </p>
-                    <div className="bg-[var(--color-surface-raised)] rounded p-3 text-xs font-mono text-gray-700 space-y-1 border border-blue-100 max-h-40 overflow-y-auto">
+                    <div className="bg-[var(--color-surface-raised)] rounded p-3 text-xs font-mono text-gray-700 space-y-1 border border-[var(--color-info)]/10 max-h-40 overflow-y-auto">
                       <p>Campaign Name: Enterprise Cloud Security Initiative 2026</p>
                       <p>Geography: EMEA</p>
                       <p>Countries: United Kingdom, Germany, France, Netherlands</p>
@@ -1077,7 +1077,7 @@ Campaign Type: BANT
 Additional Info: Need leads qualified through phone verification. Weekly delivery preferred.`;
                         setPastedEmail(sampleEmail);
                       }}
-                      className="mt-2 text-sm text-blue-700 hover:text-blue-900 font-medium"
+                      className="mt-2 text-sm text-[var(--color-info)] hover:text-[var(--color-info)]/80 font-medium"
                     >
                       Copy to textarea ↓
                     </button>
@@ -1107,12 +1107,12 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                 </>
               ) : (
                 <div className="space-y-4">
-                  <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                    <div className="flex items-center gap-2 text-green-800 mb-2">
+                  <div className="bg-[var(--color-success-bg)] border border-[var(--color-success)]/20 rounded-lg p-4">
+                    <div className="flex items-center gap-2 text-[var(--color-success)] mb-2">
                       <Check className="w-5 h-5" />
                       <h3 className="font-semibold">Email Parsed Successfully!</h3>
                     </div>
-                    <p className="text-sm text-green-700">
+                    <p className="text-sm text-[var(--color-success)]">
                       We've extracted the following details from your email. Review and edit if needed.
                     </p>
                   </div>

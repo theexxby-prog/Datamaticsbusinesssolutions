@@ -151,7 +151,7 @@ function StandardHomePage() {
       id: c.id,
       name: c.name,
       status: c.status === 'active' ? 'Live' : c.status === 'completed' ? 'Completed' : 'Scheduled',
-      statusCls: 'bg-emerald-50 text-emerald-700',
+      statusCls: 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
       progress: target > 0 ? Math.round((delivered / target) * 100) : 0,
       done: `${delivered.toLocaleString('en-US')} / ${target.toLocaleString('en-US')}`,
     };
@@ -416,14 +416,14 @@ function StandardHomePage() {
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60 bg-emerald-500" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60 bg-[var(--color-success)]" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--color-success)]" />
                     </span>
-                    <span className="text-xs font-semibold text-emerald-700">Live</span>
+                    <span className="text-xs font-semibold text-[var(--color-success)]">Live</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-emerald-700">{campaignStats.live}</span>
-                    <ArrowUpRight className="w-3 h-3 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-xs font-bold text-[var(--color-success)]">{campaignStats.live}</span>
+                    <ArrowUpRight className="w-3 h-3 text-[var(--color-success)] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </motion.button>
 
@@ -476,12 +476,12 @@ function StandardHomePage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-2 h-2 text-blue-500" />
-                    <span className="text-xs font-semibold text-blue-600">Completed</span>
+                    <CheckCircle2 className="w-2 h-2 text-[var(--color-info)]" />
+                    <span className="text-xs font-semibold text-[var(--color-info)]">Completed</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-blue-600">{campaignStats.completed}</span>
-                    <ArrowUpRight className="w-3 h-3 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-xs font-bold text-[var(--color-info)]">{campaignStats.completed}</span>
+                    <ArrowUpRight className="w-3 h-3 text-[var(--color-info)] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </motion.button>
               </div>
@@ -501,7 +501,7 @@ function StandardHomePage() {
               <div className="flex items-start justify-between mb-3">
                 <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Action Required</p>
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-warning)]/20 to-[var(--color-warning)]/10 flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-4 h-4 text-amber-500" />
+                  <Clock className="w-4 h-4 text-[var(--color-warning)]" />
                 </div>
               </div>
 
@@ -516,11 +516,11 @@ function StandardHomePage() {
                 whileHover={{ background: topOverdue ? 'rgba(239,68,68,0.09)' : 'rgba(16,185,129,0.09)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${topOverdue ? 'bg-red-50' : 'bg-emerald-50'}`}>
-                  <FileText className={`w-4 h-4 ${topOverdue ? 'text-red-500' : 'text-emerald-600'}`} />
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${topOverdue ? 'bg-[var(--color-error-bg)]' : 'bg-[var(--color-success-bg)]'}`}>
+                  <FileText className={`w-4 h-4 ${topOverdue ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]'}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-semibold ${topOverdue ? 'text-red-600' : 'text-emerald-700'}`}>
+                  <p className={`text-xs font-semibold ${topOverdue ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]'}`}>
                     {topOverdue ? 'Overdue Invoice' : 'Invoices in good standing'}
                   </p>
                   <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 truncate">
@@ -531,7 +531,7 @@ function StandardHomePage() {
                         : 'All invoices settled'}
                   </p>
                 </div>
-                <ArrowUpRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ${topOverdue ? 'text-red-400' : 'text-emerald-400'}`} />
+                <ArrowUpRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ${topOverdue ? 'text-[var(--color-error)]/70' : 'text-[var(--color-success)]/70'}`} />
               </motion.button>
 
               {/* Awaiting signature */}
@@ -542,16 +542,16 @@ function StandardHomePage() {
                 whileHover={{ background: 'rgba(245,158,11,0.09)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
-                  <FilePenLine className="w-4 h-4 text-amber-500" />
+                <div className="w-8 h-8 rounded-lg bg-[var(--color-warning-bg)] flex items-center justify-center flex-shrink-0">
+                  <FilePenLine className="w-4 h-4 text-[var(--color-warning)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-amber-700">Signature Required</p>
+                  <p className="text-xs font-semibold text-[var(--color-warning)]">Signature Required</p>
                   <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 truncate">
                     {topSignature ? `${topSignature.id} · ${topSignature.campaignName}` : 'Nothing awaiting signature'}
                   </p>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[var(--color-warning)]/70 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
               </motion.button>
             </div>
           </motion.div>

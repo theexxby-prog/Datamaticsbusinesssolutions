@@ -97,12 +97,12 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
         <div className="sticky bottom-0 bg-[var(--color-surface-raised)] border-t border-gray-200 p-4 flex gap-3">
           {isTerminal ? (
             lead.status === 'Accepted' ? (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 font-medium text-sm">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-success-bg)] border border-[var(--color-success)]/25 text-[var(--color-success)] font-medium text-sm">
                 <CheckCircle className="w-4 h-4" />
                 ✓ Accepted
               </div>
             ) : (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 font-medium text-sm">
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-error-bg)] border border-[var(--color-error)]/25 text-[var(--color-error)] font-medium text-sm">
                 <XCircle className="w-4 h-4" />
                 ✗ Rejected
               </div>
@@ -114,7 +114,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                   onStatusChange?.(lead.id, 'Accepted');
                   toast.success('Lead accepted');
                 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-medium text-sm transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-success)] hover:bg-[var(--color-success)]/90 active:bg-[var(--color-success)]/80 text-white font-medium text-sm transition-colors"
               >
                 <CheckCircle className="w-4 h-4" />
                 Accept Lead
@@ -124,7 +124,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                   onStatusChange?.(lead.id, 'Rejected');
                   toast.error('Lead rejected');
                 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-medium text-sm transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-error)] hover:bg-[var(--color-error)]/90 active:bg-[var(--color-error)]/80 text-white font-medium text-sm transition-colors"
               >
                 <XCircle className="w-4 h-4" />
                 Reject Lead
@@ -134,7 +134,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                   onStatusChange?.(lead.id, 'Contacted');
                   toast.success('Lead marked as contacted');
                 }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium text-sm transition-colors"
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-info)] hover:bg-[var(--color-info)]/90 active:bg-[var(--color-info)]/80 text-white font-medium text-sm transition-colors"
               >
                 <Mail className="w-4 h-4" />
                 Mark Contacted

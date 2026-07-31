@@ -128,9 +128,9 @@ export default function LeadUploadDashboard() {
 
   const getStatusBadge = (status: string) => {
     const styles = {
-      processing: 'bg-yellow-100 text-yellow-800',
-      completed: 'bg-green-100 text-green-800',
-      failed: 'bg-red-100 text-red-800',
+      processing: 'bg-[var(--color-warning-bg)] text-[var(--color-warning)]',
+      completed: 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
+      failed: 'bg-[var(--color-error-bg)] text-[var(--color-error)]',
       pending: 'bg-gray-100 text-gray-800',
     };
     return styles[status as keyof typeof styles] || styles.pending;
@@ -196,7 +196,7 @@ export default function LeadUploadDashboard() {
                   backgroundColor: uploadMetrics.failed > 0 ? 'rgba(239,68,68,0.1)' : 'rgba(217,119,6,0.1)' 
                 }}
               >
-                <AlertTriangle className={`w-5 h-5 ${uploadMetrics.failed > 0 ? 'text-red-600' : 'text-orange-500'}`} />
+                <AlertTriangle className={`w-5 h-5 ${uploadMetrics.failed > 0 ? 'text-[var(--color-error)]' : 'text-[var(--color-warning)]'}`} />
               </div>
               <div>
                 <p className="font-semibold text-sm mb-1" style={{ color: uploadMetrics.failed > 0 ? 'var(--color-error)' : 'var(--color-badge-paused-text)' }}>
@@ -220,7 +220,7 @@ export default function LeadUploadDashboard() {
                 onClick={() => setShowPendingAlert(false)}
                 className="btn-ghost p-2"
               >
-                <X className={`w-4 h-4 ${uploadMetrics.failed > 0 ? 'text-red-600' : 'text-orange-600'}`} />
+                <X className={`w-4 h-4 ${uploadMetrics.failed > 0 ? 'text-[var(--color-error)]' : 'text-[var(--color-warning)]'}`} />
               </button>
             </div>
           </div>
@@ -363,13 +363,13 @@ export default function LeadUploadDashboard() {
 
                 <div className="flex items-center gap-2 flex-wrap">
                   {campaign.hasProcessing && (
-                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-yellow-100 text-yellow-800 inline-flex items-center gap-1.5">
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-warning-bg)] text-[var(--color-warning)] inline-flex items-center gap-1.5">
                       <Clock className="w-3 h-3" />
                       Processing
                     </span>
                   )}
                   {campaign.hasFailed && (
-                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-red-100 text-red-800 inline-flex items-center gap-1.5">
+                    <span className="px-3 py-1 rounded-full text-xs font-semibold bg-[var(--color-error-bg)] text-[var(--color-error)] inline-flex items-center gap-1.5">
                       <AlertCircle className="w-3 h-3" />
                       Has Failures
                     </span>

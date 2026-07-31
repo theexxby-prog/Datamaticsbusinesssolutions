@@ -251,7 +251,7 @@ export default function OpsOverridePage() {
               transition={{ duration: 0.3, ease: 'easeOut' }}
               className="fixed top-8 left-1/2 -translate-x-1/2 z-50 bg-[var(--color-surface-inverse)]/95 border border-[var(--color-primary)]/40 shadow-2xl backdrop-blur-xl text-[var(--color-text-inverse)] px-6 py-4 rounded-2xl flex items-center gap-3.5 w-[calc(100vw-32px)] max-w-[500px] sm:w-auto sm:min-w-[320px]"
             >
-              <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
+              <CheckCircle2 className="w-5 h-5 text-[var(--color-success)] flex-shrink-0" />
               <span className="text-xs font-semibold tracking-wide leading-relaxed">{toastMessage}</span>
               <button onClick={() => setToastMessage(null)} className="ml-auto text-gray-400 hover:text-white transition-colors">
                 <X className="w-4 h-4" />
@@ -367,7 +367,7 @@ export default function OpsOverridePage() {
                       <td className="table-td text-center">
                         <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase ${
                           camp.leadAcceptanceMethod === 'convertr' 
-                            ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-200/20' 
+                            ? 'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[var(--color-info)]/20'
                             : 'bg-gray-50 text-gray-700'
                         }`}>
                           {camp.leadAcceptanceMethod === 'convertr' ? '⚡ Convertr' : '📁 Manual'}
@@ -395,7 +395,7 @@ export default function OpsOverridePage() {
                         <button
                           onClick={() => openEditDrawer(camp)}
                           className={`btn-ghost p-2 rounded-lg transition-all ${
-                            isOpsManager ? 'hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10' : 'hover:text-blue-500 hover:bg-blue-500/10'
+                            isOpsManager ? 'hover:text-[var(--color-primary)] hover:bg-[var(--color-primary)]/10' : 'hover:text-[var(--color-info)] hover:bg-[var(--color-info-bg)]'
                           }`}
                           title={isOpsManager ? 'Edit Campaign Metrics' : 'View Campaign Metrics'}
                         >
@@ -426,7 +426,7 @@ export default function OpsOverridePage() {
                 value: (camp) => (
                   <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase ${
                     camp.leadAcceptanceMethod === 'convertr'
-                      ? 'bg-indigo-50 text-indigo-700 dark:bg-indigo-950/40 dark:text-indigo-400 border border-indigo-200/20'
+                      ? 'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[var(--color-info)]/20'
                       : 'bg-gray-50 text-gray-700'
                   }`}>
                     {camp.leadAcceptanceMethod === 'convertr' ? '⚡ Convertr' : '📁 Manual'}
@@ -525,21 +525,21 @@ export default function OpsOverridePage() {
                   
                   {/* Security Alert Header */}
                   {isOpsManager ? (
-                    <div className="p-4 rounded-xl bg-green-50/70 dark:bg-green-950/20 border border-green-200/30 flex gap-3">
-                      <Sparkles className="w-5 h-5 text-green-600 dark:text-green-400 flex-shrink-0 mt-0.5 animate-pulse" />
+                    <div className="p-4 rounded-xl bg-[var(--color-success-bg)] border border-[var(--color-success)]/30 flex gap-3">
+                      <Sparkles className="w-5 h-5 text-[var(--color-success)] flex-shrink-0 mt-0.5 animate-pulse" />
                       <div>
-                        <div className="text-xs font-bold text-green-800 dark:text-green-300">Live API Edit Mode</div>
-                        <div className="text-[11px] text-green-700 dark:text-green-400/90 leading-relaxed mt-1">
+                        <div className="text-xs font-bold text-[var(--color-success)]">Live API Edit Mode</div>
+                        <div className="text-[11px] text-[var(--color-success)] leading-relaxed mt-1">
                           Lead goal and validation metrics are read-only from backend. Only outreach metrics are editable.
                         </div>
                       </div>
                     </div>
                   ) : (
-                    <div className="p-4 rounded-xl bg-blue-50/70 dark:bg-blue-950/20 border border-blue-200/30 flex gap-3">
-                      <Lock className="w-5 h-5 text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
+                    <div className="p-4 rounded-xl bg-[var(--color-info-bg)] border border-[var(--color-info)]/30 flex gap-3">
+                      <Lock className="w-5 h-5 text-[var(--color-info)] flex-shrink-0 mt-0.5" />
                       <div>
-                        <div className="text-xs font-bold text-blue-800 dark:text-blue-300">🔒 Read-Only Campaign View</div>
-                        <div className="text-[11px] text-blue-700 dark:text-blue-400/90 leading-relaxed mt-1">
+                        <div className="text-xs font-bold text-[var(--color-info)]">🔒 Read-Only Campaign View</div>
+                        <div className="text-[11px] text-[var(--color-info)] leading-relaxed mt-1">
                           You are logged in as a Campaign Manager. You have view-only rights. Operations override adjustments must be done by **Praful Sanil**.
                         </div>
                       </div>
@@ -553,7 +553,7 @@ export default function OpsOverridePage() {
                     <div className="space-y-2">
                       <div className="flex justify-between items-center">
                         <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wide">Target Lead Goal</label>
-                        <span className="text-xs font-bold text-[var(--color-primary)] dark:text-red-400">{liveTarget.toLocaleString()} / 5,000</span>
+                        <span className="text-xs font-bold text-[var(--color-primary)]">{liveTarget.toLocaleString()} / 5,000</span>
                       </div>
                       <div className="flex items-center gap-4">
                         {/* Read-only from backend (live API) — production parity */}
@@ -582,7 +582,7 @@ export default function OpsOverridePage() {
                     {/* Email Outreach Performance Stats */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                        <Mail className="w-4 h-4 text-indigo-500" />
+                        <Mail className="w-4 h-4 text-[var(--color-info)]" />
                         <span>Email Outreach Metrics</span>
                       </div>
                       
@@ -635,7 +635,7 @@ export default function OpsOverridePage() {
                               value={emailsOpened}
                               onChange={(e) => setEmailsOpened(e.target.value)}
                               className={`input-base w-28 px-3 py-2 text-center text-sm font-semibold disabled:opacity-60 ${
-                                validationErrors.opened ? 'border-red-500 focus:ring-1 focus:ring-red-500' : ''
+                                validationErrors.opened ? 'border-[var(--color-error)] focus:ring-1 focus:ring-[var(--color-error)]' : ''
                               }`}
                             />
                           </div>
@@ -663,7 +663,7 @@ export default function OpsOverridePage() {
                               value={emailsClicked}
                               onChange={(e) => setEmailsClicked(e.target.value)}
                               className={`input-base w-28 px-3 py-2 text-center text-sm font-semibold disabled:opacity-60 ${
-                                validationErrors.clicked ? 'border-red-500 focus:ring-1 focus:ring-red-500' : ''
+                                validationErrors.clicked ? 'border-[var(--color-error)] focus:ring-1 focus:ring-[var(--color-error)]' : ''
                               }`}
                             />
                           </div>
@@ -672,8 +672,8 @@ export default function OpsOverridePage() {
 
                       {/* Outreach Inline Errors */}
                       {(validationErrors.opened || validationErrors.clicked) && (
-                        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200/30 text-[11px] text-red-600 dark:text-red-400 flex items-start gap-2 leading-relaxed">
-                          <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500" />
+                        <div className="p-3 rounded-lg bg-[var(--color-error-bg)] border border-[var(--color-error)]/30 text-[11px] text-[var(--color-error)] flex items-start gap-2 leading-relaxed">
+                          <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--color-error)]" />
                           <div className="flex-1">
                             {validationErrors.opened && <div>• {validationErrors.opened}</div>}
                             {validationErrors.clicked && <div>• {validationErrors.clicked}</div>}
@@ -687,7 +687,7 @@ export default function OpsOverridePage() {
                     {/* Lead Validation & Delivery Stats */}
                     <div className="space-y-4">
                       <div className="flex items-center gap-2 text-xs font-bold text-gray-400 uppercase tracking-wider">
-                        <Activity className="w-4 h-4 text-emerald-500" />
+                        <Activity className="w-4 h-4 text-[var(--color-success)]" />
                         <span>Lead Validation Metrics (Read-Only)</span>
                       </div>
                       
@@ -740,7 +740,7 @@ export default function OpsOverridePage() {
                               value={acceptedLeads}
                               readOnly
                               className={`input-base w-28 px-3 py-2 text-center text-sm font-semibold disabled:opacity-60 ${
-                                validationErrors.accepted ? 'border-red-500 focus:ring-1 focus:ring-red-500' : ''
+                                validationErrors.accepted ? 'border-[var(--color-error)] focus:ring-1 focus:ring-[var(--color-error)]' : ''
                               }`}
                             />
                           </div>
@@ -749,8 +749,8 @@ export default function OpsOverridePage() {
 
                       {/* Lead Inline Error */}
                       {validationErrors.accepted && (
-                        <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950/20 border border-red-200/30 text-[11px] text-red-600 dark:text-red-400 flex items-start gap-2 leading-relaxed">
-                          <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5 text-red-500" />
+                        <div className="p-3 rounded-lg bg-[var(--color-error-bg)] border border-[var(--color-error)]/30 text-[11px] text-[var(--color-error)] flex items-start gap-2 leading-relaxed">
+                          <ShieldAlert className="w-4 h-4 flex-shrink-0 mt-0.5 text-[var(--color-error)]" />
                           <div>• {validationErrors.accepted}</div>
                         </div>
                       )}
@@ -774,28 +774,28 @@ export default function OpsOverridePage() {
                       {/* Sent */}
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">1. Sent</div>
-                        <div className="flex-1 bg-gradient-to-r from-blue-600/10 to-indigo-600/10 border border-blue-500/10 rounded-xl p-3 flex justify-between items-center">
+                        <div className="flex-1 bg-[var(--color-info-bg)] border border-[var(--color-info)]/10 rounded-xl p-3 flex justify-between items-center">
                           <span className="text-gray-800">{liveSent.toLocaleString()} emails</span>
-                          <span className="text-indigo-600 dark:text-indigo-400 text-[11px]">100%</span>
+                          <span className="text-[var(--color-info)] text-[11px]">100%</span>
                         </div>
                       </div>
 
                       {/* Opened */}
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">2. Opened</div>
-                        <div className="flex-1 ml-2 bg-gradient-to-r from-purple-600/10 to-pink-600/10 border border-purple-500/10 rounded-xl p-3 flex justify-between items-center">
+                        <div className="flex-1 ml-2 bg-[var(--color-accent-purple-bg)] border border-[var(--color-accent-purple)]/10 rounded-xl p-3 flex justify-between items-center">
                           <span className="text-gray-800">{liveOpened.toLocaleString()} opens</span>
-                          <span className="text-purple-600 dark:text-purple-400 text-[11px]">{liveOpenRate}% OR</span>
+                          <span className="text-[var(--color-accent-purple)] text-[11px]">{liveOpenRate}% OR</span>
                         </div>
                       </div>
 
                       {/* Clicked */}
                       <div className="flex items-center gap-3">
                         <div className="w-20 text-[10px] text-gray-400 uppercase">3. Clicked</div>
-                        <div className="flex-1 ml-4 bg-gradient-to-r from-emerald-600/10 to-teal-600/10 border border-emerald-500/10 rounded-xl p-3 flex justify-between items-center">
+                        <div className="flex-1 ml-4 bg-[var(--color-success-bg)] border border-[var(--color-success)]/10 rounded-xl p-3 flex justify-between items-center">
                           <span className="text-gray-800">{liveClicked.toLocaleString()} clicks</span>
                           <div className="text-right">
-                            <div className="text-emerald-600 dark:text-emerald-400 text-[11px]">{liveCTR}% CTR</div>
+                            <div className="text-[var(--color-success)] text-[11px]">{liveCTR}% CTR</div>
                             <div className="text-[10px] text-gray-400 mt-0.5">{liveCTOR}% CTOR</div>
                           </div>
                         </div>
@@ -812,7 +812,7 @@ export default function OpsOverridePage() {
                             </span>
                           </div>
                           <div className="text-right">
-                            <div className="text-[var(--color-primary)] dark:text-red-400 text-[11px]">{liveAcceptanceRate}% Accept</div>
+                            <div className="text-[var(--color-primary)] text-[11px]">{liveAcceptanceRate}% Accept</div>
                             <div className="text-[10px] text-gray-400 mt-0.5">{livePaceRate}% of Goal</div>
                           </div>
                         </div>
@@ -844,7 +844,7 @@ export default function OpsOverridePage() {
                   ) : (
                     <button
                       onClick={() => setIsDrawerOpen(false)}
-                      className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-blue-600 hover:bg-blue-700 flex items-center justify-center gap-2"
+                      className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-[var(--color-info)] hover:bg-[var(--color-info)]/90 flex items-center justify-center gap-2"
                     >
                       Close Overview
                     </button>
