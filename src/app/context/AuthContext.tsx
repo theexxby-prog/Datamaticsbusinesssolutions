@@ -102,6 +102,18 @@ export const mockUsers: User[] = [
     role: 'accounts',
     assignedClients: [],
   },
+  {
+    // Preview persona: unlocks the in-progress Propensity ABM and Relish
+    // intelligence modules (see config/demo.ts showFutureModules). Sees the
+    // same TCC client data as Renuka otherwise. Kept LAST so the client demo
+    // build's `find(role === 'client')` still resolves to Renuka.
+    id: 'u9',
+    name: 'UNION',
+    email: 'union.preview@datamaticsbpm.com',
+    role: 'client',
+    assignedClients: [],
+    company: 'The Channel Company',
+  },
 ];
 
 // ============================================

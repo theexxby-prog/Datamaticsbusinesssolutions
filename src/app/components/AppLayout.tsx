@@ -4,7 +4,14 @@ import { LeftSidebar } from './LeftSidebar';
 import { MobileTabBar } from './mobile/MobileTabBar';
 import { MobileAppBar } from './mobile/MobileAppBar';
 import { DemoRibbon } from './DemoRibbon';
-import { IS_CLIENT_DEMO, isInternalPath } from '../config/demo';
+import { useAuth } from '../context/AuthContext';
+import {
+  IS_CLIENT_DEMO,
+  isInternalPath,
+  isDemoGateOpen,
+  isFutureModulePath,
+  showFutureModules,
+} from '../config/demo';
 
 // The persistent app shell, mounted once as a router layout route. Pages
 // render into <Outlet/>; the sidebar, mobile app bar, and tab bar survive
@@ -17,15 +24,29 @@ import { IS_CLIENT_DEMO, isInternalPath } from '../config/demo';
 export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
   const scrollColumnRef = useRef<HTMLDivElement>(null);
 
-  // Client demo mode: internal routes do not exist — hard-redirect to the
-  // client dashboard even on direct URL entry.
+  // Three shell-level guards, all enforced here (not just in Login) because
+  // AuthContext falls back to the client persona, so deep links never hit the
+  // login page:
+  //  1. Client demo: internal routes do not exist — redirect to the dashboard.
+  //  2. Client demo: the access-code gate must have been passed — else back
+  //     to the landing page.
+  //  3. Future modules (Propensity/Relish previews) are visible only to the
+  //     UNION preview login — everyone else bounces to the dashboard.
+  const gateClosed = IS_CLIENT_DEMO && !isDemoGateOpen();
+  const blockedInternal = IS_CLIENT_DEMO && isInternalPath(location.pathname);
+  const blockedFuture =
+    isFutureModulePath(location.pathname) && !showFutureModules(currentUser);
+
   useEffect(() => {
-    if (IS_CLIENT_DEMO && isInternalPath(location.pathname)) {
+    if (gateClosed) {
+      navigate('/', { replace: true });
+    } else if (blockedInternal || blockedFuture) {
       navigate('/dashboard', { replace: true });
     }
-  }, [location.pathname, navigate]);
+  }, [gateClosed, blockedInternal, blockedFuture, navigate]);
 
   // With a persistent shell the scroll position no longer resets via remount;
   // reset both scroll containers (document on mobile, inner column on desktop)
@@ -35,8 +56,8 @@ export function AppLayout() {
     scrollColumnRef.current?.scrollTo(0, 0);
   }, [location.pathname]);
 
-  if (IS_CLIENT_DEMO && isInternalPath(location.pathname)) {
-    return null; // guard against a flash of internal content before redirect
+  if (gateClosed || blockedInternal || blockedFuture) {
+    return null; // guard against a flash of blocked content before redirect
   }
 
   return (

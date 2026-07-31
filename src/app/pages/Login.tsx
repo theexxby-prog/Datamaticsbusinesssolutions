@@ -2,8 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router';
 import { CheckCircle2, Loader2, Eye, EyeOff, ChevronDown } from 'lucide-react';
 import { useAuth, mockUsers } from '../context/AuthContext';
-import { IS_CLIENT_DEMO } from '../config/demo';
+import { IS_CLIENT_DEMO, DEMO_PASSCODE, openDemoGate } from '../config/demo';
 import { DemoRibbon } from '../components/DemoRibbon';
+import { TccWordmark } from '../components/TccWordmark';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 /** Equaliser-style pulse mark — the product's logo, used at card and panel scale. */
@@ -64,6 +65,14 @@ const CAPABILITIES = [
   'Invoices and payments',
 ];
 
+// What the TCC-facing build promises — their campaigns, not the whole product.
+const TCC_CAPABILITIES = [
+  'Your live campaign delivery and pacing',
+  'Lead review and CSV export',
+  'Reports across your programs',
+  'Invoices and documents in one place',
+];
+
 function useClockGreeting() {
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
@@ -86,6 +95,7 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [passcodeError, setPasscodeError] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const clockGreeting = useClockGreeting();
 
@@ -107,6 +117,17 @@ export default function Login() {
     // Brief visual feedback delay — mock login, no real network call.
     await new Promise((resolve) => setTimeout(resolve, 300));
 
+    // TCC build: entry requires the shared access code. Login alone can't
+    // gate the app (AuthContext defaults to the client persona), so the same
+    // flag is enforced in AppLayout for deep links.
+    if (IS_CLIENT_DEMO && password.trim() !== DEMO_PASSCODE) {
+      setIsLoading(false);
+      setPasscodeError(true);
+      formRef.current?.classList.add('animate-shake');
+      setTimeout(() => formRef.current?.classList.remove('animate-shake'), 500);
+      return;
+    }
+
     const selectedUser = IS_CLIENT_DEMO
       ? mockUsers.find((u) => u.role === 'client')
       : mockUsers.find((u) => u.id === selectedUserId);
@@ -117,6 +138,7 @@ export default function Login() {
       return;
     }
 
+    if (IS_CLIENT_DEMO) openDemoGate();
     setCurrentUser(selectedUser);
     setIsLoading(false);
     setShowSuccess(true);
@@ -132,6 +154,7 @@ export default function Login() {
   };
 
   const roleLabel = (u: (typeof mockUsers)[number]) =>
+    u.id === 'u9' ? 'Preview · all new modules' :
     u.role === 'client' ? `Client (${u.company})` :
     u.role === 'campaign_manager' ? 'Campaign Manager' :
     u.role === 'campaign_backup' ? 'Campaign Backup' :
@@ -165,13 +188,21 @@ export default function Login() {
           style={{ background: 'radial-gradient(circle, rgba(0,0,0,0.22) 0%, transparent 70%)' }}
         />
 
-        {/* Wordmark */}
-        <div className="relative flex items-center gap-3">
-          <PulseMark size={30} color="#FFFFFF" />
-          <div>
-            <div className="text-white font-bold leading-tight text-xl tracking-tight">Pulse</div>
-            <div className="text-white/70 text-xs">by Datamatics Business Solutions</div>
+        {/* Wordmark — in the TCC build, joined by who the portal is prepared for */}
+        <div className="relative">
+          <div className="flex items-center gap-3">
+            <PulseMark size={30} color="#FFFFFF" />
+            <div>
+              <div className="text-white font-bold leading-tight text-xl tracking-tight">Pulse</div>
+              <div className="text-white/70 text-xs">by Datamatics Business Solutions</div>
+            </div>
           </div>
+          {IS_CLIENT_DEMO && (
+            <div className="mt-6">
+              <div className="text-white/60 text-[11px] uppercase tracking-[0.14em] mb-2">Prepared for</div>
+              <TccWordmark variant="dark" />
+            </div>
+          )}
         </div>
 
         {/* Wave, label and what the portal covers read as one block, so the
@@ -179,10 +210,10 @@ export default function Login() {
         <div className="relative">
           <PulseWave />
           <h2 className="mt-10 text-white font-semibold tracking-tight text-2xl">
-            Client portal
+            {IS_CLIENT_DEMO ? 'The Channel Company portal' : 'Client portal'}
           </h2>
           <ul className="mt-6 space-y-2.5">
-            {CAPABILITIES.map((item) => (
+            {(IS_CLIENT_DEMO ? TCC_CAPABILITIES : CAPABILITIES).map((item) => (
               <li key={item} className="flex items-center gap-3 text-white/80 text-sm">
                 <span className="w-1 h-1 rounded-full bg-white/50 flex-shrink-0" />
                 <span>{item}</span>
@@ -200,16 +231,19 @@ export default function Login() {
       <main className="flex-1 flex flex-col min-w-0">
         {/* Compact brand header, small screens only */}
         <div
-          className="lg:hidden flex items-center gap-2.5 px-6 py-5"
+          className="lg:hidden flex items-center justify-between gap-2.5 px-6 py-5"
           style={{
             background: 'linear-gradient(120deg, var(--color-primary-dark), var(--color-primary-light))',
           }}
         >
-          <PulseMark size={22} color="#FFFFFF" />
-          <div>
-            <div className="text-white font-bold leading-tight text-[15px]">Pulse</div>
-            <div className="text-white/70 text-[11px]">by Datamatics Business Solutions</div>
+          <div className="flex items-center gap-2.5">
+            <PulseMark size={22} color="#FFFFFF" />
+            <div>
+              <div className="text-white font-bold leading-tight text-[15px]">Pulse</div>
+              <div className="text-white/70 text-[11px]">by Datamatics Business Solutions</div>
+            </div>
           </div>
+          {IS_CLIENT_DEMO && <TccWordmark variant="dark" className="scale-[0.8] origin-right" />}
         </div>
 
         {/* Clock — quiet, top right */}
@@ -226,10 +260,12 @@ export default function Login() {
               className="text-[30px] font-bold tracking-tight leading-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
-              Welcome back
+              {IS_CLIENT_DEMO ? 'Welcome, Channel Company team' : 'Welcome back'}
             </h1>
             <p className="mt-2 mb-8 text-[15px]" style={{ color: 'var(--color-text-secondary)' }}>
-              Sign in to access your dashboard
+              {IS_CLIENT_DEMO
+                ? 'Enter your access code to open the portal'
+                : 'Sign in to access your dashboard'}
             </p>
 
             <form ref={formRef} onSubmit={handleLogin}>
@@ -272,23 +308,27 @@ export default function Login() {
                 )}
               </div>
 
-              {/* Password — decorative in the demo build */}
+              {/* Password — the real access code in the TCC build, decorative otherwise */}
               <label
                 htmlFor="login-password"
                 className="block text-sm font-semibold mb-1.5"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                Password
+                {IS_CLIENT_DEMO ? 'Access code' : 'Password'}
               </label>
-              <div className="relative mb-7">
+              <div className={`relative ${IS_CLIENT_DEMO && passcodeError ? 'mb-2' : 'mb-7'}`}>
                 <input
                   id="login-password"
                   type={showPassword ? 'text' : 'password'}
-                  placeholder="Enter your password"
+                  placeholder={IS_CLIENT_DEMO ? 'Enter your access code' : 'Enter your password'}
                   value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  autoComplete="current-password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (passcodeError) setPasscodeError(false);
+                  }}
+                  autoComplete={IS_CLIENT_DEMO ? 'off' : 'current-password'}
                   className="input-base w-full px-3.5 py-3 pr-11 text-sm"
+                  style={IS_CLIENT_DEMO && passcodeError ? { borderColor: 'var(--color-error)' } : undefined}
                 />
                 <button
                   type="button"
@@ -300,6 +340,11 @@ export default function Login() {
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
+              {IS_CLIENT_DEMO && passcodeError && (
+                <p className="mb-5 text-[13px]" style={{ color: 'var(--color-error)' }}>
+                  That code didn't match. Check the code in your invite email.
+                </p>
+              )}
 
               <button
                 type="submit"
