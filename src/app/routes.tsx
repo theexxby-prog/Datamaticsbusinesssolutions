@@ -37,6 +37,9 @@ const CampaignApprovalsPage = lazy(() => import('./pages/CampaignApprovalsPage')
 const AdminManagementPage = lazy(() => import('./pages/AdminManagementPage'));
 const OpsOverridePage = lazy(() => import('./pages/OpsOverridePage'));
 const DemographicsEntryPage = lazy(() => import('./pages/DemographicsEntryPage'));
+// UNION-preview module: registered for everyone, but AppLayout redirects any
+// non-UNION visit to /dashboard (same pattern as internal routes in demo mode).
+const ProgrammaticPage = lazy(() => import('./pages/ProgrammaticPage'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
 // RouteLoader is a 2px brand-coloured bar that's barely noticeable and
@@ -119,6 +122,10 @@ const appRoutes: RouteObject[] = [
   {
     path: '/account',
     Component: withSuspense(Account),
+  },
+  {
+    path: '/programmatic',
+    Component: withSuspense(ProgrammaticPage),
   },
   {
     path: '/internal/dashboard',

@@ -1,8 +1,13 @@
 import { useState } from 'react';
-import { X, Mail, Phone, Building2, MapPin, Calendar, Award, TrendingUp, MessageSquare, Clock, User, ExternalLink, CheckCircle, XCircle } from 'lucide-react';
+import { X, Mail, Phone, Building2, MapPin, Calendar, Award, TrendingUp, Clock, User, ExternalLink, CheckCircle, XCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { Lead } from '../mockData';
 import { formatDateLong, formatDateShort } from '../utils/formatDate';
+import { useAuth } from '../context/AuthContext';
+import { showFutureModules } from '../config/demo';
+import { getRelishIntel } from '../data/relish';
+import { RelishCompanyPanel } from './relish/RelishCompanyPanel';
+import { RelishContactPanel } from './relish/RelishContactPanel';
 
 interface LeadDetailDrawerProps {
   lead: Lead | null;
@@ -11,36 +16,41 @@ interface LeadDetailDrawerProps {
   onStatusChange?: (id: string, status: string) => void;
 }
 
+type DrawerTab = 'details' | 'company' | 'contact';
+
+// The outer shell stays hook-free (it early-returns on !lead); everything
+// stateful lives in DrawerBody, which is keyed on the lead id so the active
+// tab resets per lead and hook order is never conditional.
+const getScoreColor = (score: number) => {
+  if (score >= 90) return 'text-[var(--color-success)] bg-[var(--color-success)]/10 border-[var(--color-success)]/20';
+  if (score >= 75) return 'text-[var(--color-info)] bg-[var(--color-info)]/10 border-[var(--color-info)]/20';
+  if (score >= 60) return 'text-[var(--color-warning)] bg-[var(--color-warning)]/10 border-[var(--color-warning)]/20';
+  return 'text-[var(--color-error)] bg-[var(--color-error)]/10 border-[var(--color-error)]/20';
+};
+
+const getScoreLabel = (score: number) => {
+  if (score >= 90) return 'Hot Lead';
+  if (score >= 75) return 'Warm Lead';
+  if (score >= 60) return 'Qualified';
+  return 'Cold Lead';
+};
+
+// Mock activity history
+const activityHistory = [
+  { date: '2026-02-28', type: 'Email Sent', description: 'Initial outreach email sent', user: 'System' },
+  { date: '2026-02-27', type: 'Lead Delivered', description: 'Lead delivered to client portal', user: 'System' },
+  { date: '2026-02-26', type: 'Verified', description: 'Contact information verified', user: 'QA Team' },
+  { date: '2026-02-25', type: 'Created', description: 'Lead created and qualified', user: 'Research Team' },
+];
+
+// Mock notes
+const notes = [
+  { date: '2026-02-28', author: 'Renuka Lawless', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
+  { date: '2026-02-26', author: 'Brijesh Singh', text: 'Company matches ICP perfectly. High potential for conversion.' },
+];
+
 export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: LeadDetailDrawerProps) {
   if (!lead) return null;
-
-  const getScoreColor = (score: number) => {
-    if (score >= 90) return 'text-[var(--color-success)] bg-[var(--color-success)]/10 border-[var(--color-success)]/20';
-    if (score >= 75) return 'text-[var(--color-info)] bg-[var(--color-info)]/10 border-[var(--color-info)]/20';
-    if (score >= 60) return 'text-[var(--color-warning)] bg-[var(--color-warning)]/10 border-[var(--color-warning)]/20';
-    return 'text-[var(--color-error)] bg-[var(--color-error)]/10 border-[var(--color-error)]/20';
-  };
-
-  const getScoreLabel = (score: number) => {
-    if (score >= 90) return 'Hot Lead';
-    if (score >= 75) return 'Warm Lead';
-    if (score >= 60) return 'Qualified';
-    return 'Cold Lead';
-  };
-
-  // Mock activity history
-  const activityHistory = [
-    { date: '2026-02-28', type: 'Email Sent', description: 'Initial outreach email sent', user: 'System' },
-    { date: '2026-02-27', type: 'Lead Delivered', description: 'Lead delivered to client portal', user: 'System' },
-    { date: '2026-02-26', type: 'Verified', description: 'Contact information verified', user: 'QA Team' },
-    { date: '2026-02-25', type: 'Created', description: 'Lead created and qualified', user: 'Research Team' },
-  ];
-
-  // Mock notes
-  const notes = [
-    { date: '2026-02-28', author: 'Renuka Lawless', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
-    { date: '2026-02-26', author: 'Brijesh Singh', text: 'Company matches ICP perfectly. High potential for conversion.' },
-  ];
 
   const isTerminal = lead.status === 'Accepted' || lead.status === 'Rejected';
 
@@ -80,8 +90,101 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
           </div>
         </div>
 
-        {/* Content — scrollable */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6">
+        {/* Content — scrollable; keyed so tab state resets per lead */}
+        <DrawerBody key={lead.id} lead={lead} />
+
+        {/* Sticky Action Bar */}
+        <div className="sticky bottom-0 bg-[var(--color-surface-raised)] border-t border-gray-200 p-4 flex gap-3">
+          {isTerminal ? (
+            lead.status === 'Accepted' ? (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 font-medium text-sm">
+                <CheckCircle className="w-4 h-4" />
+                ✓ Accepted
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 font-medium text-sm">
+                <XCircle className="w-4 h-4" />
+                ✗ Rejected
+              </div>
+            )
+          ) : (
+            <>
+              <button
+                onClick={() => {
+                  onStatusChange?.(lead.id, 'Accepted');
+                  toast.success('Lead accepted');
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-medium text-sm transition-colors"
+              >
+                <CheckCircle className="w-4 h-4" />
+                Accept Lead
+              </button>
+              <button
+                onClick={() => {
+                  onStatusChange?.(lead.id, 'Rejected');
+                  toast.error('Lead rejected');
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-medium text-sm transition-colors"
+              >
+                <XCircle className="w-4 h-4" />
+                Reject Lead
+              </button>
+              <button
+                onClick={() => {
+                  onStatusChange?.(lead.id, 'Contacted');
+                  toast.success('Lead marked as contacted');
+                }}
+                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium text-sm transition-colors"
+              >
+                <Mail className="w-4 h-4" />
+                Mark Contacted
+              </button>
+            </>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// Scroll column + (for UNION preview) the Relish intelligence tabs. Owns the
+// tab state; parent keys this on lead.id.
+function DrawerBody({ lead }: { lead: Lead }) {
+  const { currentUser } = useAuth();
+  const [tab, setTab] = useState<DrawerTab>('details');
+
+  const intel = showFutureModules(currentUser) ? getRelishIntel(lead) : null;
+  const tabs: Array<{ key: DrawerTab; label: string }> = [
+    { key: 'details', label: 'Details' },
+    ...(intel?.company ? [{ key: 'company' as const, label: 'Company Intel' }] : []),
+    ...(intel?.contact ? [{ key: 'contact' as const, label: 'Contact Intel' }] : []),
+  ];
+
+  return (
+    <div className="flex-1 overflow-y-auto p-6 space-y-6">
+      {/* Segmented switch — only when Relish intel exists for this lead */}
+      {intel && tabs.length > 1 && (
+        <div className="grid gap-1 rounded-xl p-1 bg-gray-100 border border-gray-200" style={{ gridTemplateColumns: `repeat(${tabs.length}, 1fr)` }}>
+          {tabs.map(t => (
+            <button
+              key={t.key}
+              onClick={() => setTab(t.key)}
+              className={`min-h-[36px] rounded-lg text-sm font-semibold transition-all ${
+                tab === t.key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
+              }`}
+            >
+              {t.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {tab === 'company' && intel?.company ? (
+        <RelishCompanyPanel intel={intel.company} lastUpdated={intel.lastUpdated} />
+      ) : tab === 'contact' && intel?.contact ? (
+        <RelishContactPanel lead={lead} intel={intel.contact} lastUpdated={intel.lastUpdated} />
+      ) : (
+        <>
           {/* Lead Score Card */}
           <div className="rounded-xl p-5 bg-gray-50 border border-gray-200">
             <div className="flex items-center justify-between mb-4">
@@ -271,58 +374,8 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
               </button>
             </div>
           </div>
-        </div>
-
-        {/* Sticky Action Bar */}
-        <div className="sticky bottom-0 bg-[var(--color-surface-raised)] border-t border-gray-200 p-4 flex gap-3">
-          {isTerminal ? (
-            lead.status === 'Accepted' ? (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 border border-green-200 text-green-700 font-medium text-sm">
-                <CheckCircle className="w-4 h-4" />
-                ✓ Accepted
-              </div>
-            ) : (
-              <div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 font-medium text-sm">
-                <XCircle className="w-4 h-4" />
-                ✗ Rejected
-              </div>
-            )
-          ) : (
-            <>
-              <button
-                onClick={() => {
-                  onStatusChange?.(lead.id, 'Accepted');
-                  toast.success('Lead accepted');
-                }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 active:bg-green-800 text-white font-medium text-sm transition-colors"
-              >
-                <CheckCircle className="w-4 h-4" />
-                Accept Lead
-              </button>
-              <button
-                onClick={() => {
-                  onStatusChange?.(lead.id, 'Rejected');
-                  toast.error('Lead rejected');
-                }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 active:bg-red-800 text-white font-medium text-sm transition-colors"
-              >
-                <XCircle className="w-4 h-4" />
-                Reject Lead
-              </button>
-              <button
-                onClick={() => {
-                  onStatusChange?.(lead.id, 'Contacted');
-                  toast.success('Lead marked as contacted');
-                }}
-                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 active:bg-blue-800 text-white font-medium text-sm transition-colors"
-              >
-                <Mail className="w-4 h-4" />
-                Mark Contacted
-              </button>
-            </>
-          )}
-        </div>
-      </div>
-    </>
+        </>
+      )}
+    </div>
   );
 }

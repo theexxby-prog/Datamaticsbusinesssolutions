@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router';
 import { LayoutGrid } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getTabsForRole, tabLabel, useNavBadges, type NavItem } from '../../config/navigation';
+import { showFutureModules } from '../../config/demo';
 import { MoreSheet } from './MoreSheet';
 
 // Bottom tab bar: up to four primary destinations per role plus a "More" tab
@@ -16,8 +17,8 @@ export function MobileTabBar() {
   const [moreOpen, setMoreOpen] = useState(false);
 
   const { tabs, more } = useMemo(
-    () => getTabsForRole(currentUser?.role),
-    [currentUser?.role],
+    () => getTabsForRole(currentUser?.role, showFutureModules(currentUser)),
+    [currentUser],
   );
 
   const isItemActive = (item: NavItem) =>

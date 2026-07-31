@@ -23,7 +23,7 @@ export function DemoRibbon() {
         }}
       >
         <span className="w-1.5 h-1.5 rounded-full" style={{ background: 'var(--color-warning)' }} />
-        Demo environment · Sample data
+        Preview environment
       </span>
     </div>
   );
