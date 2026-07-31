@@ -46,7 +46,9 @@ export default function UnionLeadsPage() {
   const [lens, setLens] = useState<Lens>('people');
   const [statusFilter, setStatusFilter] = useState('all');
   const [campaignFilter, setCampaignFilter] = useState('all');
-  const [enrichFilter, setEnrichFilter] = useState('all');
+  // Enriched contacts are the product story — open on them; standard leads
+  // are one select away.
+  const [enrichFilter, setEnrichFilter] = useState('enriched');
 
   // Header stats + QA line (same sources the standard page uses)
   const clientData = allClients.find(c => c.id === 'client_1');
