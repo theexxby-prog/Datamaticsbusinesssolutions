@@ -311,7 +311,7 @@ export default function TeamManagementPage() {
     const active = sortField === field;
     return (
       <th
-        className="text-left px-6 py-4 cursor-pointer select-none"
+        className="text-left px-6 py-3 cursor-pointer select-none"
         onClick={() => handleSort(field)}
         style={{ fontSize: '11px', fontWeight: 700, color: active ? 'var(--color-primary)' : 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}
       >
@@ -325,7 +325,7 @@ export default function TeamManagementPage() {
 
   function PlainTh({ label }: { label: string }) {
     return (
-      <th className="text-left px-6 py-4" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+      <th className="text-left px-6 py-3" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
         {label}
       </th>
     );
@@ -338,7 +338,7 @@ export default function TeamManagementPage() {
       <div className="max-w-[1440px] mx-auto px-6 py-6">
 
         {/* Page header */}
-        <div className="flex items-start justify-between mb-6 gap-4 flex-wrap">
+        <div className="flex items-start justify-between mb-4 gap-4 flex-wrap">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Team Management</h1>
             <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginTop: 4 }}>
@@ -395,7 +395,7 @@ export default function TeamManagementPage() {
         </div>
 
         {/* KPI cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6">
           {stats.map((s, i) => (
             <motion.div
               key={s.label}
@@ -480,7 +480,7 @@ export default function TeamManagementPage() {
                     <TableRow key={member.id} showHoverEffect animationDelay={index * 60}>
 
                       {/* Name + avatar */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <div className="relative">
                             <PersonAvatar name={member.name} size={42} />
@@ -505,7 +505,7 @@ export default function TeamManagementPage() {
                       </td>
 
                       {/* Contact */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <div className="flex items-center gap-1.5 mb-1" style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
                           <Mail className="w-3 h-3 flex-shrink-0" />
                           <span className="truncate" style={{ maxWidth: 180 }}>{member.email}</span>
@@ -517,12 +517,12 @@ export default function TeamManagementPage() {
                       </td>
 
                       {/* Role */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <RoleBadge role={member.role} />
                       </td>
 
                       {/* Client count */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <div style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)' }}>
                           {member.clientsAssigned}
                         </div>
@@ -530,13 +530,13 @@ export default function TeamManagementPage() {
                       </td>
 
                       {/* Status */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <StatusDot status={member.status} />
                       </td>
 
                       {/* Actions — ops only */}
                       {isOpsManager && (
-                        <td className="px-6 py-4">
+                        <td className="px-6 py-3">
                           <ActionMenu
                             member={member}
                             isSelf={isSelf}

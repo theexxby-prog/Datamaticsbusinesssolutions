@@ -21,8 +21,7 @@ import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { exportLeadsToCSV } from '../utils/exportUtils';
 import { allClients } from '../data/mockClients';
 import { showFutureModules } from '../config/demo';
-import { hasRelishIntel } from '../data/relish';
-import { RelishBadge } from '../components/relish/RelishBadge';
+import UnionLeadsPage from './UnionLeadsPage';
 import { toast } from 'sonner';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -30,11 +29,18 @@ type SortField = 'leadScore' | 'deliveryDate' | 'company' | 'status';
 type SortDirection = 'asc' | 'desc';
 type ViewMode = 'table' | 'grid';
 
+// The UNION preview login gets the reimagined dense Leads experience; every
+// other login keeps this page exactly as it is. Split so each owns its hooks.
 export default function LeadsPage() {
+  const { currentUser } = useAuth();
+  return showFutureModules(currentUser) ? <UnionLeadsPage /> : <StandardLeadsPage />;
+}
+
+function StandardLeadsPage() {
   useDocumentTitle('Leads');
   const { currentUser } = useAuth();
 
-  const [leads, setLeads] = useState(mockLeads);
+  const [leads, setLeads] = useState<Lead[]>(mockLeads);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -58,9 +64,6 @@ export default function LeadsPage() {
     industry: [] as string[],
     tags: [] as string[]
   });
-
-  // Relish intelligence badges — UNION preview login only.
-  const showIntel = showFutureModules(currentUser);
 
   // Determine lead acceptance method from the client
   const clientData = allClients.find(c => c.id === 'client_1'); // Current client
@@ -486,10 +489,7 @@ export default function LeadsPage() {
                         <div className="flex items-center gap-3">
                           <LeadAvatar firstName={lead.firstName} lastName={lead.lastName} size="md" />
                           <div>
-                            <div className="t1 flex items-center gap-2">
-                              {lead.firstName} {lead.lastName}
-                              {showIntel && hasRelishIntel(lead) && <RelishBadge />}
-                            </div>
+                            <div className="t1">{lead.firstName} {lead.lastName}</div>
                             <div className="t2">{lead.title}</div>
                           </div>
                         </div>
@@ -669,10 +669,7 @@ export default function LeadsPage() {
                       />
                       <LeadAvatar firstName={lead.firstName} lastName={lead.lastName} size="md" />
                       <div className="min-w-0 flex-1">
-                        <div className="t1 flex items-center gap-2">
-                          <span className="truncate">{lead.firstName} {lead.lastName}</span>
-                          {showIntel && hasRelishIntel(lead) && <RelishBadge />}
-                        </div>
+                        <div className="t1 truncate">{lead.firstName} {lead.lastName}</div>
                         <div className="t2 truncate">{lead.title}</div>
                         <div className="t2 mt-1 flex items-center gap-1.5 truncate">
                           <Building2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />

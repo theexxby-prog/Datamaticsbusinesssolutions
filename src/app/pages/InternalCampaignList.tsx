@@ -4,13 +4,10 @@ import { Search, Eye, ChevronDown, ChevronsUpDown } from 'lucide-react';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { MobileCardList } from '../components/ui/MobileCardList';
 import { allClients, type Campaign } from '../data/mockClients';
+import { formatDate } from '../utils/formatDate';
 
 type FlatCampaign = Campaign & { clientId: string; clientName: string; manager: string };
 
-function fmtDate(iso?: string) {
-  if (!iso) return null;
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
 
 const statusLabel: Record<string, string> = {
   active: 'Active',
@@ -48,7 +45,7 @@ export default function InternalCampaignList() {
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '4px' }}>All Campaigns</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
             {allCampaigns.length.toLocaleString('en-US')} campaigns found
@@ -139,19 +136,19 @@ export default function InternalCampaignList() {
                   const target = c.target ?? c.goalLeads ?? 0;
                   const delivered = c.delivered ?? c.deliveredLeads ?? 0;
                   const pct = target > 0 ? Math.round((delivered / target) * 100) : 0;
-                  const start = fmtDate(c.startDate);
-                  const end = fmtDate(c.endDate);
+                  const start = formatDate(c.startDate);
+                  const end = formatDate(c.endDate);
                   return (
                     <tr key={c.id} style={{ background: i % 2 === 1 ? 'var(--color-main-bg)' : 'transparent', borderTop: '1px solid var(--color-border-light)' }}>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-3">
                         <div style={{ fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '2px' }}>{c.name}</div>
                         <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>
                           ID: {c.id.replace(/\D/g, '') || c.id}
                           {start && end && <span> · {start} → {end}</span>}
                         </div>
                       </td>
-                      <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{statusLabel[c.status]}</td>
-                      <td className="px-5 py-4" style={{ minWidth: '240px' }}>
+                      <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{statusLabel[c.status]}</td>
+                      <td className="px-5 py-3" style={{ minWidth: '240px' }}>
                         <div className="flex items-center gap-3">
                           <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--color-border-light)' }}>
                             <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: 'var(--color-primary)' }} />
@@ -162,8 +159,8 @@ export default function InternalCampaignList() {
                           {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')} Billable Leads
                         </div>
                       </td>
-                      <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{c.totalLeads.toLocaleString('en-US')}</td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{c.totalLeads.toLocaleString('en-US')}</td>
+                      <td className="px-5 py-3">
                         <button
                           onClick={() => navigate(`/internal/campaigns/${c.id}`)}
                           aria-label={`View ${c.name}`}

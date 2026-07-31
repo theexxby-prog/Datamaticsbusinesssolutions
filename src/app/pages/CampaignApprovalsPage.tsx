@@ -21,14 +21,8 @@ import { StatusBadge } from '../components/StatusBadge';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { mockCampaignSubmissions } from '../mockData';
 import type { CampaignSubmission, SubmissionStatus } from '../types';
+import { formatDate } from '../utils/formatDate';
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-  });
-}
 
 function daysSince(iso: string) {
   const diff = Date.now() - new Date(iso).getTime();
@@ -74,8 +68,8 @@ function ChangesModal({
         }}
       >
         <div className="flex items-start gap-3 mb-5">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center flex-shrink-0">
-            <MessageSquareDiff className="w-5 h-5 text-amber-600" />
+          <div className="w-10 h-10 rounded-xl bg-[var(--color-warning-bg)] flex items-center justify-center flex-shrink-0">
+            <MessageSquareDiff className="w-5 h-5 text-[var(--color-warning)]" />
           </div>
           <div>
             <h3 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px' }}>
@@ -111,7 +105,7 @@ function ChangesModal({
           <button
             onClick={() => notes.trim() && onSubmit(notes.trim())}
             disabled={!notes.trim()}
-            className="flex-1 py-2.5 rounded-xl bg-amber-500 text-white hover:bg-amber-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-semibold"
+            className="flex-1 py-2.5 rounded-xl bg-[var(--color-warning)] text-white hover:bg-[var(--color-warning)]/90 disabled:opacity-40 disabled:cursor-not-allowed transition-colors font-semibold"
             style={{ fontSize: '14px' }}
           >
             Send Feedback
@@ -162,17 +156,17 @@ function SubmissionCard({
         <div className="h-1 w-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-warning)]" />
       )}
       {submission.status === 'Changes Requested' && (
-        <div className="h-1 w-full bg-gradient-to-r from-amber-500 to-yellow-400" />
+        <div className="h-1 w-full bg-gradient-to-r from-[var(--color-warning)] to-[var(--color-warning)]/60" />
       )}
 
-      <div className="p-6">
+      <div className="p-5">
         {/* Header row */}
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap mb-1">
               <StatusBadge status={submission.status} />
               <span className="text-xs text-[var(--color-text-muted)]">
-                Submitted {daysSince(submission.submittedAt)} · {fmtDate(submission.submittedAt)}
+                Submitted {daysSince(submission.submittedAt)} · {formatDate(submission.submittedAt)}
               </span>
             </div>
             <h3 className="font-semibold text-[var(--color-text-primary)] leading-snug" style={{ fontSize: '16px' }}>
@@ -196,7 +190,7 @@ function SubmissionCard({
           )}
           {isReviewed && (
             <div className="flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] flex-shrink-0">
-              Reviewed {submission.reviewedAt ? fmtDate(submission.reviewedAt) : ''}
+              Reviewed {submission.reviewedAt ? formatDate(submission.reviewedAt) : ''}
             </div>
           )}
         </div>
@@ -310,17 +304,17 @@ function SubmissionCard({
             style={{ background: 'rgba(245,158,11,0.06)', border: '1px solid rgba(245,158,11,0.2)' }}
           >
             <div className="flex items-start gap-2">
-              <AlertTriangle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
+              <AlertTriangle className="w-4 h-4 text-[var(--color-warning)] flex-shrink-0 mt-0.5" />
               <div>
-                <p className="font-semibold text-amber-800 mb-1" style={{ fontSize: '13px' }}>
+                <p className="font-semibold text-[var(--color-badge-paused-text)] mb-1" style={{ fontSize: '13px' }}>
                   Feedback sent to client
                 </p>
-                <p className="text-amber-900 leading-relaxed" style={{ fontSize: '13px' }}>
+                <p className="text-[var(--color-badge-paused-text)] leading-relaxed" style={{ fontSize: '13px' }}>
                   {submission.managerNotes}
                 </p>
                 {submission.reviewedBy && (
-                  <p className="text-amber-600 mt-2" style={{ fontSize: '12px' }}>
-                    — {submission.reviewedBy}{submission.reviewedAt ? `, ${fmtDate(submission.reviewedAt)}` : ''}
+                  <p className="text-[var(--color-warning)] mt-2" style={{ fontSize: '12px' }}>
+                    — {submission.reviewedBy}{submission.reviewedAt ? `, ${formatDate(submission.reviewedAt)}` : ''}
                   </p>
                 )}
               </div>
@@ -335,9 +329,9 @@ function SubmissionCard({
             style={{ background: 'rgba(5,150,105,0.06)', border: '1px solid rgba(5,150,105,0.2)' }}
           >
             <div className="flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <p className="font-semibold text-emerald-800" style={{ fontSize: '13px' }}>
-                Approved by {submission.reviewedBy}{submission.reviewedAt ? ` on ${fmtDate(submission.reviewedAt)}` : ''} — Campaign is now live
+              <CheckCircle2 className="w-4 h-4 text-[var(--color-success)]" />
+              <p className="font-semibold text-[var(--color-badge-active-text)]" style={{ fontSize: '13px' }}>
+                Approved by {submission.reviewedBy}{submission.reviewedAt ? ` on ${formatDate(submission.reviewedAt)}` : ''} — Campaign is now live
               </p>
             </div>
           </div>
@@ -350,8 +344,8 @@ function SubmissionCard({
             style={{ background: 'rgba(220,38,38,0.05)', border: '1px solid rgba(220,38,38,0.15)' }}
           >
             <div className="flex items-center gap-2">
-              <XCircle className="w-4 h-4 text-red-500" />
-              <p className="font-semibold text-red-700" style={{ fontSize: '13px' }}>
+              <XCircle className="w-4 h-4 text-[var(--color-error)]" />
+              <p className="font-semibold text-[var(--color-error)]" style={{ fontSize: '13px' }}>
                 Declined — Client has been notified
               </p>
             </div>
@@ -363,7 +357,7 @@ function SubmissionCard({
           <div className="flex gap-2 flex-wrap pt-1">
             <button
               onClick={() => onApprove(submission.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-success)] text-white hover:bg-[#047857] active:bg-[var(--color-badge-active-text)] transition-colors font-semibold"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-success)] text-white hover:bg-[var(--color-success)]/90 active:bg-[var(--color-success)]/80 transition-colors font-semibold"
               style={{ fontSize: '13px' }}
             >
               <CheckCircle2 className="w-4 h-4" />
@@ -371,7 +365,7 @@ function SubmissionCard({
             </button>
             <button
               onClick={() => onRequestChanges(submission)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-amber-500 text-white hover:bg-amber-600 active:bg-amber-700 transition-colors font-semibold"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl bg-[var(--color-warning)] text-white hover:bg-[var(--color-warning)]/90 active:bg-[var(--color-warning)]/80 transition-colors font-semibold"
               style={{ fontSize: '13px' }}
             >
               <MessageSquareDiff className="w-4 h-4" />
@@ -379,7 +373,7 @@ function SubmissionCard({
             </button>
             <button
               onClick={() => onDecline(submission.id)}
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-red-50 hover:text-red-700 hover:border-red-200 active:bg-red-100 transition-colors font-medium"
+              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-error-bg)] hover:text-[var(--color-error)] hover:border-[var(--color-error)]/25 active:bg-[var(--color-error)]/15 transition-colors font-medium"
               style={{ fontSize: '13px' }}
             >
               <XCircle className="w-4 h-4" />
@@ -477,10 +471,10 @@ export default function CampaignApprovalsPage() {
 
   return (
     <>
-      <div className="max-w-[1100px] mx-auto page-content">
+      <div className="max-w-[1440px] mx-auto page-content">
 
         {/* Page header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 className="text-[var(--color-text-primary)] mb-1" style={{ fontSize: '24px', fontWeight: 700 }}>
             Campaign Approvals
           </h1>
@@ -490,7 +484,7 @@ export default function CampaignApprovalsPage() {
         </div>
 
         {/* Summary stat strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {[
             { label: 'Pending Review', value: pendingCount, color: 'var(--color-warning)', bg: 'rgba(194,65,12,0.06)', border: 'rgba(194,65,12,0.15)' },
             { label: 'Changes Sent', value: changesCount, color: 'var(--color-warning)', bg: 'rgba(180,83,9,0.06)', border: 'rgba(180,83,9,0.15)' },
@@ -536,7 +530,7 @@ export default function CampaignApprovalsPage() {
 
         {/* Submission list */}
         {filtered.length === 0 ? (
-          <div className="rounded-2xl p-12 text-center"
+          <div className="rounded-2xl p-8 text-center"
             style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--glass-border)' }}>
             <Inbox className="w-12 h-12 text-[var(--color-border)] mx-auto mb-4" />
             <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px' }}>No submissions here</p>

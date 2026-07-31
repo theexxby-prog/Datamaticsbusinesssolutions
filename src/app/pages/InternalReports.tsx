@@ -136,7 +136,7 @@ export default function InternalReports() {
         className="max-w-[1440px] mx-auto page-content animate-fadeIn"
       >
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-1">
               Internal Reports
@@ -499,7 +499,7 @@ export default function InternalReports() {
                   {['Team Member', 'Leads Delivered', 'Acceptance Rate', 'Clients', 'Performance'].map((header) => (
                     <th
                       key={header}
-                      className="text-left px-6 py-4"
+                      className="text-left px-6 py-3"
                       style={{
                         fontSize: 'var(--font-size-xs)',
                         fontWeight: 'var(--font-weight-semibold)',
@@ -522,7 +522,7 @@ export default function InternalReports() {
                       className="border-b hover:bg-black/[0.02] transition-colors"
                       style={{ borderColor: 'var(--color-border)' }}
                     >
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <PersonAvatar name={op.name} size={36} />
                           <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
@@ -530,12 +530,12 @@ export default function InternalReports() {
                           </span>
                         </div>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                           {op.leads.toLocaleString()}
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <span
                           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full"
                           style={{
@@ -548,12 +548,12 @@ export default function InternalReports() {
                           {op.acceptance}%
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
                           {op.clients} assigned
                         </span>
                       </td>
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <div className="flex items-center gap-3">
                           <div className="progress-bar flex-1" style={{ minWidth: '80px' }}>
                             <div

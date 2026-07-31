@@ -20,6 +20,7 @@ import { allClients, Client } from '../data/mockClients';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { MobileCardList } from '../components/ui/MobileCardList';
 import { useAuth } from '../context/AuthContext';
+import { formatDate } from '../utils/formatDate';
 
 // Available team members for assignment
 interface TeamMember {
@@ -153,16 +154,11 @@ export default function ClientAssignmentPage() {
     handleCloseModal();
   };
 
-  const formatDate = (isoDate: string) => {
-    const date = new Date(isoDate);
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  };
-
   return (
     <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">
             Client Assignment Management
           </h1>
@@ -172,7 +168,7 @@ export default function ClientAssignmentPage() {
         </div>
 
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-6 stagger-children">
           <motion.div
             className="kpi-card animate-slideInUp"
             initial={{ opacity: 0, y: 20 }}
@@ -338,7 +334,7 @@ export default function ClientAssignmentPage() {
               >
                 <tr>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
@@ -350,7 +346,7 @@ export default function ClientAssignmentPage() {
                     Client
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
@@ -362,7 +358,7 @@ export default function ClientAssignmentPage() {
                     Campaign Manager
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
@@ -374,7 +370,7 @@ export default function ClientAssignmentPage() {
                     Backup Manager
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
@@ -386,7 +382,7 @@ export default function ClientAssignmentPage() {
                     Status
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
@@ -410,7 +406,7 @@ export default function ClientAssignmentPage() {
                     style={{ borderBottom: '1px solid var(--color-border)' }}
                   >
                     {/* Client Info */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div>
                         <div
                           style={{
@@ -442,7 +438,7 @@ export default function ClientAssignmentPage() {
                     </td>
 
                     {/* Campaign Manager */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       {client.campaignManagerEmail ? (
                         <div>
                           <div
@@ -479,7 +475,7 @@ export default function ClientAssignmentPage() {
                     </td>
 
                     {/* Backup Manager */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       {client.backupManagerEmail ? (
                         <div>
                           <div
@@ -516,7 +512,7 @@ export default function ClientAssignmentPage() {
                     </td>
 
                     {/* Status */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <span
                         className={`badge badge-${client.status === 'active' ? 'active' : client.status === 'paused' ? 'paused' : 'completed'}`}
                       >
@@ -525,7 +521,7 @@ export default function ClientAssignmentPage() {
                     </td>
 
                     {/* Actions */}
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div className="flex items-center gap-2">
                         {client.campaignManagerEmail && client.backupManagerEmail ? (
                           <>
@@ -660,7 +656,7 @@ export default function ClientAssignmentPage() {
 
           {/* Empty State */}
           {filteredClients.length === 0 && (
-            <div className="py-12 text-center">
+            <div className="py-8 text-center">
               <Building2
                 className="w-12 h-12 mx-auto mb-4"
                 style={{ color: 'var(--color-text-tertiary)' }}

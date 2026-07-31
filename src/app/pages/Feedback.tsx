@@ -862,10 +862,10 @@ export default function Feedback() {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto page-content">
+      <div className="max-w-5xl mx-auto page-content">
 
         {/* Page Header */}
-        <div className="mb-6 flex items-center justify-between gap-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
           {/* Left: icon + title — icon aligned to match card icons (pl-5 offset) */}
           <div className="flex items-center gap-4 pl-5">
             <div
@@ -1022,7 +1022,7 @@ export default function Feedback() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.05 }}
-          className="mb-6"
+          className="mb-5"
         >
           <button
             onClick={() => setShowComingFeatures(!showComingFeatures)}

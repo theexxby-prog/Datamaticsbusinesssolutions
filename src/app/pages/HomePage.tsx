@@ -19,6 +19,8 @@ import { PersonAvatar } from '../components/PersonAvatar';
 import { getPersonPhoto } from '../data/personPhotos';
 import { getDashPrefs, subscribeDashPrefs, type DashPrefs } from '../data/dashboardPrefs';
 import { formatDateShort } from '../utils/formatDate';
+import { showFutureModules } from '../config/demo';
+import UnionDashboard from './UnionDashboard';
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 function getGreeting() {
@@ -45,7 +47,15 @@ function formatBusinessValue(value: number): string {
 }
 // ─────────────────────────────────────────────────────────────────────────────
 
+// The UNION preview login gets the reimagined compact dashboard; everyone
+// else keeps this page exactly as it is. Split into two components so each
+// owns its hooks (no conditional hook order).
 export default function HomePage() {
+  const { currentUser } = useAuth();
+  return showFutureModules(currentUser) ? <UnionDashboard /> : <StandardHomePage />;
+}
+
+function StandardHomePage() {
   useDocumentTitle('Dashboard');
 
   const navigate = useNavigate();
@@ -141,7 +151,7 @@ export default function HomePage() {
       id: c.id,
       name: c.name,
       status: c.status === 'active' ? 'Live' : c.status === 'completed' ? 'Completed' : 'Scheduled',
-      statusCls: 'bg-emerald-50 text-emerald-700',
+      statusCls: 'bg-[var(--color-success-bg)] text-[var(--color-success)]',
       progress: target > 0 ? Math.round((delivered / target) * 100) : 0,
       done: `${delivered.toLocaleString('en-US')} / ${target.toLocaleString('en-US')}`,
     };
@@ -212,7 +222,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="max-w-[1400px] mx-auto page-content space-y-6">
+      <div className="max-w-[1600px] mx-auto page-content space-y-5">
 
         {/* ── Welcome Banner ─────────────────────────────────────────────── */}
         <motion.div
@@ -293,7 +303,7 @@ export default function HomePage() {
         </div>
 
         {/* ── KPI Row: horizontal snap-scroll on phones, grid from md up ── */}
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 md:overflow-visible md:px-0 md:pb-0">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-3 md:overflow-visible md:px-0 md:pb-0">
 
           {/* 1 — Total Leads This Month */}
           {prefs.totalLeads && (
@@ -406,14 +416,14 @@ export default function HomePage() {
                 >
                   <div className="flex items-center gap-1.5">
                     <span className="relative flex h-1.5 w-1.5">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60 bg-emerald-500" />
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60 bg-[var(--color-success)]" />
+                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[var(--color-success)]" />
                     </span>
-                    <span className="text-xs font-semibold text-emerald-700">Live</span>
+                    <span className="text-xs font-semibold text-[var(--color-success)]">Live</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-emerald-700">{campaignStats.live}</span>
-                    <ArrowUpRight className="w-3 h-3 text-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-xs font-bold text-[var(--color-success)]">{campaignStats.live}</span>
+                    <ArrowUpRight className="w-3 h-3 text-[var(--color-success)] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </motion.button>
 
@@ -466,12 +476,12 @@ export default function HomePage() {
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center gap-1.5">
-                    <CheckCircle2 className="w-2 h-2 text-blue-500" />
-                    <span className="text-xs font-semibold text-blue-600">Completed</span>
+                    <CheckCircle2 className="w-2 h-2 text-[var(--color-info)]" />
+                    <span className="text-xs font-semibold text-[var(--color-info)]">Completed</span>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="text-xs font-bold text-blue-600">{campaignStats.completed}</span>
-                    <ArrowUpRight className="w-3 h-3 text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <span className="text-xs font-bold text-[var(--color-info)]">{campaignStats.completed}</span>
+                    <ArrowUpRight className="w-3 h-3 text-[var(--color-info)] opacity-0 group-hover:opacity-100 transition-opacity" />
                   </div>
                 </motion.button>
               </div>
@@ -491,7 +501,7 @@ export default function HomePage() {
               <div className="flex items-start justify-between mb-3">
                 <p className="text-xs font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Action Required</p>
                 <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-warning)]/20 to-[var(--color-warning)]/10 flex items-center justify-center flex-shrink-0">
-                  <Clock className="w-4 h-4 text-amber-500" />
+                  <Clock className="w-4 h-4 text-[var(--color-warning)]" />
                 </div>
               </div>
 
@@ -506,11 +516,11 @@ export default function HomePage() {
                 whileHover={{ background: topOverdue ? 'rgba(239,68,68,0.09)' : 'rgba(16,185,129,0.09)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${topOverdue ? 'bg-red-50' : 'bg-emerald-50'}`}>
-                  <FileText className={`w-4 h-4 ${topOverdue ? 'text-red-500' : 'text-emerald-600'}`} />
+                <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${topOverdue ? 'bg-[var(--color-error-bg)]' : 'bg-[var(--color-success-bg)]'}`}>
+                  <FileText className={`w-4 h-4 ${topOverdue ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]'}`} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className={`text-xs font-semibold ${topOverdue ? 'text-red-600' : 'text-emerald-700'}`}>
+                  <p className={`text-xs font-semibold ${topOverdue ? 'text-[var(--color-error)]' : 'text-[var(--color-success)]'}`}>
                     {topOverdue ? 'Overdue Invoice' : 'Invoices in good standing'}
                   </p>
                   <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 truncate">
@@ -521,7 +531,7 @@ export default function HomePage() {
                         : 'All invoices settled'}
                   </p>
                 </div>
-                <ArrowUpRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ${topOverdue ? 'text-red-400' : 'text-emerald-400'}`} />
+                <ArrowUpRight className={`w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0 ${topOverdue ? 'text-[var(--color-error)]/70' : 'text-[var(--color-success)]/70'}`} />
               </motion.button>
 
               {/* Awaiting signature */}
@@ -532,16 +542,16 @@ export default function HomePage() {
                 whileHover={{ background: 'rgba(245,158,11,0.09)' }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="w-8 h-8 rounded-lg bg-amber-50 flex items-center justify-center flex-shrink-0">
-                  <FilePenLine className="w-4 h-4 text-amber-500" />
+                <div className="w-8 h-8 rounded-lg bg-[var(--color-warning-bg)] flex items-center justify-center flex-shrink-0">
+                  <FilePenLine className="w-4 h-4 text-[var(--color-warning)]" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-amber-700">Signature Required</p>
+                  <p className="text-xs font-semibold text-[var(--color-warning)]">Signature Required</p>
                   <p className="text-xs text-[var(--color-text-secondary)] mt-0.5 truncate">
                     {topSignature ? `${topSignature.id} · ${topSignature.campaignName}` : 'Nothing awaiting signature'}
                   </p>
                 </div>
-                <ArrowUpRight className="w-3.5 h-3.5 text-amber-400 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
+                <ArrowUpRight className="w-3.5 h-3.5 text-[var(--color-warning)]/70 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0" />
               </motion.button>
             </div>
           </motion.div>
@@ -549,11 +559,11 @@ export default function HomePage() {
         </div>
 
         {/* ── Recent Activity & Needs Attention ──────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Recent Activity */}
-          <div className="rounded-2xl p-6 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <h2 className="font-semibold text-[var(--color-text-primary)] mb-4" style={{ fontSize: '17px', fontWeight: 600 }}>Recent Activity</h2>
+          <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '17px', fontWeight: 600 }}>Recent Activity</h2>
             <div className="divide-y divide-black/[0.04]">
               {recentActivity.map(a => (
                 <div key={a.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0 hover:bg-[var(--color-surface-raised)] rounded-xl px-2 -mx-2 transition-colors cursor-pointer">
@@ -573,8 +583,8 @@ export default function HomePage() {
           </div>
 
           {/* Needs Your Attention */}
-          <div className="rounded-2xl p-6 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <h2 className="font-semibold text-[var(--color-text-primary)] mb-4" style={{ fontSize: '17px', fontWeight: 600 }}>Needs Your Attention</h2>
+          <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '17px', fontWeight: 600 }}>Needs Your Attention</h2>
             <div className="space-y-2.5">
               {needsAttention.map(item => {
                 const c = attentionColors(item.type);
@@ -611,8 +621,8 @@ export default function HomePage() {
         </div>
 
         {/* ── Campaign Snapshot ───────────────────────────────────────────── */}
-        <div className="rounded-2xl p-6 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <div className="flex items-center justify-between mb-5">
+        <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '17px', fontWeight: 600 }}>Campaign Snapshot</h2>
             <button
               onClick={() => navigate('/campaigns')}
@@ -624,7 +634,7 @@ export default function HomePage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
             {campaignSnapshot.map(c => (
               <motion.div
                 key={c.id}

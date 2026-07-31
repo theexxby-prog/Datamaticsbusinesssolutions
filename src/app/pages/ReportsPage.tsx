@@ -273,7 +273,7 @@ export default function ReportsPage() {
 
   return (
     <>
-      <div className={`max-w-[1120px] mx-auto page-content animate-fadeIn`}>
+      <div className={`max-w-[1440px] mx-auto page-content animate-fadeIn`}>
         {/* Compact Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-3">
           <div>

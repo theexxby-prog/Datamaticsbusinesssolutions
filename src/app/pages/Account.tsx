@@ -38,9 +38,9 @@ export default function Account() {
 
   return (
     <>
-      <div className="max-w-[1200px] mx-auto page-content animate-fadeIn">
+      <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
-        <div className="flex items-start justify-between mb-6">
+        <div className="flex items-start justify-between mb-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Account Settings</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
@@ -50,7 +50,7 @@ export default function Account() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-2 mb-6 overflow-x-auto pb-2">
+        <div className="flex gap-2 mb-5 overflow-x-auto pb-2">
           {tabs.map((tab) => {
             const Icon = tab.icon;
             return (
@@ -69,9 +69,9 @@ export default function Account() {
         </div>
 
         {/* Tab Content */}
-        <div className="glass-card p-6">
+        <div className="glass-card p-5">
           {activeTab === 'profile' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                 Personal Information
               </h2>
@@ -135,7 +135,7 @@ export default function Account() {
           )}
 
           {activeTab === 'dashboard' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div>
                 <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                   Dashboard Metrics
@@ -171,7 +171,7 @@ export default function Account() {
           )}
 
           {activeTab === 'company' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                 Company Information
               </h2>
@@ -220,7 +220,7 @@ export default function Account() {
           )}
 
           {activeTab === 'security' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                 Security Settings
               </h2>
@@ -263,7 +263,7 @@ export default function Account() {
           )}
 
           {activeTab === 'team' && (
-            <div className="space-y-6">
+            <div className="space-y-5">
               <div className="flex items-center justify-between">
                 <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>Team Members</h2>
                 <button onClick={() => toast.info('Invite member modal coming soon')} className="btn-primary px-4 py-2 flex items-center gap-2">

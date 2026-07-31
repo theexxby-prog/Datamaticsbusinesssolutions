@@ -7,6 +7,7 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { allClients } from '../data/mockClients';
 import { mockTeamMembers } from '../mockData';
 import { MobileCardList } from '../components/ui/MobileCardList';
+import { formatDate } from '../utils/formatDate';
 
 // Production parity: Admin Management = client onboarding, Convertr configuration,
 // and manager mapping (replaces the old Team Management + Client Assignment split).
@@ -25,9 +26,6 @@ interface AdminClientRow {
   analyticsVisible: boolean;
 }
 
-function fmtDate(iso: string) {
-  return new Date(iso).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-}
 
 // Same pill markup the tables render inline — shared by the mobile card views.
 function StatusPill({ status }: { status: string }) {
@@ -104,7 +102,7 @@ export default function AdminManagementPage() {
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '4px' }}>Admin Management</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
             Client onboarding, Convertr configuration, and manager mapping.
@@ -112,7 +110,7 @@ export default function AdminManagementPage() {
         </div>
 
         {/* Stat cards */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6 stagger-children">
           {stats.map(({ label, value, icon: Icon, color }, i) => (
             <div key={label} className="kpi-card animate-slideInUp" style={{ animationDelay: `${i * 70}ms` }}>
               <div className="flex items-center justify-between mb-4">
@@ -217,16 +215,16 @@ export default function AdminManagementPage() {
                 <tbody>
                   {filteredRows.map((r) => (
                     <tr key={r.id} style={{ borderTop: '1px solid var(--color-border-light)' }}>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-3">
                         <div style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{r.name}</div>
                         <div style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>{r.slug}</div>
                       </td>
-                      <td className="px-4 py-4" style={{ color: 'var(--color-text-primary)' }}>{r.type}</td>
-                      <td className="px-4 py-4" style={{ color: 'var(--color-text-primary)' }}>{r.campaignManager}</td>
-                      <td className="px-4 py-4" style={{ color: 'var(--color-text-primary)' }}>{r.opsManager}</td>
-                      <td className="px-4 py-4" style={{ color: 'var(--color-text-primary)' }}>{r.backupManager}</td>
-                      <td className="px-4 py-4" style={{ color: 'var(--color-text-primary)' }}>{r.passwordSet ? 'Set' : '—'}</td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)' }}>{r.type}</td>
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)' }}>{r.campaignManager}</td>
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)' }}>{r.opsManager}</td>
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)' }}>{r.backupManager}</td>
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)' }}>{r.passwordSet ? 'Set' : '—'}</td>
+                      <td className="px-4 py-3">
                         <span
                           className="inline-flex items-center px-2.5 py-0.5 rounded-full"
                           style={{
@@ -239,8 +237,8 @@ export default function AdminManagementPage() {
                           {r.status}
                         </span>
                       </td>
-                      <td className="px-4 py-4" style={{ color: 'var(--color-text-primary)', whiteSpace: 'nowrap' }}>{fmtDate(r.updated)}</td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-3" style={{ color: 'var(--color-text-primary)', whiteSpace: 'nowrap' }}>{formatDate(r.updated)}</td>
+                      <td className="px-4 py-3">
                         <button onClick={() => toggleAnalytics(r.id)} className="flex items-center gap-2" aria-label="Toggle analytics visibility">
                           <span
                             className="relative inline-block w-9 h-5 rounded-full transition-colors"
@@ -256,7 +254,7 @@ export default function AdminManagementPage() {
                           </span>
                         </button>
                       </td>
-                      <td className="px-4 py-4">
+                      <td className="px-4 py-3">
                         <div className="flex items-center gap-3" style={{ color: 'var(--color-text-muted)' }}>
                           <button aria-label="View client" onClick={() => toast.info(`${r.name} — client detail coming with backend wiring`)}><Eye className="w-4 h-4" /></button>
                           <button aria-label="Edit client" onClick={() => toast.info(`${r.name} — edit flow coming with backend wiring`)}><Pencil className="w-4 h-4" /></button>
@@ -281,7 +279,7 @@ export default function AdminManagementPage() {
                 { label: 'Type', value: (r) => r.type },
                 { label: 'Campaign Manager', value: (r) => r.campaignManager },
                 { label: 'Backup Manager', value: (r) => r.backupManager },
-                { label: 'Updated', value: (r) => fmtDate(r.updated) },
+                { label: 'Updated', value: (r) => formatDate(r.updated) },
                 {
                   label: 'Analytics',
                   value: (r) => (
@@ -366,14 +364,14 @@ export default function AdminManagementPage() {
                 <tbody>
                   {teamMembers.map((m) => (
                     <tr key={m.id} style={{ borderTop: '1px solid var(--color-border-light)' }}>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-3">
                         <div style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{m.name}</div>
                         <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{m.email}</div>
                       </td>
-                      <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{m.role}</td>
-                      <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{m.assignedClients.join(', ')}</td>
-                      <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{m.activeCampaigns}</td>
-                      <td className="px-5 py-4">
+                      <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{m.role}</td>
+                      <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{m.assignedClients.join(', ')}</td>
+                      <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{m.activeCampaigns}</td>
+                      <td className="px-5 py-3">
                         <span
                           className="inline-flex items-center px-2.5 py-0.5 rounded-full"
                           style={{

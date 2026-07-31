@@ -37,9 +37,12 @@ const CampaignApprovalsPage = lazy(() => import('./pages/CampaignApprovalsPage')
 const AdminManagementPage = lazy(() => import('./pages/AdminManagementPage'));
 const OpsOverridePage = lazy(() => import('./pages/OpsOverridePage'));
 const DemographicsEntryPage = lazy(() => import('./pages/DemographicsEntryPage'));
-// UNION-preview module: registered for everyone, but AppLayout redirects any
+// UNION-preview modules: registered for everyone, but AppLayout redirects any
 // non-UNION visit to /dashboard (same pattern as internal routes in demo mode).
+// The briefing pages additionally self-guard on unknown ids.
 const ProgrammaticPage = lazy(() => import('./pages/ProgrammaticPage'));
+const LeadBriefingPage = lazy(() => import('./pages/LeadBriefingPage'));
+const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
 // RouteLoader is a 2px brand-coloured bar that's barely noticeable and
@@ -90,6 +93,14 @@ const appRoutes: RouteObject[] = [
   {
     path: '/leads',
     Component: withSuspense(LeadsPage),
+  },
+  {
+    path: '/leads/account/:slug',
+    Component: withSuspense(AccountBriefingPage),
+  },
+  {
+    path: '/leads/:leadId',
+    Component: withSuspense(LeadBriefingPage),
   },
   {
     path: '/reports',

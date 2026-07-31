@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router';
 import { Link2, Users, Building2, Flame } from 'lucide-react';
 import { getSyndicationInfluence } from '../../data/propensity';
+import { formatMoney as fmtMoney } from '../../utils/format';
 
 // The crosswalk pay-off: leads your syndication campaigns delivered, matched
 // into ABM target accounts, and how many of those accounts are now engaging
 // with the programmatic layer.
 
-const fmtMoney = (n: number) => '$' + n.toLocaleString('en-US');
 
 export function SyndicationInfluenceSection() {
   const navigate = useNavigate();
