@@ -17,6 +17,7 @@ import { useTheme } from '../context/ThemeContext';
 import { getAssignedClients } from '../data/mockClients';
 import { LeadUploadModal } from './LeadUploadModal';
 import { getNavForRole, useNavBadges, type NavItem } from '../config/navigation';
+import { showFutureModules } from '../config/demo';
 import { NotificationPanel } from './NotificationPanel';
 import { useNotifications } from '../context/NotificationContext';
 import { PersonAvatar } from './PersonAvatar';
@@ -133,7 +134,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
     quickActionHandler?: () => void;
   };
   const navigation = useMemo(() => {
-    return getNavForRole(currentUser?.role).map((item): SidebarNavItem => {
+    return getNavForRole(currentUser?.role, showFutureModules(currentUser)).map((item): SidebarNavItem => {
       const count = item.badgeKey ? badges[item.badgeKey] : undefined;
       return {
         ...item,
@@ -148,7 +149,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           : {}),
       };
     });
-  }, [currentUser?.role, badges]);
+  }, [currentUser, badges]);
 
   const groupedNav = useMemo(() => navigation.reduce((acc, item) => {
     if (!acc[item.section]) acc[item.section] = [];

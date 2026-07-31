@@ -14,6 +14,7 @@ import {
   Layers,
   MessageSquare,
   ClipboardCheck,
+  Radar,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '../context/AuthContext';
@@ -81,7 +82,11 @@ export function useNavBadges(): NavBadges {
   }, []);
 }
 
-export function getNavForRole(role: UserRole | undefined): NavItem[] {
+/**
+ * @param showFuture — true only for the UNION preview login (see
+ * config/demo.ts showFutureModules); appends the in-progress modules.
+ */
+export function getNavForRole(role: UserRole | undefined, showFuture = false): NavItem[] {
   if (role === 'ops_manager') {
     // Mirrors production nav (pulse.datamaticsbpm.com): Dashboard, All Campaigns,
     // Admin Management, Metrics Override, Lead Demographics + the Phase 2 modules.
@@ -141,6 +146,9 @@ export function getNavForRole(role: UserRole | undefined): NavItem[] {
     // and showing both side by side reads as a bug.
     { name: 'Leads', icon: Users, path: '/leads', section: 'PLATFORM' },
     { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
+    ...(showFuture
+      ? [{ name: 'Programmatic', icon: Radar, path: '/programmatic', section: 'PLATFORM' as const }]
+      : []),
     { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'ORGANIZATION', badgeKey: 'unpaidInvoices' },
     { name: 'Documents', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
     { name: 'Support', icon: MessageSquare, path: '/support', section: 'ORGANIZATION', badgeKey: 'openSupportTickets' },
@@ -161,8 +169,8 @@ const TAB_PATHS_BY_ROLE: Record<UserRole, string[]> = {
   accounts: ['/invoices', '/documents'],
 };
 
-export function getTabsForRole(role: UserRole | undefined): { tabs: NavItem[]; more: NavItem[] } {
-  const nav = getNavForRole(role);
+export function getTabsForRole(role: UserRole | undefined, showFuture = false): { tabs: NavItem[]; more: NavItem[] } {
+  const nav = getNavForRole(role, showFuture);
   const tabPaths = TAB_PATHS_BY_ROLE[role ?? 'client'] ?? TAB_PATHS_BY_ROLE.client;
   const tabs = tabPaths
     .map(path => nav.find(item => item.path === path))
@@ -200,6 +208,9 @@ const DETAIL_ROUTES: Array<{ pattern: RegExp; meta: PageMeta }> = [
   { pattern: /^\/internal\/dashboard$/, meta: { title: 'Dashboard', showBack: false } },
   { pattern: /^\/internal\/uploads$/, meta: { title: 'Upload Leads', showBack: false } },
   { pattern: /^\/internal\/client-assignment$/, meta: { title: 'Client Assignment', showBack: false } },
+  // Explicit entry so the mobile app-bar title never depends on whether the
+  // nav item is visible (the route itself is gated in AppLayout).
+  { pattern: /^\/programmatic$/, meta: { title: 'Programmatic', showBack: false } },
 ];
 
 export function getPageMeta(pathname: string, role: UserRole | undefined): PageMeta {
