@@ -119,7 +119,7 @@ export default function CampaignDetail() {
     <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Breadcrumb */}
-        <div className="flex items-center gap-2 mb-6" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+        <div className="flex items-center gap-2 mb-4" style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
           <button onClick={() => navigate('/dashboard')} className="hover:text-[var(--color-primary)] transition-colors">
             Dashboard
           </button>

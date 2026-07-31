@@ -54,7 +54,7 @@ export default function InternalDashboard() {
     <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
-        <div className="mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-1">Internal Dashboard</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
@@ -71,7 +71,7 @@ export default function InternalDashboard() {
         </div>
 
         {/* KPI Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 mb-6 stagger-children">
           <div className="kpi-card animate-slideInUp">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-info-bg)' }}>
@@ -167,7 +167,7 @@ export default function InternalDashboard() {
         )}
 
         {/* Main Grid: Recent Campaigns + Quick Links */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
           {/* Recent Campaigns Table */}
           <div className="lg:col-span-2 glass-card overflow-hidden">
             <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: 'var(--color-border)' }}>
@@ -335,9 +335,9 @@ export default function InternalDashboard() {
         </div>
 
         {/* Top Clients + Recent Uploads */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           {/* Top Clients */}
-          <div className="glass-card p-6">
+          <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                 Top Clients by Leads
@@ -382,7 +382,7 @@ export default function InternalDashboard() {
           </div>
 
           {/* Recent Uploads */}
-          <div className="glass-card p-6">
+          <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                 Recent Uploads

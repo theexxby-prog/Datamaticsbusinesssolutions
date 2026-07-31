@@ -38,7 +38,7 @@ export default function InternalCampaignDetail() {
     return (
       <>
         <div className="max-w-[1440px] mx-auto page-content">
-          <div className="text-center py-12">
+          <div className="text-center py-8">
             <h2 style={{ color: 'var(--color-text-primary)' }}>Campaign not found</h2>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-2">
               Campaign ID "{id}" does not exist.
@@ -77,7 +77,7 @@ export default function InternalCampaignDetail() {
     <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-6 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between mb-4 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <button onClick={() => navigate('/internal/campaigns')} className="btn-ghost p-2">

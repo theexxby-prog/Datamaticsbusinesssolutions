@@ -165,7 +165,7 @@ function SubmissionCard({
         <div className="h-1 w-full bg-gradient-to-r from-amber-500 to-yellow-400" />
       )}
 
-      <div className="p-6">
+      <div className="p-5">
         {/* Header row */}
         <div className="flex items-start justify-between gap-4 mb-4">
           <div className="flex-1 min-w-0">
@@ -480,7 +480,7 @@ export default function CampaignApprovalsPage() {
       <div className="max-w-[1100px] mx-auto page-content">
 
         {/* Page header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 className="text-[var(--color-text-primary)] mb-1" style={{ fontSize: '24px', fontWeight: 700 }}>
             Campaign Approvals
           </h1>
@@ -490,7 +490,7 @@ export default function CampaignApprovalsPage() {
         </div>
 
         {/* Summary stat strip */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
           {[
             { label: 'Pending Review', value: pendingCount, color: 'var(--color-warning)', bg: 'rgba(194,65,12,0.06)', border: 'rgba(194,65,12,0.15)' },
             { label: 'Changes Sent', value: changesCount, color: 'var(--color-warning)', bg: 'rgba(180,83,9,0.06)', border: 'rgba(180,83,9,0.15)' },
@@ -536,7 +536,7 @@ export default function CampaignApprovalsPage() {
 
         {/* Submission list */}
         {filtered.length === 0 ? (
-          <div className="rounded-2xl p-12 text-center"
+          <div className="rounded-2xl p-8 text-center"
             style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--glass-border)' }}>
             <Inbox className="w-12 h-12 text-[var(--color-border)] mx-auto mb-4" />
             <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px' }}>No submissions here</p>

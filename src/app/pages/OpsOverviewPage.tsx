@@ -59,7 +59,7 @@ export default function OpsOverviewPage() {
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header — red accent bar, matching production */}
-        <div className="mb-6">
+        <div className="mb-4">
           <div className="flex items-center gap-3">
             <div style={{ width: '4px', height: '28px', background: 'var(--color-primary)', borderRadius: '2px' }} />
             <h1 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Operations Dashboard</h1>
@@ -78,7 +78,7 @@ export default function OpsOverviewPage() {
         </div>
 
         {/* Status cards + Total Leads card */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-6 stagger-children">
           {statusCards.map(({ label, value, icon: Icon, color, bg }, i) => (
             <div key={label} className="kpi-card animate-slideInUp" style={{ animationDelay: `${i * 70}ms` }}>
               <div className="w-9 h-9 rounded-full flex items-center justify-center mb-5" style={{ background: bg }}>
@@ -160,18 +160,18 @@ export default function OpsOverviewPage() {
               <tbody>
                 {clients.map((c) => (
                   <tr key={c.id} style={{ borderTop: '1px solid var(--color-border-light)' }}>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3">
                       <div style={{ fontWeight: 600, color: 'var(--color-text-primary)' }}>{c.name}</div>
                       <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{c.source}</div>
                     </td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3">
                       <div style={{ color: 'var(--color-text-primary)' }}>{c.total} total</div>
                       <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{c.active} active</div>
                     </td>
-                    <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{c.leadsDelivered.toLocaleString('en-US')}</td>
-                    <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{c.thisMonth.toLocaleString('en-US')}</td>
-                    <td className="px-5 py-4" style={{ color: 'var(--color-text-primary)' }}>{c.manager}</td>
-                    <td className="px-5 py-4">
+                    <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{c.leadsDelivered.toLocaleString('en-US')}</td>
+                    <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{c.thisMonth.toLocaleString('en-US')}</td>
+                    <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{c.manager}</td>
+                    <td className="px-5 py-3">
                       <button
                         onClick={() => navigate('/internal/campaigns')}
                         aria-label={`View ${c.name} campaigns`}

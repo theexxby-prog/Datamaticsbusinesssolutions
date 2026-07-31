@@ -222,7 +222,7 @@ function StandardHomePage() {
 
   return (
     <>
-      <div className="max-w-[1400px] mx-auto page-content space-y-6">
+      <div className="max-w-[1400px] mx-auto page-content space-y-5">
 
         {/* ── Welcome Banner ─────────────────────────────────────────────── */}
         <motion.div
@@ -303,7 +303,7 @@ function StandardHomePage() {
         </div>
 
         {/* ── KPI Row: horizontal snap-scroll on phones, grid from md up ── */}
-        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-4 md:overflow-visible md:px-0 md:pb-0">
+        <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto pb-1 -mx-4 px-4 md:mx-0 md:grid md:grid-cols-2 lg:grid-cols-4 md:gap-3 md:overflow-visible md:px-0 md:pb-0">
 
           {/* 1 — Total Leads This Month */}
           {prefs.totalLeads && (
@@ -559,11 +559,11 @@ function StandardHomePage() {
         </div>
 
         {/* ── Recent Activity & Needs Attention ──────────────────────────── */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
 
           {/* Recent Activity */}
-          <div className="rounded-2xl p-6 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <h2 className="font-semibold text-[var(--color-text-primary)] mb-4" style={{ fontSize: '17px', fontWeight: 600 }}>Recent Activity</h2>
+          <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '17px', fontWeight: 600 }}>Recent Activity</h2>
             <div className="divide-y divide-black/[0.04]">
               {recentActivity.map(a => (
                 <div key={a.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0 hover:bg-[var(--color-surface-raised)] rounded-xl px-2 -mx-2 transition-colors cursor-pointer">
@@ -583,8 +583,8 @@ function StandardHomePage() {
           </div>
 
           {/* Needs Your Attention */}
-          <div className="rounded-2xl p-6 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <h2 className="font-semibold text-[var(--color-text-primary)] mb-4" style={{ fontSize: '17px', fontWeight: 600 }}>Needs Your Attention</h2>
+          <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '17px', fontWeight: 600 }}>Needs Your Attention</h2>
             <div className="space-y-2.5">
               {needsAttention.map(item => {
                 const c = attentionColors(item.type);
@@ -621,8 +621,8 @@ function StandardHomePage() {
         </div>
 
         {/* ── Campaign Snapshot ───────────────────────────────────────────── */}
-        <div className="rounded-2xl p-6 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-          <div className="flex items-center justify-between mb-5">
+        <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
+          <div className="flex items-center justify-between mb-4">
             <h2 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '17px', fontWeight: 600 }}>Campaign Snapshot</h2>
             <button
               onClick={() => navigate('/campaigns')}
@@ -634,7 +634,7 @@ function StandardHomePage() {
             </button>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
             {campaignSnapshot.map(c => (
               <motion.div
                 key={c.id}

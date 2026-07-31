@@ -145,7 +145,7 @@ export function DataTable<T>({
                         <th
                           key={col.key}
                           onClick={() => toggleSort(col)}
-                          className={`select-none whitespace-nowrap px-4 py-3.5 text-[13px] font-semibold ${col.align === 'right' ? 'text-right' : 'text-left'} ${col.sortable === false ? '' : 'cursor-pointer'} ${col.widthClass ?? ''}`}
+                          className={`select-none whitespace-nowrap px-4 py-2.5 text-[13px] font-semibold ${col.align === 'right' ? 'text-right' : 'text-left'} ${col.sortable === false ? '' : 'cursor-pointer'} ${col.widthClass ?? ''}`}
                           style={{
                             color: active ? 'var(--color-text-primary)' : 'var(--color-text-muted)',
                             borderBottom: '1px solid var(--color-border)',
@@ -178,7 +178,7 @@ export function DataTable<T>({
                         <td
                           key={col.key}
                           className={`px-4 text-sm ${col.align === 'right' ? 'text-right' : 'text-left'}`}
-                          style={{ height: 60, color: 'var(--color-text-primary)', fontWeight: 500, verticalAlign: 'middle' }}
+                          style={{ height: 52, color: 'var(--color-text-primary)', fontWeight: 500, verticalAlign: 'middle' }}
                         >
                           {col.render(row)}
                         </td>
@@ -196,7 +196,7 @@ export function DataTable<T>({
               <button
                 key={getRowId(row)}
                 onClick={onRowClick ? () => onRowClick(row) : undefined}
-                className="w-full rounded-2xl border p-4 text-left transition-colors active:opacity-90"
+                className="w-full rounded-2xl border p-3.5 text-left transition-colors active:opacity-90"
                 style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-raised)' }}
               >
                 <div className="mb-3 flex items-center justify-between gap-2">

@@ -70,7 +70,7 @@ export default function Payment() {
     <>
       <div className={`max-w-[1200px] mx-auto page-content animate-fadeIn`}>
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Payment Methods</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
@@ -87,7 +87,7 @@ export default function Payment() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-5 stagger-children">
           <div className="kpi-card animate-slideInUp">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-info-bg)' }}>
@@ -120,11 +120,11 @@ export default function Payment() {
         </div>
 
         {/* Payment Methods Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
           {paymentMethods.map((method, index) => (
             <div
               key={method.id}
-              className="glass-card p-6 relative animate-slideInUp"
+              className="glass-card p-5 relative animate-slideInUp"
               style={{ animationDelay: `${index * 100}ms` }}
             >
               {method.isDefault && (
@@ -199,8 +199,8 @@ export default function Payment() {
         </div>
 
         {/* Billing Address */}
-        <div className="glass-card p-6">
-          <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-4">
+        <div className="glass-card p-5">
+          <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-3">
             Billing Address
           </h2>
 

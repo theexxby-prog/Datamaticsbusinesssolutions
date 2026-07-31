@@ -96,7 +96,7 @@ export default function ManagerDashboardPage() {
 
   const SortHeader = ({ field, label }: { field: typeof sortField; label: string }) => (
     <th
-      className="text-left px-6 py-4 cursor-pointer hover:text-[var(--color-primary)] transition-colors"
+      className="text-left px-6 py-3 cursor-pointer hover:text-[var(--color-primary)] transition-colors"
       style={{
         fontSize: 'var(--font-size-xs)',
         fontWeight: 'var(--font-weight-semibold)',
@@ -119,7 +119,7 @@ export default function ManagerDashboardPage() {
     <>
       <div className="max-w-[1440px] mx-auto page-content">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-1">
               Campaign Manager Dashboard
@@ -161,7 +161,7 @@ export default function ManagerDashboardPage() {
         </div>
 
         {/* Client Summary KPIs */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 stagger-children">
           <div className="kpi-card animate-slideInUp">
             <div className="flex items-center justify-between mb-3">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'var(--color-info-bg)' }}>
@@ -210,7 +210,7 @@ export default function ManagerDashboardPage() {
         </div>
 
         {/* Client Overview Card */}
-        <div className="glass-card p-6 mb-6">
+        <div className="glass-card p-5 mb-6">
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
             <div>
               <h2
@@ -297,7 +297,7 @@ export default function ManagerDashboardPage() {
                   <SortHeader field="name" label="Campaign" />
                   <SortHeader field="status" label="Status" />
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Progress
@@ -305,7 +305,7 @@ export default function ManagerDashboardPage() {
                   <SortHeader field="totalLeads" label="Total Leads" />
                   <SortHeader field="acceptanceRate" label="Acceptance" />
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Actions
@@ -326,7 +326,7 @@ export default function ManagerDashboardPage() {
                       onClick={() => navigate(`/internal/campaigns/${campaign.id}`)}
                     >
                       {/* Campaign Name */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <div>
                           <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                             {campaign.name}
@@ -341,12 +341,12 @@ export default function ManagerDashboardPage() {
                       </td>
 
                       {/* Status */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         {getStatusBadge(campaign.status)}
                       </td>
 
                       {/* Progress Bar */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         {target > 0 ? (
                           <div className="space-y-1.5" style={{ minWidth: '140px' }}>
                             <div className="flex items-center gap-3">
@@ -370,14 +370,14 @@ export default function ManagerDashboardPage() {
                       </td>
 
                       {/* Total Leads */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                           {campaign.totalLeads.toLocaleString()}
                         </span>
                       </td>
 
                       {/* Acceptance Rate */}
-                      <td className="px-6 py-4">
+                      <td className="px-6 py-3">
                         <span
                           className="inline-flex items-center px-2 py-0.5 rounded-full"
                           style={{
@@ -400,7 +400,7 @@ export default function ManagerDashboardPage() {
                       </td>
 
                       {/* Actions */}
-                      <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                      <td className="px-6 py-3" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center gap-2">
                           {canUploadLeads() && campaign.status === 'active' && (
                             <button
@@ -533,7 +533,7 @@ export default function ManagerDashboardPage() {
           />
 
           {sortedCampaigns.length === 0 && (
-            <div className="hidden md:block text-center py-12">
+            <div className="hidden md:block text-center py-8">
               <Target className="w-10 h-10 mx-auto mb-3" style={{ color: 'var(--color-text-muted)' }} />
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                 No campaigns found for this client

@@ -159,7 +159,7 @@ export default function LeadUploadDashboard() {
     <>
       <div className="max-w-[1600px] mx-auto page-content">
         {/* Hero Header with Giant Upload Button */}
-        <div className="mb-8">
+        <div className="mb-5">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div>
               <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-3">
@@ -231,7 +231,7 @@ export default function LeadUploadDashboard() {
           <h2 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }} className="mb-4">
             Upload Status
           </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 stagger-children">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 stagger-children">
             <div 
               className="kpi-card animate-slideInUp cursor-pointer hover:scale-105 transition-transform"
               onClick={() => setUploadFilter('processing')}
@@ -318,7 +318,7 @@ export default function LeadUploadDashboard() {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="glass-card p-6 hover:shadow-lg transition-shadow"
+                className="glass-card p-5 hover:shadow-lg transition-shadow"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
@@ -432,49 +432,49 @@ export default function LeadUploadDashboard() {
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     File Name
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Client / Campaign
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Progress
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Success / Errors
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Status
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Uploaded By
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Time
                   </th>
                   <th
-                    className="text-left px-6 py-4"
+                    className="text-left px-6 py-3"
                     style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
                   >
                     Actions
@@ -488,7 +488,7 @@ export default function LeadUploadDashboard() {
                     showHoverEffect={true}
                     animationDelay={index * 30}
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div className="flex items-center gap-2">
                         <FileText className="w-4 h-4" style={{ color: 'var(--color-text-muted)' }} />
                         <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>
@@ -496,7 +496,7 @@ export default function LeadUploadDashboard() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div>
                         <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                           {upload.clientName}
@@ -506,7 +506,7 @@ export default function LeadUploadDashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div>
                         <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }} className="mb-1">
                           {upload.processedRows} / {upload.totalRows} rows
@@ -524,7 +524,7 @@ export default function LeadUploadDashboard() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div style={{ fontSize: 'var(--font-size-base)', color: 'var(--color-text-primary)' }}>
                         <span style={{ color: 'var(--color-success)', fontWeight: 'var(--font-weight-bold)', fontSize: 'var(--font-size-lg)' }}>
                           {upload.successCount}
@@ -535,23 +535,23 @@ export default function LeadUploadDashboard() {
                         </span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <span className={`px-3 py-1.5 rounded-full text-xs font-semibold inline-flex items-center gap-1.5 ${getStatusBadge(upload.status)}`}>
                         {getStatusIcon(upload.status)}
                         {upload.status.charAt(0).toUpperCase() + upload.status.slice(1)}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
                         {upload.uploadedBy}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-muted)' }}>
                         {formatTimeAgo(upload.uploadedAt)}
                       </div>
                     </td>
-                    <td className="px-6 py-4" onClick={(e) => e.stopPropagation()}>
+                    <td className="px-6 py-3" onClick={(e) => e.stopPropagation()}>
                       <div className="flex items-center gap-2">
                         {upload.status === 'failed' && (
                           <button
@@ -643,7 +643,7 @@ export default function LeadUploadDashboard() {
           />
 
           {filteredUploads.length === 0 && (
-            <div className="hidden md:block text-center py-16" style={{ color: 'var(--color-text-secondary)' }}>
+            <div className="hidden md:block text-center py-10" style={{ color: 'var(--color-text-secondary)' }}>
               <FileText className="w-16 h-16 mx-auto mb-4 opacity-30" />
               <p style={{ fontSize: 'var(--font-size-base)' }}>No uploads found</p>
               <p style={{ fontSize: 'var(--font-size-sm)' }} className="mt-2">

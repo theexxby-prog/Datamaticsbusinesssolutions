@@ -261,7 +261,7 @@ export default function OpsOverridePage() {
         </AnimatePresence>
 
         {/* Title Section */}
-        <div className="mb-8">
+        <div className="mb-5">
           <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Campaign Metrics Override</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
             Operations Override Center with live API data and backend persistence.
@@ -473,7 +473,7 @@ export default function OpsOverridePage() {
           />
 
           {filteredCampaigns.length === 0 && (
-            <div className="hidden md:block text-center py-16">
+            <div className="hidden md:block text-center py-10">
               <Layers className="w-10 h-10 mx-auto mb-3 opacity-30" style={{ color: 'var(--color-text-muted)' }} />
               <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                 No campaigns match your search filters.

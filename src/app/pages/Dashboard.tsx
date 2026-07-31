@@ -243,13 +243,13 @@ export default function Dashboard() {
     <>
       <div className="mx-auto max-w-[1400px] page-content">
         {/* Header */}
-        <div className="mb-7 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <div className="mb-1.5 inline-flex items-center gap-2 text-[12.5px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
               <span className="h-2 w-2 rounded-full" style={{ background: 'var(--color-primary)' }} />
               Client Portal &middot; {tccClient?.companyName ?? 'The Channel Company'}
             </div>
-            <h1 className="text-[30px] font-extrabold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Campaign Dashboard</h1>
+            <h1 className="text-[26px] font-extrabold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Campaign Dashboard</h1>
             <p className="mt-1 text-[15px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Every active campaign, pacing, delivery and billing in one place.</p>
           </div>
           <button
@@ -270,7 +270,7 @@ export default function Dashboard() {
           </span>
           <PeriodSwitch value={period} onChange={setPeriod} />
         </div>
-        <div className="mb-7 grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className="mb-5 grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Kpi icon={DollarSign} tone="var(--color-primary)" toneBg="var(--color-primary-tint)" value={`$${(billable / 1000).toFixed(1)}K`} label={`Billable ${periodMeta.suffix}`} delta="▲ 8%" deltaTone="var(--color-success)" />
           <Kpi icon={TrendingUp} tone="var(--color-info)" toneBg="var(--color-info-bg)" value={leads.toLocaleString()} label="Leads delivered" delta="▲ 12%" deltaTone="var(--color-success)" />
           <Kpi icon={CheckCircle2} tone="var(--color-success)" toneBg="var(--color-success-bg)" value={`${acceptance}%`} label="Acceptance rate" delta="= stable" deltaTone="var(--color-text-muted)" />
@@ -292,7 +292,7 @@ export default function Dashboard() {
 
         {/* Account team */}
         {accountTeam && (
-          <div className="mt-8">
+          <div className="mt-6">
             <AccountTeam
               manager={{
                 name: accountTeam.manager.name, role: accountTeam.manager.role, email: accountTeam.manager.email,

@@ -21,33 +21,26 @@ import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { exportLeadsToCSV } from '../utils/exportUtils';
 import { allClients } from '../data/mockClients';
 import { showFutureModules } from '../config/demo';
-import { hasRelishIntel } from '../data/relish';
-import { RelishBadge } from '../components/relish/RelishBadge';
-import { useNavigate } from 'react-router';
-import { getSignalLeads, isSignalLeadId, signalContactFromLeadId, getSynthesis, getSignalAccount } from '../data/signalRoom';
-import { IntentChip } from '../components/signal/signalMeta';
-import { SignalAccountsView } from '../components/signal/SignalAccountsView';
-import { SignalTimelineView } from '../components/signal/SignalTimelineView';
+import UnionLeadsPage from './UnionLeadsPage';
 import { toast } from 'sonner';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 type SortField = 'leadScore' | 'deliveryDate' | 'company' | 'status';
 type SortDirection = 'asc' | 'desc';
 type ViewMode = 'table' | 'grid';
-type Lens = 'people' | 'accounts' | 'signals';
 
+// The UNION preview login gets the reimagined dense Leads experience; every
+// other login keeps this page exactly as it is. Split so each owns its hooks.
 export default function LeadsPage() {
+  const { currentUser } = useAuth();
+  return showFutureModules(currentUser) ? <UnionLeadsPage /> : <StandardLeadsPage />;
+}
+
+function StandardLeadsPage() {
   useDocumentTitle('Leads');
   const { currentUser } = useAuth();
-  const navigate = useNavigate();
 
-  // Relish/Signal intelligence — UNION preview login only. The enriched
-  // campaign's 20 contacts join the lead list; accounts/signals lenses open.
-  const showIntel = showFutureModules(currentUser);
-  const [leads, setLeads] = useState<Lead[]>(() =>
-    showIntel ? [...getSignalLeads(), ...mockLeads] : mockLeads,
-  );
-  const [lens, setLens] = useState<Lens>('people');
+  const [leads, setLeads] = useState<Lead[]>(mockLeads);
   const [isLoading, setIsLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
@@ -249,36 +242,8 @@ export default function LeadsPage() {
   };
 
   const handleLeadDetail = (lead: Lead) => {
-    // Enriched leads open the full intelligence briefing, not the drawer.
-    if (isSignalLeadId(lead.id)) {
-      navigate(`/leads/${lead.id}`);
-      return;
-    }
     setSelectedLead(lead);
     setIsDrawerOpen(true);
-  };
-
-  // Intent chip + committee count for enriched rows in both renderers.
-  const signalRowMeta = (lead: Lead) => {
-    if (!isSignalLeadId(lead.id)) return null;
-    const contact = signalContactFromLeadId(lead.id);
-    if (!contact) return null;
-    const synthesis = getSynthesis(contact.id);
-    const committeeSize = getSignalAccount(contact.companySlug)?.contactIds.length ?? 1;
-    return (
-      <span className="inline-flex flex-wrap items-center gap-1.5">
-        {synthesis && <IntentChip type={synthesis.intentType} />}
-        {committeeSize > 1 && (
-          <span
-            className="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
-            style={{ background: 'var(--background-muted)', color: 'var(--color-text-secondary)' }}
-            title={`${committeeSize} contacts on this buying committee`}
-          >
-            +{committeeSize - 1}
-          </span>
-        )}
-      </span>
-    );
   };
 
   const toggleStar = (leadId: string, e: React.MouseEvent) => {
@@ -401,34 +366,6 @@ export default function LeadsPage() {
           </div>
         )}
 
-        {/* Intelligence lenses — UNION preview only: People (the lead list),
-            Accounts (readiness-ranked), Signals (trigger timeline). */}
-        {showIntel && (
-          <div
-            className="mb-5 grid grid-cols-3 gap-1 rounded-xl p-1 sm:inline-grid sm:min-w-[360px]"
-            style={{ background: 'var(--background-muted)' }}
-            role="tablist"
-          >
-            {([['people', 'People'], ['accounts', 'Accounts'], ['signals', 'Signals']] as const).map(([key, label]) => (
-              <button
-                key={key}
-                role="tab"
-                aria-selected={lens === key}
-                onClick={() => setLens(key)}
-                className={`min-h-[38px] rounded-lg px-4 text-sm font-semibold transition-colors ${
-                  lens === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
-                }`}
-              >
-                {label}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {lens === 'accounts' && <SignalAccountsView />}
-        {lens === 'signals' && <SignalTimelineView />}
-
-        {lens === 'people' && (<>
         {/* Filter Row */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-5">
           <div className="lg:col-span-4 relative">
@@ -552,11 +489,7 @@ export default function LeadsPage() {
                         <div className="flex items-center gap-3">
                           <LeadAvatar firstName={lead.firstName} lastName={lead.lastName} size="md" />
                           <div>
-                            <div className="t1 flex items-center gap-2">
-                              {lead.firstName} {lead.lastName}
-                              {showIntel && !isSignalLeadId(lead.id) && hasRelishIntel(lead) && <RelishBadge />}
-                              {showIntel && signalRowMeta(lead)}
-                            </div>
+                            <div className="t1">{lead.firstName} {lead.lastName}</div>
                             <div className="t2">{lead.title}</div>
                           </div>
                         </div>
@@ -736,11 +669,7 @@ export default function LeadsPage() {
                       />
                       <LeadAvatar firstName={lead.firstName} lastName={lead.lastName} size="md" />
                       <div className="min-w-0 flex-1">
-                        <div className="t1 flex items-center gap-2">
-                          <span className="truncate">{lead.firstName} {lead.lastName}</span>
-                          {showIntel && !isSignalLeadId(lead.id) && hasRelishIntel(lead) && <RelishBadge />}
-                          {showIntel && signalRowMeta(lead)}
-                        </div>
+                        <div className="t1 truncate">{lead.firstName} {lead.lastName}</div>
                         <div className="t2 truncate">{lead.title}</div>
                         <div className="t2 mt-1 flex items-center gap-1.5 truncate">
                           <Building2 className="w-3.5 h-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
@@ -902,7 +831,6 @@ export default function LeadsPage() {
             ))}
           </div>
         )}
-        </>)}
       </div>
 
       {/* Bulk Action Bar — sits above the mobile tab bar, centred on desktop */}

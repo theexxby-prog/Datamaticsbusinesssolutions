@@ -598,13 +598,13 @@ export default function Invoices() {
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
-        <div className="mb-6">
+        <div className="mb-4">
           <h1 style={{ color: 'var(--color-text-primary)' }}>Invoices</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{subtitle}</p>
         </div>
 
         {/* KPI row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 stagger-children">
           {kpis.map(({ label, value, icon: Icon, money }, i) => (
             <div key={label} className="kpi-card animate-slideInUp" style={{ padding: '16px', animationDelay: `${i * 80}ms` }}>
               <div className="flex items-center justify-between mb-1">
@@ -620,7 +620,7 @@ export default function Invoices() {
 
         {/* Accounts: validation queue first */}
         {perspective === 'accounts' && validationQueue.length > 0 && (
-          <div className="mb-6">
+          <div className="mb-5">
             <h2 className="mb-3 flex items-center gap-2" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
               <Send className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
               Validation Queue

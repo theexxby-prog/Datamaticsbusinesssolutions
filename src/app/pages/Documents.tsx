@@ -445,7 +445,7 @@ export default function Documents() {
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }}>Documents</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{subtitle}</p>
@@ -459,7 +459,7 @@ export default function Documents() {
         </div>
 
         {/* Tabs */}
-        <div className="flex gap-1 mb-6 p-1 rounded-xl w-fit" style={{ background: 'var(--color-border-light)' }}>
+        <div className="flex gap-1 mb-5 p-1 rounded-xl w-fit" style={{ background: 'var(--color-border-light)' }}>
           {([
             { key: 'jobcards', label: 'Job Cards', icon: FileSignature },
             { key: 'library', label: 'Document Library', icon: FolderOpen },
@@ -488,7 +488,7 @@ export default function Documents() {
           <>
             {/* Signature requests */}
             {awaitingSignature.length > 0 ? (
-              <div className="mb-8">
+              <div className="mb-5">
                 <h2 className="mb-3" style={{ fontSize: '14px', fontWeight: 700, color: 'var(--color-text-primary)' }}>
                   Awaiting Your Signature
                 </h2>
@@ -499,7 +499,7 @@ export default function Documents() {
                 </div>
               </div>
             ) : (
-              <div className="glass-card p-5 mb-8 flex items-center gap-3">
+              <div className="glass-card p-5 mb-5 flex items-center gap-3">
                 <CheckCircle2 className="w-5 h-5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
                 <span style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
                   Nothing needs your signature right now.
@@ -528,7 +528,7 @@ export default function Documents() {
         ) : (
           <>
             {/* KPI row */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-6 stagger-children">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 stagger-children">
               {kpis.map(({ label, value, icon: Icon }, i) => (
                 <div key={label} className="kpi-card animate-slideInUp" style={{ padding: '16px', animationDelay: `${i * 80}ms` }}>
                   <div className="flex items-center justify-between mb-1">

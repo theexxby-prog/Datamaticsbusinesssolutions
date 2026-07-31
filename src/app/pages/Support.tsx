@@ -167,7 +167,7 @@ export default function Support() {
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-6 gap-4">
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
               <h1 style={{ color: 'var(--color-text-primary)' }}>Support Tickets</h1>
@@ -186,7 +186,7 @@ export default function Support() {
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6 stagger-children">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 stagger-children">
           <div className="kpi-card animate-slideInUp">
             <div className="flex items-center justify-between">
               <MessageSquare className="kpi-card__icon" />
@@ -270,22 +270,22 @@ export default function Support() {
             <table className="w-full min-w-[900px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
-                  <th className="text-left px-6 py-4" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
                     Ticket
                   </th>
-                  <th className="text-left px-6 py-4" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
                     Category
                   </th>
-                  <th className="text-left px-6 py-4" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
                     Priority
                   </th>
-                  <th className="text-left px-6 py-4" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
                     Status
                   </th>
-                  <th className="text-left px-6 py-4" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
                     Last Updated
                   </th>
-                  <th className="text-left px-6 py-4" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
                     Actions
                   </th>
                 </tr>
@@ -297,7 +297,7 @@ export default function Support() {
                     showHoverEffect={true}
                     animationDelay={index * 50}
                   >
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div>
                         <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                           {ticket.title}
@@ -307,26 +307,26 @@ export default function Support() {
                         </div>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <span className="badge badge-completed">{ticket.category}</span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-full ${getPriorityColor(ticket.priority)}`} style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', letterSpacing: 'var(--letter-spacing-wide)' }}>
                         {ticket.priority}
                       </span>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div className={getStatusColor(ticket.status)}>
                         {getStatusIcon(ticket.status)}
                         <span>{ticket.status}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-primary)' }}>
                         {formatDate(ticket.lastUpdated)}
                       </div>
                     </td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-3">
                       <button
                         onClick={() => toast.info('Opening ticket...')}
                         className="btn-outline px-3 py-1.5"
