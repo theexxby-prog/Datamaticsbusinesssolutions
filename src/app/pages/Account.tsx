@@ -38,7 +38,7 @@ export default function Account() {
 
   return (
     <>
-      <div className="max-w-[1200px] mx-auto page-content animate-fadeIn">
+      <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>

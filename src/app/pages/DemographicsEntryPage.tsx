@@ -116,7 +116,7 @@ export default function DemographicsEntryPage() {
 
   return (
     <>
-      <div className="max-w-[1100px] mx-auto page-content animate-fadeIn">
+      <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Client + Campaign selectors */}
         <div className="glass-card p-4 mb-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-3">

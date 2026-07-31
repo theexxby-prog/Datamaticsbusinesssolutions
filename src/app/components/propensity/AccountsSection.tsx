@@ -45,21 +45,22 @@ export function AccountsSection() {
   const columns: Column<AccountEngagement>[] = [
     {
       key: 'name', header: 'Account', icon: Building2, primary: true,
+      widthClass: 'w-[45%] lg:w-[30%] xl:w-[26%]',
       sortValue: a => a.name, text: a => a.name,
       render: a => (
-        <div>
-          <div className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{a.name}</div>
-          <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{a.industry} · {a.employeeSize}</div>
+        <div className="min-w-0">
+          <div className="truncate font-bold" style={{ color: 'var(--color-text-primary)' }}>{a.name}</div>
+          <div className="truncate" style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{a.industry} · {a.employeeSize}</div>
         </div>
       ),
     },
     {
-      key: 'warmth', header: 'Warmth',
+      key: 'warmth', header: 'Warmth', widthClass: 'w-[25%] lg:w-[14%] xl:w-[11%]',
       sortValue: a => ({ hot: 2, warm: 1, cool: 0 }[a.warmth]), text: a => a.warmth,
       render: a => <WarmthPill warmth={a.warmth} />,
     },
     {
-      key: 'intent', header: 'Intent',
+      key: 'intent', header: 'Intent', widthClass: 'w-[30%] lg:w-[18%] xl:w-[15%]',
       sortValue: a => a.intentScore, text: a => String(a.intentScore),
       render: a => (
         <div className="flex items-center gap-2">
@@ -78,6 +79,7 @@ export function AccountsSection() {
     },
     {
       key: 'interactions', header: 'Ad + web', align: 'right',
+      widthClass: 'hidden lg:table-cell lg:w-[22%] xl:w-[18%]',
       sortValue: a => a.adInteractions + a.webVisits, text: a => `${a.adInteractions + a.webVisits}`,
       render: a => (
         <span style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--color-text-secondary)' }}>
@@ -87,6 +89,7 @@ export function AccountsSection() {
     },
     {
       key: 'source', header: 'Source', mobileHidden: true, sortable: false,
+      widthClass: 'hidden xl:table-cell xl:w-[15%]',
       render: a =>
         a.sourcedFromSyndication ? (
           <span
@@ -101,6 +104,7 @@ export function AccountsSection() {
     },
     {
       key: 'last', header: 'Last activity', align: 'right', mobileHidden: true,
+      widthClass: 'hidden lg:table-cell lg:w-[16%] xl:w-[15%]',
       sortValue: a => a.lastActivity, text: a => a.lastActivity,
       render: a => <span style={{ fontSize: '13px', color: 'var(--color-text-muted)' }}>{fmtShortDate(a.lastActivity)}</span>,
     },
@@ -129,6 +133,7 @@ export function AccountsSection() {
         columns={columns}
         rows={accounts}
         getRowId={a => a.accountId}
+        layout="fixed"
         searchPlaceholder="Search accounts…"
         countLabel={n => `${n} target accounts`}
         empty={{ icon: Building2, title: 'No engaged accounts', description: 'Accounts appear once Propensity reports engagement.' }}

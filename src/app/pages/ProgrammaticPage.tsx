@@ -36,7 +36,7 @@ export default function ProgrammaticPage() {
   ];
 
   return (
-    <div className="max-w-[1120px] mx-auto page-content">
+    <div className="max-w-[1440px] mx-auto page-content">
       {/* Header */}
       <div className="mb-6">
         <div className="flex items-center gap-2">

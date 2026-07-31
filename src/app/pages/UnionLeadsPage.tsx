@@ -1,8 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  Users, Download, ShieldCheck, Building2, Layers, Award, CalendarDays,
-  Check, X, BarChart2,
+  Users, Download, ShieldCheck, Building2,
+  Check, X, BarChart2, Sparkles,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockLeads, type Lead } from '../mockData';
@@ -10,7 +10,7 @@ import { allClients } from '../data/mockClients';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { SignalAccountsView } from '../components/signal/SignalAccountsView';
 import { SignalTimelineView } from '../components/signal/SignalTimelineView';
-import { IntentChip, RoleDot } from '../components/signal/signalMeta';
+import { INTENT_META, RoleDot } from '../components/signal/signalMeta';
 import {
   getSignalLeads, isSignalLeadId, signalContactFromLeadId, getSynthesis,
   getSignalAccount, signalMeta,
@@ -46,6 +46,7 @@ export default function UnionLeadsPage() {
   const [lens, setLens] = useState<Lens>('people');
   const [statusFilter, setStatusFilter] = useState('all');
   const [campaignFilter, setCampaignFilter] = useState('all');
+  const [enrichFilter, setEnrichFilter] = useState('all');
 
   // Header stats + QA line (same sources the standard page uses)
   const clientData = allClients.find(c => c.id === 'client_1');
@@ -73,8 +74,9 @@ export default function UnionLeadsPage() {
   const filtered = useMemo(
     () => leads.filter(l =>
       (statusFilter === 'all' || l.status === statusFilter) &&
-      (campaignFilter === 'all' || l.campaignId === campaignFilter)),
-    [leads, statusFilter, campaignFilter],
+      (campaignFilter === 'all' || l.campaignId === campaignFilter) &&
+      (enrichFilter === 'all' || (enrichFilter === 'enriched') === isSignalLeadId(l.id))),
+    [leads, statusFilter, campaignFilter, enrichFilter],
   );
 
   const setStatus = (id: string, status: Lead['status']) => {
@@ -84,11 +86,10 @@ export default function UnionLeadsPage() {
 
   const columns: Column<Lead>[] = [
     {
-      key: 'name', header: 'Lead', icon: Users, primary: true,
+      key: 'name', header: 'Lead', primary: true, widthClass: 'w-[32%] lg:w-[24%] xl:w-[22%]',
       sortValue: l => `${l.firstName} ${l.lastName}`, text: l => `${l.firstName} ${l.lastName} ${l.email}`,
       render: l => {
         const contact = isSignalLeadId(l.id) ? signalContactFromLeadId(l.id) : undefined;
-        const synthesis = contact ? getSynthesis(contact.id) : undefined;
         const committee = contact ? (getSignalAccount(contact.companySlug)?.contactIds.length ?? 1) : 1;
         return (
           <div className="min-w-0">
@@ -97,7 +98,6 @@ export default function UnionLeadsPage() {
               <span className="truncate font-bold" style={{ color: 'var(--color-text-primary)' }}>
                 {l.firstName} {l.lastName}
               </span>
-              {synthesis && <IntentChip type={synthesis.intentType} />}
               {committee > 1 && (
                 <span
                   className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
@@ -114,7 +114,7 @@ export default function UnionLeadsPage() {
       },
     },
     {
-      key: 'company', header: 'Company', icon: Building2,
+      key: 'company', header: 'Company', widthClass: 'w-[26%] lg:w-[17%] xl:w-[14%]',
       sortValue: l => l.company, text: l => `${l.company} ${l.industry}`,
       render: l => (
         <div className="min-w-0">
@@ -124,18 +124,49 @@ export default function UnionLeadsPage() {
       ),
     },
     {
-      key: 'campaign', header: 'Campaign', icon: Layers, mobileHidden: true,
+      key: 'campaign', header: 'Campaign', mobileHidden: true,
+      widthClass: 'hidden xl:table-cell xl:w-[12%]',
       sortValue: l => l.campaignName, text: l => l.campaignName,
       render: l => (
-        <span className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>{l.campaignName}</span>
+        <span className="block truncate text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }} title={l.campaignName}>
+          {l.campaignName}
+        </span>
       ),
     },
     {
-      key: 'score', header: 'Intent', icon: Award, align: 'right',
+      key: 'enrichment', header: 'Data', widthClass: 'hidden lg:table-cell lg:w-[15%] xl:w-[13.5%]',
+      sortValue: l => {
+        const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
+        return synthesis ? `0-${synthesis.intentType}` : '1';
+      },
+      text: l => {
+        const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
+        return synthesis ? `Enriched ${INTENT_META[synthesis.intentType].label}` : 'Standard';
+      },
+      render: l => {
+        const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
+        if (!synthesis) {
+          return <span className="text-[11.5px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Standard</span>;
+        }
+        const meta = INTENT_META[synthesis.intentType];
+        return (
+          <span
+            className="inline-flex max-w-full items-center gap-1 overflow-hidden rounded-full px-2 py-0.5 text-[11px] font-semibold"
+            style={{ background: meta.bg, color: meta.color }}
+            title={`Enriched — ${meta.label} intent. Opens the full briefing: synthesis, buying committee, account signals.`}
+          >
+            <Sparkles className="h-3 w-3 flex-shrink-0" />
+            <span className="truncate">{meta.label}</span>
+          </span>
+        );
+      },
+    },
+    {
+      key: 'score', header: 'Intent', align: 'right', widthClass: 'w-[20%] lg:w-[13%] xl:w-[10.5%]',
       sortValue: l => l.leadScore, text: l => String(l.leadScore),
       render: l => (
         <div className="flex items-center justify-end gap-2">
-          <div className="h-1.5 w-12 overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
+          <div className="h-1.5 w-8 overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
             <div
               className="h-full rounded-full"
               style={{ width: `${l.leadScore}%`, background: l.leadScore >= 85 ? 'var(--color-primary)' : '#3E5C8A' }}
@@ -149,12 +180,12 @@ export default function UnionLeadsPage() {
       mobileRender: l => <span className="font-bold">{l.leadScore} / 100</span>,
     },
     {
-      key: 'status', header: 'Status',
+      key: 'status', header: 'Status', widthClass: 'w-[22%] lg:w-[17%] xl:w-[19%]',
       sortValue: l => l.status, text: l => l.status,
       render: l => {
         const meta = STATUS_META[l.status] ?? STATUS_META.Contacted;
         return (
-          <span className="inline-flex items-center gap-1.5" onClick={e => e.stopPropagation()}>
+          <span className="inline-flex flex-wrap items-center gap-1.5" onClick={e => e.stopPropagation()}>
             <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: meta.bg, color: meta.color }}>
               {l.status}
             </span>
@@ -181,7 +212,8 @@ export default function UnionLeadsPage() {
       },
     },
     {
-      key: 'date', header: 'Delivered', icon: CalendarDays, align: 'right', mobileHidden: true,
+      key: 'date', header: 'Date', align: 'right', mobileHidden: true,
+      widthClass: 'hidden lg:table-cell lg:w-[14%] xl:w-[9%]',
       sortValue: l => l.deliveryDate, text: l => l.deliveryDate,
       render: l => (
         <span className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>{formatDateShort(l.deliveryDate)}</span>
@@ -192,7 +224,7 @@ export default function UnionLeadsPage() {
   const selectCls = 'input-base h-[38px] px-3 text-sm';
 
   return (
-    <div className="max-w-[1240px] mx-auto page-content space-y-3">
+    <div className="max-w-[1600px] mx-auto page-content space-y-3">
       {/* Header — one row */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
@@ -268,6 +300,7 @@ export default function UnionLeadsPage() {
           onRowClick={l => navigate(`/leads/${l.id}`)}
           searchPlaceholder="Search name, company, email…"
           pageSize={14}
+          layout="fixed"
           countLabel={n => `${n} shown`}
           toolbar={
             <div className="flex gap-2">
@@ -282,6 +315,11 @@ export default function UnionLeadsPage() {
                 {['Pending Review', 'Accepted', 'Contacted', 'Rejected'].map(s => (
                   <option key={s} value={s}>{s}</option>
                 ))}
+              </select>
+              <select value={enrichFilter} onChange={e => setEnrichFilter(e.target.value)} className={selectCls}>
+                <option value="all">All data</option>
+                <option value="enriched">Enriched only</option>
+                <option value="standard">Standard only</option>
               </select>
             </div>
           }

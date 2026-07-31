@@ -108,7 +108,7 @@ export default function UnionDashboard() {
   ];
 
   return (
-    <div className="max-w-[1200px] mx-auto page-content space-y-4">
+    <div className="max-w-[1600px] mx-auto page-content space-y-4">
       {/* Greeting */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">

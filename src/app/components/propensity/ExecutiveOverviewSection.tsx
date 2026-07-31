@@ -33,11 +33,13 @@ export function ExecutiveOverviewSection() {
   const columns: Column<AbmCampaign>[] = [
     {
       key: 'name', header: 'ABM campaign', icon: Layers, primary: true,
+      widthClass: 'w-[40%] lg:w-[24%] xl:w-[20%] 2xl:w-[17%]',
       sortValue: c => c.name, text: c => c.name,
-      render: c => <div className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</div>,
+      render: c => <div className="truncate font-bold" style={{ color: 'var(--color-text-primary)' }} title={c.name}>{c.name}</div>,
     },
     {
       key: 'linked', header: 'Supports', icon: Link2, sortable: false,
+      widthClass: 'hidden lg:table-cell lg:w-[16%] xl:w-[15%] 2xl:w-[13%]',
       render: c => {
         const xw = getCrosswalkForAbm(c.id);
         if (!xw) return <span style={{ color: 'var(--color-text-muted)' }}>—</span>;
@@ -59,6 +61,7 @@ export function ExecutiveOverviewSection() {
     },
     {
       key: 'spend', header: 'Spend', align: 'right',
+      widthClass: 'w-[38%] lg:w-[24%] xl:w-[20%] 2xl:w-[17%]',
       sortValue: c => c.spendToDate, text: c => fmtMoney(c.spendToDate),
       render: c => (
         <span style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -69,8 +72,9 @@ export function ExecutiveOverviewSection() {
     },
     {
       key: 'pacing', header: 'Pacing', icon: Activity, sortValue: c => c.pacingPct, sortable: true,
+      widthClass: 'hidden lg:table-cell lg:w-[25%] xl:w-[20%] 2xl:w-[17%]',
       render: c => (
-        <div className="min-w-[130px]">
+        <div>
           <ProgressBar
             label=""
             value={`${c.pacingPct}%`}
@@ -83,6 +87,7 @@ export function ExecutiveOverviewSection() {
     },
     {
       key: 'engaged', header: 'Accounts', align: 'right',
+      widthClass: 'hidden xl:table-cell xl:w-[15%] 2xl:w-[11%]',
       sortValue: c => c.engagedAccounts, text: c => String(c.engagedAccounts),
       render: c => (
         <span style={{ fontVariantNumeric: 'tabular-nums' }}>
@@ -92,7 +97,7 @@ export function ExecutiveOverviewSection() {
       ),
     },
     {
-      key: 'roi', header: 'ROI', align: 'right',
+      key: 'roi', header: 'ROI', align: 'right', widthClass: 'w-[22%] lg:w-[11%] xl:w-[10%] 2xl:w-[8%]',
       sortValue: c => c.roi, text: c => `${c.roi}x`,
       render: c => (
         <span className="font-bold" style={{ color: c.roi >= 2.5 ? 'var(--color-success)' : 'var(--color-text-primary)' }}>
@@ -102,6 +107,7 @@ export function ExecutiveOverviewSection() {
     },
     {
       key: 'dates', header: 'Flight', icon: CalendarClock, align: 'right', mobileHidden: true,
+      widthClass: 'hidden 2xl:table-cell 2xl:w-[17%]',
       sortValue: c => c.endDate, text: c => c.endDate,
       render: c => (
         <span style={{ color: 'var(--color-text-muted)', fontSize: '13px' }}>
@@ -156,6 +162,7 @@ export function ExecutiveOverviewSection() {
         columns={columns}
         rows={campaigns}
         getRowId={c => c.id}
+        layout="fixed"
         searchable={false}
         countLabel={n => `${n} active ABM campaign${n === 1 ? '' : 's'}`}
         empty={{ icon: Layers, title: 'No ABM campaigns', description: 'Campaigns appear here once Propensity reports them.' }}

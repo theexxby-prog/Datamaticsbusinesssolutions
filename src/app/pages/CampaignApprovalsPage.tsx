@@ -477,7 +477,7 @@ export default function CampaignApprovalsPage() {
 
   return (
     <>
-      <div className="max-w-[1100px] mx-auto page-content">
+      <div className="max-w-[1440px] mx-auto page-content">
 
         {/* Page header */}
         <div className="mb-4">

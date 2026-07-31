@@ -28,6 +28,7 @@ export interface Column<T> {
   mobileHidden?: boolean;
   /** Card-specific cell content; falls back to `render`. */
   mobileRender?: (row: T) => ReactNode;
+  /** Applied to both th and td — column width (`w-[16%]`) and/or responsive visibility (`hidden xl:table-cell`). */
   widthClass?: string;
 }
 
@@ -42,6 +43,12 @@ interface DataTableProps<T> {
   /** Extra controls (e.g. a status filter) shown in the toolbar. */
   toolbar?: ReactNode;
   pageSize?: number;
+  /**
+   * 'fixed' locks column widths (set via each column's widthClass) so the table
+   * always fits its container — long text truncates instead of forcing a
+   * horizontal scroll. Default 'auto' sizes columns to content.
+   */
+  layout?: 'auto' | 'fixed';
   empty: { icon: LucideIcon; title: string; description: string };
   /** Optional caption shown above the table (e.g. "24 campaigns"). */
   countLabel?: (n: number) => string;
@@ -51,7 +58,7 @@ type SortDir = 'asc' | 'desc' | null;
 
 export function DataTable<T>({
   columns, rows, getRowId, onRowClick, searchable = true,
-  searchPlaceholder = 'Search…', toolbar, pageSize, empty, countLabel,
+  searchPlaceholder = 'Search…', toolbar, pageSize, layout = 'auto', empty, countLabel,
 }: DataTableProps<T>) {
   const [query, setQuery] = useState('');
   const [sortKey, setSortKey] = useState<string | null>(null);
@@ -135,7 +142,7 @@ export function DataTable<T>({
           {/* ── Desktop table ── */}
           <div className="hidden overflow-hidden rounded-2xl border md:block" style={{ borderColor: 'var(--color-border)' }}>
             <div className="overflow-x-auto">
-              <table className="w-full border-collapse" style={{ background: 'var(--color-surface-raised)' }}>
+              <table className={`w-full border-collapse ${layout === 'fixed' ? 'table-fixed' : ''}`} style={{ background: 'var(--color-surface-raised)' }}>
                 <thead>
                   <tr>
                     {columns.map(col => {
@@ -177,7 +184,7 @@ export function DataTable<T>({
                       {columns.map(col => (
                         <td
                           key={col.key}
-                          className={`px-4 text-sm ${col.align === 'right' ? 'text-right' : 'text-left'}`}
+                          className={`px-4 text-sm ${col.align === 'right' ? 'text-right' : 'text-left'} ${col.widthClass ?? ''}`}
                           style={{ height: 52, color: 'var(--color-text-primary)', fontWeight: 500, verticalAlign: 'middle' }}
                         >
                           {col.render(row)}

@@ -241,7 +241,7 @@ export default function Dashboard() {
 
   return (
     <>
-      <div className="mx-auto max-w-[1400px] page-content">
+      <div className="mx-auto max-w-[1600px] page-content">
         {/* Header */}
         <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>

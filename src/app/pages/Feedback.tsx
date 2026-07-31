@@ -862,7 +862,7 @@ export default function Feedback() {
 
   return (
     <>
-      <div className="max-w-4xl mx-auto page-content">
+      <div className="max-w-5xl mx-auto page-content">
 
         {/* Page Header */}
         <div className="mb-4 flex items-center justify-between gap-4">

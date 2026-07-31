@@ -57,7 +57,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
   const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
-    <div className="max-w-[920px] mx-auto page-content space-y-4">
+    <div className="max-w-[1140px] mx-auto page-content space-y-4">
       {/* Back + provenance + jump-nav in one compact band */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-1">
@@ -214,7 +214,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
   };
 
   return (
-    <div className="max-w-[1100px] mx-auto page-content space-y-4">
+    <div className="max-w-[1440px] mx-auto page-content space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
         <button
           onClick={() => navigate('/leads')}

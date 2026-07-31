@@ -68,7 +68,7 @@ export default function Payment() {
 
   return (
     <>
-      <div className={`max-w-[1200px] mx-auto page-content animate-fadeIn`}>
+      <div className={`max-w-[1440px] mx-auto page-content animate-fadeIn`}>
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>

@@ -33,7 +33,7 @@ export default function AccountBriefingPage() {
   const anchor = getSignalContact(account.contactIds[0]);
 
   return (
-    <div className="max-w-[880px] mx-auto page-content space-y-5">
+    <div className="max-w-[1040px] mx-auto page-content space-y-5">
       <div className="flex items-center justify-between gap-3">
         <button
           onClick={() => navigate('/leads')}

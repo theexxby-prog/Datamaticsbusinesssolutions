@@ -222,7 +222,7 @@ function StandardHomePage() {
 
   return (
     <>
-      <div className="max-w-[1400px] mx-auto page-content space-y-5">
+      <div className="max-w-[1600px] mx-auto page-content space-y-5">
 
         {/* ── Welcome Banner ─────────────────────────────────────────────── */}
         <motion.div

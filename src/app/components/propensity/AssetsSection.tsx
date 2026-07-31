@@ -24,16 +24,17 @@ export function AssetsSection() {
   const columns: Column<AssetAnalytics>[] = [
     {
       key: 'name', header: 'Asset', icon: FileImage, primary: true,
+      widthClass: 'w-[44%] lg:w-[30%] xl:w-[28%]',
       sortValue: a => a.name, text: a => a.name,
       render: a => (
-        <div>
-          <div className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{a.name}</div>
-          <div style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{campaignName.get(a.abmCampaignId)}</div>
+        <div className="min-w-0">
+          <div className="truncate font-bold" style={{ color: 'var(--color-text-primary)' }} title={a.name}>{a.name}</div>
+          <div className="truncate" style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{campaignName.get(a.abmCampaignId)}</div>
         </div>
       ),
     },
     {
-      key: 'type', header: 'Type',
+      key: 'type', header: 'Type', widthClass: 'hidden lg:table-cell lg:w-[14%] xl:w-[12%]',
       sortValue: a => a.type, text: a => a.type,
       render: a => {
         const meta = TYPE_META[a.type];
@@ -48,6 +49,7 @@ export function AssetsSection() {
     },
     {
       key: 'impressions', header: 'Impressions', align: 'right',
+      widthClass: 'hidden lg:table-cell lg:w-[20%] xl:w-[17%]',
       sortValue: a => a.impressions, text: a => String(a.impressions),
       render: a => (
         <span style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--color-text-primary)' }}>
@@ -57,6 +59,7 @@ export function AssetsSection() {
     },
     {
       key: 'clicks', header: 'Clicks', align: 'right', mobileHidden: true,
+      widthClass: 'hidden xl:table-cell xl:w-[14%]',
       sortValue: a => a.clicks, text: a => String(a.clicks),
       render: a => (
         <span style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--color-text-secondary)' }}>
@@ -65,7 +68,7 @@ export function AssetsSection() {
       ),
     },
     {
-      key: 'ctr', header: 'CTR', align: 'right',
+      key: 'ctr', header: 'CTR', align: 'right', widthClass: 'w-[24%] lg:w-[14%] xl:w-[12%]',
       sortValue: a => a.ctrPct, text: a => `${a.ctrPct}%`,
       render: a => (
         <span className="font-bold" style={{ color: a.ctrPct >= 1.4 ? 'var(--color-success)' : 'var(--color-text-primary)' }}>
@@ -75,6 +78,7 @@ export function AssetsSection() {
     },
     {
       key: 'engagements', header: 'Engagements', align: 'right',
+      widthClass: 'w-[32%] lg:w-[22%] xl:w-[17%]',
       sortValue: a => a.engagements, text: a => String(a.engagements),
       render: a => (
         <span className="font-bold" style={{ fontVariantNumeric: 'tabular-nums', color: 'var(--color-text-primary)' }}>
@@ -97,6 +101,7 @@ export function AssetsSection() {
         columns={columns}
         rows={assets}
         getRowId={a => a.assetId}
+        layout="fixed"
         searchPlaceholder="Search assets…"
         countLabel={n => `${n} creatives in flight`}
         empty={{ icon: FileImage, title: 'No assets yet', description: 'Creative performance appears once campaigns serve.' }}
