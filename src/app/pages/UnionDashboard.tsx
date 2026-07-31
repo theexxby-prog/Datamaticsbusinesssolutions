@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import {
-  Users, Layers, TrendingUp, Sparkles, Gauge, Radar, ArrowRight, AlertCircle,
+  Users, Layers, TrendingUp, TrendingDown, Sparkles, Gauge, Radar, ArrowRight, AlertCircle,
   FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -12,6 +12,7 @@ import {
   getSignalContact, signalLeadId, getTriggerTimeline,
 } from '../data/signalRoom';
 import { getAbmSummary, getBlendedSpend } from '../data/propensity';
+import { getLeadOutcomes, getCampaignForecasts } from '../data/outcomes';
 import { formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { formatMoney as fmtMoney } from '../utils/format';
@@ -34,6 +35,9 @@ export default function UnionDashboard() {
   const campaigns = client?.campaigns ?? [];
   const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
   const leadsThisMonth = campaigns.reduce((sum, c) => sum + (c.leadsThisMonth ?? 0), 0);
+  const outcomes = getLeadOutcomes();
+  const forecasts = getCampaignForecasts();
+  const atRiskForecast = forecasts.find(f => f.atRisk);
 
   const myInvoices = mockInvoiceRecords.filter(i => i.clientId === 'client_1');
   const thisMonth = new Date().toISOString().slice(0, 7);
@@ -60,11 +64,17 @@ export default function UnionDashboard() {
   const avgIntent = Math.round(scores.reduce((s, v) => s + v, 0) / scores.length);
   const ranked = getAccountsByReadiness();
   const latestTrigger = getTriggerTimeline()[0];
-  const topAction = (() => {
-    const step = ranked[0]?.insight.sequence[0];
-    const person = step ? getSignalContact(step.contactId) : undefined;
-    return person ? { person, account: ranked[0].account } : undefined;
-  })();
+  // First resolvable step per account — sequences can name contacts outside
+  // the enriched sample, so resolve before ranking/numbering.
+  const nextActions = ranked
+    .map(({ account, insight }) => {
+      const step = insight.sequence.find(s => getSignalContact(s.contactId));
+      const person = step ? getSignalContact(step.contactId) : undefined;
+      return person ? { account, person } : null;
+    })
+    .filter((x): x is NonNullable<typeof x> => Boolean(x))
+    .slice(0, 3);
+  const topAction = nextActions[0];
 
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
@@ -83,6 +93,12 @@ export default function UnionDashboard() {
       label: 'Signature required',
       text: `${topSignature.id} · ${topSignature.campaignName}`,
       go: () => navigate('/documents'),
+    },
+    atRiskForecast && {
+      icon: TrendingDown, tone: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)',
+      label: 'Delivery at risk',
+      text: `${atRiskForecast.campaign.name} · projected ${atRiskForecast.projected} of ${atRiskForecast.target}`,
+      go: () => navigate(`/campaigns/${atRiskForecast.campaign.id}`),
     },
     latestTrigger && {
       icon: Megaphone, tone: 'var(--color-info)', bg: 'rgba(8,145,178,0.08)',
@@ -192,10 +208,9 @@ export default function UnionDashboard() {
             </button>
           </div>
           <div className="space-y-2.5">
-            {campaigns.map(c => {
-              const target = c.goalLeads ?? c.target ?? 0;
-              const delivered = c.deliveredLeads ?? c.delivered ?? 0;
+            {forecasts.map(({ campaign: c, target, delivered, projected, projectedPct, atRisk }) => {
               const pct = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
+              const active = c.status === 'active';
               return (
                 <button
                   key={c.id}
@@ -210,6 +225,18 @@ export default function UnionDashboard() {
                   </div>
                   <div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
                     <div className="h-full rounded-full" style={{ width: `${pct}%`, background: c.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-primary)' }} />
+                  </div>
+                  <div className="mt-1 flex items-center justify-between gap-2 text-[10.5px] font-semibold">
+                    <span style={{ color: !active ? 'var(--color-text-muted)' : atRisk ? 'var(--color-warning)' : 'var(--color-success)' }}>
+                      {!active
+                        ? 'Flight complete'
+                        : atRisk
+                          ? `At risk · projected ${projected.toLocaleString('en-US')} of ${target.toLocaleString('en-US')}`
+                          : `On pace · ${projected.toLocaleString('en-US')} by ${formatDateShort(c.endDate ?? '')}`}
+                    </span>
+                    {active && (
+                      <span style={{ color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>{projectedPct}% of goal</span>
+                    )}
                   </div>
                 </button>
               );
@@ -299,8 +326,55 @@ export default function UnionDashboard() {
         </div>
       </div>
 
-      {/* Intelligence row */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {/* Outcomes + intelligence row */}
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
+        {/* Lead outcomes — what happened after delivery */}
+        <div className="glass-card p-4">
+          <div className="mb-2.5 flex items-center justify-between gap-2">
+            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
+              <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+              Lead outcomes
+            </h3>
+            <button onClick={() => navigate('/reports')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
+              Reports <ArrowRight className="ml-0.5 inline h-3 w-3" />
+            </button>
+          </div>
+          <div className="mb-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(outcomes.pipelineValue)}</span>
+            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+              pipeline influenced · {fmtMoney(outcomes.wonValue)} closed-won
+            </span>
+          </div>
+          <div className="space-y-1.5">
+            {([
+              ['Delivered', outcomes.delivered],
+              ['Accepted', outcomes.accepted],
+              ['Synced to CRM', outcomes.synced],
+              ['Opportunities', outcomes.opportunities],
+              ['Closed-won', outcomes.closedWon],
+            ] as const).map(([label, value]) => {
+              const pct = Math.max(2, Math.round((value / Math.max(outcomes.delivered, 1)) * 100));
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  <span className="w-[92px] flex-shrink-0 text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+                    {label}
+                  </span>
+                  <span className="h-2 flex-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                    <span className="block h-full rounded-full" style={{ width: `${pct}%`, background: 'var(--color-primary)' }} />
+                  </span>
+                  <span className="w-[78px] flex-shrink-0 text-right text-[11.5px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                    {value.toLocaleString('en-US')}
+                    <span className="ml-1 font-semibold" style={{ color: 'var(--color-text-muted)' }}>{pct}%</span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <p className="mt-2.5 text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            Reported back through your CRM sync · updated daily
+          </p>
+        </div>
+
         {/* Accounts & next actions */}
         <div className="glass-card p-4">
           <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -336,10 +410,7 @@ export default function UnionDashboard() {
               <ListOrdered className="h-3.5 w-3.5" /> Next best actions
             </div>
             <div className="space-y-0.5">
-              {ranked.slice(0, 3).map(({ account, insight }, index) => {
-                const step = insight.sequence[0];
-                const person = step ? getSignalContact(step.contactId) : undefined;
-                if (!person) return null;
+              {nextActions.map(({ account, person }, index) => {
                 return (
                   <button
                     key={account.slug}
