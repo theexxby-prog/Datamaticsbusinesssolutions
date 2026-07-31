@@ -275,19 +275,21 @@ export interface ContactEngagement {
   lastSeen: string;
 }
 
+// Names/titles mirror mockLeads exactly — these are the same people, seen
+// through Propensity's engagement lens.
 const CONTACT_ENGAGEMENT: ContactEngagement[] = [
-  { contactId: 'con_01', leadId: 'L001', name: 'Marcus Webb', title: 'VP of Infrastructure', account: 'Summit Managed Services', adClicks: 12, webSessions: 9, contentDownloads: 4, engagementScore: 94, lastSeen: isoDaysAgo(0) },
-  { contactId: 'con_02', leadId: 'L002', name: 'Sandra Liu', title: 'Director of IT', account: 'Northgate IT Partners', adClicks: 9, webSessions: 7, contentDownloads: 3, engagementScore: 88, lastSeen: isoDaysAgo(1) },
-  { contactId: 'con_03', leadId: 'L003', name: 'David Okafor', title: 'CTO', account: 'ClearPath Solutions Group', adClicks: 7, webSessions: 5, contentDownloads: 2, engagementScore: 79, lastSeen: isoDaysAgo(1) },
-  { contactId: 'con_04', leadId: 'L004', name: 'Rachel Kim', title: 'Head of Procurement', account: 'Beacon Technology Group', adClicks: 5, webSessions: 4, contentDownloads: 1, engagementScore: 68, lastSeen: isoDaysAgo(2) },
-  { contactId: 'con_05', leadId: 'L005', name: 'Tom Bradley', title: 'Solutions Architect', account: 'Ironwood Systems Integration', adClicks: 8, webSessions: 6, contentDownloads: 3, engagementScore: 82, lastSeen: isoDaysAgo(0) },
-  { contactId: 'con_06', leadId: 'L006', name: 'Priya Raman', title: 'IT Operations Manager', account: 'Cascade Network Solutions', adClicks: 4, webSessions: 3, contentDownloads: 1, engagementScore: 61, lastSeen: isoDaysAgo(3) },
-  { contactId: 'con_07', leadId: 'L007', name: 'James Corrigan', title: 'VP Engineering', account: 'Silverline Technology Partners', adClicks: 3, webSessions: 4, contentDownloads: 1, engagementScore: 57, lastSeen: isoDaysAgo(4) },
-  { contactId: 'con_08', leadId: 'L008', name: 'Elena Vasquez', title: 'Director of Cloud Services', account: 'Vantage Point Integrators', adClicks: 2, webSessions: 2, contentDownloads: 0, engagementScore: 44, lastSeen: isoDaysAgo(6) },
-  { contactId: 'con_09', leadId: null, name: 'Owen Fitzgerald', title: 'Chief Information Officer', account: 'Halcyon Cloud Partners', adClicks: 6, webSessions: 5, contentDownloads: 2, engagementScore: 73, lastSeen: isoDaysAgo(2) },
-  { contactId: 'con_10', leadId: 'L016', name: 'Nadia Osman', title: 'Security Practice Lead', account: 'Kestrel Security Resellers', adClicks: 7, webSessions: 6, contentDownloads: 2, engagementScore: 80, lastSeen: isoDaysAgo(1) },
-  { contactId: 'con_11', leadId: null, name: 'Grant Whitfield', title: 'Director of Facilities IT', account: 'Ridgeline Data Centers', adClicks: 1, webSessions: 1, contentDownloads: 0, engagementScore: 31, lastSeen: isoDaysAgo(8) },
-  { contactId: 'con_12', leadId: 'L017', name: 'Mei Tanaka', title: 'Automation Program Manager', account: 'Arbor Industrial Systems', adClicks: 4, webSessions: 3, contentDownloads: 1, engagementScore: 62, lastSeen: isoDaysAgo(3) },
+  { contactId: 'con_01', leadId: 'L001', name: 'Marcus Whitfield', title: 'IT Director', account: 'Summit Managed Services', adClicks: 12, webSessions: 9, contentDownloads: 4, engagementScore: 94, lastSeen: isoDaysAgo(0) },
+  { contactId: 'con_02', leadId: 'L002', name: 'Priya Raghavan', title: 'VP IT', account: 'Northgate IT Partners', adClicks: 9, webSessions: 7, contentDownloads: 3, engagementScore: 88, lastSeen: isoDaysAgo(1) },
+  { contactId: 'con_03', leadId: 'L003', name: 'Daniel Okonkwo', title: 'CIO', account: 'ClearPath Solutions Group', adClicks: 7, webSessions: 5, contentDownloads: 2, engagementScore: 79, lastSeen: isoDaysAgo(1) },
+  { contactId: 'con_04', leadId: 'L004', name: 'Hannah Lindqvist', title: 'CTO', account: 'Beacon Technology Group', adClicks: 5, webSessions: 4, contentDownloads: 1, engagementScore: 68, lastSeen: isoDaysAgo(2) },
+  { contactId: 'con_05', leadId: 'L005', name: 'Reuben Castellanos', title: 'IT Director', account: 'Ironwood Systems Integration', adClicks: 8, webSessions: 6, contentDownloads: 3, engagementScore: 82, lastSeen: isoDaysAgo(0) },
+  { contactId: 'con_06', leadId: 'L006', name: 'Alicia Mbeki', title: 'VP IT', account: 'Cascade Network Solutions', adClicks: 4, webSessions: 3, contentDownloads: 1, engagementScore: 61, lastSeen: isoDaysAgo(3) },
+  { contactId: 'con_07', leadId: 'L007', name: 'Tobias Renner', title: 'IT Director', account: 'Silverline Technology Partners', adClicks: 3, webSessions: 4, contentDownloads: 1, engagementScore: 57, lastSeen: isoDaysAgo(4) },
+  { contactId: 'con_08', leadId: 'L008', name: 'Naomi Fairbanks', title: 'CTO', account: 'Vantage Point Integrators', adClicks: 2, webSessions: 2, contentDownloads: 0, engagementScore: 44, lastSeen: isoDaysAgo(6) },
+  { contactId: 'con_09', leadId: 'L011', name: 'Cormac Delaney', title: 'DevOps Manager', account: 'Halcyon Cloud Partners', adClicks: 6, webSessions: 5, contentDownloads: 2, engagementScore: 73, lastSeen: isoDaysAgo(2) },
+  { contactId: 'con_10', leadId: 'L015', name: 'Desmond Achterberg', title: 'IT Manager', account: 'Kestrel Security Resellers', adClicks: 7, webSessions: 6, contentDownloads: 2, engagementScore: 80, lastSeen: isoDaysAgo(1) },
+  { contactId: 'con_11', leadId: 'L016', name: 'Rosalind Ferraro', title: 'Data Center Manager', account: 'Ridgeline Data Centers', adClicks: 1, webSessions: 1, contentDownloads: 0, engagementScore: 31, lastSeen: isoDaysAgo(8) },
+  { contactId: 'con_12', leadId: 'L017', name: 'Anselm Kowalczyk', title: 'VP Operations', account: 'Arbor Industrial Systems', adClicks: 4, webSessions: 3, contentDownloads: 1, engagementScore: 62, lastSeen: isoDaysAgo(3) },
 ];
 
 export function getContactEngagement(): ContactEngagement[] {
