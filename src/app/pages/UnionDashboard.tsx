@@ -1,7 +1,8 @@
 import { useNavigate } from 'react-router';
 import {
   Users, Layers, TrendingUp, TrendingDown, Sparkles, Gauge, Radar, ArrowRight, AlertCircle,
-  FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone,
+  FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone, ClipboardList,
+  CalendarDays, Wallet, Truck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { unionClient, UNION_CLIENT_ID } from '../data/unionClient';
@@ -12,8 +13,12 @@ import {
   getSignalContact, signalLeadId, getTriggerTimeline,
 } from '../data/signalRoom';
 import { getAbmSummary, getBlendedSpend } from '../data/propensity';
-import { getLeadOutcomes, getCampaignForecasts } from '../data/outcomes';
-import { formatDateShort } from '../utils/formatDate';
+import {
+  getLeadOutcomes, getCampaignForecasts, getUpcomingEvents, getAcceptanceTrend, getBillingPosition,
+} from '../data/outcomes';
+import { mockLeads } from '../mockData';
+import { getAccountTeam } from '../data/mockClients';
+import { formatDate, formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { formatMoney as fmtMoney } from '../utils/format';
 
@@ -38,6 +43,11 @@ export default function UnionDashboard() {
   const outcomes = getLeadOutcomes();
   const forecasts = getCampaignForecasts();
   const atRiskForecast = forecasts.find(f => f.atRisk);
+  const pendingLeads = mockLeads.filter(l => l.status === 'Pending Review').length;
+  const upcoming = getUpcomingEvents();
+  const acceptanceTrend = getAcceptanceTrend();
+  const billing = getBillingPosition();
+  const team = getAccountTeam('client_1');
 
   const myInvoices = mockInvoiceRecords.filter(i => i.clientId === UNION_CLIENT_ID);
   const thisMonth = new Date().toISOString().slice(0, 7);
@@ -82,6 +92,12 @@ export default function UnionDashboard() {
 
   // ── Needs attention — the few things that matter right now ─────────────────
   const attention = [
+    pendingLeads > 0 && {
+      icon: ClipboardList, tone: 'var(--color-primary)', bg: 'var(--color-primary-tint)',
+      label: 'Leads awaiting review',
+      text: `${pendingLeads} lead${pendingLeads === 1 ? '' : 's'} pending your accept/reject`,
+      go: () => navigate('/leads?status=Pending%20Review&data=all'),
+    },
     topOverdue && {
       icon: AlertCircle, tone: 'var(--color-error)', bg: 'rgba(239,68,68,0.07)',
       label: 'Overdue invoice',
@@ -194,8 +210,35 @@ export default function UnionDashboard() {
         })}
       </div>
 
-      {/* Relationship row: syndication · invoices & documents · programmatic */}
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+      {/* Coming up — the next dated things in the relationship */}
+      {upcoming.length > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border px-3 py-2"
+          style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
+        >
+          <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+            <CalendarDays className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+            Coming up
+          </span>
+          {upcoming.map(ev => (
+            <button
+              key={`${ev.date}-${ev.label}`}
+              onClick={() => navigate(ev.href)}
+              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[12px] transition-colors hover:bg-[var(--color-primary-tint)]"
+            >
+              {ev.kind === 'delivery'
+                ? <Truck className="h-3.5 w-3.5" style={{ color: 'var(--color-success)' }} />
+                : <Receipt className="h-3.5 w-3.5" style={{ color: 'var(--color-warning)' }} />}
+              <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{formatDateShort(ev.date)}</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{ev.label}</span>
+              <span className="hidden sm:inline" style={{ color: 'var(--color-text-muted)' }}>· {ev.sub}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Relationship row: syndication · invoices & documents · billing · programmatic */}
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
         {/* Content syndication campaigns */}
         <div className="glass-card p-4">
           <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -297,6 +340,33 @@ export default function UnionDashboard() {
           </div>
         </div>
 
+        {/* Billing position */}
+        <div className="glass-card p-4">
+          <div className="mb-2.5 flex items-center justify-between gap-2">
+            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
+              <Wallet className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+              Billing position
+            </h3>
+            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>FY 2026</span>
+          </div>
+          <div className="mb-1.5 flex items-baseline gap-2">
+            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(billing.billed)}</span>
+            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+              billed of {fmtMoney(billing.contracted)} contracted
+            </span>
+          </div>
+          <div className="h-2 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+            <div className="h-full rounded-full" style={{ width: `${billing.pct}%`, background: 'var(--color-primary)' }} />
+          </div>
+          <div className="mt-1.5 flex items-center justify-between text-[11px] font-semibold">
+            <span style={{ color: 'var(--color-text-secondary)' }}>{billing.pct}% of commitment</span>
+            <span style={{ color: 'var(--color-success)' }}>{fmtMoney(billing.remaining)} remaining</span>
+          </div>
+          <p className="mt-2.5 text-[11px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
+            Billed figures reconcile with your Invoices page to the dollar.
+          </p>
+        </div>
+
         {/* Programmatic mini */}
         <div className="glass-card p-4">
           <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -370,7 +440,29 @@ export default function UnionDashboard() {
               );
             })}
           </div>
-          <p className="mt-2.5 text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+          <div className="mt-2.5 flex items-center justify-between gap-2 border-t pt-2" style={{ borderColor: 'var(--color-border-light)' }}>
+            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+              Acceptance rate · 6 mo
+            </span>
+            <span className="flex items-center gap-2">
+              <svg width="90" height="24" viewBox="0 0 90 24" aria-hidden="true">
+                <polyline
+                  fill="none"
+                  stroke="var(--color-success)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  points={acceptanceTrend
+                    .map((pt, i) => `${4 + (i * 82) / (acceptanceTrend.length - 1)},${20 - ((pt.value - 94.5) / 3) * 16}`)
+                    .join(' ')}
+                />
+              </svg>
+              <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
+                {acceptanceTrend[acceptanceTrend.length - 1].value}%
+              </span>
+            </span>
+          </div>
+          <p className="mt-2 text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             Reported back through your CRM sync · updated daily
           </p>
         </div>
@@ -470,6 +562,46 @@ export default function UnionDashboard() {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* Your team — the humans on the account */}
+      <div
+        className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border px-4 py-3"
+        style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
+      >
+        <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+          <Users className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+          Your team
+        </span>
+        {[
+          { name: team?.manager.name ?? 'Brijesh Singh', role: 'Campaign manager', email: team?.manager.email ?? '' },
+          { name: team?.backup.name ?? 'Arjun Patel', role: 'Backup manager', email: team?.backup.email ?? '' },
+          { name: 'Praful Sanil', role: 'Operations', email: 'praful.sanil@datamaticsbpm.com' },
+        ].map(member => (
+          <a
+            key={member.name}
+            href={member.email ? `mailto:${member.email}` : undefined}
+            className="inline-flex items-center gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-[var(--color-primary-tint)]"
+          >
+            <span
+              className="flex h-6 w-6 flex-shrink-0 select-none items-center justify-center rounded-full text-[10px] font-extrabold text-white"
+              style={{ background: 'var(--color-primary)' }}
+            >
+              {member.name.split(' ').map(w => w[0]).slice(0, 2).join('')}
+            </span>
+            <span className="leading-tight">
+              <span className="block text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{member.name}</span>
+              <span className="block text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{member.role}</span>
+            </span>
+          </a>
+        ))}
+        <span
+          className="ml-auto inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
+          style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+        >
+          <CalendarDays className="h-3.5 w-3.5" />
+          Next business review · {formatDate('2026-08-14')}
+        </span>
       </div>
     </div>
   );
