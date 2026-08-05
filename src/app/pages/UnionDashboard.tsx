@@ -169,14 +169,14 @@ export default function UnionDashboard() {
 
       {/* Needs attention — highlighted, horizontal snap on phones */}
       {attention.length > 0 && (
-        <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-2 md:px-0 md:pb-0 xl:grid-cols-4">
+        <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-2 md:px-0 md:pb-0 xl:flex xl:overflow-visible">
           {attention.map(item => {
             const Icon = item.icon;
             return (
               <button
                 key={item.label}
                 onClick={item.go}
-                className="flex min-w-[240px] flex-shrink-0 snap-start items-start gap-2.5 rounded-xl border p-3 text-left transition-all hover:shadow-md md:min-w-0"
+                className="flex min-w-[240px] flex-shrink-0 snap-start items-start gap-2.5 rounded-xl border p-3 text-left transition-all hover:shadow-md md:min-w-0 xl:flex-1"
                 style={{ borderColor: 'var(--color-border-light)', background: item.bg }}
               >
                 <Icon className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: item.tone }} />
