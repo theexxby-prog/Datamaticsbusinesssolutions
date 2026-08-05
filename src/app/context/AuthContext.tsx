@@ -1,4 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useCallback } from 'react';
+import { UNION_COMPANY } from '../data/unionClient';
 
 // ============================================
 // TYPES
@@ -112,7 +113,7 @@ export const mockUsers: User[] = [
     email: 'union.preview@datamaticsbpm.com',
     role: 'client',
     assignedClients: [],
-    company: 'The Channel Company',
+    company: UNION_COMPANY,
   },
 ];
 

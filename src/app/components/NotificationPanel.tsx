@@ -5,6 +5,7 @@ import { Bell, X, CheckCheck, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useNotifications, type AppNotification } from '../context/NotificationContext';
 import { useIsMobile } from './ui/use-mobile';
+import { useUnionLens } from '../hooks/useUnionLens';
 
 export interface NotificationPanelProps {
   isOpen: boolean;
@@ -107,7 +108,9 @@ export function NotificationPanel({
   anchorRef,
   isMobile = false,
 }: NotificationPanelProps) {
-  const { notifications, unreadCount, markAllRead, markOneRead } = useNotifications();
+  const { notifications: rawNotifications, unreadCount, markAllRead, markOneRead } = useNotifications();
+  const lens = useUnionLens();
+  const notifications = lens(rawNotifications);
   const navigate = useNavigate();
 
   // Fixed pixel position of the panel (desktop only)

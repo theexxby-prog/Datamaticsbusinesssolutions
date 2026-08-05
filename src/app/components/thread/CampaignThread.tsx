@@ -11,6 +11,7 @@ import { ThreadEntryCard } from './ThreadEntryCard';
 import { ThreadComposer } from './ThreadComposer';
 import { authorFromUser, canResolveRequests, formatEntryTime } from './threadFormat';
 import { toast } from 'sonner';
+import { useUnionLens } from '../../hooks/useUnionLens';
 
 // One feed, filtered — not three tabs. Splitting comments, files and requests
 // into separate sections would break the one thing that makes a thread useful:
@@ -113,7 +114,8 @@ export function CampaignThread({ campaignId, campaignName, activities = [], vari
 
   const author = useMemo(() => authorFromUser(currentUser), [currentUser]);
   const canResolve = canResolveRequests(currentUser);
-  const entries = entriesFor(campaignId);
+  const lens = useUnionLens();
+  const entries = lens(entriesFor(campaignId));
 
   const counts = useMemo(() => ({
     all: entries.length,

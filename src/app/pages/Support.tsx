@@ -10,6 +10,7 @@ import { AnimatedCounter } from '../components/AnimatedCounter';
 import { EmptyState } from '../components/EmptyState';
 import { toast } from 'sonner';
 import { formatDate } from '../utils/formatDate';
+import { useUnionLens } from '../hooks/useUnionLens';
 
 interface Ticket {
   id: string;
@@ -72,12 +73,14 @@ const mockTickets: Ticket[] = [
 ];
 
 export default function Support() {
+  const lens = useUnionLens();
+  const allTickets = lens(mockTickets);
   const { currentUser } = useAuth();
   const ticketStats = {
-    total: mockTickets.length,
-    active: mockTickets.filter(t => t.status !== 'Resolved' && t.status !== 'Closed').length,
-    resolved: mockTickets.filter(t => t.status === 'Resolved' || t.status === 'Closed').length,
-    highPriority: mockTickets.filter(t => t.priority === 'High' || t.priority === 'Urgent').length,
+    total: allTickets.length,
+    active: allTickets.filter(t => t.status !== 'Resolved' && t.status !== 'Closed').length,
+    resolved: allTickets.filter(t => t.status === 'Resolved' || t.status === 'Closed').length,
+    highPriority: allTickets.filter(t => t.priority === 'High' || t.priority === 'Urgent').length,
   };
 
   const [searchTerm, setSearchTerm] = useState('');
@@ -91,7 +94,7 @@ export default function Support() {
     priority: 'Medium' as Ticket['priority']
   });
 
-  const filteredTickets = mockTickets.filter(ticket => {
+  const filteredTickets = allTickets.filter(ticket => {
     const matchesSearch = ticket.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          ticket.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'All' || ticket.status === statusFilter;

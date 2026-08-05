@@ -16,6 +16,8 @@ import {
 } from '../utils/documentWorkflow';
 import type { JobCard, ScopeSummary } from '../types';
 import { formatDate } from '../utils/formatDate';
+import { showFutureModules, } from '../config/demo';
+import { UNION_CLIENT_ID } from '../data/unionClient';
 
 // ─── Sign modal (client) ──────────────────────────────────────────────────────
 
@@ -406,8 +408,8 @@ export default function Documents() {
     const card: JobCard = {
       id,
       campaignName: `${scope.industry} ${scope.serviceType} – ${scope.geography} ${new Date(scope.startDate).getFullYear()}`,
-      clientId: 'client_1',
-      clientCompany: 'The Channel Company',
+      clientId: showFutureModules(currentUser) ? UNION_CLIENT_ID : 'client_1',
+      clientCompany: currentUser?.company ?? 'The Channel Company',
       type: 'client_signature',
       stage: 'pending_cm_review',
       createdAt: now(),

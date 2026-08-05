@@ -1,5 +1,6 @@
 import { FileSpreadsheet, AlertCircle } from 'lucide-react';
 import { useCampaignThread } from '../../context/CampaignThreadContext';
+import { useUnionLens } from '../../hooks/useUnionLens';
 import { formatDate } from '../../utils/formatDate';
 
 /**
@@ -12,7 +13,8 @@ import { formatDate } from '../../utils/formatDate';
  */
 export function TalBadge({ campaignId }: { campaignId: string }) {
   const { latestTalFor, openRequestsFor } = useCampaignThread();
-  const tal = latestTalFor(campaignId);
+  const lens = useUnionLens();
+  const tal = lens(latestTalFor(campaignId));
   const openRequests = openRequestsFor(campaignId);
 
   if (!tal && openRequests === 0) return null;

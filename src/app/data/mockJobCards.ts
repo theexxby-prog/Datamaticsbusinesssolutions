@@ -1,4 +1,5 @@
 import type { JobCard } from '../types';
+import { UNION_CLIENT_ID, UNION_COMPANY, renameCampaignName, neutralizeDeep } from './unionClient';
 
 // Job cards across every pipeline stage so each role's view and action set can
 // be demonstrated. client_1 = The Channel Company (the demo client login).
@@ -284,3 +285,21 @@ export const mockJobCards: JobCard[] = [
     ],
   },
 ];
+
+// The UNION preview login's documents: the three client_1 cards re-identified
+// to the neutral demo client — same stages, scopes, dates, and history, so
+// every pipeline state still demos, without a real client's name on it.
+const unionCards: JobCard[] = mockJobCards
+  .filter(c => c.clientId === 'client_1')
+  .map((c, i) => ({
+    ...neutralizeDeep(c),
+    id: `JC-2026-014${i + 1}`,
+    clientId: UNION_CLIENT_ID,
+    clientCompany: UNION_COMPANY,
+    campaignName: renameCampaignName(c.campaignName),
+    scopeSource: c.scopeSource
+      ? { ...c.scopeSource, fileName: `northwind-${c.id.toLowerCase()}-scope.pdf` }
+      : c.scopeSource,
+  }));
+
+mockJobCards.push(...unionCards);

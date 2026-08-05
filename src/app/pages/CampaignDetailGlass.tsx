@@ -13,8 +13,10 @@ import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { useCampaignThread } from '../context/CampaignThreadContext';
+import { useAuth } from '../context/AuthContext';
+import { useUnionLens } from '../hooks/useUnionLens';
 import { useIsMobile } from '../components/ui/use-mobile';
-import { allClients } from '../data/mockClients';
+import { resolveCampaignForUser } from '../data/unionClient';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
 import { toast } from 'sonner';
@@ -23,6 +25,8 @@ import { formatMoney as fmtMoney } from '../utils/format';
 export default function CampaignDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { currentUser } = useAuth();
+  const lens = useUnionLens();
   const [showJobCard, setShowJobCard] = useState(false);
   const [showCloneModal, setShowCloneModal] = useState(false);
   const [showNewCampaignModal, setShowNewCampaignModal] = useState(false);
@@ -33,18 +37,10 @@ export default function CampaignDetail() {
   // switch shows one at a time instead of stacking a very long page.
   const [mobileSection, setMobileSection] = useState<'overview' | 'discussion'>('overview');
   
-  // Find the campaign across all clients
-  let campaign = null;
-  let client = null;
-  
-  for (const c of allClients) {
-    const foundCampaign = c.campaigns.find(camp => camp.id === id);
-    if (foundCampaign) {
-      campaign = foundCampaign;
-      client = c;
-      break;
-    }
-  }
+  // Find the campaign across all clients, under this login's identity
+  const resolved = resolveCampaignForUser(currentUser, id);
+  const campaign = resolved?.campaign ?? null;
+  const client = resolved?.client ?? null;
 
   if (!campaign) {
     return (
@@ -77,7 +73,7 @@ export default function CampaignDetail() {
   const totalBillable = cpl * deliveredLeads;
   
   const health = getCampaignHealth(campaign);
-  const activities = getActivitiesForCampaign(campaign.id);
+  const activities = lens(getActivitiesForCampaign(campaign.id));
   const replacementStats = getReplacementStats(campaign.id);
   const isConvertr = client?.leadAcceptanceMethod === 'convertr';
 

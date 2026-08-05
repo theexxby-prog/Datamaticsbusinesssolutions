@@ -12,10 +12,12 @@ import { TccWordmark } from '../components/TccWordmark';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { NotificationsTabContent } from '../components/NotificationsTabContent';
 import { DASH_METRICS, getDashPrefs, setDashMetric, type DashMetricKey } from '../data/dashboardPrefs';
+import { useUnionLens } from '../hooks/useUnionLens';
 
 export default function Account() {
   useDocumentTitle('Account Settings');
   const { currentUser } = useAuth();
+  const lens = useUnionLens();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'company' | 'team' | 'security' | 'notifications' | 'dashboard'>('profile');
   const [showPassword, setShowPassword] = useState(false);
@@ -112,11 +114,11 @@ export default function Account() {
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Company</label>
-                  <input type="text" defaultValue="The Channel Company" className="input-base w-full px-4 py-3" disabled style={{ background: 'var(--color-surface)' }} />
+                  <input type="text" defaultValue={currentUser?.company ?? ''} className="input-base w-full px-4 py-3" disabled style={{ background: 'var(--color-surface)' }} />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Email Address</label>
-                  <input type="email" defaultValue="rlawless@thechannelcompany.com" className="input-base w-full px-4 py-3" />
+                  <input type="email" defaultValue={lens('rlawless@thechannelcompany.com')} className="input-base w-full px-4 py-3" />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Phone Number</label>
@@ -184,7 +186,7 @@ export default function Account() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="md:col-span-2">
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Company Name</label>
-                  <input type="text" defaultValue="The Channel Company" className="input-base w-full px-4 py-3" />
+                  <input type="text" defaultValue={currentUser?.company ?? ''} className="input-base w-full px-4 py-3" />
                 </div>
                 <div>
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Industry</label>
@@ -206,7 +208,7 @@ export default function Account() {
                 </div>
                 <div className="md:col-span-2">
                   <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">Website</label>
-                  <input type="url" defaultValue="https://thechannelcompany.com" className="input-base w-full px-4 py-3" />
+                  <input type="url" defaultValue={lens('https://thechannelcompany.com')} className="input-base w-full px-4 py-3" />
                 </div>
               </div>
               <div className="flex justify-end gap-2">
@@ -272,11 +274,11 @@ export default function Account() {
                 </button>
               </div>
               <div className="space-y-3">
-                {[
+                {lens([
                   { name: 'Renuka Lawless', email: 'rlawless@thechannelcompany.com', role: 'Admin' },
                   { name: 'Dana Whitcomb', email: 'dwhitcomb@thechannelcompany.com', role: 'Member' },
                   { name: 'Peter Ashford', email: 'pashford@thechannelcompany.com', role: 'Member' },
-                ].map((member, i) => (
+                ]).map((member, i) => (
                   <div key={i} className="flex items-center justify-between p-4 rounded-lg" style={{ background: 'var(--color-border-light)' }}>
                     <div className="flex items-center gap-3">
                       <PersonAvatar name={member.name} size={40} />

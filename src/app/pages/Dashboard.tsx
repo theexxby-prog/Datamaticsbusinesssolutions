@@ -6,6 +6,7 @@ import {
   Check, Pause, Clock, X,
 } from 'lucide-react';
 import { getAccountTeam, allClients } from '../data/mockClients';
+import { getPortalClient } from '../data/unionClient';
 import { NewCampaignModal, CampaignFormData } from '../components/NewCampaignModal';
 import { AccountTeam } from '../components/AccountTeam';
 import { DataTable, type Column } from '../components/ui/DataTable';
@@ -125,7 +126,7 @@ export default function Dashboard() {
 
   const accountTeam = getAccountTeam('client_1');
   const isClientRole = currentUser?.role === 'client';
-  const tccClient = allClients.find(c => c.id === 'client_1');
+  const tccClient = getPortalClient(currentUser);
   const managerName = accountTeam?.manager.name ?? 'Brijesh Singh';
 
   const rows: Row[] = useMemo(() => {

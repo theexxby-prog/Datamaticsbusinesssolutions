@@ -1,5 +1,6 @@
 import type { InvoiceRecord } from '../types';
 import { tccTaxInvoices } from './tccTaxInvoices';
+import { UNION_CLIENT_ID, UNION_COMPANY, neutralizeLineDescription } from './unionClient';
 
 const MONTHS: Record<string, string> = {
   Jan: '01', Feb: '02', Mar: '03', Apr: '04', May: '05', Jun: '06',
@@ -55,8 +56,27 @@ const tccRecords: InvoiceRecord[] = tccTaxInvoices.map((inv) => ({
   ],
 }));
 
+// The UNION preview login's ledger: the same 19 invoices — every figure, date,
+// and stage identical — re-identified to the neutral demo client so no real
+// client's name, invoice numbers, or vendor programs are exposed to partners.
+// No tax-invoice document exists for these numbers on purpose: the underlying
+// PDFs are client-identifiable.
+const unionRecords: InvoiceRecord[] = tccRecords.map((rec, i) => {
+  const invoiceNumber = `INV-2026-02${String(i + 1).padStart(2, '0')}`;
+  return {
+    ...rec,
+    id: `inv_union_${i + 1}`,
+    invoiceNumber,
+    clientId: UNION_CLIENT_ID,
+    clientCompany: UNION_COMPANY,
+    lineItems: rec.lineItems.map(l => ({ ...l, campaignName: neutralizeLineDescription(l.campaignName) })),
+    tally: { ...rec.tally, voucherId: `TLY-U${String(i + 1).padStart(4, '0')}` },
+  };
+});
+
 export const mockInvoiceRecords: InvoiceRecord[] = [
   ...tccRecords,
+  ...unionRecords,
 
   // ── Other clients — internal pipeline coverage only (never client-visible) ──
   // Draft awaiting Accounts validation.
