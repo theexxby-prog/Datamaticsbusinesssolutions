@@ -1,6 +1,7 @@
 import { X, FileText, Send, Download } from 'lucide-react';
 import { Logo } from './Logo';
 import { toast } from 'sonner';
+import { useAuth } from '../context/AuthContext';
 
 interface JobCardModalProps {
   campaign: any;
@@ -9,6 +10,13 @@ interface JobCardModalProps {
 }
 
 export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalProps) {
+  const { currentUser } = useAuth();
+  // A client sees their own identity on the card; internal roles see the demo client.
+  const isClient = currentUser?.role === 'client';
+  const clientCompany = isClient ? currentUser?.company ?? '' : 'The Channel Company';
+  const clientContact = isClient ? currentUser?.name ?? '' : 'Renuka Lawless';
+  const clientEmail = isClient ? currentUser?.email ?? '' : 'rlawless@thechannelcompany.com';
+
   const handleSendForSignature = () => {
     toast.success('Job card sent for e-signature! Check your inbox.');
     onClose();
@@ -62,15 +70,15 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-gray-600">Company</div>
-                <div className="font-medium">The Channel Company</div>
+                <div className="font-medium">{clientCompany}</div>
               </div>
               <div>
                 <div className="text-sm text-gray-600">Contact Person</div>
-                <div className="font-medium">Renuka Lawless</div>
+                <div className="font-medium">{clientContact}</div>
               </div>
               <div>
                 <div className="text-sm text-gray-600">Email</div>
-                <div className="font-medium">rlawless@thechannelcompany.com</div>
+                <div className="font-medium">{clientEmail}</div>
               </div>
               <div>
                 <div className="text-sm text-gray-600">Phone</div>
@@ -180,8 +188,8 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
             <div className="border-t-2 border-gray-300 pt-4">
               <div className="text-sm text-gray-600 mb-2">Client Signature</div>
               <div className="h-16 border-b-2 border-dashed border-gray-300 mb-2"></div>
-              <div className="text-xs text-gray-500">Renuka Lawless</div>
-              <div className="text-xs text-gray-500">The Channel Company</div>
+              <div className="text-xs text-gray-500">{clientContact}</div>
+              <div className="text-xs text-gray-500">{clientCompany}</div>
             </div>
             <div className="border-t-2 border-gray-300 pt-4">
               <div className="text-sm text-gray-600 mb-2">Datamatics Business Solutions Representative</div>

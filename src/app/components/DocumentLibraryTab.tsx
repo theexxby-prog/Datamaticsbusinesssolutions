@@ -15,6 +15,7 @@ import { formatDate } from '../utils/formatDate';
 import { useCampaignThread } from '../context/CampaignThreadContext';
 import { allClients } from '../data/mockClients';
 import { ATTACHMENT_KIND_LABEL, type CampaignThreadEntry } from '../data/campaignThread';
+import { useUnionLens } from '../hooks/useUnionLens';
 
 interface Document {
   id: string;
@@ -152,6 +153,7 @@ function attachmentsAsDocuments(entries: CampaignThreadEntry[]): Document[] {
 }
 
 export function DocumentLibraryTab() {
+  const lens = useUnionLens();
   const isMobile = useIsMobile();
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState<string>('All');
@@ -177,8 +179,9 @@ export function DocumentLibraryTab() {
       .flatMap(client => client.campaigns)
       .flatMap(campaign => attachmentsAsDocuments(entriesFor(campaign.id)));
     // Newest first, so a TAL uploaded during the call appears at the top.
-    return [...fromCampaigns, ...mockDocuments].sort((a, b) => b.uploadDate.localeCompare(a.uploadDate));
-  }, [entriesFor]);
+    // The lens covers thread attachments and the seed library alike.
+    return lens([...fromCampaigns, ...mockDocuments]).sort((a, b) => b.uploadDate.localeCompare(a.uploadDate));
+  }, [entriesFor, lens]);
 
   const filteredDocuments = documents.filter((doc) => {
     const matchesSearch =

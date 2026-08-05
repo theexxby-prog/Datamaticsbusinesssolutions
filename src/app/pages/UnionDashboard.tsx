@@ -4,7 +4,7 @@ import {
   FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { allClients } from '../data/mockClients';
+import { unionClient, UNION_CLIENT_ID } from '../data/unionClient';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
 import { mockJobCards } from '../data/mockJobCards';
 import {
@@ -31,7 +31,7 @@ export default function UnionDashboard() {
   const { currentUser } = useAuth();
 
   // ── Relationship data (same sources the module pages use) ──────────────────
-  const client = allClients.find(c => c.id === 'client_1');
+  const client = unionClient;
   const campaigns = client?.campaigns ?? [];
   const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
   const leadsThisMonth = campaigns.reduce((sum, c) => sum + (c.leadsThisMonth ?? 0), 0);
@@ -39,7 +39,7 @@ export default function UnionDashboard() {
   const forecasts = getCampaignForecasts();
   const atRiskForecast = forecasts.find(f => f.atRisk);
 
-  const myInvoices = mockInvoiceRecords.filter(i => i.clientId === 'client_1');
+  const myInvoices = mockInvoiceRecords.filter(i => i.clientId === UNION_CLIENT_ID);
   const thisMonth = new Date().toISOString().slice(0, 7);
   const billableMtd = myInvoices.filter(i => (i.issueDate ?? '').startsWith(thisMonth)).reduce((s, i) => s + i.total, 0);
   const overdueInvoices = myInvoices.filter(i => i.stage === 'overdue');

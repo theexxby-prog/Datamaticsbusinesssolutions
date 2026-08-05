@@ -321,26 +321,32 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
       </div>
 
       <div className="flex flex-wrap items-center gap-2 mt-4">
-        <button onClick={() => onView(invoice.invoiceNumber)} className="btn-secondary px-4 py-2 flex items-center gap-2">
-          <FileText className="w-4 h-4" />
-          View invoice
-        </button>
-        <button
-          onClick={async () => {
-            const doc = tccTaxInvoices.find((t) => t.invoiceNumber === invoice.invoiceNumber);
-            if (!doc) return;
-            try {
-              await generateTaxInvoicePDF(doc);
-              toast.success(`Invoice ${doc.invoiceNumber} downloaded`);
-            } catch {
-              toast.error('Could not generate the invoice PDF');
-            }
-          }}
-          className="btn-secondary px-4 py-2 flex items-center gap-2"
-        >
-          <Download className="w-4 h-4" />
-          Download
-        </button>
+        {/* Document actions only where an issued document exists — rebranded
+            demo records deliberately have none. */}
+        {tccTaxInvoices.some((t) => t.invoiceNumber === invoice.invoiceNumber) && (
+          <>
+            <button onClick={() => onView(invoice.invoiceNumber)} className="btn-secondary px-4 py-2 flex items-center gap-2">
+              <FileText className="w-4 h-4" />
+              View invoice
+            </button>
+            <button
+              onClick={async () => {
+                const doc = tccTaxInvoices.find((t) => t.invoiceNumber === invoice.invoiceNumber);
+                if (!doc) return;
+                try {
+                  await generateTaxInvoicePDF(doc);
+                  toast.success(`Invoice ${doc.invoiceNumber} downloaded`);
+                } catch {
+                  toast.error('Could not generate the invoice PDF');
+                }
+              }}
+              className="btn-secondary px-4 py-2 flex items-center gap-2"
+            >
+              <Download className="w-4 h-4" />
+              Download
+            </button>
+          </>
+        )}
         <button
           onClick={() => setExpanded((v) => !v)}
           className="ml-auto flex items-center gap-1 px-2 py-1"

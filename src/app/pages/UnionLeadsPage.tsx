@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockLeads, type Lead } from '../mockData';
-import { allClients } from '../data/mockClients';
+import { unionClient, renameLeadCampaign } from '../data/unionClient';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { SignalAccountsView } from '../components/signal/SignalAccountsView';
 import { SignalTimelineView } from '../components/signal/SignalTimelineView';
@@ -41,7 +41,7 @@ export default function UnionLeadsPage() {
   // Enriched contacts and campaign leads in one list, highest intent first so
   // the two datasets interleave naturally.
   const [leads, setLeads] = useState<Lead[]>(() =>
-    [...getSignalLeads(), ...mockLeads].sort((a, b) => b.leadScore - a.leadScore),
+    [...getSignalLeads(), ...mockLeads.map(renameLeadCampaign)].sort((a, b) => b.leadScore - a.leadScore),
   );
   const [lens, setLens] = useState<Lens>('people');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -51,7 +51,7 @@ export default function UnionLeadsPage() {
   const [enrichFilter, setEnrichFilter] = useState('enriched');
 
   // Header stats + QA line (same sources the standard page uses)
-  const clientData = allClients.find(c => c.id === 'client_1');
+  const clientData = unionClient;
   const deliveredToDate = clientData?.totalLeads ?? leads.length;
   const qaCaution = Math.round(deliveredToDate * 0.02);
   const qaInvalid = Math.round(deliveredToDate * 0.01);

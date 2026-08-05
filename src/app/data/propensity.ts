@@ -41,15 +41,15 @@ export interface CrosswalkEntry {
 }
 
 export const ABM_SYNDICATION_CROSSWALK: CrosswalkEntry[] = [
-  { abmCampaignId: 'abm_101', syndicationCampaignId: '46888', syndicationCampaignName: 'Lenovo Intel FIFA AI' },
-  { abmCampaignId: 'abm_102', syndicationCampaignId: '46873', syndicationCampaignName: 'Uptime Solutions CRN2 - Lead Gen' },
-  { abmCampaignId: 'abm_103', syndicationCampaignId: '46936', syndicationCampaignName: 'Eaton 2026 Full Year 1_Q3' },
+  { abmCampaignId: 'abm_101', syndicationCampaignId: '46888', syndicationCampaignName: 'Atlas AI Infrastructure — Q3' },
+  { abmCampaignId: 'abm_102', syndicationCampaignId: '46873', syndicationCampaignName: 'Resilience Suite Lead Gen' },
+  { abmCampaignId: 'abm_103', syndicationCampaignId: '46936', syndicationCampaignName: 'GridWorks FY2026 — Q3' },
 ];
 
 const ABM_CAMPAIGNS: AbmCampaign[] = [
   {
     id: 'abm_101',
-    name: 'Lenovo AI Infrastructure — ABM Air Cover',
+    name: 'Atlas AI Infrastructure — ABM Air Cover',
     status: 'active',
     startDate: '2026-06-01',
     endDate: '2026-10-31',
@@ -65,7 +65,7 @@ const ABM_CAMPAIGNS: AbmCampaign[] = [
   },
   {
     id: 'abm_102',
-    name: 'Uptime Solutions CRN2 — Channel ABM',
+    name: 'Resilience Suite — Channel ABM',
     status: 'active',
     startDate: '2026-06-15',
     endDate: '2026-09-30',
@@ -81,7 +81,7 @@ const ABM_CAMPAIGNS: AbmCampaign[] = [
   },
   {
     id: 'abm_103',
-    name: 'Eaton FY2026 — Industrial ICP Display',
+    name: 'GridWorks FY2026 — Industrial ICP Display',
     status: 'active',
     startDate: '2026-07-01',
     endDate: '2026-12-31',
@@ -314,12 +314,12 @@ export interface AssetAnalytics {
 const ASSET_ANALYTICS: AssetAnalytics[] = [
   { assetId: 'ast_01', name: 'AI Infrastructure Buyer’s Guide — 300x250', type: 'display', abmCampaignId: 'abm_101', impressions: 96400, clicks: 1520, ctrPct: 1.58, engagements: 611 },
   { assetId: 'ast_02', name: 'FIFA AI Story — 15s pre-roll', type: 'video', abmCampaignId: 'abm_101', impressions: 71200, clicks: 1180, ctrPct: 1.66, engagements: 540 },
-  { assetId: 'ast_03', name: 'Lenovo + Intel benchmark native card', type: 'native', abmCampaignId: 'abm_101', impressions: 64800, clicks: 940, ctrPct: 1.45, engagements: 402 },
-  { assetId: 'ast_04', name: 'CRN2 uptime calculator — 728x90', type: 'display', abmCampaignId: 'abm_102', impressions: 58800, clicks: 620, ctrPct: 1.05, engagements: 268 },
-  { assetId: 'ast_05', name: 'Uptime SLA checklist native card', type: 'native', abmCampaignId: 'abm_102', impressions: 49300, clicks: 710, ctrPct: 1.44, engagements: 305 },
-  { assetId: 'ast_06', name: 'Eaton industrial ICP — 300x600', type: 'display', abmCampaignId: 'abm_103', impressions: 41600, clicks: 430, ctrPct: 1.03, engagements: 174 },
+  { assetId: 'ast_03', name: 'Atlas AI benchmark native card', type: 'native', abmCampaignId: 'abm_101', impressions: 64800, clicks: 940, ctrPct: 1.45, engagements: 402 },
+  { assetId: 'ast_04', name: 'Resilience uptime calculator — 728x90', type: 'display', abmCampaignId: 'abm_102', impressions: 58800, clicks: 620, ctrPct: 1.05, engagements: 268 },
+  { assetId: 'ast_05', name: 'Resilience SLA checklist native card', type: 'native', abmCampaignId: 'abm_102', impressions: 49300, clicks: 710, ctrPct: 1.44, engagements: 305 },
+  { assetId: 'ast_06', name: 'GridWorks industrial ICP — 300x600', type: 'display', abmCampaignId: 'abm_103', impressions: 41600, clicks: 430, ctrPct: 1.03, engagements: 174 },
   { assetId: 'ast_07', name: 'Powering the smart plant — 30s video', type: 'video', abmCampaignId: 'abm_103', impressions: 36500, clicks: 505, ctrPct: 1.38, engagements: 231 },
-  { assetId: 'ast_08', name: 'Eaton FY26 line card native', type: 'native', abmCampaignId: 'abm_103', impressions: 28700, clicks: 330, ctrPct: 1.15, engagements: 129 },
+  { assetId: 'ast_08', name: 'GridWorks FY26 line card native', type: 'native', abmCampaignId: 'abm_103', impressions: 28700, clicks: 330, ctrPct: 1.15, engagements: 129 },
 ];
 
 export function getAssetAnalytics(): AssetAnalytics[] {
@@ -379,9 +379,9 @@ export function getSyndicationInfluence(): SyndicationInfluence {
     engagedAccounts: sourced.length,
     pipelineValue: 46800,
     perCampaign: [
-      { syndicationCampaignId: '46888', syndicationCampaignName: 'Lenovo Intel FIFA AI', abmCampaignName: 'Lenovo AI Infrastructure — ABM Air Cover', leads: 112, engagedAccounts: 4 },
-      { syndicationCampaignId: '46873', syndicationCampaignName: 'Uptime Solutions CRN2 - Lead Gen', abmCampaignName: 'Uptime Solutions CRN2 — Channel ABM', leads: 64, engagedAccounts: 3 },
-      { syndicationCampaignId: '46936', syndicationCampaignName: 'Eaton 2026 Full Year 1_Q3', abmCampaignName: 'Eaton FY2026 — Industrial ICP Display', leads: 44, engagedAccounts: 2 },
+      { syndicationCampaignId: '46888', syndicationCampaignName: 'Atlas AI Infrastructure — Q3', abmCampaignName: 'Atlas AI Infrastructure — ABM Air Cover', leads: 112, engagedAccounts: 4 },
+      { syndicationCampaignId: '46873', syndicationCampaignName: 'Resilience Suite Lead Gen', abmCampaignName: 'Resilience Suite — Channel ABM', leads: 64, engagedAccounts: 3 },
+      { syndicationCampaignId: '46936', syndicationCampaignName: 'GridWorks FY2026 — Q3', abmCampaignName: 'GridWorks FY2026 — Industrial ICP Display', leads: 44, engagedAccounts: 2 },
     ],
   };
 }
