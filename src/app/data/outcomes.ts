@@ -1,5 +1,7 @@
 import type { Campaign } from './mockClients';
-import { unionClient } from './unionClient';
+import { unionClient, UNION_CLIENT_ID } from './unionClient';
+import { mockInvoiceRecords } from './mockInvoiceRecords';
+import { formatMoney } from '../utils/format';
 
 // ─── Downstream lead outcomes + delivery forecasting ─────────────────────────
 // What happened to the leads after delivery (the client's real ROI question),
@@ -85,4 +87,85 @@ export function getCampaignForecasts(): CampaignForecast[] {
       atRisk: c.status === 'active' && projectedPct < 95,
     };
   });
+}
+
+// ─── What's coming up ────────────────────────────────────────────────────────
+// The next few dated things in the relationship: scheduled lead deliveries and
+// invoice due dates. Answers the client's quiet daily question — is anything
+// arriving this week?
+
+export interface UpcomingEvent {
+  date: string;
+  kind: 'delivery' | 'invoice_due';
+  label: string;
+  sub: string;
+  href: string;
+}
+
+export function getUpcomingEvents(): UpcomingEvent[] {
+  const today = new Date().toISOString().slice(0, 10);
+  const deliveries: UpcomingEvent[] = unionClient.campaigns.flatMap(c =>
+    (c.deliverySchedule ?? [])
+      .filter(d => d.status === 'upcoming' && d.date.slice(0, 10) >= today)
+      .map(d => ({
+        date: d.date.slice(0, 10),
+        kind: 'delivery' as const,
+        label: `${d.leadsDelivered} leads`,
+        sub: c.name,
+        href: `/campaigns/${c.id}`,
+      })),
+  );
+  const dues: UpcomingEvent[] = mockInvoiceRecords
+    .filter(i => i.clientId === UNION_CLIENT_ID && i.stage === 'sent' && (i.dueDate ?? '') >= today)
+    .map(i => ({
+      date: i.dueDate!,
+      kind: 'invoice_due' as const,
+      label: `${i.invoiceNumber} due`,
+      sub: formatMoney(i.total),
+      href: '/invoices',
+    }));
+  return [...deliveries, ...dues].sort((a, b) => a.date.localeCompare(b.date)).slice(0, 4);
+}
+
+// ─── Acceptance-rate trend ───────────────────────────────────────────────────
+// Six months of QA acceptance, ending at the current rate the QA strip shows.
+
+export interface TrendPoint { label: string; value: number }
+
+export function getAcceptanceTrend(): TrendPoint[] {
+  return [
+    { label: 'Mar', value: 94.8 },
+    { label: 'Apr', value: 95.6 },
+    { label: 'May', value: 96.2 },
+    { label: 'Jun', value: 96.4 },
+    { label: 'Jul', value: 96.9 },
+    { label: 'Aug', value: 97.1 },
+  ];
+}
+
+// ─── Billing position ────────────────────────────────────────────────────────
+// The commercial standing at a glance: annual commitment, billed to date, and
+// remaining runway. Billed is the sum of the client's issued invoices so it
+// always agrees with the Invoices page.
+
+export interface BillingPosition {
+  contracted: number;
+  billed: number;
+  remaining: number;
+  pct: number;
+}
+
+const FY26_COMMITMENT = 148_000;
+
+export function getBillingPosition(): BillingPosition {
+  const billed = mockInvoiceRecords
+    .filter(i => i.clientId === UNION_CLIENT_ID)
+    .reduce((sum, i) => sum + i.total, 0);
+  const remaining = Math.max(0, FY26_COMMITMENT - billed);
+  return {
+    contracted: FY26_COMMITMENT,
+    billed,
+    remaining,
+    pct: Math.min(100, Math.round((billed / FY26_COMMITMENT) * 100)),
+  };
 }

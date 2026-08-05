@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import {
   Users, Download, ShieldCheck, Building2,
   Check, X, BarChart2, Sparkles,
@@ -43,12 +43,15 @@ export default function UnionLeadsPage() {
   const [leads, setLeads] = useState<Lead[]>(() =>
     [...getSignalLeads(), ...mockLeads.map(renameLeadCampaign)].sort((a, b) => b.leadScore - a.leadScore),
   );
+  // Deep links (e.g. the dashboard's "leads awaiting review" chip) can preset
+  // the filters; read once at mount.
+  const [searchParams] = useSearchParams();
   const [lens, setLens] = useState<Lens>('people');
-  const [statusFilter, setStatusFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? 'all');
   const [campaignFilter, setCampaignFilter] = useState('all');
   // Enriched contacts are the product story — open on them; standard leads
   // are one select away.
-  const [enrichFilter, setEnrichFilter] = useState('enriched');
+  const [enrichFilter, setEnrichFilter] = useState(() => searchParams.get('data') ?? 'enriched');
 
   // Header stats + QA line (same sources the standard page uses)
   const clientData = unionClient;
