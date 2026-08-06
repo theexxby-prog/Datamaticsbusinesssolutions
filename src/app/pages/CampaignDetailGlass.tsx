@@ -267,7 +267,7 @@ export default function CampaignDetail() {
 
         {/* Analytics on the left, the conversation pinned alongside it —
             or, on mobile, one section at a time via the switch above. */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5 items-start">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
           {(!isMobile || mobileSection === 'overview') && (
             <div className="lg:col-span-3 space-y-5">
               <CampaignAnalyticsTabs
@@ -308,14 +308,18 @@ export default function CampaignDetail() {
           )}
 
           {/* The thread scrolls inside itself so the page height no longer
-              depends on how much the client and the campaign manager talk. */}
+              depends on how much the client and the campaign manager talk. It
+              stretches with the row rather than sticking to the viewport, so it
+              bottom-aligns with the analytics column beside it — sticky plus a
+              viewport-height cap left it ending short of that column. */}
           {(!isMobile || mobileSection === 'discussion') && (
-            <div id="campaign-discussion" className="lg:col-span-2 lg:sticky lg:top-5">
+            <div id="campaign-discussion" className="lg:col-span-2">
               <CampaignThread
                 campaignId={campaign.id}
                 campaignName={campaign.name}
                 activities={activities}
                 variant="rail"
+                fill
               />
             </div>
           )}

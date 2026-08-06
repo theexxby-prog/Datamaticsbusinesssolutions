@@ -102,9 +102,16 @@ interface CampaignThreadProps {
    * everything below it off the page and gets longer every week.
    */
   variant?: 'inline' | 'rail';
+  /**
+   * Rail only: take the height of the column instead of the viewport, so the
+   * thread bottom-aligns with whatever sits beside it. Use when the parent grid
+   * stretches its cells; a viewport-derived cap leaves the rail ending short of
+   * its neighbour, which reads as a broken column.
+   */
+  fill?: boolean;
 }
 
-export function CampaignThread({ campaignId, campaignName, activities = [], variant = 'inline' }: CampaignThreadProps) {
+export function CampaignThread({ campaignId, campaignName, activities = [], variant = 'inline', fill = false }: CampaignThreadProps) {
   const isRail = variant === 'rail';
   const { currentUser } = useAuth();
   const { entriesFor, addComment, addChangeRequest, addAttachment, setRequestStatus } = useCampaignThread();
@@ -173,7 +180,9 @@ export function CampaignThread({ campaignId, campaignName, activities = [], vari
   return (
     <div
       className={`glass-card flex flex-col ${
-        isRail ? 'max-h-[calc(100vh-16rem)] min-h-[26rem] p-5' : 'p-6'
+        isRail
+          ? `min-h-[26rem] p-5 ${fill ? 'h-full' : 'max-h-[calc(100vh-16rem)]'}`
+          : 'p-6'
       }`}
     >
       <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">

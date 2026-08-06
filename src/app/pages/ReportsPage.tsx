@@ -10,6 +10,7 @@ import {
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { getCampaignDemographics, getPacing, campaignsForScope, type CampaignStatus } from '../data/demographics';
+import { getPortalClient } from '../data/unionClient';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { UnifiedKpiCard } from '../components/UnifiedKpiCard';
 import { DateRangePicker } from '../components/DateRangePicker';
@@ -244,9 +245,13 @@ export default function ReportsPage() {
   const rejectedPct = Math.round((100 - acceptedPct) * 10) / 10;
   const rejectedCount = Math.round((currentMetrics.totalLeads * (100 - acceptedPct)) / 100);
 
-  // Get active and completed counts
-  const activeCampaigns = currentMetrics.activeCampaigns;
-  const completedCount = currentMetrics.completedCampaigns;
+  // Campaign counts come from the portal's own campaign list, not the mock
+  // metrics table above — those carried literal 3/1 figures that stayed put
+  // however many campaigns the client actually had. getPortalClient applies the
+  // brand's campaign renaming, so this is safe to read on a UNION login.
+  const portalCampaigns = getPortalClient(currentUser)?.campaigns ?? [];
+  const activeCampaigns = portalCampaigns.filter(c => c.status === 'active').length;
+  const completedCount = portalCampaigns.filter(c => c.status === 'completed').length;
   const totalCampaigns = activeCampaigns + completedCount;
   const pausedCampaigns = 0;
 
