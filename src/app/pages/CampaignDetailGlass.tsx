@@ -313,7 +313,7 @@ export default function CampaignDetail() {
               bottom-aligns with the analytics column beside it — sticky plus a
               viewport-height cap left it ending short of that column. */}
           {(!isMobile || mobileSection === 'discussion') && (
-            <div id="campaign-discussion" className="lg:col-span-2">
+            <div id="campaign-discussion" className="lg:relative lg:col-span-2">
               <CampaignThread
                 campaignId={campaign.id}
                 campaignName={campaign.name}
