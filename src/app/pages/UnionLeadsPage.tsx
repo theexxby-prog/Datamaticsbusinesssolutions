@@ -1,13 +1,14 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   Users, Download, ShieldCheck, Building2,
-  Check, X, Sparkles, CheckCircle2, Clock,
+  Check, X, Sparkles, CheckCircle2, Clock, ChevronDown,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockLeads, type Lead } from '../mockData';
 import { unionClient, renameLeadCampaign } from '../data/unionClient';
 import { DataTable, type Column } from '../components/ui/DataTable';
+import { PropensityTabs, type PropensityTab } from '../components/propensity/PropensityTabs';
 import { SignalAccountsView } from '../components/signal/SignalAccountsView';
 import { INTENT_META, RoleDot } from '../components/signal/signalMeta';
 import {
@@ -35,6 +36,9 @@ const STATUS_META: Record<string, { bg: string; color: string }> = {
   Contacted: { bg: 'rgba(8,145,178,0.10)', color: 'var(--color-info)' },
 };
 
+const LIVE_CHANNELS = CLIENT_DELIVERY_CHANNELS.filter(c => c.status === 'available');
+const ROADMAP_CHANNELS = CLIENT_DELIVERY_CHANNELS.filter(c => c.status !== 'available');
+
 export default function UnionLeadsPage() {
   useDocumentTitle('Leads');
   const navigate = useNavigate();
@@ -49,9 +53,13 @@ export default function UnionLeadsPage() {
   // the filters; read once at mount. A filter deep link lands on the People
   // lens; otherwise Accounts is the default.
   const [searchParams] = useSearchParams();
-  const [lens, setLens] = useState<Lens>(() =>
+  const [initialLens] = useState<Lens>(() =>
     searchParams.get('status') || searchParams.get('data') ? 'people' : 'accounts',
   );
+  const [lens, setLens] = useState<Lens>(initialLens);
+  // Delivery + QA collapse into one summary line by default; expanding shows
+  // both blocks in full.
+  const [channelsOpen, setChannelsOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? 'all');
   const [campaignFilter, setCampaignFilter] = useState('all');
   // Enriched contacts are the product story — open on them; standard leads
@@ -247,116 +255,19 @@ export default function UnionLeadsPage() {
 
   const selectCls = 'input-base h-[38px] px-3 text-sm';
 
-  return (
-    <div className="max-w-[1600px] mx-auto page-content space-y-3">
-      {/* Header — one row */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
-            Leads
-          </h1>
-          <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-            {stats.total} leads · {stats.pending} pending review · {stats.hot} hot · {stats.avg} avg signal ·{' '}
-            <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
-              {signalMeta.rows} enriched of {signalMeta.sampleOf}
-            </span>
-          </p>
-        </div>
-        <button
-          onClick={() => { exportLeadsToCSV(filtered); toast.success('Leads exported'); }}
-          className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
-        >
-          <Download className="h-4 w-4" /> Export CSV
-        </button>
-      </div>
+  const accountsTab: PropensityTab = {
+    key: 'accounts',
+    label: 'Accounts',
+    Icon: Building2,
+    content: <SignalAccountsView />,
+  };
 
-      {/* How leads reach you. CSV is live today; the API and CRM push are
-          deliberately non-interactive — they are on the roadmap, not in the
-          September build, and a working connect flow here would overstate it. */}
-      <div
-        className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border px-3 py-2"
-        style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
-        data-testid="delivery-channels"
-      >
-        <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-          Delivery
-        </span>
-        {CLIENT_DELIVERY_CHANNELS.map(channel => {
-          const live = channel.status === 'available';
-          return (
-            <span key={channel.key} className="inline-flex items-center gap-1.5">
-              {live
-                ? <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
-                : <Clock className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />}
-              <span className="text-[12px] font-semibold" style={{ color: live ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
-                {channel.label}
-              </span>
-              <span className="hidden text-[11.5px] sm:inline" style={{ color: 'var(--color-text-muted)' }}>
-                {channel.blurb}
-              </span>
-              {!live && (
-                <span
-                  className="rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
-                  style={{ background: 'var(--background-muted)', color: 'var(--color-text-muted)' }}
-                >
-                  Coming next
-                </span>
-              )}
-            </span>
-          );
-        })}
-      </div>
-
-      {/* Slim automated-QA line — people-level QA, so it only renders on the
-          People lens; on Accounts it's noise. */}
-      {lens === 'people' && (
-      <div
-        className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border px-3 py-2"
-        style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
-      >
-        <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-          <ShieldCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
-          Automated QA
-        </span>
-        <span className="flex h-1.5 w-28 overflow-hidden rounded-full">
-          <span style={{ width: '97%', background: 'var(--color-success)' }} />
-          <span style={{ width: '2%', background: 'var(--color-warning)' }} />
-          <span style={{ width: '1%', background: 'var(--color-error)' }} />
-        </span>
-        <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
-          <b style={{ color: 'var(--color-success)' }}>{deliveredToDate.toLocaleString('en-US')}</b> valid (97%) ·{' '}
-          <b style={{ color: 'var(--color-warning)' }}>{qaCaution}</b> caution ·{' '}
-          <b style={{ color: 'var(--color-error)' }}>{qaInvalid}</b> invalid of {qaTotal.toLocaleString('en-US')} processed · accepted leads sync to your CRM in real time
-        </span>
-      </div>
-      )}
-
-      {/* Lens toggle */}
-      <div
-        className="grid grid-cols-2 gap-1 rounded-xl p-1 sm:inline-grid sm:min-w-[260px]"
-        style={{ background: 'var(--background-muted)' }}
-        role="tablist"
-      >
-        {([['accounts', 'Accounts', Building2], ['people', 'People', Users]] as const).map(([key, label, Icon]) => (
-          <button
-            key={key}
-            role="tab"
-            aria-selected={lens === key}
-            onClick={() => setLens(key)}
-            className={`flex min-h-[36px] items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors ${
-              lens === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
-            }`}
-          >
-            <Icon className="h-3.5 w-3.5" />
-            {label}
-          </button>
-        ))}
-      </div>
-
-      {lens === 'accounts' && <SignalAccountsView />}
-
-      {lens === 'people' && (
-        <DataTable
+  const peopleTab: PropensityTab = {
+    key: 'people',
+    label: 'People',
+    Icon: Users,
+    content: (
+      <DataTable
           columns={columns}
           rows={filtered}
           getRowId={l => l.id}
@@ -386,9 +297,122 @@ export default function UnionLeadsPage() {
               </select>
             </div>
           }
-          empty={{ icon: Users, title: 'No leads match', description: 'Try widening a filter or clearing the search.' }}
-        />
-      )}
+        empty={{ icon: Users, title: 'No leads match', description: 'Try widening a filter or clearing the search.' }}
+      />
+    ),
+  };
+
+  // Order is fixed — Accounts then People — whatever the deep link asks for.
+  // `initialKey` picks which one opens, so a ?status= / ?data= link still lands
+  // on People without the tab row rearranging itself under the user.
+  const tabs = [accountsTab, peopleTab];
+
+  return (
+    <div className="max-w-[1600px] mx-auto page-content space-y-3">
+      {/* Header — one row */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+            Leads
+          </h1>
+          <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            {stats.total} leads · {stats.pending} pending review · {stats.hot} hot · {stats.avg} avg signal ·{' '}
+            <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
+              {signalMeta.rows} enriched of {signalMeta.sampleOf}
+            </span>
+          </p>
+        </div>
+        <button
+          onClick={() => { exportLeadsToCSV(filtered); toast.success('Leads exported'); }}
+          className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
+        >
+          <Download className="h-4 w-4" /> Export CSV
+        </button>
+      </div>
+
+      {/* Delivery + automated QA, collapsed into one line. How leads reach you:
+          CSV is live today; the API and CRM push are deliberately
+          non-interactive — they are on the roadmap, not in the September build,
+          and a working connect flow here would overstate it. */}
+      <div
+        className="rounded-xl border"
+        style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
+      >
+        <button
+          type="button"
+          onClick={() => setChannelsOpen(o => !o)}
+          aria-expanded={channelsOpen}
+          className="flex w-full flex-wrap items-center gap-x-2 gap-y-1 rounded-xl px-3 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
+        >
+          <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+            Delivery
+          </span>
+          <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <b style={{ color: 'var(--color-text-primary)' }}>{LIVE_CHANNELS.map(c => c.label).join(', ')}</b> live
+            {ROADMAP_CHANNELS.length > 0 && <> · {ROADMAP_CHANNELS.map(c => c.label).join(' and ')} coming next</>}
+            {lens === 'people' && <> · QA 97 / 2 / 1</>}
+          </span>
+          <ChevronDown
+            className={`ml-auto h-4 w-4 flex-shrink-0 transition-transform ${channelsOpen ? 'rotate-180' : ''}`}
+            style={{ color: 'var(--color-text-muted)' }}
+          />
+        </button>
+
+        {channelsOpen && (
+        <div className="space-y-2 border-t px-3 py-2" style={{ borderColor: 'var(--color-border-light)' }}>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2" data-testid="delivery-channels">
+            {CLIENT_DELIVERY_CHANNELS.map(channel => {
+              const live = channel.status === 'available';
+              return (
+                <span key={channel.key} className="inline-flex items-center gap-1.5">
+                  {live
+                    ? <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
+                    : <Clock className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />}
+                  <span className="text-[12px] font-semibold" style={{ color: live ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
+                    {channel.label}
+                  </span>
+                  <span className="hidden text-[11.5px] sm:inline" style={{ color: 'var(--color-text-muted)' }}>
+                    {channel.blurb}
+                  </span>
+                  {!live && (
+                    <span
+                      className="rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                      style={{ background: 'var(--background-muted)', color: 'var(--color-text-muted)' }}
+                    >
+                      Coming next
+                    </span>
+                  )}
+                </span>
+              );
+            })}
+          </div>
+
+          {/* Slim automated-QA line — people-level QA, so it only renders on the
+              People lens; on Accounts it's noise. */}
+          {lens === 'people' && (
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
+              <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+                <ShieldCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
+                Automated QA
+              </span>
+              <span className="flex h-1.5 w-28 overflow-hidden rounded-full">
+                <span style={{ width: '97%', background: 'var(--color-success)' }} />
+                <span style={{ width: '2%', background: 'var(--color-warning)' }} />
+                <span style={{ width: '1%', background: 'var(--color-error)' }} />
+              </span>
+              <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+                <b style={{ color: 'var(--color-success)' }}>{deliveredToDate.toLocaleString('en-US')}</b> valid (97%) ·{' '}
+                <b style={{ color: 'var(--color-warning)' }}>{qaCaution}</b> caution ·{' '}
+                <b style={{ color: 'var(--color-error)' }}>{qaInvalid}</b> invalid of {qaTotal.toLocaleString('en-US')} processed · accepted leads sync to your CRM in real time
+              </span>
+            </div>
+          )}
+        </div>
+        )}
+      </div>
+
+      {/* Lens toggle + panel — the shared tab component owns the switching. */}
+      <PropensityTabs tabs={tabs} initialKey={initialLens} onChange={k => setLens(k as Lens)} fitContent />
     </div>
   );
 }

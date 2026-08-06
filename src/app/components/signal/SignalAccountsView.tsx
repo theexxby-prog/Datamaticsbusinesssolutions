@@ -94,6 +94,7 @@ export function SignalAccountsView() {
       getRowId={r => r.account.slug}
       onRowClick={r => navigate(`/leads/account/${r.account.slug}`)}
       searchPlaceholder="Search account, industry, location…"
+      pageSize={8}
       layout="fixed"
       countLabel={n => `${n} accounts`}
       empty={{ icon: Building2, title: 'No accounts match', description: 'Try clearing the search.' }}
