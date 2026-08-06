@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
-  TrendingUp, TrendingDown, DollarSign, Users, Target, CheckCircle, Download,
+  TrendingUp, TrendingDown, DollarSign, Users, Target, CheckCircle, AlertTriangle, Download,
   Share2, BarChart3, Activity, Zap, Filter,
   Globe, Building2, IdCard
 } from 'lucide-react';
@@ -225,6 +225,11 @@ export default function ReportsPage() {
   const leadDelta = md.length >= 2 ? pctChange(md[md.length - 1].leads, md[md.length - 2].leads) : 0;
   const revDelta = md.length >= 2 ? pctChange(md[md.length - 1].revenue, md[md.length - 2].revenue) : 0;
   const convDelta = md.length >= 2 ? pctChange(md[md.length - 1].conversions, md[md.length - 2].conversions) : 0;
+  // Acceptance has no prior-period value in the mock series (monthlyData carries
+  // leads/revenue/conversions only), so the movement stays a fixed +2 pts until the
+  // backend supplies a prior acceptance rate. Rendered through the same signed
+  // conditional as its neighbours so it flips arrow + colour once it's real.
+  const acceptanceDelta = 2;
   const reduce = useReducedMotion();
 
   // Account-level billable trend (trailing 12 months + prior year). This is the
@@ -254,7 +259,7 @@ export default function ReportsPage() {
     campaignLabel: selectedCampaign === 'all' ? `All ${scope} campaigns` : selectedCampaign,
     kpis: [
       { label: 'Total Leads', value: currentMetrics.totalLeads.toLocaleString(), delta: `${leadDelta >= 0 ? '▲' : '▼'} ${Math.abs(leadDelta)}%`, up: leadDelta >= 0 },
-      { label: 'Acceptance', value: `${currentMetrics.acceptance}%`, delta: '▲ 2 pts', up: true },
+      { label: 'Acceptance', value: `${currentMetrics.acceptance}%`, delta: `${acceptanceDelta >= 0 ? '▲' : '▼'} ${Math.abs(acceptanceDelta)} pts`, up: acceptanceDelta >= 0 },
       { label: 'Conversions', value: String(currentMetrics.conversions), delta: `${convDelta >= 0 ? '▲' : '▼'} ${Math.abs(convDelta)}%`, up: convDelta >= 0 },
       { label: 'Billable', value: `$${(currentMetrics.revenue / 1000).toFixed(0)}K`, delta: `${revDelta >= 0 ? '▲' : '▼'} ${Math.abs(revDelta)}%`, up: revDelta >= 0 },
       { label: 'Campaigns', value: `${activeCampaigns} active · ${completedCount} completed` },
@@ -296,18 +301,10 @@ export default function ReportsPage() {
         </div>
 
         {/* Account-level billing overview — sits above (and independent of) the
-            campaign filters. Slate-washed surface so it reads as its own section
-            and doesn't get lost among the white analytics cards. */}
+            campaign filters. Uses the standard card treatment (.glass-card) so it
+            follows the theme instead of a bespoke slate wash tuned for the old brand. */}
         <Reveal>
-        <div
-          className="rounded-2xl p-5 mb-4 animate-fadeIn"
-          style={{
-            background:
-              'linear-gradient(135deg, rgba(62,92,138,0.13), rgba(62,92,138,0.05))',
-            border: '1px solid rgba(62,92,138,0.22)',
-            boxShadow: '0 10px 30px rgba(30,45,73,0.10)',
-          }}
-        >
+        <div className="glass-card p-5 mb-4 animate-fadeIn">
           <div className="flex items-center justify-between mb-1 flex-wrap gap-2">
             <h3
               className="flex items-center gap-2"
@@ -326,12 +323,12 @@ export default function ReportsPage() {
             >
               {hasPrevYear && (
                 <span className="flex items-center gap-1.5">
-                  <span style={{ width: 10, height: 10, borderRadius: 3, background: '#E0A8AB', display: 'inline-block' }} />
+                  <span style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--chart-cat-2)', display: 'inline-block' }} />
                   Last year
                 </span>
               )}
               <span className="flex items-center gap-1.5">
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--color-primary)', display: 'inline-block' }} />
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: 'var(--chart-cat-1)', display: 'inline-block' }} />
                 This year
               </span>
             </div>
@@ -341,7 +338,7 @@ export default function ReportsPage() {
           </p>
           <ResponsiveContainer width="100%" height={chartH}>
             <BarChart data={billableTrend} barGap={3} barCategoryGap="22%">
-              <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
+              <CartesianGrid strokeDasharray="0" stroke="var(--chart-grid)" vertical={false} />
               <XAxis dataKey="label" style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} />
               <YAxis
                 style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
@@ -351,8 +348,8 @@ export default function ReportsPage() {
                 tickFormatter={(v: any) => `$${Math.round(v / 1000)}k`}
               />
               <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: any, name: any) => [`$${Number(v).toLocaleString()}`, name]} />
-              {hasPrevYear && <Bar dataKey="prev" name="Last year" fill="#E0A8AB" radius={[4, 4, 0, 0]} maxBarSize={22} />}
-              <Bar dataKey="current" name="This year" fill="var(--color-primary)" radius={[4, 4, 0, 0]} maxBarSize={22} />
+              {hasPrevYear && <Bar dataKey="prev" name="Last year" fill="var(--chart-cat-2)" radius={[4, 4, 0, 0]} maxBarSize={22} />}
+              <Bar dataKey="current" name="This year" fill="var(--chart-cat-1)" radius={[4, 4, 0, 0]} maxBarSize={22} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -380,7 +377,7 @@ export default function ReportsPage() {
               </div>
               {/* Search */}
               <div className="relative">
-                <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-tertiary)' }} />
+                <Filter className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--color-text-muted)' }} />
                 <input
                   type="text"
                   value={search}
@@ -437,7 +434,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.totalLeads.toLocaleString()}</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Total Leads</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: leadDelta >= 0 ? 'var(--color-success)' : 'var(--color-primary)' }}>{leadDelta >= 0 ? '▲' : '▼'} {Math.abs(leadDelta)}% vs last mo</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: leadDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{leadDelta >= 0 ? '▲' : '▼'} {Math.abs(leadDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -446,7 +443,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.acceptance}%</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Acceptance</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--color-success)' }}>▲ 2 pts</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: acceptanceDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{acceptanceDelta >= 0 ? '▲' : '▼'} {Math.abs(acceptanceDelta)} pts</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -455,7 +452,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.conversions}</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Conversions</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: convDelta >= 0 ? 'var(--color-success)' : 'var(--color-primary)' }}>{convDelta >= 0 ? '▲' : '▼'} {Math.abs(convDelta)}% vs last mo</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: convDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{convDelta >= 0 ? '▲' : '▼'} {Math.abs(convDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -464,7 +461,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>${(currentMetrics.revenue / 1000).toFixed(0)}K</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Billable</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: revDelta >= 0 ? 'var(--color-success)' : 'var(--color-primary)' }}>{revDelta >= 0 ? '▲' : '▼'} {Math.abs(revDelta)}% vs last mo</div>
+            <div style={{ fontSize: '10px', fontWeight: 600, color: revDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{revDelta >= 0 ? '▲' : '▼'} {Math.abs(revDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -492,11 +489,11 @@ export default function ReportsPage() {
                 <span
                   className="text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1"
                   style={{
-                    background: pacingPct >= 60 ? 'rgba(16,163,127,0.12)' : 'rgba(245,158,11,0.14)',
+                    background: pacingPct >= 60 ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
                     color: pacingPct >= 60 ? 'var(--color-success)' : 'var(--color-warning)',
                   }}
                 >
-                  <CheckCircle className="w-3.5 h-3.5" /> {pacingPct >= 60 ? 'On track' : 'Behind pace'}
+                  {pacingPct >= 60 ? <CheckCircle className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />} {pacingPct >= 60 ? 'On track' : 'Behind pace'}
                 </span>
               </div>
               <div className="flex items-baseline gap-2 mb-2.5">
@@ -532,11 +529,11 @@ export default function ReportsPage() {
                 <span
                   className="text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1"
                   style={{
-                    background: acceptedPct >= 80 ? 'rgba(16,163,127,0.12)' : 'rgba(245,158,11,0.14)',
+                    background: acceptedPct >= 80 ? 'var(--color-success-bg)' : 'var(--color-warning-bg)',
                     color: acceptedPct >= 80 ? 'var(--color-success)' : 'var(--color-warning)',
                   }}
                 >
-                  <CheckCircle className="w-3.5 h-3.5" /> {acceptedPct >= 80 ? 'Healthy' : 'Needs review'}
+                  {acceptedPct >= 80 ? <CheckCircle className="w-3.5 h-3.5" /> : <AlertTriangle className="w-3.5 h-3.5" />} {acceptedPct >= 80 ? 'Healthy' : 'Needs review'}
                 </span>
               </div>
               <div className="flex items-baseline gap-2 mb-2.5">
@@ -572,10 +569,12 @@ export default function ReportsPage() {
             Lead Demographics
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <DistributionBars title="Geographic Distribution" data={demographics.geo} icon={Globe} chipBg="var(--color-accent-purple-bg)" chipColor="var(--color-accent-purple)" />
-            <DistributionBars title="Industry Distribution" data={demographics.industry} icon={Building2} chipBg="var(--color-success-bg)" chipColor="var(--color-success)" />
-            <DistributionBars title="Title Distribution" data={demographics.title} icon={IdCard} chipBg="var(--color-warning-bg)" chipColor="var(--color-warning)" />
-            <DistributionBars title="Company Size" data={demographics.size} icon={Users} chipBg="var(--color-error-bg)" chipColor="var(--color-error)" />
+            {/* Chips are decorative dimension markers, so they walk the categorical
+                ramp in order — no status meaning implied. */}
+            <DistributionBars title="Geographic Distribution" data={demographics.geo} icon={Globe} chipBg="color-mix(in srgb, var(--chart-cat-1) 12%, transparent)" chipColor="var(--chart-cat-1)" />
+            <DistributionBars title="Industry Distribution" data={demographics.industry} icon={Building2} chipBg="color-mix(in srgb, var(--chart-cat-2) 12%, transparent)" chipColor="var(--chart-cat-2)" />
+            <DistributionBars title="Title Distribution" data={demographics.title} icon={IdCard} chipBg="color-mix(in srgb, var(--chart-cat-3) 12%, transparent)" chipColor="var(--chart-cat-3)" />
+            <DistributionBars title="Company Size" data={demographics.size} icon={Users} chipBg="color-mix(in srgb, var(--chart-cat-4) 12%, transparent)" chipColor="var(--chart-cat-4)" />
           </div>
         </div>
         </Reveal>
