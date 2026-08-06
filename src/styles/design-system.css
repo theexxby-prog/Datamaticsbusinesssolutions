@@ -43,6 +43,11 @@
 --color-surface-inverse: #1C1C1E;
 --color-text-inverse: #FFFFFF;
 
+/* The "Datamatics Business Solutions" wordmark in the logo. The red mark beside
+   it is a fixed brand colour; the lettering is not, and has to follow whatever
+   ground the logo sits on. */
+--logo-wordmark: #5a555d;
+
 --color-success: #059669;
 --color-success-bg: rgba(5, 150, 105, 0.10);
 --color-warning: #D97706;
@@ -536,6 +541,8 @@ input[type="checkbox"]:disabled {
   --color-text-muted: #98ABCE;
   --color-primary: #6BA5F8;
   --color-primary-tint: rgba(107, 165, 248, 0.16);
+  /* The default #5a555d wordmark all but vanishes on the navy (~1.9:1) */
+  --logo-wordmark: #FFFFFF;
   --color-surface: rgba(255, 255, 255, 0.06);
   --color-border: rgba(255, 255, 255, 0.10);
   --color-border-light: rgba(255, 255, 255, 0.08);
