@@ -14,7 +14,7 @@ import { NotificationsTabContent } from '../components/NotificationsTabContent';
 import { DASH_METRICS, getDashPrefs, setDashMetric, type DashMetricKey } from '../data/dashboardPrefs';
 import { useUnionLens } from '../hooks/useUnionLens';
 import { showFutureModules } from '../config/demo';
-import { useUnionPrefs, setUnionWidget, setDerivedIntel, UNION_WIDGET_LABELS, type UnionWidgetKey } from '../config/unionPrefs';
+import { useUnionPrefs, setUnionWidget, setDerivedIntel, setLeadsSignalsColumn, UNION_WIDGET_LABELS, type UnionWidgetKey } from '../config/unionPrefs';
 
 export default function Account() {
   useDocumentTitle('Account Settings');
@@ -171,6 +171,26 @@ export default function Account() {
                     </div>
                   );
                 })}
+                <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                  <div>
+                    <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                      Signals column (Accounts list)
+                    </div>
+                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                      Show the per-account signal count on the Leads → Accounts list.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setLeadsSignalsColumn(!unionPrefs.leadsSignalsColumn)}
+                    role="switch"
+                    aria-checked={unionPrefs.leadsSignalsColumn}
+                    aria-label="Toggle Signals column"
+                    className="relative rounded-full transition-colors flex-shrink-0"
+                    style={{ width: 44, height: 24, background: unionPrefs.leadsSignalsColumn ? 'var(--color-primary)' : 'var(--color-border)' }}
+                  >
+                    <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: unionPrefs.leadsSignalsColumn ? 'translateX(20px)' : 'translateX(0)' }} />
+                  </button>
+                </div>
                 <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
                   <div>
                     <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>

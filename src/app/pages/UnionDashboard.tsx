@@ -33,6 +33,27 @@ import { formatMoney as fmtMoney } from '../utils/format';
 // desktop beyond the signals feed.
 
 
+function PeriodPills({ period, onChange }: { period: StatPeriod; onChange: (p: StatPeriod) => void }) {
+  return (
+    <div className="mb-2.5 flex rounded-full p-0.5" style={{ background: 'var(--background-muted)' }} role="tablist">
+      {(['month', 'quarter', 'year'] as const).map(p => (
+        <button
+          key={p}
+          role="tab"
+          aria-selected={period === p}
+          onClick={() => onChange(p)}
+          className={`flex-1 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors ${
+            period === p ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+          }`}
+          style={period === p ? { background: 'var(--color-primary)' } : undefined}
+        >
+          {p}
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export default function UnionDashboard() {
   useDocumentTitle('Dashboard');
   const navigate = useNavigate();
@@ -182,43 +203,22 @@ export default function UnionDashboard() {
         </div>
       )}
 
-      {/* Key numbers — one period, three linked boxes (Ben: default month) */}
+      {/* Key numbers — three boxes, one synced Month/Quarter/Year period */}
       {prefs.widgets.stats && (
         <div>
-          <div className="mb-2 flex items-center justify-between gap-2">
-            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-              Key numbers
-            </span>
-            <div className="inline-flex rounded-lg p-0.5" style={{ background: 'var(--background-muted)' }} role="tablist">
-              {(['month', 'quarter', 'year'] as const).map(pKey => (
-                <button
-                  key={pKey}
-                  role="tab"
-                  aria-selected={period === pKey}
-                  onClick={() => setPeriod(pKey)}
-                  className={`rounded-md px-2.5 py-1 text-[11px] font-bold capitalize transition-colors ${
-                    period === pKey
-                      ? 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] shadow-sm'
-                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
-                  }`}
-                >
-                  {pKey}
-                </button>
-              ))}
-            </div>
-          </div>
           <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 stagger-children">
             <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
-              <Layers className="kpi-card__icon mb-1" style={{ width: '14px', height: '14px' }} />
+              <PeriodPills period={period} onChange={setPeriod} />
               <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.activeCampaigns}</div>
               <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Active campaigns</div>
             </div>
             <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
-              <Users className="kpi-card__icon mb-1" style={{ width: '14px', height: '14px' }} />
+              <PeriodPills period={period} onChange={setPeriod} />
               <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.leads.toLocaleString('en-US')}</div>
               <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Leads this {period}</div>
             </div>
             <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
+              <PeriodPills period={period} onChange={setPeriod} />
               <div className="flex items-baseline gap-1.5">
                 <span className="kpi-card__number" style={{ fontSize: '20px', marginBottom: 0 }}>{fmtMoney(periodStats.billed)}</span>
                 <span className="text-[10px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>

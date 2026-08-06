@@ -12,10 +12,10 @@ type Row = { account: SignalAccount; insight: AccountInsight };
 
 export function SignalAccountsView() {
   const navigate = useNavigate();
-  const { derivedIntel } = useUnionPrefs();
+  const { derivedIntel, leadsSignalsColumn } = useUnionPrefs();
   const rows = getAccountsByReadiness();
 
-  const columns: Column<Row>[] = [
+  const allColumns: Column<Row>[] = [
     {
       key: 'account', header: 'Account', primary: true,
       widthClass: derivedIntel ? 'w-[30%]' : 'w-[34%]',
@@ -85,6 +85,7 @@ export function SignalAccountsView() {
       mobileRender: r => <span className="font-bold">{r.insight.readiness} / 100</span>,
     } satisfies Column<Row>] : []),
   ];
+  const columns = allColumns.filter(c => c.key !== 'signals' || leadsSignalsColumn);
 
   return (
     <DataTable

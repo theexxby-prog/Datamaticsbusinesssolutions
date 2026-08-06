@@ -64,7 +64,7 @@ export function AccountsSection() {
           <div className="h-1.5 w-[64px] overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
             <div
               className="h-full rounded-full"
-              style={{ width: `${a.intentScore}%`, background: a.intentScore >= 80 ? 'var(--color-primary)' : '#3E5C8A' }}
+              style={{ width: `${a.intentScore}%`, background: a.intentScore >= 80 ? 'var(--color-primary)' : 'var(--color-chart-2)' }}
             />
           </div>
           <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
@@ -160,7 +160,7 @@ export function AccountsSection() {
             <YAxis style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} width={34} />
             <Tooltip contentStyle={TOOLTIP_STYLE} labelFormatter={(v: string) => formatDateShort(v)} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
-            <Area type="monotone" dataKey="totalVisitors" name="All visitors" stroke="#3E5C8A" strokeWidth={1.5} fill="transparent" />
+            <Area type="monotone" dataKey="totalVisitors" name="All visitors" stroke="var(--color-chart-2)" strokeWidth={1.5} fill="transparent" />
             <Area type="monotone" dataKey="icpVisitors" name="ICP visitors" stroke="var(--color-primary)" strokeWidth={2} fill="url(#icpFill)" />
           </AreaChart>
         </ResponsiveContainer>

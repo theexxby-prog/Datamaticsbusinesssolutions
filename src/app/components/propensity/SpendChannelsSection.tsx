@@ -15,7 +15,7 @@ import { formatDateShort } from '../../utils/formatDate';
 
 const CHANNELS = [
   { key: 'display', label: 'Display', color: 'var(--color-primary)' },
-  { key: 'native', label: 'Native', color: '#3E5C8A' },
+  { key: 'native', label: 'Native', color: 'var(--color-chart-2)' },
   { key: 'video', label: 'Video', color: 'var(--color-info)' },
   { key: 'ctv', label: 'CTV', color: 'var(--color-warning)' },
 ] as const;
@@ -96,7 +96,7 @@ export function SpendChannelsSection() {
               formatter={(v: string) => (v === 'pdn' ? 'PDN (programmatic)' : 'Content syndication')}
             />
             <Bar dataKey="pdn" fill="var(--color-primary)" radius={[3, 3, 0, 0]} maxBarSize={44} />
-            <Bar dataKey="syndication" fill="#3E5C8A" radius={[3, 3, 0, 0]} maxBarSize={44} />
+            <Bar dataKey="syndication" fill="var(--color-chart-2)" radius={[3, 3, 0, 0]} maxBarSize={44} />
           </BarChart>
         </ResponsiveContainer>
       </ChartCard>

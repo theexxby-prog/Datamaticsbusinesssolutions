@@ -203,6 +203,7 @@ export default function CampaignDetail() {
 
         {/* KPI band — absorbs the old donut card and Delivery Pace card. */}
         <CampaignKpiBand
+          hideOps={showFuture}
           billable={fmtMoney(totalBillable)}
           cpl={fmtMoney(cpl)}
           delivered={deliveredLeads}

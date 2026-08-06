@@ -192,7 +192,7 @@ export default function UnionLeadsPage() {
           <div className="h-1.5 w-8 overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
             <div
               className="h-full rounded-full"
-              style={{ width: `${l.leadScore}%`, background: l.leadScore >= 85 ? 'var(--color-primary)' : '#3E5C8A' }}
+              style={{ width: `${l.leadScore}%`, background: l.leadScore >= 85 ? 'var(--color-primary)' : 'var(--color-chart-2)' }}
             />
           </div>
           <span className="w-6 text-right text-[13px] font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>

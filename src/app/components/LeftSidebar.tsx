@@ -667,7 +667,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
       <div
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className="hidden md:flex flex-col h-screen overflow-hidden flex-shrink-0"
+        className="app-sidebar hidden md:flex flex-col h-screen overflow-hidden flex-shrink-0"
         style={{ 
           width: isPinned ? '260px' : (isHovered ? '260px' : '72px'),
           minWidth: isPinned ? '260px' : (isHovered ? '260px' : '72px'),

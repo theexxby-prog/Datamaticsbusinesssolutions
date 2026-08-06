@@ -50,7 +50,7 @@ export function DistributionBars({ title, data, chipBg, chipColor, icon: Icon }:
               <div className="flex-1 h-2.5 rounded-full overflow-hidden" style={{ background: 'var(--background-muted)' }}>
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: i === 0 ? 'var(--color-primary)' : '#3E5C8A' }}
+                  style={{ background: i === 0 ? 'var(--color-primary)' : 'var(--color-chart-2)' }}
                   initial={reduce ? false : { width: 0 }}
                   whileInView={{ width: `${Math.max(3, Math.round((d.percentage / maxPct) * 100))}%` }}
                   viewport={{ once: true, amount: 0.5 }}

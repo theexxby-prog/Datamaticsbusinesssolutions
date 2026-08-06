@@ -21,6 +21,8 @@ export type UnionWidgetKey =
 export interface UnionPrefs {
   widgets: Record<UnionWidgetKey, boolean>;
   derivedIntel: boolean;
+  /** The Signals count column on the Accounts list — off until scoring is real. */
+  leadsSignalsColumn: boolean;
 }
 
 export const UNION_WIDGET_LABELS: Record<UnionWidgetKey, string> = {
@@ -50,6 +52,7 @@ const DEFAULTS: UnionPrefs = {
     team: true,
   },
   derivedIntel: false,
+  leadsSignalsColumn: false,
 };
 
 const STORAGE_KEY = 'union-dashboard-prefs';
@@ -62,6 +65,7 @@ function load(): UnionPrefs {
     return {
       widgets: { ...DEFAULTS.widgets, ...(parsed.widgets ?? {}) },
       derivedIntel: parsed.derivedIntel ?? DEFAULTS.derivedIntel,
+      leadsSignalsColumn: parsed.leadsSignalsColumn ?? DEFAULTS.leadsSignalsColumn,
     };
   } catch {
     return DEFAULTS;
@@ -77,6 +81,12 @@ function emit() {
 
 export function setUnionWidget(key: UnionWidgetKey, on: boolean) {
   current = { ...current, widgets: { ...current.widgets, [key]: on } };
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
+  emit();
+}
+
+export function setLeadsSignalsColumn(on: boolean) {
+  current = { ...current, leadsSignalsColumn: on };
   localStorage.setItem(STORAGE_KEY, JSON.stringify(current));
   emit();
 }
