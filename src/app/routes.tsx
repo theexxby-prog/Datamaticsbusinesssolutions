@@ -1,4 +1,4 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { lazy, Suspense } from 'react';
 import { RouteLoader } from './components/RouteLoader';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -40,7 +40,6 @@ const DemographicsEntryPage = lazy(() => import('./pages/DemographicsEntryPage')
 // UNION-preview modules: registered for everyone, but AppLayout redirects any
 // non-UNION visit to /dashboard (same pattern as internal routes in demo mode).
 // The briefing pages additionally self-guard on unknown ids.
-const ProgrammaticPage = lazy(() => import('./pages/ProgrammaticPage'));
 const LeadBriefingPage = lazy(() => import('./pages/LeadBriefingPage'));
 const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
 
@@ -135,8 +134,10 @@ const appRoutes: RouteObject[] = [
     Component: withSuspense(Account),
   },
   {
+    // Programmatic merged into Campaigns — the standalone page retired, old
+    // links and bookmarks land on the campaign list instead.
     path: '/programmatic',
-    Component: withSuspense(ProgrammaticPage),
+    element: <Navigate to="/campaigns" replace />,
   },
   {
     path: '/internal/dashboard',

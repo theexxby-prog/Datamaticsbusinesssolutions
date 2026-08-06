@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { Mail, CalendarDays, ShieldCheck } from 'lucide-react';
+import { Mail, CalendarDays, ShieldCheck, Radar } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
 // ─── Analytics, tabbed ───────────────────────────────────────────────────────
@@ -16,7 +16,7 @@ export interface AnalyticsTab {
 }
 
 /** The icons the two campaign pages use, so callers don't each import them. */
-export const TAB_ICONS = { performance: Mail, delivery: CalendarDays, quality: ShieldCheck } as const;
+export const TAB_ICONS = { performance: Mail, delivery: CalendarDays, quality: ShieldCheck, programmatic: Radar } as const;
 
 interface CampaignAnalyticsTabsProps {
   tabs: (AnalyticsTab | false | undefined | null)[];

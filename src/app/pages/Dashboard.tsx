@@ -7,6 +7,8 @@ import {
 } from 'lucide-react';
 import { getAccountTeam, allClients } from '../data/mockClients';
 import { getPortalClient } from '../data/unionClient';
+import { showFutureModules } from '../config/demo';
+import { campaignTypeFor } from '../data/outcomes';
 import { NewCampaignModal, CampaignFormData } from '../components/NewCampaignModal';
 import { AccountTeam } from '../components/AccountTeam';
 import { DataTable, type Column } from '../components/ui/DataTable';
@@ -126,6 +128,9 @@ export default function Dashboard() {
 
   const accountTeam = getAccountTeam('client_1');
   const isClientRole = currentUser?.role === 'client';
+  // UNION preview only: campaigns are sold bundled, so the list chips each
+  // campaign's type. Renuka and the TCC build keep the plain name.
+  const showTypeChip = isClientRole && showFutureModules(currentUser);
   const tccClient = getPortalClient(currentUser);
   const managerName = accountTeam?.manager.name ?? 'Brijesh Singh';
 
@@ -161,7 +166,17 @@ export default function Dashboard() {
       key: 'name', header: 'Campaign', icon: BarChart2, primary: true,
       sortValue: r => r.name, text: r => r.name,
       render: r => (
-        <div className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.name}</div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.name}</span>
+          {showTypeChip && (
+            <span
+              className="rounded-full px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide"
+              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+            >
+              {campaignTypeFor(r.id)}
+            </span>
+          )}
+        </div>
       ),
     },
     {

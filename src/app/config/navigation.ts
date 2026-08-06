@@ -14,7 +14,6 @@ import {
   Layers,
   MessageSquare,
   ClipboardCheck,
-  Radar,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '../context/AuthContext';
@@ -84,7 +83,9 @@ export function useNavBadges(): NavBadges {
 
 /**
  * @param showFuture — true only for the UNION preview login (see
- * config/demo.ts showFutureModules); appends the in-progress modules.
+ * config/demo.ts showFutureModules). Programmatic no longer gets its own nav
+ * item — it merged into Campaigns — but the parameter stays so future
+ * UNION-only modules can hook in without touching every caller.
  */
 export function getNavForRole(role: UserRole | undefined, showFuture = false): NavItem[] {
   if (role === 'ops_manager') {
@@ -146,9 +147,6 @@ export function getNavForRole(role: UserRole | undefined, showFuture = false): N
     // and showing both side by side reads as a bug.
     { name: 'Leads', icon: Users, path: '/leads', section: 'PLATFORM' },
     { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
-    ...(showFuture
-      ? [{ name: 'Programmatic', icon: Radar, path: '/programmatic', section: 'PLATFORM' as const }]
-      : []),
     { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'ORGANIZATION', badgeKey: 'unpaidInvoices' },
     { name: 'Documents', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
     { name: 'Support', icon: MessageSquare, path: '/support', section: 'ORGANIZATION', badgeKey: 'openSupportTickets' },

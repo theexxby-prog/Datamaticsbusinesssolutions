@@ -2,7 +2,7 @@ import { ArrowRight, Compass, ShieldAlert } from 'lucide-react';
 import type { IntentSynthesis } from '../../data/signalRoom';
 import { INTENT_META } from './signalMeta';
 
-// The intent synthesis — the heart of a briefing: intent type + score, the
+// The signal synthesis — the heart of a briefing: signal type + score, the
 // "why now" narrative, the cross-field connection threads, the recommended
 // play, and the most likely blocker.
 
@@ -15,7 +15,7 @@ export function SynthesisBlock({ synthesis }: { synthesis: IntentSynthesis }) {
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="text-[11px] font-bold uppercase tracking-[0.08em]" style={{ color: meta.color }}>
-              Intent synthesis — {meta.label}
+              Signal synthesis — {meta.label}
             </div>
             <h2 className="mt-1 text-xl font-extrabold tracking-tight leading-snug" style={{ color: 'var(--color-text-primary)' }}>
               {synthesis.headline}
@@ -26,7 +26,7 @@ export function SynthesisBlock({ synthesis }: { synthesis: IntentSynthesis }) {
               {synthesis.intentScore}
             </div>
             <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-              Intent score
+              Signal score
             </div>
           </div>
         </div>

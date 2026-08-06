@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import { Link2, Users, Building2, Flame } from 'lucide-react';
-import { getSyndicationInfluence } from '../../data/propensity';
+import { getSyndicationInfluence, getAssetAnalytics } from '../../data/propensity';
 import { formatMoney as fmtMoney } from '../../utils/format';
 
 // The crosswalk pay-off: leads your syndication campaigns delivered, matched
@@ -8,9 +8,15 @@ import { formatMoney as fmtMoney } from '../../utils/format';
 // with the programmatic layer.
 
 
+// Propensity reports impressions, not unique people — reach = impressions /
+// avg frequency (3.2, the network's typical exposure count per person).
+const AVG_AD_FREQUENCY = 3.2;
+
 export function SyndicationInfluenceSection() {
   const navigate = useNavigate();
   const influence = getSyndicationInfluence();
+  const totalImpressions = getAssetAnalytics().reduce((sum, a) => sum + a.impressions, 0);
+  const peopleReached = Math.round(totalImpressions / AVG_AD_FREQUENCY);
 
   const steps = [
     { icon: Users, label: 'Syndication leads delivered', value: influence.syndicationLeads, pct: 100 },
@@ -68,10 +74,20 @@ export function SyndicationInfluenceSection() {
           })}
         </div>
 
-        <p className="mt-5 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-          Attributed pipeline value:{' '}
-          <span className="font-bold" style={{ color: 'var(--color-success)' }}>{fmtMoney(influence.pipelineValue)}</span>
-        </p>
+        {/* Blended ROI was removed from the client render (methodology under
+            review); people reached takes its place beside pipeline value. */}
+        <div className="mt-5 flex flex-wrap gap-x-6 gap-y-1 text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+          <span>
+            Attributed pipeline value:{' '}
+            <span className="font-bold" style={{ color: 'var(--color-success)' }}>{fmtMoney(influence.pipelineValue)}</span>
+          </span>
+          <span>
+            People reached:{' '}
+            <span className="font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+              {peopleReached.toLocaleString()}
+            </span>
+          </span>
+        </div>
       </div>
 
       {/* Per-campaign crosswalk */}

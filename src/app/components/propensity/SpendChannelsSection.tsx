@@ -71,7 +71,7 @@ export function SpendChannelsSection() {
 
       <ChartCard title="Programmatic vs content syndication spend" icon={GitMerge}>
         <p className="mb-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-          PDN media spend beside your syndication program spend, joined via the campaign crosswalk · blended ROI per month
+          PDN media spend beside your syndication program spend, joined via the campaign crosswalk · monthly
         </p>
         <ResponsiveContainer width="100%" height={isMobile ? 180 : 220}>
           <BarChart data={blended} barGap={4} barCategoryGap="35%">
@@ -84,27 +84,21 @@ export function SpendChannelsSection() {
               width={44}
               tickFormatter={(v: number) => `$${Math.round(v / 1000)}k`}
             />
+            {/* Blended ROI is no longer shown to clients — leadership pulled
+                the figure from the client render pending a methodology review. */}
             <Tooltip
               contentStyle={TOOLTIP_STYLE}
               formatter={(v: number, name: string) =>
-                name === 'blendedRoi' ? [`${v}×`, 'Blended ROI'] : [fmtMoney(v), name === 'pdn' ? 'PDN (programmatic)' : 'Content syndication']}
+                [fmtMoney(v), name === 'pdn' ? 'PDN (programmatic)' : 'Content syndication']}
             />
             <Legend
               wrapperStyle={{ fontSize: 11 }}
-              formatter={(v: string) => (v === 'pdn' ? 'PDN (programmatic)' : v === 'syndication' ? 'Content syndication' : 'Blended ROI')}
+              formatter={(v: string) => (v === 'pdn' ? 'PDN (programmatic)' : 'Content syndication')}
             />
             <Bar dataKey="pdn" fill="var(--color-primary)" radius={[3, 3, 0, 0]} maxBarSize={44} />
             <Bar dataKey="syndication" fill="#3E5C8A" radius={[3, 3, 0, 0]} maxBarSize={44} />
           </BarChart>
         </ResponsiveContainer>
-        <div className="mt-2 flex flex-wrap gap-x-5 gap-y-1">
-          {blended.map(m => (
-            <span key={m.month} style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
-              {m.month}: blended ROI{' '}
-              <span className="font-bold" style={{ color: 'var(--color-success)' }}>{m.blendedRoi}×</span>
-            </span>
-          ))}
-        </div>
       </ChartCard>
     </div>
   );

@@ -9,18 +9,36 @@ interface OutreachMetrics {
 interface OutreachFunnelProps {
   metrics: OutreachMetrics;
   deliveredLeads: number;
+  /** Programmatic ad impressions for the paired ABM campaign — when present
+   *  (UNION preview, crosswalk-paired campaigns only) an Impressions bar tops
+   *  the funnel. Omitted for every other login: render unchanged. */
+  impressions?: number;
 }
 
 /** Lifted out of CampaignDetailGlass, which was carrying ~130 lines of it inline. */
-export function OutreachFunnel({ metrics, deliveredLeads }: OutreachFunnelProps) {
+export function OutreachFunnel({ metrics, deliveredLeads, impressions }: OutreachFunnelProps) {
   const pct = (n: number, d: number) => (d > 0 ? Math.round((n / d) * 1000) / 10 : 0);
   const leadRate = pct(deliveredLeads, metrics.emailsSent);
+  const hasImpressions = typeof impressions === 'number' && impressions > 0;
 
   const stages = [
+    // With impressions on top as the full-width bar, the email rows keep their
+    // funnel shape but slot beneath it (widths are illustrative, not to scale —
+    // emails vs impressions differ by two orders of magnitude).
+    ...(hasImpressions
+      ? [{
+          label: 'Impressions',
+          count: impressions!,
+          width: 100,
+          gradient: 'from-[var(--color-info)] to-[var(--color-accent-purple)]',
+          rate: null as number | null,
+          rateColor: '',
+        }]
+      : []),
     {
       label: 'Emails Sent',
       count: metrics.emailsSent,
-      width: 100,
+      width: hasImpressions ? 72 : 100,
       gradient: 'from-blue-500 to-indigo-500',
       rate: null as number | null,
       rateColor: '',

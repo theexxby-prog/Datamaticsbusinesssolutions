@@ -57,7 +57,7 @@ export function AccountsSection() {
       render: a => <WarmthPill warmth={a.warmth} />,
     },
     {
-      key: 'intent', header: 'Intent', widthClass: 'w-[30%] lg:w-[18%] xl:w-[15%]',
+      key: 'intent', header: 'Signal', widthClass: 'w-[30%] lg:w-[18%] xl:w-[15%]',
       sortValue: a => a.intentScore, text: a => String(a.intentScore),
       render: a => (
         <div className="flex items-center gap-2">

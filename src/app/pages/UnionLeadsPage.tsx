@@ -2,30 +2,30 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   Users, Download, ShieldCheck, Building2,
-  Check, X, BarChart2, Sparkles,
+  Check, X, Sparkles,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockLeads, type Lead } from '../mockData';
 import { unionClient, renameLeadCampaign } from '../data/unionClient';
 import { DataTable, type Column } from '../components/ui/DataTable';
 import { SignalAccountsView } from '../components/signal/SignalAccountsView';
-import { SignalTimelineView } from '../components/signal/SignalTimelineView';
 import { INTENT_META, RoleDot } from '../components/signal/signalMeta';
 import {
   getSignalLeads, isSignalLeadId, signalContactFromLeadId, getSynthesis,
   getSignalAccount, signalMeta,
 } from '../data/signalRoom';
+import { useUnionPrefs } from '../config/unionPrefs';
 import { exportLeadsToCSV } from '../utils/exportUtils';
 import { formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
 // ─── UNION Leads ─────────────────────────────────────────────────────────────
 // The dense, intelligence-first Leads experience for the preview login: one
-// compact header, a slim QA line, one unified list (campaign leads + enriched
-// contacts), and the Accounts / Signals lenses. Every row opens a full-page
-// lead view — no side panel.
+// compact header, a slim QA line, the Accounts lens (default) and one unified
+// People list (campaign leads + enriched contacts). Every row opens a
+// full-page lead view — no side panel.
 
-type Lens = 'people' | 'accounts' | 'signals';
+type Lens = 'accounts' | 'people';
 
 const STATUS_META: Record<string, { bg: string; color: string }> = {
   'Pending Review': { bg: 'rgba(217,119,6,0.10)', color: 'var(--color-warning)' },
@@ -37,16 +37,20 @@ const STATUS_META: Record<string, { bg: string; color: string }> = {
 export default function UnionLeadsPage() {
   useDocumentTitle('Leads');
   const navigate = useNavigate();
+  const { derivedIntel } = useUnionPrefs();
 
-  // Enriched contacts and campaign leads in one list, highest intent first so
+  // Enriched contacts and campaign leads in one list, highest score first so
   // the two datasets interleave naturally.
   const [leads, setLeads] = useState<Lead[]>(() =>
     [...getSignalLeads(), ...mockLeads.map(renameLeadCampaign)].sort((a, b) => b.leadScore - a.leadScore),
   );
   // Deep links (e.g. the dashboard's "leads awaiting review" chip) can preset
-  // the filters; read once at mount.
+  // the filters; read once at mount. A filter deep link lands on the People
+  // lens; otherwise Accounts is the default.
   const [searchParams] = useSearchParams();
-  const [lens, setLens] = useState<Lens>('people');
+  const [lens, setLens] = useState<Lens>(() =>
+    searchParams.get('status') || searchParams.get('data') ? 'people' : 'accounts',
+  );
   const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? 'all');
   const [campaignFilter, setCampaignFilter] = useState('all');
   // Enriched contacts are the product story — open on them; standard leads
@@ -142,23 +146,37 @@ export default function UnionLeadsPage() {
       key: 'enrichment', header: 'Data', widthClass: 'hidden lg:table-cell lg:w-[15%] xl:w-[13.5%]',
       sortValue: l => {
         const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
-        return synthesis ? `0-${synthesis.intentType}` : '1';
+        if (!synthesis) return '1';
+        return derivedIntel ? `0-${synthesis.intentType}` : '0';
       },
       text: l => {
         const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
-        return synthesis ? `Enriched ${INTENT_META[synthesis.intentType].label}` : 'Standard';
+        if (!synthesis) return 'Standard';
+        return derivedIntel ? `Enriched ${INTENT_META[synthesis.intentType].label}` : 'Enriched';
       },
       render: l => {
         const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
         if (!synthesis) {
           return <span className="text-[11.5px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Standard</span>;
         }
+        if (!derivedIntel) {
+          return (
+            <span
+              className="inline-flex max-w-full items-center gap-1 overflow-hidden rounded-full px-2 py-0.5 text-[11px] font-semibold"
+              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              title="Enriched — opens the full briefing: buying committee, talking points, account signals."
+            >
+              <Sparkles className="h-3 w-3 flex-shrink-0" />
+              <span className="truncate">Enriched</span>
+            </span>
+          );
+        }
         const meta = INTENT_META[synthesis.intentType];
         return (
           <span
             className="inline-flex max-w-full items-center gap-1 overflow-hidden rounded-full px-2 py-0.5 text-[11px] font-semibold"
             style={{ background: meta.bg, color: meta.color }}
-            title={`Enriched — ${meta.label} intent. Opens the full briefing: synthesis, buying committee, account signals.`}
+            title={`Enriched — ${meta.label} signal. Opens the full briefing: synthesis, buying committee, account signals.`}
           >
             <Sparkles className="h-3 w-3 flex-shrink-0" />
             <span className="truncate">{meta.label}</span>
@@ -167,7 +185,7 @@ export default function UnionLeadsPage() {
       },
     },
     {
-      key: 'score', header: 'Intent', align: 'right', widthClass: 'w-[20%] lg:w-[13%] xl:w-[10.5%]',
+      key: 'score', header: 'Score', align: 'right', widthClass: 'w-[20%] lg:w-[13%] xl:w-[10.5%]',
       sortValue: l => l.leadScore, text: l => String(l.leadScore),
       render: l => (
         <div className="flex items-center justify-end gap-2">
@@ -237,7 +255,7 @@ export default function UnionLeadsPage() {
             Leads
           </h1>
           <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-            {stats.total} leads · {stats.pending} pending review · {stats.hot} hot · {stats.avg} avg intent ·{' '}
+            {stats.total} leads · {stats.pending} pending review · {stats.hot} hot · {stats.avg} avg signal ·{' '}
             <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
               {signalMeta.rows} enriched of {signalMeta.sampleOf}
             </span>
@@ -274,11 +292,11 @@ export default function UnionLeadsPage() {
 
       {/* Lens toggle */}
       <div
-        className="grid grid-cols-3 gap-1 rounded-xl p-1 sm:inline-grid sm:min-w-[340px]"
+        className="grid grid-cols-2 gap-1 rounded-xl p-1 sm:inline-grid sm:min-w-[260px]"
         style={{ background: 'var(--background-muted)' }}
         role="tablist"
       >
-        {([['people', 'People', Users], ['accounts', 'Accounts', Building2], ['signals', 'Signals', BarChart2]] as const).map(([key, label, Icon]) => (
+        {([['accounts', 'Accounts', Building2], ['people', 'People', Users]] as const).map(([key, label, Icon]) => (
           <button
             key={key}
             role="tab"
@@ -295,7 +313,6 @@ export default function UnionLeadsPage() {
       </div>
 
       {lens === 'accounts' && <SignalAccountsView />}
-      {lens === 'signals' && <SignalTimelineView />}
 
       {lens === 'people' && (
         <DataTable
