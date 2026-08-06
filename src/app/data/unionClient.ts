@@ -111,7 +111,10 @@ const TERM_MAP: Array<[RegExp, string]> = [
   [/Lenovo/g, 'Atlas'],
   [/Uptime/g, 'Resilience'],
   [/Eaton/g, 'GridWorks'],
-  [/\bCRN(\d*)\b/g, 'Channel$1'],
+  // No word boundaries: the token also appears inside filenames like
+  // "Uptime_CRN2_Suppression.csv", where the underscores are word characters
+  // and \b never matches.
+  [/CRN(\d*)/g, 'Channel$1'],
 ];
 
 export function neutralizeText(text: string): string {

@@ -411,8 +411,10 @@ export default function UnionOpsCampaign() {
           <CampaignAnalyticsTabs
             tabs={[
               {
+                // Keyed on the campaign: prev/next keeps this component mounted,
+                // and its local decision state must not carry across campaigns.
                 key: 'exceptions', label: 'Exceptions & QA', Icon: TAB_ICONS.quality,
-                content: <ExceptionsTab campaignId={campaign.id} />,
+                content: <ExceptionsTab key={campaign.id} campaignId={campaign.id} />,
               },
               {
                 key: 'batches', label: 'Batches', Icon: UploadCloud,
