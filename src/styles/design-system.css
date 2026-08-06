@@ -449,3 +449,24 @@ input[type="checkbox"]:disabled {
    is invisible on a dark ground, and the selectors matched the very token
    classes that replaced them. Text colour comes from the tokens, and
    `.text-gray-*` flips with the mirrored ramp in dark.css. */
+/* ─── UNION retail brand — Tech Blue ─────────────────────────────────────────
+   The retail product's primary is Tech Blue per the Datamatics design
+   guidelines (red/black become ancillary accents). Placeholder hex until the
+   final value from the guidelines/Karan; swap it here only. Stamped on <html>
+   as data-brand="union" by AppLayout for the UNION login. Error/overdue stays
+   red via --color-error, untouched. */
+:root[data-brand="union"] {
+  --color-primary: #1B6FE8;
+  --color-primary-dark: #1558BF;
+  --color-primary-light: #4A8CF0;
+  --color-primary-tint: rgba(27, 111, 232, 0.07);
+  --color-primary-glow: rgba(27, 111, 232, 0.22);
+}
+
+:root[data-brand="union"][data-theme="dark"] {
+  --color-primary: #5B96F2;
+  --color-primary-dark: #3D7DE8;
+  --color-primary-light: #83B1F6;
+  --color-primary-tint: rgba(91, 150, 242, 0.16);
+  --color-primary-glow: rgba(91, 150, 242, 0.32);
+}

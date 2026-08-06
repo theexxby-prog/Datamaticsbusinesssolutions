@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  Users, Layers, TrendingUp, TrendingDown, Sparkles, Gauge, Radar, ArrowRight, AlertCircle,
+  Users, Layers, TrendingUp, TrendingDown, Sparkles, Radar, ArrowRight, AlertCircle,
   FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone, ClipboardList,
-  CalendarDays, Wallet, Truck,
+  CalendarDays, Truck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { unionClient, UNION_CLIENT_ID } from '../data/unionClient';
@@ -14,8 +15,10 @@ import {
 } from '../data/signalRoom';
 import { getAbmSummary, getBlendedSpend } from '../data/propensity';
 import {
-  getLeadOutcomes, getCampaignForecasts, getUpcomingEvents, getAcceptanceTrend, getBillingPosition,
+  getLeadOutcomes, getCampaignForecasts, getUpcomingEvents, getAcceptanceTrend,
+  getPeriodStats, campaignTypeFor, hottestLeadFor, getAdDelivery, type StatPeriod,
 } from '../data/outcomes';
+import { useUnionPrefs } from '../config/unionPrefs';
 import { mockLeads } from '../mockData';
 import { getAccountTeam } from '../data/mockClients';
 import { formatDate, formatDateShort } from '../utils/formatDate';
@@ -40,18 +43,19 @@ export default function UnionDashboard() {
   const campaigns = client?.campaigns ?? [];
   const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
   const leadsThisMonth = campaigns.reduce((sum, c) => sum + (c.leadsThisMonth ?? 0), 0);
-  const outcomes = getLeadOutcomes();
+  const prefs = useUnionPrefs();
+  const [period, setPeriod] = useState<StatPeriod>('month');
+  const periodStats = getPeriodStats(period);
+  const outcomes = getLeadOutcomes(periodStats.leads);
+  const adDelivery = getAdDelivery();
   const forecasts = getCampaignForecasts();
   const atRiskForecast = forecasts.find(f => f.atRisk);
   const pendingLeads = mockLeads.filter(l => l.status === 'Pending Review').length;
   const upcoming = getUpcomingEvents();
   const acceptanceTrend = getAcceptanceTrend();
-  const billing = getBillingPosition();
   const team = getAccountTeam('client_1');
 
   const myInvoices = mockInvoiceRecords.filter(i => i.clientId === UNION_CLIENT_ID);
-  const thisMonth = new Date().toISOString().slice(0, 7);
-  const billableMtd = myInvoices.filter(i => (i.issueDate ?? '').startsWith(thisMonth)).reduce((s, i) => s + i.total, 0);
   const overdueInvoices = myInvoices.filter(i => i.stage === 'overdue');
   const dueInvoices = myInvoices.filter(i => i.stage === 'sent');
   const openTotal = [...overdueInvoices, ...dueInvoices].reduce((s, i) => s + i.total, 0);
@@ -70,8 +74,6 @@ export default function UnionDashboard() {
   const blended = getBlendedSpend();
   const blendedRoi = blended[blended.length - 1]?.blendedRoi ?? 0;
 
-  const scores = signalContacts.map(c => getSynthesis(c.id)?.intentScore ?? c.signalScore);
-  const avgIntent = Math.round(scores.reduce((s, v) => s + v, 0) / scores.length);
   const ranked = getAccountsByReadiness();
   const latestTrigger = getTriggerTimeline()[0];
   // First resolvable step per account — sequences can name contacts outside
@@ -130,14 +132,6 @@ export default function UnionDashboard() {
     },
   ].filter((x): x is NonNullable<typeof x> => Boolean(x));
 
-  const stats = [
-    { icon: Users, value: leadsThisMonth.toLocaleString('en-US'), label: 'Leads this month' },
-    { icon: Layers, value: String(activeCampaigns), label: 'Active campaigns' },
-    { icon: Receipt, value: fmtMoney(billableMtd), label: 'Billable MTD' },
-    { icon: AlertCircle, value: String(overdueInvoices.length + dueInvoices.length), label: 'Open invoices' },
-    { icon: FilePenLine, value: String(pendingSignatures.length), label: 'Awaiting signature' },
-    { icon: Gauge, value: String(avgIntent), label: 'Avg intent score' },
-  ];
 
   return (
     <div className="max-w-[1600px] mx-auto page-content space-y-4">
@@ -159,16 +153,10 @@ export default function UnionDashboard() {
             </div>
           </div>
         </div>
-        <button
-          onClick={() => navigate('/programmatic')}
-          className="btn-outline inline-flex min-h-[38px] items-center gap-1.5 px-3.5 text-sm font-semibold"
-        >
-          <Radar className="h-4 w-4" /> Programmatic ABM
-        </button>
       </div>
 
-      {/* Needs attention — highlighted, horizontal snap on phones */}
-      {attention.length > 0 && (
+      {/* Needs attention — off by default per Ben; toggleable in Account settings */}
+      {prefs.widgets.attention && attention.length > 0 && (
         <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-2 md:px-0 md:pb-0 xl:flex xl:overflow-visible">
           {attention.map(item => {
             const Icon = item.icon;
@@ -194,57 +182,73 @@ export default function UnionDashboard() {
         </div>
       )}
 
-      {/* Six-stat strip */}
-      <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 lg:grid-cols-6 stagger-children">
-        {stats.map(stat => {
-          const Icon = stat.icon;
-          return (
-            <div key={stat.label} className="kpi-card animate-slideInUp" style={{ padding: '11px 13px' }}>
-              <div className="mb-1 flex items-center justify-between">
-                <Icon className="kpi-card__icon" style={{ width: '14px', height: '14px' }} />
-              </div>
-              <div className="kpi-card__number" style={{ fontSize: '19px', marginBottom: '1px' }}>{stat.value}</div>
-              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>{stat.label}</div>
+      {/* Key numbers — one period, three linked boxes (Ben: default month) */}
+      {prefs.widgets.stats && (
+        <div>
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+              Key numbers
+            </span>
+            <div className="inline-flex rounded-lg p-0.5" style={{ background: 'var(--background-muted)' }} role="tablist">
+              {(['month', 'quarter', 'year'] as const).map(pKey => (
+                <button
+                  key={pKey}
+                  role="tab"
+                  aria-selected={period === pKey}
+                  onClick={() => setPeriod(pKey)}
+                  className={`rounded-md px-2.5 py-1 text-[11px] font-bold capitalize transition-colors ${
+                    period === pKey
+                      ? 'bg-[var(--color-surface-raised)] text-[var(--color-text-primary)] shadow-sm'
+                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                  }`}
+                >
+                  {pKey}
+                </button>
+              ))}
             </div>
-          );
-        })}
-      </div>
-
-      {/* Coming up — the next dated things in the relationship */}
-      {upcoming.length > 0 && (
-        <div
-          className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border px-3 py-2"
-          style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
-        >
-          <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-            <CalendarDays className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-            Coming up
-          </span>
-          {upcoming.map(ev => (
-            <button
-              key={`${ev.date}-${ev.label}`}
-              onClick={() => navigate(ev.href)}
-              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[12px] transition-colors hover:bg-[var(--color-primary-tint)]"
-            >
-              {ev.kind === 'delivery'
-                ? <Truck className="h-3.5 w-3.5" style={{ color: 'var(--color-success)' }} />
-                : <Receipt className="h-3.5 w-3.5" style={{ color: 'var(--color-warning)' }} />}
-              <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{formatDateShort(ev.date)}</span>
-              <span style={{ color: 'var(--color-text-secondary)' }}>{ev.label}</span>
-              <span className="hidden sm:inline" style={{ color: 'var(--color-text-muted)' }}>· {ev.sub}</span>
-            </button>
-          ))}
+          </div>
+          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 stagger-children">
+            <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
+              <Layers className="kpi-card__icon mb-1" style={{ width: '14px', height: '14px' }} />
+              <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.activeCampaigns}</div>
+              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Active campaigns</div>
+            </div>
+            <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
+              <Users className="kpi-card__icon mb-1" style={{ width: '14px', height: '14px' }} />
+              <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.leads.toLocaleString('en-US')}</div>
+              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Leads this {period}</div>
+            </div>
+            <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
+              <div className="flex items-baseline gap-1.5">
+                <span className="kpi-card__number" style={{ fontSize: '20px', marginBottom: 0 }}>{fmtMoney(periodStats.billed)}</span>
+                <span className="text-[10px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+                  of {fmtMoney(periodStats.contracted)} contracted
+                </span>
+              </div>
+              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Billed this {period}</div>
+              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                <div
+                  className="h-full rounded-full"
+                  style={{ width: `${Math.min(100, Math.round((periodStats.billed / periodStats.contracted) * 100))}%`, background: 'var(--color-primary)' }}
+                />
+              </div>
+              <div className="mt-1 text-[10px] font-semibold" style={{ color: 'var(--color-success)' }}>
+                {fmtMoney(periodStats.remainingYear)} remaining on the FY26 commitment
+              </div>
+            </div>
+          </div>
         </div>
       )}
 
-      {/* Relationship row: syndication · invoices & documents · billing · programmatic */}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-4">
+      {/* What we're delivering — campaigns first, everything else around it */}
+      <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
+        {prefs.widgets.campaigns && (<>
         {/* Content syndication campaigns */}
-        <div className="glass-card p-4">
+        <div className="glass-card p-4 xl:col-span-2">
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Content syndication
+              Campaigns
             </h3>
             <button onClick={() => navigate('/campaigns')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
               Campaigns <ArrowRight className="ml-0.5 inline h-3 w-3" />
@@ -261,7 +265,15 @@ export default function UnionDashboard() {
                   className="w-full rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
                 >
                   <div className="mb-1 flex items-center justify-between gap-2">
-                    <span className="truncate text-[12.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
+                    <span className="flex min-w-0 items-center gap-1.5">
+                      <span className="truncate text-[12.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
+                      <span
+                        className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide"
+                        style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                      >
+                        {campaignTypeFor(c.id)}
+                      </span>
+                    </span>
                     <span className="flex-shrink-0 text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
                       {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')}
                     </span>
@@ -281,12 +293,96 @@ export default function UnionDashboard() {
                       <span style={{ color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>{projectedPct}% of goal</span>
                     )}
                   </div>
+                  {(() => {
+                    const hot = hottestLeadFor(c.id);
+                    return hot ? (
+                      <div className="mt-0.5 truncate text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                        Hottest lead · <span style={{ color: 'var(--color-text-secondary)', fontWeight: 600 }}>{hot.name}</span> · {hot.company}
+                      </div>
+                    ) : null;
+                  })()}
                 </button>
               );
             })}
           </div>
         </div>
-
+        </>)}
+        {prefs.widgets.outcomes && (<>
+        {/* Lead outcomes — what happened after delivery */}
+        <div className="glass-card p-4">
+          <div className="mb-2.5 flex items-center justify-between gap-2">
+            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
+              <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+              Lead outcomes
+            </h3>
+            <button onClick={() => navigate('/reports')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
+              Reports <ArrowRight className="ml-0.5 inline h-3 w-3" />
+            </button>
+          </div>
+          <div className="mb-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(outcomes.pipelineValue)}</span>
+            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+              pipeline influenced · {fmtMoney(outcomes.wonValue)} closed-won
+            </span>
+          </div>
+          <div className="space-y-1.5">
+            {([
+              ['Delivered', outcomes.delivered],
+              ['Accepted', outcomes.accepted],
+              ['Synced to CRM', outcomes.synced],
+              ['Opportunities', outcomes.opportunities],
+              ['Closed-won', outcomes.closedWon],
+            ] as const).map(([label, value]) => {
+              const pct = Math.max(2, Math.round((value / Math.max(outcomes.delivered, 1)) * 100));
+              return (
+                <div key={label} className="flex items-center gap-2">
+                  <span className="w-[92px] flex-shrink-0 text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+                    {label}
+                  </span>
+                  <span className="h-2 flex-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                    <span className="block h-full rounded-full" style={{ width: `${pct}%`, background: 'var(--color-primary)' }} />
+                  </span>
+                  <span className="w-[78px] flex-shrink-0 text-right text-[11.5px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                    {value.toLocaleString('en-US')}
+                    <span className="ml-1 font-semibold" style={{ color: 'var(--color-text-muted)' }}>{pct}%</span>
+                  </span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+            <span>{adDelivery.impressions.toLocaleString('en-US')} impressions delivered</span>
+            <span style={{ color: 'var(--color-text-muted)' }}>·</span>
+            <span>{adDelivery.clicks.toLocaleString('en-US')} ad clicks</span>
+          </div>
+          <div className="mt-2.5 flex items-center justify-between gap-2 border-t pt-2" style={{ borderColor: 'var(--color-border-light)' }}>
+            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+              Acceptance rate · 6 mo
+            </span>
+            <span className="flex items-center gap-2">
+              <svg width="90" height="24" viewBox="0 0 90 24" aria-hidden="true">
+                <polyline
+                  fill="none"
+                  stroke="var(--color-success)"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  points={acceptanceTrend
+                    .map((pt, i) => `${4 + (i * 82) / (acceptanceTrend.length - 1)},${20 - ((pt.value - 94.5) / 3) * 16}`)
+                    .join(' ')}
+                />
+              </svg>
+              <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
+                {acceptanceTrend[acceptanceTrend.length - 1].value}%
+              </span>
+            </span>
+          </div>
+          <p className="mt-2 text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            Reported back through your CRM sync · updated daily
+          </p>
+        </div>
+        </>)}
+        {prefs.widgets.invoicesDocs && (<>
         {/* Invoices & documents */}
         <div className="glass-card p-4">
           <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -339,34 +435,8 @@ export default function UnionDashboard() {
             </button>
           </div>
         </div>
-
-        {/* Billing position */}
-        <div className="glass-card p-4">
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <Wallet className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Billing position
-            </h3>
-            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>FY 2026</span>
-          </div>
-          <div className="mb-1.5 flex items-baseline gap-2">
-            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(billing.billed)}</span>
-            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-              billed of {fmtMoney(billing.contracted)} contracted
-            </span>
-          </div>
-          <div className="h-2 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-            <div className="h-full rounded-full" style={{ width: `${billing.pct}%`, background: 'var(--color-primary)' }} />
-          </div>
-          <div className="mt-1.5 flex items-center justify-between text-[11px] font-semibold">
-            <span style={{ color: 'var(--color-text-secondary)' }}>{billing.pct}% of commitment</span>
-            <span style={{ color: 'var(--color-success)' }}>{fmtMoney(billing.remaining)} remaining</span>
-          </div>
-          <p className="mt-2.5 text-[11px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            Billed figures reconcile with your Invoices page to the dollar.
-          </p>
-        </div>
-
+        </>)}
+        {prefs.widgets.programmatic && (<>
         {/* Programmatic mini */}
         <div className="glass-card p-4">
           <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -394,90 +464,20 @@ export default function UnionDashboard() {
             {abm.length} ABM campaigns give your syndication programs air cover — spend, ROI and engaged accounts read as one story.
           </p>
         </div>
-      </div>
-
-      {/* Outcomes + intelligence row */}
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2 xl:grid-cols-3">
-        {/* Lead outcomes — what happened after delivery */}
-        <div className="glass-card p-4">
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Lead outcomes
-            </h3>
-            <button onClick={() => navigate('/reports')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Reports <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          <div className="mb-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(outcomes.pipelineValue)}</span>
-            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-              pipeline influenced · {fmtMoney(outcomes.wonValue)} closed-won
-            </span>
-          </div>
-          <div className="space-y-1.5">
-            {([
-              ['Delivered', outcomes.delivered],
-              ['Accepted', outcomes.accepted],
-              ['Synced to CRM', outcomes.synced],
-              ['Opportunities', outcomes.opportunities],
-              ['Closed-won', outcomes.closedWon],
-            ] as const).map(([label, value]) => {
-              const pct = Math.max(2, Math.round((value / Math.max(outcomes.delivered, 1)) * 100));
-              return (
-                <div key={label} className="flex items-center gap-2">
-                  <span className="w-[92px] flex-shrink-0 text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
-                    {label}
-                  </span>
-                  <span className="h-2 flex-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                    <span className="block h-full rounded-full" style={{ width: `${pct}%`, background: 'var(--color-primary)' }} />
-                  </span>
-                  <span className="w-[78px] flex-shrink-0 text-right text-[11.5px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                    {value.toLocaleString('en-US')}
-                    <span className="ml-1 font-semibold" style={{ color: 'var(--color-text-muted)' }}>{pct}%</span>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-2.5 flex items-center justify-between gap-2 border-t pt-2" style={{ borderColor: 'var(--color-border-light)' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-              Acceptance rate · 6 mo
-            </span>
-            <span className="flex items-center gap-2">
-              <svg width="90" height="24" viewBox="0 0 90 24" aria-hidden="true">
-                <polyline
-                  fill="none"
-                  stroke="var(--color-success)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  points={acceptanceTrend
-                    .map((pt, i) => `${4 + (i * 82) / (acceptanceTrend.length - 1)},${20 - ((pt.value - 94.5) / 3) * 16}`)
-                    .join(' ')}
-                />
-              </svg>
-              <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                {acceptanceTrend[acceptanceTrend.length - 1].value}%
-              </span>
-            </span>
-          </div>
-          <p className="mt-2 text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Reported back through your CRM sync · updated daily
-          </p>
-        </div>
-
+        </>)}
+        {prefs.widgets.leadsIntel && (<>
         {/* Accounts & next actions */}
-        <div className="glass-card p-4">
+        <div className={`glass-card p-4 ${prefs.widgets.freshSignals ? "" : "xl:col-span-2"}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Sparkles className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Enriched accounts · {signalMeta.rows} of {signalMeta.sampleOf} contacts
+              Leads · {signalMeta.rows} of {signalMeta.sampleOf} enriched
             </h3>
             <button onClick={() => navigate('/leads')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
               Leads <ArrowRight className="ml-0.5 inline h-3 w-3" />
             </button>
           </div>
+          <div className={prefs.widgets.freshSignals ? '' : 'md:grid md:grid-cols-2 md:gap-5'}>
           <div className="space-y-0.5">
             {ranked.slice(0, 4).map(({ account, insight }) => (
               <button
@@ -488,16 +488,24 @@ export default function UnionDashboard() {
                 <span className="min-w-0 flex-1 truncate text-[12.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
                   {account.name}
                 </span>
-                <span className="h-1.5 w-20 flex-shrink-0 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                  <span className="block h-full rounded-full" style={{ width: `${insight.readiness}%`, background: 'var(--color-primary)' }} />
-                </span>
-                <span className="w-7 flex-shrink-0 text-right text-[13px] font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                  {insight.readiness}
-                </span>
+                {prefs.derivedIntel ? (
+                  <>
+                    <span className="h-1.5 w-20 flex-shrink-0 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                      <span className="block h-full rounded-full" style={{ width: `${insight.readiness}%`, background: 'var(--color-primary)' }} />
+                    </span>
+                    <span className="w-7 flex-shrink-0 text-right text-[13px] font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                      {insight.readiness}
+                    </span>
+                  </>
+                ) : (
+                  <span className="max-w-[45%] flex-shrink-0 truncate text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+                    {account.industry}
+                  </span>
+                )}
               </button>
             ))}
           </div>
-          <div className="mt-2.5 border-t pt-2.5" style={{ borderColor: 'var(--color-border-light)' }}>
+          <div className={prefs.widgets.freshSignals ? 'mt-2.5 border-t pt-2.5' : 'mt-2.5 border-t pt-2.5 md:mt-0 md:border-0 md:pt-0'} style={{ borderColor: 'var(--color-border-light)' }}>
             <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
               <ListOrdered className="h-3.5 w-3.5" /> Next best actions
             </div>
@@ -524,8 +532,10 @@ export default function UnionDashboard() {
               })}
             </div>
           </div>
+          </div>
         </div>
-
+        </>)}
+        {prefs.widgets.freshSignals && (<>
         {/* Fresh signals */}
         <div className="glass-card p-4">
           <div className="mb-2.5 flex items-center justify-between gap-2">
@@ -562,9 +572,38 @@ export default function UnionDashboard() {
             ))}
           </div>
         </div>
+        </>)}
       </div>
 
+      {/* What will happen — at the bottom, per Ben: this page is about what is happening */}
+      {prefs.widgets.comingUp && upcoming.length > 0 && (
+        <div
+          className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border px-3 py-2"
+          style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
+        >
+          <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+            <CalendarDays className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+            Coming up
+          </span>
+          {upcoming.map(ev => (
+            <button
+              key={`${ev.date}-${ev.label}`}
+              onClick={() => navigate(ev.href)}
+              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[12px] transition-colors hover:bg-[var(--color-primary-tint)]"
+            >
+              {ev.kind === 'delivery'
+                ? <Truck className="h-3.5 w-3.5" style={{ color: 'var(--color-success)' }} />
+                : <Receipt className="h-3.5 w-3.5" style={{ color: 'var(--color-warning)' }} />}
+              <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{formatDateShort(ev.date)}</span>
+              <span style={{ color: 'var(--color-text-secondary)' }}>{ev.label}</span>
+              <span className="hidden sm:inline" style={{ color: 'var(--color-text-muted)' }}>· {ev.sub}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       {/* Your team — the humans on the account */}
+      {prefs.widgets.team && (
       <div
         className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border px-4 py-3"
         style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
@@ -597,12 +636,13 @@ export default function UnionDashboard() {
         ))}
         <span
           className="ml-auto inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
-          style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+          style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)' }}
         >
           <CalendarDays className="h-3.5 w-3.5" />
           Next business review · {formatDate('2026-08-14')}
         </span>
       </div>
+      )}
     </div>
   );
 }

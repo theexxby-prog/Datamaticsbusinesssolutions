@@ -40,6 +40,16 @@ export function AppLayout() {
   const blockedFuture =
     isFutureModulePath(location.pathname) && !showFutureModules(currentUser);
 
+  // The retail brand: UNION previews the future product, which is Tech Blue.
+  // Stamping <html> lets the token layer flip every primary-coloured element
+  // without touching components; all other logins keep Datamatics red.
+  useEffect(() => {
+    const root = document.documentElement;
+    if (showFutureModules(currentUser)) root.setAttribute('data-brand', 'union');
+    else root.removeAttribute('data-brand');
+    return () => root.removeAttribute('data-brand');
+  }, [currentUser]);
+
   useEffect(() => {
     if (gateClosed) {
       navigate('/', { replace: true });

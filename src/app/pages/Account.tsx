@@ -13,11 +13,14 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { NotificationsTabContent } from '../components/NotificationsTabContent';
 import { DASH_METRICS, getDashPrefs, setDashMetric, type DashMetricKey } from '../data/dashboardPrefs';
 import { useUnionLens } from '../hooks/useUnionLens';
+import { showFutureModules } from '../config/demo';
+import { useUnionPrefs, setUnionWidget, setDerivedIntel, UNION_WIDGET_LABELS, type UnionWidgetKey } from '../config/unionPrefs';
 
 export default function Account() {
   useDocumentTitle('Account Settings');
   const { currentUser } = useAuth();
   const lens = useUnionLens();
+  const unionPrefs = useUnionPrefs();
 
   const [activeTab, setActiveTab] = useState<'profile' | 'company' | 'team' | 'security' | 'notifications' | 'dashboard'>('profile');
   const [showPassword, setShowPassword] = useState(false);
@@ -136,7 +139,61 @@ export default function Account() {
             </div>
           )}
 
-          {activeTab === 'dashboard' && (
+          {activeTab === 'dashboard' && (showFutureModules(currentUser) ? (
+            <div className="space-y-5">
+              <div>
+                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                  Dashboard Sections
+                </h2>
+                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-1">
+                  Turn dashboard sections on or off — the layout reflows automatically. Defaults follow the
+                  product spec; anything can be switched back on in seconds for a walkthrough.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {(Object.keys(UNION_WIDGET_LABELS) as UnionWidgetKey[]).map((key) => {
+                  const on = unionPrefs.widgets[key];
+                  return (
+                    <div key={key} className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                      <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                        {UNION_WIDGET_LABELS[key]}
+                      </div>
+                      <button
+                        onClick={() => setUnionWidget(key, !on)}
+                        role="switch"
+                        aria-checked={on}
+                        aria-label={`Toggle ${UNION_WIDGET_LABELS[key]}`}
+                        className="relative rounded-full transition-colors flex-shrink-0"
+                        style={{ width: 44, height: 24, background: on ? 'var(--color-primary)' : 'var(--color-border)' }}
+                      >
+                        <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: on ? 'translateX(20px)' : 'translateX(0)' }} />
+                      </button>
+                    </div>
+                  );
+                })}
+                <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                  <div>
+                    <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                      Derived scores &amp; synthesis
+                    </div>
+                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                      AI-derived signal scores, readiness and synthesis narratives — off until real scoring lands.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setDerivedIntel(!unionPrefs.derivedIntel)}
+                    role="switch"
+                    aria-checked={unionPrefs.derivedIntel}
+                    aria-label="Toggle derived scores and synthesis"
+                    className="relative rounded-full transition-colors flex-shrink-0"
+                    style={{ width: 44, height: 24, background: unionPrefs.derivedIntel ? 'var(--color-primary)' : 'var(--color-border)' }}
+                  >
+                    <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: unionPrefs.derivedIntel ? 'translateX(20px)' : 'translateX(0)' }} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
             <div className="space-y-5">
               <div>
                 <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
@@ -170,7 +227,7 @@ export default function Account() {
                 })}
               </div>
             </div>
-          )}
+          ))}
 
           {activeTab === 'company' && (
             <div className="space-y-5">
