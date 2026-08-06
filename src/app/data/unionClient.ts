@@ -14,11 +14,21 @@ import { showUnionIdentity } from '../config/demo';
 export const UNION_COMPANY = 'Northwind Technologies';
 export const UNION_CLIENT_ID = 'client_union';
 
-/** Neutral names for the three seeded campaigns, keyed by campaign id. */
+/** Neutral names for the seeded campaigns, keyed by campaign id. Every campaign
+ *  on client_1 must have an entry — the lookup falls back to the real name. */
 export const CAMPAIGN_RENAMES: Record<string, string> = {
   '46888': 'Atlas AI Infrastructure — Q3',
   '46873': 'Resilience Suite Lead Gen',
   '46936': 'GridWorks FY2026 — Q3',
+  '46901': 'Beacon Secure Edge — NAM Q3',
+  '46912': 'Harbor Data Resilience — EMEA',
+  '46927': 'Skyline AI Device Refresh — APAC',
+  '46944': 'Meridian Hybrid Cloud — Q1',
+  '46952': 'Sentinel SecOps Modernization',
+  '46967': 'Summit Cloud Platform — NAM Q2',
+  '46974': 'Compass Zero Trust — EMEA Q2',
+  '46989': 'Quarry Flash Storage — Q4',
+  '46995': 'Foundry Private Cloud — Q4',
 };
 
 const sourceClient = allClients.find(c => c.id === 'client_1')!;
@@ -103,6 +113,15 @@ const TERM_MAP: Array<[RegExp, string]> = [
   [/Uptime Solutions CRN2/g, CAMPAIGN_RENAMES['46873']],
   [/Eaton 2026 Full Year 1_Q3/g, CAMPAIGN_RENAMES['46936']],
   [/Eaton FY2026 Q3/g, CAMPAIGN_RENAMES['46936']],
+  [/Cisco Secure Edge CRN NAM - Q3/g, CAMPAIGN_RENAMES['46901']],
+  [/Veeam Data Resilience CRN4 - EMEA/g, CAMPAIGN_RENAMES['46912']],
+  [/Dell AI PC Refresh 2026 - APAC/g, CAMPAIGN_RENAMES['46927']],
+  [/HPE GreenLake Hybrid Cloud - Q1/g, CAMPAIGN_RENAMES['46944']],
+  [/Fortinet SecOps Modernization CRN1/g, CAMPAIGN_RENAMES['46952']],
+  [/Nutanix Cloud Platform CRN NAM - Q2/g, CAMPAIGN_RENAMES['46967']],
+  [/Zscaler Zero Trust Exchange - EMEA Q2/g, CAMPAIGN_RENAMES['46974']],
+  [/Pure Storage FlashBlade CRN - Q4/g, CAMPAIGN_RENAMES['46989']],
+  [/Broadcom VMware Cloud Foundation - Q4/g, CAMPAIGN_RENAMES['46995']],
   [/The Channel Company/g, UNION_COMPANY],
   [/thechannelcompany\.com/g, 'northwindtech.com'],
   [/thechannelco\.com/g, 'northwindtech.com'],
@@ -111,6 +130,15 @@ const TERM_MAP: Array<[RegExp, string]> = [
   [/Lenovo/g, 'Atlas'],
   [/Uptime/g, 'Resilience'],
   [/Eaton/g, 'GridWorks'],
+  [/Cisco/g, 'Beacon'],
+  [/Veeam/g, 'Harbor'],
+  [/Dell/g, 'Skyline'],
+  [/HPE GreenLake/g, 'Meridian'],
+  [/Fortinet/g, 'Sentinel'],
+  [/Nutanix/g, 'Summit'],
+  [/Zscaler/g, 'Compass'],
+  [/Pure Storage FlashBlade/g, 'Quarry Flash'],
+  [/Broadcom VMware/g, 'Foundry'],
   // No word boundaries: the token also appears inside filenames like
   // "Uptime_CRN2_Suppression.csv", where the underscores are word characters
   // and \b never matches.
