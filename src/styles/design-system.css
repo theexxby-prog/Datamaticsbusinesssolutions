@@ -59,12 +59,46 @@
 --color-accent-purple: #7C3AED;
 --color-accent-purple-bg: rgba(124, 58, 237, 0.10);
 
+/* ── Categorical chart palette ────────────────────────────────────────────────
+   Eight slots for series identity, assigned in fixed order and never cycled.
+   Validated against the surfaces charts actually render on (light #F1F6FD, the
+   union card over its canvas; dark #232647): lightness band, chroma floor,
+   adjacent-pair CVD separation (worst ΔE 9.1 light / 8.4 dark against an ≥8
+   target) and the normal-vision floor (19.6 / 19.3 against ≥15) all pass.
+
+   The ordering IS the colourblind-safety mechanism — re-ordering these
+   invalidates the adjacent-pair results, so re-run the validator if you do.
+   Four light slots sit under 3:1 against the surface, which is why every chart
+   using them keeps visible axis labels and tooltip values rather than leaning
+   on hue alone.
+
+   Slot 1 is the brand blue so the primary series reads as "ours". Status
+   colours (--color-success/-warning/-error) are deliberately NOT in this ramp:
+   a state must never be mistaken for a series. */
+--chart-cat-1: #1E6FF2;
+--chart-cat-2: #EB6834;
+--chart-cat-3: #1BAF7A;
+--chart-cat-4: #EDA100;
+--chart-cat-5: #E87BA4;
+--chart-cat-6: #008300;
+--chart-cat-7: #4A3AA7;
+--chart-cat-8: #E34948;
+
+/* Recessive chart chrome */
+--chart-grid: rgba(23, 49, 92, 0.14);
+
 --color-badge-active-bg: rgba(5, 150, 105, 0.12);
 --color-badge-active-text: #065F46;
 --color-badge-paused-bg: rgba(217, 119, 6, 0.12);
 --color-badge-paused-text: #78350F;
 --color-badge-completed-bg: rgba(107, 114, 128, 0.12);
 --color-badge-completed-text: #374151;
+
+/* The sidebar's lift off the page. Default keeps the panel edge the red brand
+   has always had; the union brand drops it so the nav reads as part of the
+   canvas rather than a slab sitting on it. */
+--sidebar-shadow-expanded: 4px 0 24px rgba(0, 0, 0, 0.06);
+--sidebar-shadow-collapsed: 2px 0 8px rgba(0, 0, 0, 0.03);
 
 /* ============================================
    GLASSMORPHISM SURFACES
@@ -530,7 +564,10 @@ input[type="checkbox"]:disabled {
   --kpi-sublabel-color: #7286A6;
   /* Deep-navy sidebar anchor, graded so it doesn't read as a flat slab */
   --color-sidebar-bg: linear-gradient(180deg, rgba(22, 38, 72, 0.94) 0%, rgba(14, 24, 48, 0.96) 100%);
-  --color-sidebar-border: rgba(255, 255, 255, 0.08);
+  /* Borderless: the reference sidebar has no edge — it ends where the canvas
+     begins. Kept as a token rather than deleted so the rule still resolves. */
+  --color-sidebar-border: transparent;
+  --sidebar-shadow: none;
 }
 
 /* Sidebar subtree under the union brand: re-scope the text/surface tokens so

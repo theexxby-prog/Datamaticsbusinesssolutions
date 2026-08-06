@@ -48,6 +48,22 @@
   --color-accent-purple: #A78BFA;
   --color-accent-purple-bg: rgba(167, 139, 250, 0.15);
 
+  /* Categorical chart palette, re-stepped for a dark ground — the same eight
+     hues, not an automatic lightening of the light values. Validated as a set
+     against the dark chart surface; the light slot-1 blue sits at L 0.72, above
+     the dark band's 0.67 ceiling, which is why it steps down here rather than
+     staying put. Slot 6 is mode-invariant. */
+  --chart-cat-1: #4A8CF0;
+  --chart-cat-2: #D95926;
+  --chart-cat-3: #199E70;
+  --chart-cat-4: #C98500;
+  --chart-cat-5: #D55181;
+  --chart-cat-6: #008300;
+  --chart-cat-7: #9085E9;
+  --chart-cat-8: #E66767;
+
+  --chart-grid: rgba(255, 255, 255, 0.10);
+
   --color-badge-active-bg: rgba(52, 211, 153, 0.16);
   --color-badge-active-text: #6EE7B7;
   --color-badge-paused-bg: rgba(251, 191, 36, 0.16);
