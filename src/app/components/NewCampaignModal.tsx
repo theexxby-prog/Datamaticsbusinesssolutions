@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { X, Upload, Copy, Check, Mail, FileText, Sparkles, Eye, EyeOff, Info, Wifi, ChevronDown } from 'lucide-react';
+import { DELIVERY_METHODS } from '../config/deliveryMethods';
 
 interface NewCampaignModalProps {
   isOpen: boolean;
@@ -25,17 +26,6 @@ export interface CampaignFormData {
   deliveryConfig?: Record<string, string>;
 }
 
-const DELIVERY_METHODS = [
-  { value: 'email',      label: '📧 Email (CSV attachment)' },
-  { value: 'sheets',     label: '📊 Google Sheets' },
-  { value: 'webhook',    label: '🔗 Custom Webhook' },
-  { value: 'salesforce', label: '☁️ Salesforce CRM' },
-  { value: 'hubspot',    label: '🟠 HubSpot CRM' },
-  { value: 'pipedrive',  label: '🟣 Pipedrive CRM' },
-  { value: 'convertr',   label: '⚡ Automated Delivery' },
-  { value: 'leadbyte',   label: '📦 LeadByte' },
-  { value: 'ftp',        label: '🗂️ FTP / SFTP' },
-];
 
 const US_STATES = [
   'Alabama', 'Alaska', 'Arizona', 'Arkansas', 'California', 'Colorado', 'Connecticut', 'Delaware',

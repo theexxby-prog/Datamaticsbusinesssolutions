@@ -13,10 +13,11 @@ import {
   signalMeta, signalContacts, getSynthesis, getAccountsByReadiness,
   getSignalContact, signalLeadId, getTriggerTimeline,
 } from '../data/signalRoom';
-import { getAbmSummary, getBlendedSpend } from '../data/propensity';
+import { getAbmSummary } from '../data/propensity';
 import {
   getLeadOutcomes, getCampaignForecasts, getUpcomingEvents, getAcceptanceTrend,
-  getPeriodStats, campaignTypeFor, hottestLeadFor, getAdDelivery, type StatPeriod,
+  getPeriodStats, campaignTypeFor, hottestLeadFor, getAdDelivery, getPeopleReached,
+  type StatPeriod,
 } from '../data/outcomes';
 import { useUnionPrefs } from '../config/unionPrefs';
 import { mockLeads } from '../mockData';
@@ -92,8 +93,6 @@ export default function UnionDashboard() {
   const abm = getAbmSummary();
   const abmSpend = abm.reduce((s, c) => s + c.spendToDate, 0);
   const abmEngaged = abm.reduce((s, c) => s + c.engagedAccounts, 0);
-  const blended = getBlendedSpend();
-  const blendedRoi = blended[blended.length - 1]?.blendedRoi ?? 0;
 
   const ranked = getAccountsByReadiness();
   const latestTrigger = getTriggerTimeline()[0];
@@ -245,7 +244,7 @@ export default function UnionDashboard() {
                   of {fmtMoney(periodStats.contracted)} contracted
                 </span>
               </div>
-              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Billed this {period}</div>
+              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Billables</div>
               <div className="mt-1.5 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
                 <div
                   className="h-full rounded-full"
@@ -464,14 +463,16 @@ export default function UnionDashboard() {
               <Radar className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
               Programmatic ABM
             </h3>
-            <button onClick={() => navigate('/programmatic')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
+            <button onClick={() => navigate('/campaigns')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
               Open <ArrowRight className="ml-0.5 inline h-3 w-3" />
             </button>
           </div>
           <div className="grid grid-cols-3 gap-2 text-center">
             {[
               { value: fmtMoney(abmSpend), label: 'Spend to date' },
-              { value: `${blendedRoi}×`, label: 'Blended ROI' },
+              // Blended ROI pulled from the client render pending a methodology
+              // review — people reached takes its place, per Ben.
+              { value: getPeopleReached().toLocaleString('en-US'), label: 'People reached' },
               { value: String(abmEngaged), label: 'Accounts engaged' },
             ].map(x => (
               <div key={x.label} className="rounded-xl border p-2.5" style={{ borderColor: 'var(--color-border-light)' }}>
@@ -481,7 +482,7 @@ export default function UnionDashboard() {
             ))}
           </div>
           <p className="mt-2.5 text-[11px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {abm.length} ABM campaigns give your syndication programs air cover — spend, ROI and engaged accounts read as one story.
+            {abm.length} ABM campaigns give your syndication programs air cover — spend, reach and engaged accounts read as one story.
           </p>
         </div>
         </>)}

@@ -231,6 +231,7 @@ const DETAIL_ROUTES: Array<{ pattern: RegExp; meta: PageMeta }> = [
   { pattern: /^\/programmatic$/, meta: { title: 'Programmatic', showBack: false } },
   { pattern: /^\/ops-union$/, meta: { title: 'Pipeline', showBack: false } },
   { pattern: /^\/ops-union\/intake$/, meta: { title: 'Data Intake', showBack: false } },
+  { pattern: /^\/ops-union\/campaigns\/[^/]+$/, meta: { title: 'Campaign', showBack: true } },
   { pattern: /^\/leads\/account\/[^/]+$/, meta: { title: 'Account briefing', showBack: true } },
   { pattern: /^\/leads\/[^/]+$/, meta: { title: 'Lead briefing', showBack: true } },
 ];

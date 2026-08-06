@@ -87,3 +87,14 @@ export function isUnionOpsPath(pathname: string): boolean {
 export function isUnionOps(user: Pick<User, 'id'> | null | undefined): boolean {
   return !IS_CLIENT_DEMO && user?.id === UNION_OPS_USER_ID;
 }
+
+/**
+ * Display identity, not module access. Both UNION logins render the neutral
+ * Northwind identity — the client sees it because it is their portal, and ops
+ * sees it because they are looking at the same account's data. Deliberately
+ * separate from showFutureModules, which also gates routes and nav: widening
+ * that would hand the ops login the whole client module set.
+ */
+export function showUnionIdentity(user: Pick<User, 'id'> | null | undefined): boolean {
+  return showFutureModules(user) || isUnionOps(user);
+}

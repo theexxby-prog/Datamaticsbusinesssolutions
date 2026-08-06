@@ -13,11 +13,16 @@ import { formatDateShort } from '../../utils/formatDate';
 
 
 
+// The real media channels the buy runs across. Keys must match PdnSpendDay in
+// data/propensity.ts — recharts resolves dataKey loosely, so a mismatch renders
+// empty bars rather than failing the build. Order is load-bearing: the last
+// entry gets the rounded top of the stack.
 const CHANNELS = [
-  { key: 'display', label: 'Display', color: 'var(--color-primary)' },
-  { key: 'native', label: 'Native', color: 'var(--color-chart-2)' },
-  { key: 'video', label: 'Video', color: 'var(--color-info)' },
-  { key: 'ctv', label: 'CTV', color: 'var(--color-warning)' },
+  { key: 'linkedin', label: 'LinkedIn', color: 'var(--color-primary)' },
+  { key: 'meta', label: 'Meta', color: 'var(--color-chart-2)' },
+  { key: 'reddit', label: 'Reddit', color: 'var(--color-warning)' },
+  { key: 'youtube', label: 'YouTube', color: 'var(--color-error)' },
+  { key: 'pdn', label: 'PDN', color: 'var(--color-info)' },
 ] as const;
 
 export function SpendChannelsSection() {
@@ -27,9 +32,9 @@ export function SpendChannelsSection() {
 
   return (
     <div className="space-y-4">
-      <ChartCard title="Daily PDN spend by channel" icon={Wallet}>
+      <ChartCard title="Daily spend by channel" icon={Wallet}>
         <p className="mb-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-          Media spend across Propensity Display Network channels · last 30 days
+          Media spend across social, video and the Propensity Display Network · last 30 days
         </p>
         <ResponsiveContainer width="100%" height={isMobile ? 190 : 240}>
           <BarChart data={pdn} barCategoryGap="30%">

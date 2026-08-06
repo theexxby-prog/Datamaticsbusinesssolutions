@@ -175,25 +175,31 @@ export function getDailyActivity(days = 30): DailyAbmActivity[] {
   return out;
 }
 
+// Real media channels, per Ben: the buy runs across social and video networks
+// with PDN as a small always-on slice. NOTE: these are *channels* — distinct
+// from AssetType below, which is the creative format (display/native/video).
 export interface PdnSpendDay {
   date: string;
-  display: number;
-  native: number;
-  video: number;
-  ctv: number;
+  linkedin: number;
+  meta: number;
+  reddit: number;
+  youtube: number;
+  pdn: number;
 }
 
-/** Daily PDN Spend — spend by Propensity Display Network channel, oldest first. */
+/** Daily media spend by channel, oldest first. Totals are unchanged from the
+ *  previous format-based split so getBlendedSpend's monthly sums still hold. */
 export function getPdnSpend(days = 30): PdnSpendDay[] {
   const out: PdnSpendDay[] = [];
   for (let i = days - 1; i >= 0; i--) {
     const t = days - 1 - i;
     out.push({
       date: isoDaysAgo(i),
-      display: Math.round(182 + ripple(t) * 28),
-      native: Math.round(96 + ripple(t, 1) * 18),
-      video: Math.round(64 + ripple(t, 2) * 16),
-      ctv: Math.round(38 + ripple(t, 3) * 12),
+      linkedin: Math.round(148 + ripple(t) * 22),
+      meta: Math.round(94 + ripple(t, 1) * 18),
+      reddit: Math.round(62 + ripple(t, 2) * 14),
+      youtube: Math.round(48 + ripple(t, 3) * 12),
+      pdn: Math.round(28 + ripple(t, 4) * 8),
     });
   }
   return out;

@@ -250,3 +250,11 @@ export function getAdDelivery(): { impressions: number; clicks: number } {
     clicks: assets.reduce((s, a) => s + a.clicks, 0),
   };
 }
+
+/** Average times one person sees an ad — turns impressions into humans reached. */
+const AVG_AD_FREQUENCY = 3.2;
+
+/** People reached — Ben's replacement for blended ROI on the client render. */
+export function getPeopleReached(): number {
+  return Math.round(getAdDelivery().impressions / AVG_AD_FREQUENCY);
+}
