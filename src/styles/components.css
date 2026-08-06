@@ -1,4 +1,18 @@
 /* ============================================
+   APP CANVAS — the shell's ground
+   ============================================ */
+
+/* Painted on the AppLayout wrapper. --color-canvas is a plain colour by
+   default and a gradient under brands that want one; the last layer of that
+   value is always a solid colour, so a fixed attachment can never expose bare
+   page behind it. Kept viewport-anchored so a tall scrolling page doesn't
+   stretch the gradient until it reads flat. */
+.app-canvas {
+  background: var(--color-canvas);
+  background-attachment: fixed;
+}
+
+/* ============================================
    GLASSMORPHISM CARD — use for ALL KPI cards,
    metric boxes, and data panels
    ============================================ */
@@ -10,8 +24,8 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  box-shadow: 0 1px 2px rgba(16, 18, 26, 0.05), 0 4px 16px rgba(16, 18, 26, 0.07);
-  transition: 
+  box-shadow: var(--card-shadow);
+  transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
 }
@@ -24,7 +38,7 @@
 
 .glass-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 2px 4px rgba(16, 18, 26, 0.06), 0 10px 28px rgba(16, 18, 26, 0.11);
+  box-shadow: var(--card-shadow-hover);
 }
 
 .glass-card-strong {
@@ -33,7 +47,7 @@
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  box-shadow: 0 1px 2px rgba(16, 18, 26, 0.05), 0 4px 16px rgba(16, 18, 26, 0.07);
+  box-shadow: var(--card-shadow);
 }
 
 @supports not (backdrop-filter: blur(1px)) {
@@ -67,9 +81,9 @@
   -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  box-shadow: 0 1px 2px rgba(16, 18, 26, 0.05), 0 4px 16px rgba(16, 18, 26, 0.07);
+  box-shadow: var(--card-shadow);
   padding: var(--space-4);
-  transition: 
+  transition:
     transform var(--transition-fast),
     box-shadow var(--transition-fast);
 }
@@ -80,9 +94,23 @@
   }
 }
 
+/* Its own token rather than --card-shadow-hover: the KPI lift has always been a
+   single deeper shadow than the glass-card's two-part one, and that difference
+   predates this brand work. */
 .kpi-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.10);
+  box-shadow: var(--kpi-shadow-hover);
+}
+
+/* Union brand: the KPI boxes carry a top-light wash instead of a flat fill, so
+   they read as glass catching light rather than as opaque tiles on a gradient.
+   Scoped to the brand — every other login keeps the flat surface. */
+:root[data-brand="union"] .kpi-card {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.58) 100%);
+}
+
+:root[data-brand="union"][data-theme="dark"] .kpi-card {
+  background: linear-gradient(165deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.04) 100%);
 }
 
 /* Reduce blur on mobile */

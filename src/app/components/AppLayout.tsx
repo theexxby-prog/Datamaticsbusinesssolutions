@@ -81,10 +81,7 @@ export function AppLayout() {
   }
 
   return (
-    <div
-      className="min-h-dvh md:flex md:h-screen md:w-screen md:overflow-hidden"
-      style={{ background: 'var(--color-main-bg)' }}
-    >
+    <div className="app-canvas min-h-dvh md:flex md:h-screen md:w-screen md:overflow-hidden">
       {/* Desktop sidebar — hidden on mobile, replaced by MobileAppBar + MobileTabBar */}
       <LeftSidebar />
       <DemoRibbon />

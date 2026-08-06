@@ -18,6 +18,16 @@
 --color-surface-raised: rgba(255, 255, 255, 0.96);
 --color-surface-overlay: rgba(255, 255, 255, 0.60);
 
+/* The app shell's ground, painted by `.app-canvas` on the AppLayout wrapper.
+   Deliberately separate from --color-main-bg: that one doubles as a flat chip /
+   table-row / panel fill in a dozen pages, so it has to stay a plain colour.
+   This one may be a gradient, and a brand can make it one. */
+--color-canvas: var(--color-main-bg);
+
+/* Brand-coloured fill for bars and marks. Follows --color-primary, so it is red
+   by default and turns with any brand that re-points the primary family. */
+--gradient-primary: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%);
+
 /* STANDARDIZED TEXT COLORS - ONLY 2 OPTIONS */
 --color-text-primary: #000000;
 --color-text-secondary: #6B7280;
@@ -75,6 +85,16 @@
   0 8px 32px rgba(186, 32, 39, 0.18),
   0 2px 8px rgba(186, 32, 39, 0.10),
   inset 0 1px 0 rgba(255, 255, 255, 0.30);
+
+/* The lift under .glass-card / .kpi-card. Tokenised so a brand can tint it to
+   its own ground — a neutral grey shadow reads muddy over a coloured canvas. */
+--card-shadow:
+  0 1px 2px rgba(16, 18, 26, 0.05),
+  0 4px 16px rgba(16, 18, 26, 0.07);
+--card-shadow-hover:
+  0 2px 4px rgba(16, 18, 26, 0.06),
+  0 10px 28px rgba(16, 18, 26, 0.11);
+--kpi-shadow-hover: 0 8px 28px rgba(0, 0, 0, 0.10);
 
 /* ============================================
    TYPOGRAPHY
@@ -455,25 +475,56 @@ input[type="checkbox"]:disabled {
    guidelines (red/black become ancillary accents). Placeholder hex until the
    final value from the guidelines/Karan; swap it here only. Stamped on <html>
    as data-brand="union" by AppLayout for the UNION login. Error/overdue stays
-   red via --color-error, untouched. */
+   red via --color-error, untouched.
+
+   The surface treatment is a layered one: a soft gradient canvas with genuinely
+   translucent cards floating over it, so the ground reads through the blur that
+   .glass-card / .kpi-card already carry. Cards were previously 96% opaque, which
+   left the blur with nothing to do. Colour stays on the data — bars, pills,
+   marks — never on the containers. */
 :root[data-brand="union"] {
   /* Action blue — filled pills, links, bars */
-  --color-primary: #1464E8;
-  --color-primary-dark: #0E4FC4;
-  --color-primary-light: #4A8CF0;
-  --color-primary-tint: rgba(20, 100, 232, 0.08);
-  --color-primary-glow: rgba(20, 100, 232, 0.24);
+  --color-primary: #1E6FF2;
+  --color-primary-dark: #1558CC;
+  --color-primary-light: #5B9BF7;
+  --color-primary-tint: rgba(30, 111, 242, 0.08);
+  --color-primary-glow: rgba(30, 111, 242, 0.24);
   /* Navy ink for words — fixes the washed-out grey text */
   --color-text-primary: #10203A;
   --color-text-secondary: #42526B;
   --color-text-muted: #67758D;
-  /* Arctic canvas + structure: blue-tinted instead of neutral grey */
-  --color-main-bg: #EDF1F8;
-  --color-surface: #F3F7FC;
-  --background-muted: #E3EAF5;
+  /* Gradient canvas. --color-main-bg keeps a flat value: it doubles as a chip
+     and table-row fill elsewhere, where a gradient would look broken. */
+  --color-canvas:
+    radial-gradient(1100px 620px at 12% -18%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0) 55%),
+    linear-gradient(160deg, #E8F1FD 0%, #D6E5F7 45%, #C3D9F1 100%),
+    #E6EEFA;
+  --color-main-bg: #E6EEFA;
+  --background-muted: #DCE7F6;
   --color-chart-2: #24478F;
-  /* Deep-navy sidebar anchor */
-  --color-sidebar-bg: #14213D;
+  /* Translucent surfaces so the canvas shows through the card blur */
+  --color-surface: rgba(255, 255, 255, 0.55);
+  --color-surface-raised: rgba(255, 255, 255, 0.68);
+  --color-surface-overlay: rgba(255, 255, 255, 0.50);
+  --glass-border: rgba(23, 49, 92, 0.10);
+  --glass-border-subtle: rgba(23, 49, 92, 0.07);
+  --color-border: rgba(23, 49, 92, 0.10);
+  --color-border-light: rgba(23, 49, 92, 0.06);
+  /* Shadows tint to the ground — neutral grey goes muddy over blue */
+  --card-shadow:
+    0 1px 2px rgba(23, 49, 92, 0.06),
+    0 6px 20px rgba(23, 49, 92, 0.09);
+  --card-shadow-hover:
+    0 2px 6px rgba(23, 49, 92, 0.08),
+    0 14px 34px rgba(23, 49, 92, 0.14);
+  --kpi-shadow-hover: 0 10px 30px rgba(23, 49, 92, 0.16);
+  /* KPI ink — the base values are a hardcoded neutral grey that reads dirty
+     against a blue canvas */
+  --kpi-number-color: #10203A;
+  --kpi-label-color: #7286A6;
+  --kpi-sublabel-color: #7286A6;
+  /* Deep-navy sidebar anchor, graded so it doesn't read as a flat slab */
+  --color-sidebar-bg: linear-gradient(180deg, rgba(22, 38, 72, 0.94) 0%, rgba(14, 24, 48, 0.96) 100%);
   --color-sidebar-border: rgba(255, 255, 255, 0.08);
 }
 
@@ -483,18 +534,46 @@ input[type="checkbox"]:disabled {
   --color-text-primary: #E9EFFA;
   --color-text-secondary: #BAC8E2;
   --color-text-muted: #98ABCE;
-  --color-primary: #5B96F2;
-  --color-primary-tint: rgba(91, 150, 242, 0.16);
+  --color-primary: #6BA5F8;
+  --color-primary-tint: rgba(107, 165, 248, 0.16);
   --color-surface: rgba(255, 255, 255, 0.06);
   --color-border: rgba(255, 255, 255, 0.10);
   --color-border-light: rgba(255, 255, 255, 0.08);
   --background-muted: rgba(255, 255, 255, 0.08);
 }
 
+/* Union dark. Two attribute selectors beat dark.css's single `[data-theme]`
+   on specificity, so this wins regardless of dark.css being imported last —
+   no !important, no import-order dependency. The ground is a deep indigo
+   gradient rather than the default warm near-black, and the cards invert to a
+   light translucent film so the layering survives the theme flip. */
 :root[data-brand="union"][data-theme="dark"] {
-  --color-primary: #5B96F2;
+  --color-primary: #6BA5F8;
   --color-primary-dark: #3D7DE8;
-  --color-primary-light: #83B1F6;
-  --color-primary-tint: rgba(91, 150, 242, 0.16);
-  --color-primary-glow: rgba(91, 150, 242, 0.32);
+  --color-primary-light: #9AC2FB;
+  --color-primary-tint: rgba(107, 165, 248, 0.16);
+  --color-primary-glow: rgba(107, 165, 248, 0.32);
+  --color-canvas:
+    radial-gradient(900px 600px at 25% 10%, #2C3364 0%, #1A1D3D 55%, #14162E 100%),
+    #1A1D3D;
+  --color-main-bg: #1A1D3D;
+  --background-muted: rgba(255, 255, 255, 0.08);
+  --color-surface: rgba(255, 255, 255, 0.055);
+  --color-surface-raised: rgba(255, 255, 255, 0.075);
+  --color-surface-overlay: rgba(255, 255, 255, 0.05);
+  --glass-border: rgba(255, 255, 255, 0.10);
+  --glass-border-subtle: rgba(255, 255, 255, 0.07);
+  --color-border: rgba(255, 255, 255, 0.10);
+  --color-border-light: rgba(255, 255, 255, 0.06);
+  --card-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.30),
+    0 8px 24px rgba(0, 0, 0, 0.34);
+  --card-shadow-hover:
+    0 2px 6px rgba(0, 0, 0, 0.34),
+    0 16px 40px rgba(0, 0, 0, 0.44);
+  --kpi-shadow-hover: 0 14px 36px rgba(0, 0, 0, 0.42);
+  --kpi-number-color: #EEF3FC;
+  --kpi-label-color: #93A4C6;
+  --kpi-sublabel-color: #93A4C6;
+  --color-sidebar-bg: linear-gradient(180deg, rgba(28, 33, 72, 0.82) 0%, rgba(18, 21, 48, 0.88) 100%);
 }
