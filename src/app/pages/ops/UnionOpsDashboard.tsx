@@ -228,12 +228,15 @@ function MonthRollupCard() {
   )[0];
 
   return (
-    <div className="glass-card p-4">
+    <div className="glass-card flex flex-col p-4">
       <h2 className="flex items-center gap-2 text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
         <CircleCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
         {OPS_MONTH_LABEL}
       </h2>
-      <div className="mt-2 space-y-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+      {/* Spreads through the slack rather than pooling it under the last row:
+          this card shares a row with the taller task queue, which sets the
+          height. */}
+      <div className="mt-2 flex flex-1 flex-col justify-around gap-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
         {rows.map(row => (
           <div key={row.label} className="flex items-center justify-between">
             <span>{row.label}</span>
