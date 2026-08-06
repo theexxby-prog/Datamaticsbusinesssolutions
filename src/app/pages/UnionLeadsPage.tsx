@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   Users, Download, ShieldCheck, Building2,
-  Check, X, Sparkles,
+  Check, X, Sparkles, CheckCircle2, Clock,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { mockLeads, type Lead } from '../mockData';
@@ -15,6 +15,7 @@ import {
   getSignalAccount, signalMeta,
 } from '../data/signalRoom';
 import { useUnionPrefs } from '../config/unionPrefs';
+import { CLIENT_DELIVERY_CHANNELS } from '../config/deliveryMethods';
 import { exportLeadsToCSV } from '../utils/exportUtils';
 import { formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -267,6 +268,43 @@ export default function UnionLeadsPage() {
         >
           <Download className="h-4 w-4" /> Export CSV
         </button>
+      </div>
+
+      {/* How leads reach you. CSV is live today; the API and CRM push are
+          deliberately non-interactive — they are on the roadmap, not in the
+          September build, and a working connect flow here would overstate it. */}
+      <div
+        className="flex flex-wrap items-center gap-x-4 gap-y-2 rounded-xl border px-3 py-2"
+        style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
+        data-testid="delivery-channels"
+      >
+        <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+          Delivery
+        </span>
+        {CLIENT_DELIVERY_CHANNELS.map(channel => {
+          const live = channel.status === 'available';
+          return (
+            <span key={channel.key} className="inline-flex items-center gap-1.5">
+              {live
+                ? <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
+                : <Clock className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />}
+              <span className="text-[12px] font-semibold" style={{ color: live ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
+                {channel.label}
+              </span>
+              <span className="hidden text-[11.5px] sm:inline" style={{ color: 'var(--color-text-muted)' }}>
+                {channel.blurb}
+              </span>
+              {!live && (
+                <span
+                  className="rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                  style={{ background: 'var(--background-muted)', color: 'var(--color-text-muted)' }}
+                >
+                  Coming next
+                </span>
+              )}
+            </span>
+          );
+        })}
       </div>
 
       {/* Slim automated-QA line — people-level QA, so it only renders on the

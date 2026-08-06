@@ -131,6 +131,10 @@ export default function Dashboard() {
   // UNION preview only: campaigns are sold bundled, so the list chips each
   // campaign's type. Renuka and the TCC build keep the plain name.
   const showTypeChip = isClientRole && showFutureModules(currentUser);
+  // Self-serve campaign creation is hidden in the UNION preview until leadership
+  // has had the wholesale-vs-retail conversation. Hidden, not deleted — every
+  // other persona still gets the button.
+  const hideSelfServe = isClientRole && showFutureModules(currentUser);
   const tccClient = getPortalClient(currentUser);
   const managerName = accountTeam?.manager.name ?? 'Brijesh Singh';
 
@@ -268,15 +272,17 @@ export default function Dashboard() {
             <h1 className="text-[26px] font-extrabold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Campaign Dashboard</h1>
             <p className="mt-1 text-[15px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Every active campaign, pacing, delivery and billing in one place.</p>
           </div>
-          <button
-            onClick={() => setIsNewCampaignModalOpen(true)}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition-colors sm:w-auto"
-            style={{ background: 'var(--color-primary)' }}
-            onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
-            onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary)')}
-          >
-            <Plus className="h-4 w-4" strokeWidth={2.6} /> New campaign
-          </button>
+          {!hideSelfServe && (
+            <button
+              onClick={() => setIsNewCampaignModalOpen(true)}
+              className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition-colors sm:w-auto"
+              style={{ background: 'var(--color-primary)' }}
+              onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary)')}
+            >
+              <Plus className="h-4 w-4" strokeWidth={2.6} /> New campaign
+            </button>
+          )}
         </div>
 
         {/* KPI strip */}

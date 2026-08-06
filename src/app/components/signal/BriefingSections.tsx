@@ -2,7 +2,7 @@ import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import {
   RadioTower, Swords, Package, Layers,
-  ShieldCheck, Newspaper, AlertTriangle, UserCheck, CalendarClock,
+  ShieldCheck, Newspaper, AlertTriangle, UserCheck, CalendarClock, ExternalLink,
 } from 'lucide-react';
 import type { SignalAccount } from '../../data/signalRoom';
 import { fmtSignalDate } from './signalMeta';
@@ -21,17 +21,40 @@ export function Section({ icon: Icon, title, id, children }: { icon: LucideIcon;
   );
 }
 
-export function BulletList({ items }: { items: string[] }) {
+/** `linkFor` turns each bullet into an external link — used by Recent news so a
+ *  seller can open the story mid-call. Omit it and the list renders as plain
+ *  text exactly as before. */
+export function BulletList({ items, linkFor }: { items: string[]; linkFor?: (item: string) => string }) {
   return (
     <ul className="space-y-2">
       {items.map(item => (
         <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
           <span className="mt-[7px] h-1.5 w-1.5 flex-shrink-0 rounded-full" style={{ background: 'var(--color-primary)', opacity: 0.6 }} />
-          <span>{item}</span>
+          {linkFor ? (
+            <a
+              href={linkFor(item)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-start gap-1 underline-offset-2 transition-colors hover:text-[var(--color-primary)] hover:underline"
+              title="Open coverage in a new tab"
+            >
+              <span>{item}</span>
+              <ExternalLink className="mt-[3px] h-3 w-3 flex-shrink-0 opacity-0 transition-opacity group-hover:opacity-70" />
+            </a>
+          ) : (
+            <span>{item}</span>
+          )}
         </li>
       ))}
     </ul>
   );
+}
+
+/** Recent-news items are prose with no URL of their own, so link out to a news
+ *  search scoped to the account — always resolves, never a dead link. */
+export function newsSearchUrl(accountName: string, headline: string): string {
+  const words = headline.replace(/^\s*\d{4}:\s*|^\s*[A-Z][a-z]+ \d{4}:\s*/, '').split(/\s+/).slice(0, 9).join(' ');
+  return `https://news.google.com/search?q=${encodeURIComponent(`${accountName} ${words}`)}`;
 }
 
 export function ChipList({ items }: { items: string[] }) {
@@ -66,7 +89,7 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
   return (
     <div className="space-y-4">
       <Section icon={Newspaper} title="Recent news">
-        <BulletList items={account.recentNews} />
+        <BulletList items={account.recentNews} linkFor={item => newsSearchUrl(account.name, item)} />
       </Section>
 
       <Section icon={RadioTower} title="Buying signals">
@@ -91,7 +114,20 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
                 <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{trigger.text}</p>
                 <p className="mt-0.5 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
                   {trigger.date ? fmtSignalDate(trigger.date) : ''}
-                  {trigger.source ? ` · ${trigger.source}` : ''}
+                  {trigger.source && (
+                    <>
+                      {trigger.date ? ' · ' : ''}
+                      <a
+                        href={`https://${trigger.source}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="underline-offset-2 transition-colors hover:text-[var(--color-primary)] hover:underline"
+                        title={`Open ${trigger.source} in a new tab`}
+                      >
+                        {trigger.source}
+                      </a>
+                    </>
+                  )}
                 </p>
               </div>
             </div>

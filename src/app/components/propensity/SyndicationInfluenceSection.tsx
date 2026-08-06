@@ -1,22 +1,19 @@
 import { useNavigate } from 'react-router';
 import { Link2, Users, Building2, Flame } from 'lucide-react';
-import { getSyndicationInfluence, getAssetAnalytics } from '../../data/propensity';
+import { getSyndicationInfluence } from '../../data/propensity';
+import { getPeopleReached } from '../../data/outcomes';
 import { formatMoney as fmtMoney } from '../../utils/format';
 
 // The crosswalk pay-off: leads your syndication campaigns delivered, matched
 // into ABM target accounts, and how many of those accounts are now engaging
 // with the programmatic layer.
 
-
-// Propensity reports impressions, not unique people — reach = impressions /
-// avg frequency (3.2, the network's typical exposure count per person).
-const AVG_AD_FREQUENCY = 3.2;
-
 export function SyndicationInfluenceSection() {
   const navigate = useNavigate();
   const influence = getSyndicationInfluence();
-  const totalImpressions = getAssetAnalytics().reduce((sum, a) => sum + a.impressions, 0);
-  const peopleReached = Math.round(totalImpressions / AVG_AD_FREQUENCY);
+  // Propensity reports impressions, not unique people — the reach conversion
+  // lives in data/outcomes so the dashboard tile and this line always agree.
+  const peopleReached = getPeopleReached();
 
   const steps = [
     { icon: Users, label: 'Syndication leads delivered', value: influence.syndicationLeads, pct: 100 },

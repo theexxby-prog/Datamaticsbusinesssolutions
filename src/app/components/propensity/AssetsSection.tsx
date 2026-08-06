@@ -5,6 +5,9 @@ import { getAssetAnalytics, getAbmSummary, type AssetAnalytics, type AssetType }
 
 // Asset Analytics: per-creative performance, plus each asset's share of total
 // engagement so the "which content is pulling" story is one glance.
+//
+// NOTE: AssetType is the creative *format*, not the media channel — channels
+// live in PdnSpendDay (data/propensity.ts). Same words, different axes.
 
 const TYPE_META: Record<AssetType, { label: string; icon: typeof FileImage }> = {
   display: { label: 'Display', icon: FileImage },
@@ -12,14 +15,20 @@ const TYPE_META: Record<AssetType, { label: string; icon: typeof FileImage }> = 
   video: { label: 'Video', icon: Film },
 };
 
-export function AssetsSection() {
-  const assets = getAssetAnalytics();
+/** `abmCampaignId` scopes the view to one campaign — shares are recomputed
+ *  against the filtered set so the percentages still read as a whole. */
+export function AssetsSection({ abmCampaignId }: { abmCampaignId?: string } = {}) {
+  const all = getAssetAnalytics();
+  const assets = abmCampaignId ? all.filter(a => a.abmCampaignId === abmCampaignId) : all;
   const campaignName = new Map(getAbmSummary().map(c => [c.id, c.name]));
 
   const totalEngagements = assets.reduce((s, a) => s + a.engagements, 0);
   const share = [...assets]
     .sort((a, b) => b.engagements - a.engagements)
-    .map(a => ({ name: a.name, percentage: Math.round((a.engagements / totalEngagements) * 100) }));
+    .map(a => ({
+      name: a.name,
+      percentage: totalEngagements > 0 ? Math.round((a.engagements / totalEngagements) * 100) : 0,
+    }));
 
   const columns: Column<AssetAnalytics>[] = [
     {
@@ -29,7 +38,10 @@ export function AssetsSection() {
       render: a => (
         <div className="min-w-0">
           <div className="truncate font-bold" style={{ color: 'var(--color-text-primary)' }} title={a.name}>{a.name}</div>
-          <div className="truncate" style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{campaignName.get(a.abmCampaignId)}</div>
+          {/* The campaign line is noise once the view is already one campaign. */}
+          {!abmCampaignId && (
+            <div className="truncate" style={{ fontSize: '12px', color: 'var(--color-text-muted)' }}>{campaignName.get(a.abmCampaignId)}</div>
+          )}
         </div>
       ),
     },
@@ -103,7 +115,7 @@ export function AssetsSection() {
         getRowId={a => a.assetId}
         layout="fixed"
         searchPlaceholder="Search assets…"
-        countLabel={n => `${n} creatives in flight`}
+        countLabel={n => (abmCampaignId ? `${n} creatives on this campaign` : `${n} creatives in flight`)}
         empty={{ icon: FileImage, title: 'No assets yet', description: 'Creative performance appears once campaigns serve.' }}
       />
     </div>

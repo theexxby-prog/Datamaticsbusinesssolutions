@@ -46,6 +46,7 @@ const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
 // non-UNION-OPS visit to /dashboard (isUnionOpsPath guard).
 const UnionOpsDashboard = lazy(() => import('./pages/ops/UnionOpsDashboard'));
 const UnionOpsIntake = lazy(() => import('./pages/ops/UnionOpsIntake'));
+const UnionOpsCampaign = lazy(() => import('./pages/ops/UnionOpsCampaign'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
 // RouteLoader is a 2px brand-coloured bar that's barely noticeable and
@@ -150,6 +151,10 @@ const appRoutes: RouteObject[] = [
   {
     path: '/ops-union/intake',
     Component: withSuspense(UnionOpsIntake),
+  },
+  {
+    path: '/ops-union/campaigns/:id',
+    Component: withSuspense(UnionOpsCampaign),
   },
   {
     path: '/internal/dashboard',

@@ -2,7 +2,7 @@ import type { Campaign, Client } from './mockClients';
 import { allClients } from './mockClients';
 import type { Lead } from '../mockData';
 import type { User } from '../context/AuthContext';
-import { showFutureModules } from '../config/demo';
+import { showUnionIdentity } from '../config/demo';
 
 // ─── The UNION login's client identity ───────────────────────────────────────
 // The UNION preview is shown to partners and prospects, so it must not carry a
@@ -47,7 +47,7 @@ export const unionClient: Client = {
 
 /** The client whose data the portal shows for this login. */
 export function getPortalClient(user: User | null): Client {
-  return showFutureModules(user) ? unionClient : sourceClient;
+  return showUnionIdentity(user) ? unionClient : sourceClient;
 }
 
 /** Campaign lookup that applies the UNION identity when appropriate. */
@@ -55,7 +55,7 @@ export function resolveCampaignForUser(
   user: User | null,
   campaignId: string | undefined,
 ): { campaign: Campaign; client: Client } | null {
-  for (const c of showFutureModules(user) ? [unionClient, ...allClients.filter(x => x.id !== 'client_1')] : allClients) {
+  for (const c of showUnionIdentity(user) ? [unionClient, ...allClients.filter(x => x.id !== 'client_1')] : allClients) {
     const campaign = c.campaigns.find(camp => camp.id === campaignId);
     if (campaign) return { campaign, client: c };
   }

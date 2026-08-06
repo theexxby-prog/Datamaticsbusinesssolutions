@@ -97,7 +97,7 @@ export function CampaignKpiBand({
       sub: 'Automated validation',
       Icon: ShieldCheck,
       tone: 'var(--color-accent-purple)',
-      toneBg: 'rgba(99,102,241,0.1)',
+      toneBg: 'var(--color-accent-purple-bg)',
     });
   }
 

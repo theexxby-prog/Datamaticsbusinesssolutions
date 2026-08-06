@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { Shield, CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
 interface ConvertrQAStatsProps {
@@ -5,9 +6,11 @@ interface ConvertrQAStatsProps {
   valid: number;
   caution: number;
   invalid: number;
+  /** Closing line. Defaults to the client-facing wording; ops passes its own. */
+  footnote?: ReactNode;
 }
 
-export function ConvertrQAStats({ totalProcessed, valid, caution, invalid }: ConvertrQAStatsProps) {
+export function ConvertrQAStats({ totalProcessed, valid, caution, invalid, footnote }: ConvertrQAStatsProps) {
   const validPct = totalProcessed > 0 ? Math.round((valid / totalProcessed) * 100) : 0;
   const cautionPct = totalProcessed > 0 ? Math.round((caution / totalProcessed) * 100) : 0;
   const invalidPct = totalProcessed > 0 ? Math.round((invalid / totalProcessed) * 100) : 0;
@@ -64,7 +67,7 @@ export function ConvertrQAStats({ totalProcessed, valid, caution, invalid }: Con
       </div>
 
       <p className="mt-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-        Lead validation is handled automatically. Accepted leads are delivered to your CRM in real-time.
+        {footnote ?? 'Lead validation is handled automatically. Accepted leads are delivered to your CRM in real-time.'}
       </p>
     </div>
   );

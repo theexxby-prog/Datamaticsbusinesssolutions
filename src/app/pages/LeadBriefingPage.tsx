@@ -167,6 +167,24 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             {accountFactLine(account, false)}
           </p>
         )}
+        {/* The stack, in front of the seller on the call. A chip row rather than
+            a full section — the rest of the account read stays on the account page. */}
+        {account && account.techStack.length > 0 && (
+          <div className="mt-2 flex flex-wrap items-center gap-1.5">
+            <span className="text-[10.5px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+              Stack
+            </span>
+            {account.techStack.map(tech => (
+              <span
+                key={tech}
+                className="rounded-full border px-2 py-0.5 text-[11px] font-medium"
+                style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface-raised)', color: 'var(--color-text-secondary)' }}
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
 
       {derivedIntel && synthesis && <div id="sec-synth"><SynthesisBlock synthesis={synthesis} /></div>}
