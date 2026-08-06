@@ -406,7 +406,7 @@ export default function UnionOpsCampaign() {
         )}
       </div>
 
-      <div className="grid grid-cols-1 items-start gap-5 lg:grid-cols-5">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
         <div className="space-y-4 lg:col-span-3">
           <CampaignAnalyticsTabs
             tabs={[
@@ -477,12 +477,13 @@ export default function UnionOpsCampaign() {
           )}
         </div>
 
-        <div id="campaign-discussion" className="lg:col-span-2 lg:sticky lg:top-5">
+        <div id="campaign-discussion" className="lg:relative lg:col-span-2">
           <CampaignThread
             campaignId={campaign.id}
             campaignName={pipeline.campaignName}
             activities={lens(getActivitiesForCampaign(campaign.id))}
             variant="rail"
+            fill
           />
         </div>
       </div>

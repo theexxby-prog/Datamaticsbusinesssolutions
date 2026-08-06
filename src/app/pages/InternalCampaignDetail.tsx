@@ -130,7 +130,7 @@ export default function InternalCampaignDetail() {
           onOpenRequests={() => document.getElementById('campaign-discussion')?.scrollIntoView({ behavior: 'smooth', block: 'start' })}
         />
 
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5 items-start">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
           <div className="lg:col-span-3">
             <CampaignAnalyticsTabs
               tabs={[{
@@ -175,12 +175,13 @@ export default function InternalCampaignDetail() {
             />
           </div>
 
-          <div id="campaign-discussion" className="lg:col-span-2 lg:sticky lg:top-5">
+          <div id="campaign-discussion" className="lg:relative lg:col-span-2">
             <CampaignThread
               campaignId={campaign.id}
               campaignName={campaign.name}
               activities={getActivitiesForCampaign(campaign.id)}
               variant="rail"
+            fill
             />
           </div>
         </div>

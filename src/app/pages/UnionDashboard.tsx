@@ -160,6 +160,30 @@ export default function UnionDashboard() {
 
   const allWidgetsOff = Object.values(prefs.widgets).every(on => !on);
 
+  // ── Widget grid spans ──────────────────────────────────────────────────────
+  // Six cards share one 3-column grid and every one of them is independently
+  // switchable in Account settings. Hardcoding the spans only fills the rows for
+  // the default combination: turn on Invoices & documents, say, and the last
+  // card can no longer fit beside it, so it wraps and leaves two empty columns
+  // sitting mid-page — a hole, not a trailing gap.
+  //
+  // Instead each card takes its natural span and the *last* rendered one absorbs
+  // whatever is left of its row (a whole row if it starts a fresh one). Every
+  // combination ends flush.
+  const GRID_COLS = 3;
+  const NATURAL_SPAN: Partial<Record<keyof typeof prefs.widgets, number>> = { campaigns: 2 };
+  const SPAN_CLASS: Record<number, string> = { 1: '', 2: 'xl:col-span-2', 3: 'xl:col-span-3' };
+  const gridWidgets = (['campaigns', 'outcomes', 'invoicesDocs', 'programmatic', 'leadsIntel', 'freshSignals'] as const)
+    .filter(key => prefs.widgets[key]);
+  const spanClass: Partial<Record<(typeof gridWidgets)[number], string>> = {};
+  let cellsUsed = 0;
+  gridWidgets.forEach((key, i) => {
+    const remainder = (GRID_COLS - (cellsUsed % GRID_COLS)) % GRID_COLS;
+    const span = i === gridWidgets.length - 1 ? remainder || GRID_COLS : NATURAL_SPAN[key] ?? 1;
+    spanClass[key] = SPAN_CLASS[span];
+    cellsUsed += span;
+  });
+
   return (
     <div className="max-w-[1600px] mx-auto page-content space-y-4">
       {/* Greeting */}
@@ -269,7 +293,7 @@ export default function UnionDashboard() {
       <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
         {prefs.widgets.campaigns && (<>
         {/* Content syndication campaigns */}
-        <div className="glass-card p-4 xl:col-span-2">
+        <div className={`glass-card p-4 ${spanClass.campaigns ?? ''}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
@@ -343,7 +367,7 @@ export default function UnionDashboard() {
         </>)}
         {prefs.widgets.outcomes && (<>
         {/* Lead outcomes — what happened after delivery */}
-        <div className="glass-card p-4">
+        <div className={`glass-card flex flex-col p-4 ${spanClass.outcomes ?? ''}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
@@ -359,7 +383,10 @@ export default function UnionDashboard() {
               pipeline influenced · {fmtMoney(outcomes.wonValue)} closed-won
             </span>
           </div>
-          <div className="space-y-1.5">
+          {/* Grows into the slack: this card sits beside the taller Campaigns
+              card, and without this the extra height pooled as dead space under
+              the last row instead of breathing through the funnel. */}
+          <div className="flex flex-1 flex-col justify-around gap-1.5">
             {([
               ['Delivered', outcomes.delivered],
               ['Accepted', outcomes.accepted],
@@ -418,7 +445,7 @@ export default function UnionDashboard() {
         </>)}
         {prefs.widgets.invoicesDocs && (<>
         {/* Invoices & documents */}
-        <div className="glass-card p-4">
+        <div className={`glass-card p-4 ${spanClass.invoicesDocs ?? ''}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Receipt className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
@@ -472,7 +499,7 @@ export default function UnionDashboard() {
         </>)}
         {prefs.widgets.programmatic && (<>
         {/* Programmatic mini */}
-        <div className="glass-card p-4">
+        <div className={`glass-card p-4 ${spanClass.programmatic ?? ''}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Radar className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
@@ -503,10 +530,7 @@ export default function UnionDashboard() {
         </>)}
         {prefs.widgets.leadsIntel && (<>
         {/* Accounts & next actions */}
-        {/* Fresh signals sits beside this card and is off by default. When it is
-            off nothing else occupies the row, so span the full three columns —
-            col-span-2 left a third of the row empty and read as a missing card. */}
-        <div className={`glass-card p-4 ${prefs.widgets.freshSignals ? '' : 'xl:col-span-3'}`}>
+        <div className={`glass-card p-4 ${spanClass.leadsIntel ?? ''}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Sparkles className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
@@ -579,7 +603,7 @@ export default function UnionDashboard() {
         </>)}
         {prefs.widgets.freshSignals && (<>
         {/* Fresh signals */}
-        <div className="glass-card p-4">
+        <div className={`glass-card p-4 ${spanClass.freshSignals ?? ''}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <FileBarChart className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />

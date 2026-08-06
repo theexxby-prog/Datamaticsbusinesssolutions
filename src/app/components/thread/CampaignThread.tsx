@@ -102,9 +102,23 @@ interface CampaignThreadProps {
    * everything below it off the page and gets longer every week.
    */
   variant?: 'inline' | 'rail';
+  /**
+   * Rail only: take the height of the column instead of the viewport, so the
+   * thread bottom-aligns with whatever sits beside it. A viewport-derived cap
+   * leaves the rail ending short of its neighbour, which reads as a broken
+   * column.
+   *
+   * From `lg` up this positions absolutely inside the parent cell, which must
+   * therefore be `relative`. That is deliberate: a conversation has unbounded
+   * length, so an in-flow `h-full` makes the thread *drive* the row height
+   * rather than fill it — the feed stops scrolling internally and the page just
+   * gets longer. Taking it out of flow lets the column beside it set the height
+   * and gives the feed a definite box to scroll inside.
+   */
+  fill?: boolean;
 }
 
-export function CampaignThread({ campaignId, campaignName, activities = [], variant = 'inline' }: CampaignThreadProps) {
+export function CampaignThread({ campaignId, campaignName, activities = [], variant = 'inline', fill = false }: CampaignThreadProps) {
   const isRail = variant === 'rail';
   const { currentUser } = useAuth();
   const { entriesFor, addComment, addChangeRequest, addAttachment, setRequestStatus } = useCampaignThread();
@@ -173,7 +187,14 @@ export function CampaignThread({ campaignId, campaignName, activities = [], vari
   return (
     <div
       className={`glass-card flex flex-col ${
-        isRail ? 'max-h-[calc(100vh-16rem)] min-h-[26rem] p-5' : 'p-6'
+        isRail
+          ? `min-h-[26rem] p-5 max-h-[calc(100vh-16rem)] ${
+              // Below lg there is no column to match, so the viewport cap above
+              // stays and keeps the feed scrolling internally. Dropping it at
+              // every width let the thread run to its full length on phones.
+              fill ? 'lg:absolute lg:inset-0 lg:h-full lg:max-h-none' : ''
+            }`
+          : 'p-6'
       }`}
     >
       <div className="mb-3 flex flex-wrap items-center gap-x-3 gap-y-1">
