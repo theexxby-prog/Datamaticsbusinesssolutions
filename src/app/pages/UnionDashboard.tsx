@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import {
   Users, Layers, TrendingUp, TrendingDown, Sparkles, Radar, ArrowRight, AlertCircle,
   FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone, ClipboardList,
-  CalendarDays, Truck,
+  CalendarDays, Truck, LayoutGrid,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { unionClient, UNION_CLIENT_ID } from '../data/unionClient';
@@ -153,6 +153,7 @@ export default function UnionDashboard() {
     },
   ].filter((x): x is NonNullable<typeof x> => Boolean(x));
 
+  const allWidgetsOff = Object.values(prefs.widgets).every(on => !on);
 
   return (
     <div className="max-w-[1600px] mx-auto page-content space-y-4">
@@ -175,6 +176,25 @@ export default function UnionDashboard() {
           </div>
         </div>
       </div>
+
+      {/* Every section hidden — point at the switch that brings them back */}
+      {allWidgetsOff && (
+        <div
+          className="glass-card flex flex-col items-center gap-2 p-10 text-center"
+          data-testid="dashboard-empty-state"
+        >
+          <LayoutGrid className="h-8 w-8" style={{ color: 'var(--color-text-muted)' }} />
+          <div className="text-[15px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+            All dashboard sections are hidden
+          </div>
+          <p className="max-w-sm text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            Turn sections back on in Account settings — each one has a switch under the Dashboard tab.
+          </p>
+          <button onClick={() => navigate('/account?tab=dashboard')} className="btn-primary mt-1 px-4 py-2 text-sm">
+            Open dashboard settings
+          </button>
+        </div>
+      )}
 
       {/* Needs attention — off by default per Ben; toggleable in Account settings */}
       {prefs.widgets.attention && attention.length > 0 && (

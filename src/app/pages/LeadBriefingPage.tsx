@@ -3,13 +3,14 @@ import { useNavigate, useParams } from 'react-router';
 import {
   ArrowLeft, Mail, Phone, Globe2, BrainCircuit, AlertTriangle, MessageSquare,
   Heart, Compass, ShieldQuestion, Sparkles, MapPin, Award, Layers,
-  CheckCircle, XCircle, Clock, User as UserIcon,
+  CheckCircle, XCircle, Clock, User as UserIcon, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { showFutureModules } from '../config/demo';
 import {
   signalContactFromLeadId, getSignalAccount, getSynthesis, signalMeta,
+  getCommittee, signalLeadId,
 } from '../data/signalRoom';
 import { mockLeads, type Lead } from '../mockData';
 import { getRelishIntel } from '../data/relish';
@@ -56,6 +57,13 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
   const account = getSignalAccount(contact.companySlug);
   const synthesis = getSynthesis(contact.id);
 
+  // Prev/next through the buying committee in strip order — work the sequence
+  // on a call without bouncing back to the list.
+  const committee = getCommittee(contact);
+  const committeeIdx = committee.findIndex(m => m.id === contact.id);
+  const prevMember = committeeIdx > 0 ? committee[committeeIdx - 1] : undefined;
+  const nextMember = committeeIdx >= 0 && committeeIdx < committee.length - 1 ? committee[committeeIdx + 1] : undefined;
+
   const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
   return (
@@ -84,10 +92,37 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             </button>
           ))}
         </div>
-        <span className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-          <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--color-primary)' }} />
-          {signalMeta.campaign} · enriched by {signalMeta.enrichedBy}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="hidden items-center gap-1.5 text-[11px] sm:flex" style={{ color: 'var(--color-text-muted)' }}>
+            <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--color-primary)' }} />
+            {signalMeta.campaign} · enriched by {signalMeta.enrichedBy}
+          </span>
+          {(prevMember || nextMember) && (
+            <span className="flex items-center gap-1">
+              <button
+                disabled={!prevMember}
+                onClick={() => prevMember && navigate(`/leads/${signalLeadId(prevMember.id)}`)}
+                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+                title={prevMember ? `Previous on the committee: ${prevMember.name}` : undefined}
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                <span className="hidden max-w-[110px] truncate md:inline">{prevMember?.name.split(' ')[0] ?? 'Prev'}</span>
+              </button>
+              <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>
+                {committeeIdx + 1}/{committee.length}
+              </span>
+              <button
+                disabled={!nextMember}
+                onClick={() => nextMember && navigate(`/leads/${signalLeadId(nextMember.id)}`)}
+                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+                title={nextMember ? `Next on the committee: ${nextMember.name}` : undefined}
+              >
+                <span className="hidden max-w-[110px] truncate md:inline">{nextMember?.name.split(' ')[0] ?? 'Next'}</span>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Header — identity in one tight block */}
@@ -339,7 +374,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
           <Section icon={UserIcon} title="Notes">
             <div className="space-y-2.5">
               {[
-                { author: 'Renuka Lawless', date: '2026-02-28', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
+                { author: 'Jordan Blake', date: '2026-02-28', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
                 { author: 'Brijesh Singh', date: '2026-02-26', text: 'Company matches ICP perfectly. High potential for conversion.' },
               ].map(note => (
                 <div key={note.text} className="rounded-xl border p-3" style={{ borderColor: 'var(--color-border-light)' }}>

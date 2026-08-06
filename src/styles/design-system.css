@@ -473,7 +473,7 @@ input[type="checkbox"]:disabled {
   --background-muted: #E3EAF5;
   --color-chart-2: #24478F;
   /* Deep-navy sidebar anchor */
-  --color-sidebar-bg: #0D1830;
+  --color-sidebar-bg: #14213D;
   --color-sidebar-border: rgba(255, 255, 255, 0.08);
 }
 
@@ -482,7 +482,7 @@ input[type="checkbox"]:disabled {
 :root[data-brand="union"] .app-sidebar {
   --color-text-primary: #E9EFFA;
   --color-text-secondary: #BAC8E2;
-  --color-text-muted: #8FA3C8;
+  --color-text-muted: #98ABCE;
   --color-primary: #5B96F2;
   --color-primary-tint: rgba(91, 150, 242, 0.16);
   --color-surface: rgba(255, 255, 255, 0.06);

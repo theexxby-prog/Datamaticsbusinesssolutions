@@ -42,6 +42,10 @@ const DemographicsEntryPage = lazy(() => import('./pages/DemographicsEntryPage')
 // The briefing pages additionally self-guard on unknown ids.
 const LeadBriefingPage = lazy(() => import('./pages/LeadBriefingPage'));
 const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
+// UNION OPS mirror: registered for everyone, but AppLayout bounces any
+// non-UNION-OPS visit to /dashboard (isUnionOpsPath guard).
+const UnionOpsDashboard = lazy(() => import('./pages/ops/UnionOpsDashboard'));
+const UnionOpsIntake = lazy(() => import('./pages/ops/UnionOpsIntake'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
 // RouteLoader is a 2px brand-coloured bar that's barely noticeable and
@@ -138,6 +142,14 @@ const appRoutes: RouteObject[] = [
     // links and bookmarks land on the campaign list instead.
     path: '/programmatic',
     element: <Navigate to="/campaigns" replace />,
+  },
+  {
+    path: '/ops-union',
+    Component: withSuspense(UnionOpsDashboard),
+  },
+  {
+    path: '/ops-union/intake',
+    Component: withSuspense(UnionOpsIntake),
   },
   {
     path: '/internal/dashboard',

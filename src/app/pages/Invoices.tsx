@@ -22,6 +22,8 @@ import {
 } from '../utils/invoiceWorkflow';
 import type { InvoiceRecord } from '../types';
 import { formatDate } from '../utils/formatDate';
+import { showFutureModules } from '../config/demo';
+import { getBillingPosition } from '../data/outcomes';
 
 type InvoicePerspective = 'client' | 'accounts' | 'readonly';
 
@@ -608,6 +610,30 @@ export default function Invoices() {
           <h1 style={{ color: 'var(--color-text-primary)' }}>Invoices</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>{subtitle}</p>
         </div>
+
+        {/* UNION: billing position vs the annual commitment — same numbers as
+            the dashboard box, reconciling visibly with this page's list. */}
+        {perspective === 'client' && showFutureModules(currentUser) && (() => {
+          const pos = getBillingPosition();
+          return (
+            <div
+              className="mb-5 rounded-xl border px-4 py-3"
+              style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
+              data-testid="billing-position-bar"
+            >
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[12.5px]">
+                <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>FY2026 billing position</span>
+                <span style={{ color: 'var(--color-text-secondary)' }}>
+                  <b style={{ color: 'var(--color-text-primary)' }}>{formatUSD(pos.billed)}</b> billed of {formatUSD(pos.contracted)} contracted ·{' '}
+                  <b style={{ color: 'var(--color-primary)' }}>{formatUSD(pos.remaining)}</b> remaining
+                </span>
+              </div>
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                <div className="h-full rounded-full" style={{ width: `${pos.pct}%`, background: 'var(--color-primary)' }} />
+              </div>
+            </div>
+          );
+        })()}
 
         {/* KPI row */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5 stagger-children">

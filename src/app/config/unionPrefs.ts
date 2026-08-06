@@ -25,6 +25,19 @@ export interface UnionPrefs {
   leadsSignalsColumn: boolean;
 }
 
+export const UNION_WIDGET_DESCRIPTIONS: Record<UnionWidgetKey, string> = {
+  attention: 'Action chips at the very top — overdue invoice, pending leads, signatures, at-risk delivery.',
+  stats: 'The three linked Month/Quarter/Year boxes: active campaigns, leads, billed vs contracted.',
+  campaigns: 'Per-campaign progress, pacing forecast, type, and the hottest lead.',
+  outcomes: 'Delivered → accepted → CRM → opportunities → closed-won funnel, impressions, acceptance trend.',
+  leadsIntel: 'Top enriched accounts and the next-best-action list from lead intelligence.',
+  freshSignals: 'Latest buying signals and news events across enriched accounts.',
+  invoicesDocs: 'Outstanding balance and latest invoices — also shows/hides the Invoices and Documents menu items.',
+  programmatic: 'Programmatic ad summary: spend, ROI, accounts engaged.',
+  comingUp: 'The next scheduled lead deliveries and invoice due dates.',
+  team: 'Your campaign manager, backup, and operations contact with the next business review.',
+};
+
 export const UNION_WIDGET_LABELS: Record<UnionWidgetKey, string> = {
   attention: 'Needs-attention strip',
   stats: 'Key numbers (campaigns · leads · billing)',
@@ -74,6 +87,12 @@ function load(): UnionPrefs {
 
 let current = typeof window === 'undefined' ? DEFAULTS : load();
 const listeners = new Set<() => void>();
+
+/** Non-hook snapshot for non-component callers (nav building). Components that
+ *  need reactivity subscribe via useUnionPrefs. */
+export function getUnionPrefsSnapshot(): UnionPrefs {
+  return current;
+}
 
 function emit() {
   listeners.forEach(l => l());

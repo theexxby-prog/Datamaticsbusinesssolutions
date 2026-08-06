@@ -1,5 +1,6 @@
 import { PersonAvatar } from '../components/PersonAvatar';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import {
   User, Mail, Phone, Building2, MapPin, Globe, Lock, Bell, Shield,
   Smartphone, Monitor, Users, UserPlus, Trash2, Edit, Check, X,
@@ -14,7 +15,7 @@ import { NotificationsTabContent } from '../components/NotificationsTabContent';
 import { DASH_METRICS, getDashPrefs, setDashMetric, type DashMetricKey } from '../data/dashboardPrefs';
 import { useUnionLens } from '../hooks/useUnionLens';
 import { showFutureModules } from '../config/demo';
-import { useUnionPrefs, setUnionWidget, setDerivedIntel, setLeadsSignalsColumn, UNION_WIDGET_LABELS, type UnionWidgetKey } from '../config/unionPrefs';
+import { useUnionPrefs, setUnionWidget, setDerivedIntel, setLeadsSignalsColumn, UNION_WIDGET_LABELS, UNION_WIDGET_DESCRIPTIONS, type UnionWidgetKey } from '../config/unionPrefs';
 
 export default function Account() {
   useDocumentTitle('Account Settings');
@@ -22,7 +23,12 @@ export default function Account() {
   const lens = useUnionLens();
   const unionPrefs = useUnionPrefs();
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'company' | 'team' | 'security' | 'notifications' | 'dashboard'>('profile');
+  // Deep links (e.g. the dashboard's empty-state) can open a specific tab.
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'profile' | 'company' | 'team' | 'security' | 'notifications' | 'dashboard'>(() => {
+    const t = searchParams.get('tab');
+    return t === 'dashboard' || t === 'notifications' ? t : 'profile';
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [dashPrefs, setDashPrefs] = useState(getDashPrefs);
 
@@ -154,9 +160,14 @@ export default function Account() {
                 {(Object.keys(UNION_WIDGET_LABELS) as UnionWidgetKey[]).map((key) => {
                   const on = unionPrefs.widgets[key];
                   return (
-                    <div key={key} className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
-                      <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-                        {UNION_WIDGET_LABELS[key]}
+                    <div key={key} className="flex items-center justify-between gap-4 p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                      <div>
+                        <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                          {UNION_WIDGET_LABELS[key]}
+                        </div>
+                        <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                          {UNION_WIDGET_DESCRIPTIONS[key]}
+                        </div>
                       </div>
                       <button
                         onClick={() => setUnionWidget(key, !on)}
@@ -171,7 +182,10 @@ export default function Account() {
                     </div>
                   );
                 })}
-                <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                <h3 className="pt-2" style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                  Data display
+                </h3>
+                <div className="flex items-center justify-between gap-4 p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
                   <div>
                     <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
                       Signals column (Accounts list)

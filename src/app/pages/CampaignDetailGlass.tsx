@@ -16,6 +16,7 @@ import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgramm
 import { CampaignDemographics } from '../components/campaign/CampaignDemographics';
 import { showFutureModules } from '../config/demo';
 import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from '../data/propensity';
+import { campaignTypeFor } from '../data/outcomes';
 import { useCampaignThread } from '../context/CampaignThreadContext';
 import { useAuth } from '../context/AuthContext';
 import { useUnionLens } from '../hooks/useUnionLens';
@@ -156,6 +157,14 @@ export default function CampaignDetail() {
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pl-1">
               <span className={getStatusColor(campaign.status)}>{formatStatus(campaign.status)}</span>
+              {showFuture && (
+                <span
+                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                  style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                >
+                  {campaignTypeFor(campaign.id)}
+                </span>
+              )}
               <CampaignHealthBadge health={health} showDetails />
               {campaign.startDate && campaign.endDate && (
                 <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>

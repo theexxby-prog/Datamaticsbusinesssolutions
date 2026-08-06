@@ -11,7 +11,10 @@ import {
   isDemoGateOpen,
   isFutureModulePath,
   showFutureModules,
+  isUnionOps,
+  isUnionOpsPath,
 } from '../config/demo';
+import { Eye } from 'lucide-react';
 
 // The persistent app shell, mounted once as a router layout route. Pages
 // render into <Outlet/>; the sidebar, mobile app bar, and tab bar survive
@@ -24,7 +27,7 @@ import {
 export function AppLayout() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
+  const { currentUser, isPreviewingClient, setPreviewingClient } = useAuth();
   const scrollColumnRef = useRef<HTMLDivElement>(null);
 
   // Three shell-level guards, all enforced here (not just in Login) because
@@ -39,13 +42,18 @@ export function AppLayout() {
   const blockedInternal = IS_CLIENT_DEMO && isInternalPath(location.pathname);
   const blockedFuture =
     isFutureModulePath(location.pathname) && !showFutureModules(currentUser);
+  // The ops mirror belongs to the UNION OPS login alone. While previewing the
+  // client, currentUser IS the client — so ops routes bounce there too, which
+  // is exactly right: the preview shows only what the client can see.
+  const blockedOpsUnion = isUnionOpsPath(location.pathname) && !isUnionOps(currentUser);
 
   // The retail brand: UNION previews the future product, which is Tech Blue.
   // Stamping <html> lets the token layer flip every primary-coloured element
-  // without touching components; all other logins keep Datamatics red.
+  // without touching components; all other logins keep Datamatics red. The
+  // ops mirror is the same product's kitchen, so it shares the brand.
   useEffect(() => {
     const root = document.documentElement;
-    if (showFutureModules(currentUser)) root.setAttribute('data-brand', 'union');
+    if (showFutureModules(currentUser) || isUnionOps(currentUser)) root.setAttribute('data-brand', 'union');
     else root.removeAttribute('data-brand');
     return () => root.removeAttribute('data-brand');
   }, [currentUser]);
@@ -55,8 +63,10 @@ export function AppLayout() {
       navigate('/', { replace: true });
     } else if (blockedInternal || blockedFuture) {
       navigate('/dashboard', { replace: true });
+    } else if (blockedOpsUnion) {
+      navigate('/dashboard', { replace: true });
     }
-  }, [gateClosed, blockedInternal, blockedFuture, navigate]);
+  }, [gateClosed, blockedInternal, blockedFuture, blockedOpsUnion, navigate]);
 
   // With a persistent shell the scroll position no longer resets via remount;
   // reset both scroll containers (document on mobile, inner column on desktop)
@@ -66,7 +76,7 @@ export function AppLayout() {
     scrollColumnRef.current?.scrollTo(0, 0);
   }, [location.pathname]);
 
-  if (gateClosed || blockedInternal || blockedFuture) {
+  if (gateClosed || blockedInternal || blockedFuture || blockedOpsUnion) {
     return null; // guard against a flash of blocked content before redirect
   }
 
@@ -114,6 +124,30 @@ export function AppLayout() {
 
       {/* Mobile Bottom Tab Bar — only visible below md breakpoint */}
       <MobileTabBar />
+
+      {/* UNION OPS previewing the client portal: floating pill with the way
+          back. Sits above the mobile tab bar; on desktop it floats free. */}
+      {isPreviewingClient && (
+        <div className="pointer-events-none fixed inset-x-0 bottom-20 z-[90] flex justify-center md:bottom-5">
+          <div
+            className="pointer-events-auto flex items-center gap-2.5 rounded-full py-2 pl-4 pr-2 shadow-xl"
+            style={{ background: 'var(--color-surface-inverse)', color: 'var(--color-text-inverse)' }}
+            data-testid="client-preview-bar"
+          >
+            <Eye className="h-4 w-4 flex-shrink-0" style={{ opacity: 0.75 }} />
+            <span className="text-[12.5px] font-semibold">
+              Viewing as Northwind Technologies
+            </span>
+            <button
+              onClick={() => { setPreviewingClient(false); navigate('/ops-union'); }}
+              className="rounded-full px-3 py-1.5 text-[12px] font-bold transition-opacity hover:opacity-85"
+              style={{ background: 'var(--color-text-inverse)', color: 'var(--color-surface-inverse)' }}
+            >
+              Exit preview
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

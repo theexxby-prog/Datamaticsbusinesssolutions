@@ -17,10 +17,11 @@ import { useTheme } from '../context/ThemeContext';
 import { getAssignedClients } from '../data/mockClients';
 import { LeadUploadModal } from './LeadUploadModal';
 import { getNavForRole, useNavBadges, type NavItem } from '../config/navigation';
-import { showFutureModules } from '../config/demo';
+import { showFutureModules, isUnionOps } from '../config/demo';
 import { NotificationPanel } from './NotificationPanel';
 import { useNotifications } from '../context/NotificationContext';
 import { PersonAvatar } from './PersonAvatar';
+import { useUnionPrefs } from '../config/unionPrefs';
 
 interface SidebarProps {
   collapsed?: boolean;
@@ -133,8 +134,11 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
     quickActionIcon?: LucideIcon;
     quickActionHandler?: () => void;
   };
+  // Subscribing keeps the menu in sync with the widget toggles (the
+  // "Invoices & documents" pref governs those menu items for UNION).
+  const unionPrefs = useUnionPrefs();
   const navigation = useMemo(() => {
-    return getNavForRole(currentUser?.role, showFutureModules(currentUser)).map((item): SidebarNavItem => {
+    return getNavForRole(currentUser?.role, showFutureModules(currentUser), isUnionOps(currentUser)).map((item): SidebarNavItem => {
       const count = item.badgeKey ? badges[item.badgeKey] : undefined;
       return {
         ...item,
@@ -149,7 +153,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           : {}),
       };
     });
-  }, [currentUser, badges]);
+  }, [currentUser, badges, unionPrefs]);
 
   const groupedNav = useMemo(() => navigation.reduce((acc, item) => {
     if (!acc[item.section]) acc[item.section] = [];

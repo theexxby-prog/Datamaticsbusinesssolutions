@@ -269,7 +269,9 @@ export default function UnionLeadsPage() {
         </button>
       </div>
 
-      {/* Slim automated-QA line */}
+      {/* Slim automated-QA line — people-level QA, so it only renders on the
+          People lens; on Accounts it's noise. */}
+      {lens === 'people' && (
       <div
         className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border px-3 py-2"
         style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
@@ -289,6 +291,7 @@ export default function UnionLeadsPage() {
           <b style={{ color: 'var(--color-error)' }}>{qaInvalid}</b> invalid of {qaTotal.toLocaleString('en-US')} processed · accepted leads sync to your CRM in real time
         </span>
       </div>
+      )}
 
       {/* Lens toggle */}
       <div
