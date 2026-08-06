@@ -189,9 +189,30 @@ export interface PeriodStats {
   remainingYear: number;
 }
 
+/** Start/end of the period the toggle is showing, in the current year. */
+function periodWindow(period: StatPeriod): { from: Date; to: Date } {
+  const now = new Date();
+  const y = now.getFullYear();
+  if (period === 'month') return { from: new Date(y, now.getMonth(), 1), to: new Date(y, now.getMonth() + 1, 0) };
+  if (period === 'quarter') {
+    const q = Math.floor(now.getMonth() / 3);
+    return { from: new Date(y, q * 3, 1), to: new Date(y, q * 3 + 3, 0) };
+  }
+  return { from: new Date(y, 0, 1), to: new Date(y, 11, 31) };
+}
+
 export function getPeriodStats(period: StatPeriod): PeriodStats {
   const campaigns = unionClient.campaigns;
-  const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
+  // Campaigns whose flight overlaps the selected period, not just the ones
+  // active right now — an active-status count is the same number under every
+  // period, which made the Month/Quarter/Year toggle look broken on this box.
+  const { from, to } = periodWindow(period);
+  const activeCampaigns = campaigns.filter(c => {
+    const start = c.startDate ? new Date(c.startDate) : null;
+    const end = c.endDate ? new Date(c.endDate) : null;
+    if (!start && !end) return false;
+    return (start ?? from) <= to && (end ?? to) >= from;
+  }).length;
 
   const monthLeads = campaigns.reduce((s, c) => s + (c.leadsThisMonth ?? 0), 0);
   const yearLeads = unionClient.totalLeads;

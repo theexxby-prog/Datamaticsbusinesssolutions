@@ -72,6 +72,12 @@ export default function UnionDashboard() {
   const adDelivery = getAdDelivery();
   const forecasts = getCampaignForecasts();
   const atRiskForecast = forecasts.find(f => f.atRisk);
+  // The dashboard shows the five most recently touched; /campaigns has the full
+  // list with search and filters. atRiskForecast above still reads the whole set,
+  // so a campaign slipping out of this slice can't slip out of the warning.
+  const recentForecasts = [...forecasts]
+    .sort((a, b) => Date.parse(b.campaign.lastActivity) - Date.parse(a.campaign.lastActivity))
+    .slice(0, 5);
   const pendingLeads = mockLeads.filter(l => l.status === 'Pending Review').length;
   const upcoming = getUpcomingEvents();
   const acceptanceTrend = getAcceptanceTrend();
@@ -229,7 +235,7 @@ export default function UnionDashboard() {
             <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
               <PeriodPills period={period} onChange={setPeriod} />
               <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.activeCampaigns}</div>
-              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Active campaigns</div>
+              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Total campaigns</div>
             </div>
             <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
               <PeriodPills period={period} onChange={setPeriod} />
@@ -268,13 +274,16 @@ export default function UnionDashboard() {
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
               Campaigns
+              <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+                latest {recentForecasts.length}
+              </span>
             </h3>
             <button onClick={() => navigate('/campaigns')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Campaigns <ArrowRight className="ml-0.5 inline h-3 w-3" />
+              All {forecasts.length} <ArrowRight className="ml-0.5 inline h-3 w-3" />
             </button>
           </div>
           <div className="space-y-2.5">
-            {forecasts.map(({ campaign: c, target, delivered, projected, projectedPct, atRisk }) => {
+            {recentForecasts.map(({ campaign: c, target, delivered, projected, projectedPct, atRisk }) => {
               const pct = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
               const active = c.status === 'active';
               return (
@@ -301,8 +310,14 @@ export default function UnionDashboard() {
                     <div className="h-full rounded-full" style={{ width: `${pct}%`, background: c.status === 'completed' ? 'var(--color-text-muted)' : 'var(--gradient-primary)' }} />
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-2 text-[10.5px] font-semibold">
-                    <span style={{ color: !active ? 'var(--color-text-muted)' : atRisk ? 'var(--color-warning)' : 'var(--color-success)' }}>
-                      {!active
+                    {/* Not-active covers two opposite states. Before there were
+                        only active campaigns seeded, so everything non-active
+                        fell through to "Flight complete" — which read as done on
+                        a campaign that has not started. */}
+                    <span style={{ color: c.status === 'pending_approval' ? 'var(--color-warning)' : !active ? 'var(--color-text-muted)' : atRisk ? 'var(--color-warning)' : 'var(--color-success)' }}>
+                      {c.status === 'pending_approval'
+                        ? 'Awaiting approval · not yet live'
+                        : !active
                         ? 'Flight complete'
                         : atRisk
                           ? `At risk · projected ${projected.toLocaleString('en-US')} of ${target.toLocaleString('en-US')}`
@@ -488,7 +503,10 @@ export default function UnionDashboard() {
         </>)}
         {prefs.widgets.leadsIntel && (<>
         {/* Accounts & next actions */}
-        <div className={`glass-card p-4 ${prefs.widgets.freshSignals ? "" : "xl:col-span-2"}`}>
+        {/* Fresh signals sits beside this card and is off by default. When it is
+            off nothing else occupies the row, so span the full three columns —
+            col-span-2 left a third of the row empty and read as a missing card. */}
+        <div className={`glass-card p-4 ${prefs.widgets.freshSignals ? '' : 'xl:col-span-3'}`}>
           <div className="mb-2.5 flex items-center justify-between gap-2">
             <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
               <Sparkles className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
@@ -498,7 +516,10 @@ export default function UnionDashboard() {
               Leads <ArrowRight className="ml-0.5 inline h-3 w-3" />
             </button>
           </div>
-          <div className={prefs.widgets.freshSignals ? '' : 'md:grid md:grid-cols-2 md:gap-5'}>
+          {/* Across the full width the accounts list earns the larger share —
+              two equal columns left its industry text truncating while the
+              actions column ran mostly empty. */}
+          <div className={prefs.widgets.freshSignals ? '' : 'md:grid md:grid-cols-[1.6fr_1fr] md:gap-6'}>
           <div className="space-y-0.5">
             {ranked.slice(0, 4).map(({ account, insight }) => (
               <button
