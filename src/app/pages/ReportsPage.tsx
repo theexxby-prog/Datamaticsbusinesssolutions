@@ -287,10 +287,10 @@ export default function ReportsPage() {
           <div className="flex gap-2 flex-wrap items-center">
             <button
               onClick={() => setShowExportModal(true)}
-              className="btn-primary px-3 py-2 flex items-center gap-2"
+              className="btn-primary flex items-center gap-2 px-5 py-2.5 font-bold shadow-md"
             >
               <Download className="w-4 h-4" />
-              Export
+              Export report
             </button>
           </div>
         </div>

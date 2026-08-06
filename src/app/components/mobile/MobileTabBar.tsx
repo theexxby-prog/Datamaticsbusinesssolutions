@@ -3,22 +3,25 @@ import { useNavigate, useLocation } from 'react-router';
 import { LayoutGrid } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { getTabsForRole, tabLabel, useNavBadges, type NavItem } from '../../config/navigation';
-import { showFutureModules } from '../../config/demo';
+import { showFutureModules, isUnionOps } from '../../config/demo';
 import { MoreSheet } from './MoreSheet';
+import { useUnionPrefs } from '../../config/unionPrefs';
 
 // Bottom tab bar: up to four primary destinations per role plus a "More" tab
 // that opens a sheet with everything else. Driven by the same navigation
 // config as the desktop sidebar so both always agree.
 export function MobileTabBar() {
   const { currentUser } = useAuth();
+  const unionPrefs = useUnionPrefs();
   const navigate = useNavigate();
   const location = useLocation();
   const badges = useNavBadges();
   const [moreOpen, setMoreOpen] = useState(false);
 
   const { tabs, more } = useMemo(
-    () => getTabsForRole(currentUser?.role, showFutureModules(currentUser)),
-    [currentUser],
+    () => getTabsForRole(currentUser?.role, showFutureModules(currentUser), isUnionOps(currentUser)),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [currentUser, unionPrefs],
   );
 
   const isItemActive = (item: NavItem) =>

@@ -3,10 +3,11 @@ import { Users } from 'lucide-react';
 import type { SignalAccount, SignalContact } from '../../data/signalRoom';
 import { getCommittee, getSynthesis, signalLeadId } from '../../data/signalRoom';
 import { IntentChip, RoleDot } from './signalMeta';
+import { useUnionPrefs } from '../../config/unionPrefs';
 
 // Buying committee — the "connections between relevant leads": everyone the
-// enrichment found at this account, ranked by intent, tap-through to each
-// person's briefing.
+// enrichment found at this account, tap-through to each person's briefing.
+// The derived signal chips/scores only show when derived intel is on.
 
 export function CommitteeStrip({
   account, anchor, currentContactId,
@@ -16,6 +17,7 @@ export function CommitteeStrip({
   currentContactId?: number;
 }) {
   const navigate = useNavigate();
+  const { derivedIntel } = useUnionPrefs();
   const committee = getCommittee(anchor);
   if (committee.length < 2) return null;
 
@@ -27,7 +29,7 @@ export function CommitteeStrip({
           Buying committee — {account.name}
         </h3>
         <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
-          {committee.length} contacts, ranked by intent
+          {derivedIntel ? `${committee.length} contacts, ranked by signal` : `${committee.length} contacts`}
         </span>
       </div>
       <div className="space-y-1.5">
@@ -55,12 +57,14 @@ export function CommitteeStrip({
                 </span>
                 <span className="block truncate text-xs" style={{ color: 'var(--color-text-muted)' }}>{member.title}</span>
               </span>
-              <span className="flex flex-shrink-0 items-center gap-2">
-                {synthesis && <IntentChip type={synthesis.intentType} />}
-                <span className="text-sm font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                  {synthesis?.intentScore ?? member.signalScore}
+              {derivedIntel && (
+                <span className="flex flex-shrink-0 items-center gap-2">
+                  {synthesis && <IntentChip type={synthesis.intentType} />}
+                  <span className="text-sm font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                    {synthesis?.intentScore ?? member.signalScore}
+                  </span>
                 </span>
-              </span>
+              )}
             </button>
           );
         })}

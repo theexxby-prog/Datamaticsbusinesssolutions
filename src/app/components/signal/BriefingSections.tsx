@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react';
 import type { LucideIcon } from 'lucide-react';
 import {
-  Building2, MapPin, Users, DollarSign, RadioTower, Swords, Package, Layers,
-  ShieldCheck, Newspaper, AlertTriangle, UserCheck, CalendarClock, FileText,
+  RadioTower, Swords, Package, Layers,
+  ShieldCheck, Newspaper, AlertTriangle, UserCheck, CalendarClock,
 } from 'lucide-react';
 import type { SignalAccount } from '../../data/signalRoom';
 import { fmtSignalDate } from './signalMeta';
@@ -50,42 +50,31 @@ export function ChipList({ items }: { items: string[] }) {
   );
 }
 
-/** Industry / HQ / Employees / Revenue stat strip. */
-export function AccountFactStrip({ account }: { account: SignalAccount }) {
-  const facts = [
-    { icon: Building2, label: 'Industry', value: account.industry },
-    { icon: MapPin, label: 'Headquarters', value: account.hq },
-    { icon: Users, label: 'Employees', value: account.employees },
-    { icon: DollarSign, label: 'Revenue', value: account.revenue },
-  ];
-  return (
-    <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
-      {facts.map(fact => {
-        const Icon = fact.icon;
-        return (
-          <div key={fact.label} className="glass-card p-3.5">
-            <div className="mb-1 flex items-center gap-1.5 text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-              <Icon className="h-3.5 w-3.5" />
-              {fact.label}
-            </div>
-            <div className="text-[13px] font-semibold leading-snug" style={{ color: 'var(--color-text-primary)' }}>{fact.value}</div>
-          </div>
-        );
-      })}
-    </div>
-  );
+/** Compact "Industry · HQ · N employees · Revenue" line for briefing headers. */
+export function accountFactLine(account: SignalAccount, includeHq = true): string {
+  const clean = (value: string) => value.replace(/\s*\([^)]*\)/g, '').trim();
+  return [
+    account.industry,
+    ...(includeHq ? [account.hq] : []),
+    `${clean(account.employees)} employees`,
+    clean(account.revenue),
+  ].join(' · ');
 }
 
-/** The full account intelligence stack, shared by contact + account briefings. */
+/** The account intelligence stack, owned by the account briefing. */
 export function AccountDetailSections({ account }: { account: SignalAccount }) {
   return (
     <div className="space-y-4">
-      <Section icon={FileText} title="Account summary">
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{account.summary}</p>
+      <Section icon={Newspaper} title="Recent news">
+        <BulletList items={account.recentNews} />
       </Section>
 
       <Section icon={RadioTower} title="Buying signals">
         <BulletList items={account.buyingSignals} />
+      </Section>
+
+      <Section icon={AlertTriangle} title="Account pain points">
+        <BulletList items={account.painPoints} />
       </Section>
 
       <Section icon={CalendarClock} title="Trigger events">
@@ -110,10 +99,6 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
         </div>
       </Section>
 
-      <Section icon={AlertTriangle} title="Account pain points">
-        <BulletList items={account.painPoints} />
-      </Section>
-
       <Section icon={Swords} title="Competitive openings">
         <BulletList items={account.competitiveOps} />
       </Section>
@@ -133,10 +118,6 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
 
       <Section icon={ShieldCheck} title="Security posture">
         <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{account.securityPosture}</p>
-      </Section>
-
-      <Section icon={Newspaper} title="Recent news">
-        <BulletList items={account.recentNews} />
       </Section>
     </div>
   );

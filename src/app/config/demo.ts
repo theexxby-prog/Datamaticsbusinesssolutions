@@ -70,3 +70,20 @@ export function isFutureModulePath(pathname: string): boolean {
 export function showFutureModules(user: Pick<User, 'id'> | null | undefined): boolean {
   return !IS_CLIENT_DEMO && user?.id === UNION_USER_ID;
 }
+
+// ─── UNION OPS (operations mirror) ───────────────────────────────────────────
+// The kitchen behind the UNION client portal: data intake (CSV/CRM), the
+// Relish enrichment pipeline, Propensity pairing, and publish-to-portal. One
+// dedicated login sees it; everyone else (including the client demo build)
+// never does.
+export const UNION_OPS_USER_ID = 'u10';
+
+export const UNION_OPS_ROUTE_PREFIX = '/ops-union';
+
+export function isUnionOpsPath(pathname: string): boolean {
+  return pathname === UNION_OPS_ROUTE_PREFIX || pathname.startsWith(`${UNION_OPS_ROUTE_PREFIX}/`);
+}
+
+export function isUnionOps(user: Pick<User, 'id'> | null | undefined): boolean {
+  return !IS_CLIENT_DEMO && user?.id === UNION_OPS_USER_ID;
+}

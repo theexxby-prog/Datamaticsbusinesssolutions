@@ -38,12 +38,14 @@ interface CampaignKpiBandProps {
   /** Omitted for clients on manual review, where there is no automated QA. */
   qaValidPercent?: number;
   openRequests: number;
+  /** Retail client view: keep the ops bookkeeping tiles (QA, requests) off this band. */
+  hideOps?: boolean;
   onOpenRequests: () => void;
 }
 
 export function CampaignKpiBand({
   billable, cpl, delivered, target, progressPercent, acceptanceRate,
-  timeElapsedPercent, paceColor, paceLabel, qaValidPercent, openRequests, onOpenRequests,
+  timeElapsedPercent, paceColor, paceLabel, qaValidPercent, openRequests, onOpenRequests, hideOps,
 }: CampaignKpiBandProps) {
   const remaining = Math.max(0, target - delivered);
 
@@ -87,7 +89,7 @@ export function CampaignKpiBand({
     },
   ];
 
-  if (qaValidPercent !== undefined) {
+  if (!hideOps && qaValidPercent !== undefined) {
     tiles.push({
       key: 'qa',
       label: 'QA Valid',
@@ -99,7 +101,7 @@ export function CampaignKpiBand({
     });
   }
 
-  tiles.push({
+  if (!hideOps) tiles.push({
     key: 'requests',
     label: 'Open Requests',
     value: String(openRequests),
@@ -111,7 +113,9 @@ export function CampaignKpiBand({
   });
 
   return (
-    <div className="mb-5 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-6">
+    <div className={`mb-5 grid grid-cols-2 gap-3 md:grid-cols-3 ${
+      { 4: 'xl:grid-cols-4', 5: 'xl:grid-cols-5', 6: 'xl:grid-cols-6' }[tiles.length] ?? 'xl:grid-cols-6'
+    }`}>
       {tiles.map(tile => {
         const interactive = Boolean(tile.onClick);
         const Tag = interactive ? 'button' : 'div';

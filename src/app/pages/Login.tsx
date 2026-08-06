@@ -143,7 +143,8 @@ export default function Login() {
     setIsLoading(false);
     setShowSuccess(true);
 
-    const route = selectedUser.role === 'ops_manager' ? '/dashboard/ops' :
+    const route = selectedUser.id === 'u10' ? '/ops-union' :
+                  selectedUser.role === 'ops_manager' ? '/dashboard/ops' :
                   selectedUser.role === 'campaign_manager' ? '/dashboard/manager' :
                   selectedUser.role === 'campaign_backup' ? '/dashboard/manager' :
                   selectedUser.role === 'account_manager' ? '/documents' :
@@ -155,6 +156,7 @@ export default function Login() {
 
   const roleLabel = (u: (typeof mockUsers)[number]) =>
     u.id === 'u9' ? 'Preview · all new modules' :
+    u.id === 'u10' ? 'Operations · data pipeline' :
     u.role === 'client' ? `Client (${u.company})` :
     u.role === 'campaign_manager' ? 'Campaign Manager' :
     u.role === 'campaign_backup' ? 'Campaign Backup' :

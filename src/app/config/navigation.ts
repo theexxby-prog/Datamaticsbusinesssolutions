@@ -14,13 +14,13 @@ import {
   Layers,
   MessageSquare,
   ClipboardCheck,
-  Radar,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '../context/AuthContext';
 import { allClients, recentUploadBatches } from '../data/mockClients';
 import { getPendingSubmissions } from '../mockData';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
+import { getUnionPrefsSnapshot } from './unionPrefs';
 
 // ─── Shared navigation config ────────────────────────────────────────────────
 // Single source of truth for role-based navigation, consumed by LeftSidebar
@@ -84,9 +84,22 @@ export function useNavBadges(): NavBadges {
 
 /**
  * @param showFuture — true only for the UNION preview login (see
- * config/demo.ts showFutureModules); appends the in-progress modules.
+ * config/demo.ts showFutureModules). Programmatic no longer gets its own nav
+ * item — it merged into Campaigns — but the parameter stays so future
+ * UNION-only modules can hook in without touching every caller.
+ * @param unionOps — true only for the UNION OPS login (isUnionOps): the
+ * operations mirror gets its own pipeline-first nav instead of the standard
+ * internal ops nav.
  */
-export function getNavForRole(role: UserRole | undefined, showFuture = false): NavItem[] {
+export function getNavForRole(role: UserRole | undefined, showFuture = false, unionOps = false): NavItem[] {
+  if (unionOps) {
+    return [
+      { name: 'Pipeline', icon: LayoutDashboard, path: '/ops-union', section: 'PLATFORM' },
+      { name: 'Data Intake', icon: Upload, path: '/ops-union/intake', section: 'PLATFORM', primary: true },
+      { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
+    ];
+  }
+
   if (role === 'ops_manager') {
     // Mirrors production nav (pulse.datamaticsbpm.com): Dashboard, All Campaigns,
     // Admin Management, Metrics Override, Lead Demographics + the Phase 2 modules.
@@ -137,7 +150,9 @@ export function getNavForRole(role: UserRole | undefined, showFuture = false): N
     ];
   }
 
-  // Client role
+  // Client role. For the UNION preview, the "Invoices & documents" widget
+  // toggle governs the whole surface — dashboard card AND these menu items.
+  const hideInvoicesDocs = showFuture && !getUnionPrefsSnapshot().widgets.invoicesDocs;
   return [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard', section: 'PLATFORM' },
     { name: 'Campaigns', icon: BarChart2, path: '/campaigns', section: 'PLATFORM', badgeKey: 'clientActiveCampaigns' },
@@ -146,11 +161,12 @@ export function getNavForRole(role: UserRole | undefined, showFuture = false): N
     // and showing both side by side reads as a bug.
     { name: 'Leads', icon: Users, path: '/leads', section: 'PLATFORM' },
     { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
-    ...(showFuture
-      ? [{ name: 'Programmatic', icon: Radar, path: '/programmatic', section: 'PLATFORM' as const }]
-      : []),
-    { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'ORGANIZATION', badgeKey: 'unpaidInvoices' },
-    { name: 'Documents', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
+    ...(hideInvoicesDocs
+      ? []
+      : [
+          { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'ORGANIZATION' as const, badgeKey: 'unpaidInvoices' as const },
+          { name: 'Documents', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' as const },
+        ]),
     { name: 'Support', icon: MessageSquare, path: '/support', section: 'ORGANIZATION', badgeKey: 'openSupportTickets' },
     { name: 'Account', icon: UserCircle, path: '/account', section: 'ORGANIZATION' },
     { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
@@ -169,9 +185,11 @@ const TAB_PATHS_BY_ROLE: Record<UserRole, string[]> = {
   accounts: ['/invoices', '/documents'],
 };
 
-export function getTabsForRole(role: UserRole | undefined, showFuture = false): { tabs: NavItem[]; more: NavItem[] } {
-  const nav = getNavForRole(role, showFuture);
-  const tabPaths = TAB_PATHS_BY_ROLE[role ?? 'client'] ?? TAB_PATHS_BY_ROLE.client;
+export function getTabsForRole(role: UserRole | undefined, showFuture = false, unionOps = false): { tabs: NavItem[]; more: NavItem[] } {
+  const nav = getNavForRole(role, showFuture, unionOps);
+  const tabPaths = unionOps
+    ? ['/ops-union', '/ops-union/intake', '/account']
+    : TAB_PATHS_BY_ROLE[role ?? 'client'] ?? TAB_PATHS_BY_ROLE.client;
   const tabs = tabPaths
     .map(path => nav.find(item => item.path === path))
     .filter((item): item is NavItem => Boolean(item));
@@ -211,6 +229,8 @@ const DETAIL_ROUTES: Array<{ pattern: RegExp; meta: PageMeta }> = [
   // Explicit entries so the mobile app-bar title never depends on whether the
   // nav item is visible (the routes themselves are gated in AppLayout).
   { pattern: /^\/programmatic$/, meta: { title: 'Programmatic', showBack: false } },
+  { pattern: /^\/ops-union$/, meta: { title: 'Pipeline', showBack: false } },
+  { pattern: /^\/ops-union\/intake$/, meta: { title: 'Data Intake', showBack: false } },
   { pattern: /^\/leads\/account\/[^/]+$/, meta: { title: 'Account briefing', showBack: true } },
   { pattern: /^\/leads\/[^/]+$/, meta: { title: 'Lead briefing', showBack: true } },
 ];

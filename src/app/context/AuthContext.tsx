@@ -28,6 +28,10 @@ interface AuthContextValue {
   setCurrentUser: (user: User) => void;
   /** Clears the remembered persona so Log Out survives a refresh too. */
   signOut: () => void;
+  /** True while UNION OPS is viewing the portal as the client (u9). */
+  isPreviewingClient: boolean;
+  /** Enter/exit the client preview. Only meaningful for the UNION OPS login. */
+  setPreviewingClient: (on: boolean) => void;
   canUploadLeads: () => boolean;
   canAccessOps: () => boolean;
   canManageTeam: () => boolean;
@@ -115,6 +119,18 @@ export const mockUsers: User[] = [
     assignedClients: [],
     company: UNION_COMPANY,
   },
+  {
+    // Operations mirror for the UNION preview: the pipeline that produces
+    // everything the u9 client login sees (CSV/CRM intake → Relish enrichment
+    // → publish to portal, Propensity pairing). Gated by isUnionOps in
+    // config/demo.ts; can preview the client experience via previewClient.
+    id: 'u10',
+    name: 'UNION OPS',
+    email: 'union.ops@datamaticsbpm.com',
+    role: 'ops_manager',
+    assignedClients: [],
+    company: UNION_COMPANY,
+  },
 ];
 
 // ============================================
@@ -128,6 +144,9 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 // dropped whoever was signed in back to the client, so an internal page would
 // keep rendering while the viewer had quietly become someone else.
 const SESSION_KEY = 'signed-in-user-id';
+// Per-tab flag: UNION OPS viewing the portal as the client. Kept separate from
+// the persona key so a refresh mid-preview restores the same state.
+const PREVIEW_KEY = 'union-ops-previewing';
 
 function initialUser(): User {
   if (typeof window === 'undefined') return mockUsers[0];
@@ -139,14 +158,36 @@ function initialUser(): User {
   }
 }
 
+function initialPreviewing(): boolean {
+  if (typeof window === 'undefined') return false;
+  try {
+    return window.sessionStorage.getItem(PREVIEW_KEY) === '1';
+  } catch {
+    return false;
+  }
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   // Defaults to the client persona; restored from the tab's session if set.
-  const [currentUser, setCurrentUserState] = useState<User>(initialUser);
+  const [actualUser, setCurrentUserState] = useState<User>(initialUser);
+  const [previewing, setPreviewingState] = useState<boolean>(initialPreviewing);
+
+  const setPreviewingClient = useCallback((on: boolean) => {
+    setPreviewingState(on);
+    try {
+      if (on) window.sessionStorage.setItem(PREVIEW_KEY, '1');
+      else window.sessionStorage.removeItem(PREVIEW_KEY);
+    } catch {
+      // Private mode — preview just won't survive a refresh.
+    }
+  }, []);
 
   const signOut = useCallback(() => {
     setCurrentUserState(mockUsers[0]);
+    setPreviewingState(false);
     try {
       window.sessionStorage.removeItem(SESSION_KEY);
+      window.sessionStorage.removeItem(PREVIEW_KEY);
     } catch {
       // Nothing to clear if storage is unavailable.
     }
@@ -154,12 +195,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const setCurrentUser = useCallback((user: User) => {
     setCurrentUserState(user);
+    // Switching personas always leaves the preview — it belongs to UNION OPS.
+    setPreviewingState(false);
     try {
       window.sessionStorage.setItem(SESSION_KEY, user.id);
+      window.sessionStorage.removeItem(PREVIEW_KEY);
     } catch {
       // Private mode / quota — the persona just won't survive a refresh.
     }
   }, []);
+
+  // While UNION OPS previews the client experience, the whole app sees the
+  // UNION client persona (u9) — nav, gates, brand, and data all follow with
+  // zero page-level changes. The preview flag only applies to the ops login.
+  const isPreviewingClient = previewing && actualUser.id === 'u10';
+  const currentUser = isPreviewingClient
+    ? mockUsers.find(u => u.id === 'u9') ?? actualUser
+    : actualUser;
 
   // Permission helpers — wrapped in useCallback so their identity stays stable
   // across re-renders. This prevents all context consumers from re-rendering
@@ -201,6 +253,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         currentUser,
         setCurrentUser,
         signOut,
+        isPreviewingClient,
+        setPreviewingClient,
         canUploadLeads,
         canAccessOps,
         canManageTeam,

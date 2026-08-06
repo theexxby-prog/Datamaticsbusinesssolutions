@@ -1,5 +1,6 @@
 import { PersonAvatar } from '../components/PersonAvatar';
 import { useState } from 'react';
+import { useSearchParams } from 'react-router';
 import {
   User, Mail, Phone, Building2, MapPin, Globe, Lock, Bell, Shield,
   Smartphone, Monitor, Users, UserPlus, Trash2, Edit, Check, X,
@@ -13,13 +14,21 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { NotificationsTabContent } from '../components/NotificationsTabContent';
 import { DASH_METRICS, getDashPrefs, setDashMetric, type DashMetricKey } from '../data/dashboardPrefs';
 import { useUnionLens } from '../hooks/useUnionLens';
+import { showFutureModules } from '../config/demo';
+import { useUnionPrefs, setUnionWidget, setDerivedIntel, setLeadsSignalsColumn, UNION_WIDGET_LABELS, UNION_WIDGET_DESCRIPTIONS, type UnionWidgetKey } from '../config/unionPrefs';
 
 export default function Account() {
   useDocumentTitle('Account Settings');
   const { currentUser } = useAuth();
   const lens = useUnionLens();
+  const unionPrefs = useUnionPrefs();
 
-  const [activeTab, setActiveTab] = useState<'profile' | 'company' | 'team' | 'security' | 'notifications' | 'dashboard'>('profile');
+  // Deep links (e.g. the dashboard's empty-state) can open a specific tab.
+  const [searchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState<'profile' | 'company' | 'team' | 'security' | 'notifications' | 'dashboard'>(() => {
+    const t = searchParams.get('tab');
+    return t === 'dashboard' || t === 'notifications' ? t : 'profile';
+  });
   const [showPassword, setShowPassword] = useState(false);
   const [dashPrefs, setDashPrefs] = useState(getDashPrefs);
 
@@ -136,7 +145,89 @@ export default function Account() {
             </div>
           )}
 
-          {activeTab === 'dashboard' && (
+          {activeTab === 'dashboard' && (showFutureModules(currentUser) ? (
+            <div className="space-y-5">
+              <div>
+                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                  Dashboard Sections
+                </h2>
+                <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-1">
+                  Turn dashboard sections on or off — the layout reflows automatically. Defaults follow the
+                  product spec; anything can be switched back on in seconds for a walkthrough.
+                </p>
+              </div>
+              <div className="space-y-3">
+                {(Object.keys(UNION_WIDGET_LABELS) as UnionWidgetKey[]).map((key) => {
+                  const on = unionPrefs.widgets[key];
+                  return (
+                    <div key={key} className="flex items-center justify-between gap-4 p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                      <div>
+                        <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                          {UNION_WIDGET_LABELS[key]}
+                        </div>
+                        <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                          {UNION_WIDGET_DESCRIPTIONS[key]}
+                        </div>
+                      </div>
+                      <button
+                        onClick={() => setUnionWidget(key, !on)}
+                        role="switch"
+                        aria-checked={on}
+                        aria-label={`Toggle ${UNION_WIDGET_LABELS[key]}`}
+                        className="relative rounded-full transition-colors flex-shrink-0"
+                        style={{ width: 44, height: 24, background: on ? 'var(--color-primary)' : 'var(--color-border)' }}
+                      >
+                        <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: on ? 'translateX(20px)' : 'translateX(0)' }} />
+                      </button>
+                    </div>
+                  );
+                })}
+                <h3 className="pt-2" style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                  Data display
+                </h3>
+                <div className="flex items-center justify-between gap-4 p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                  <div>
+                    <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                      Signals column (Accounts list)
+                    </div>
+                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                      Show the per-account signal count on the Leads → Accounts list.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setLeadsSignalsColumn(!unionPrefs.leadsSignalsColumn)}
+                    role="switch"
+                    aria-checked={unionPrefs.leadsSignalsColumn}
+                    aria-label="Toggle Signals column"
+                    className="relative rounded-full transition-colors flex-shrink-0"
+                    style={{ width: 44, height: 24, background: unionPrefs.leadsSignalsColumn ? 'var(--color-primary)' : 'var(--color-border)' }}
+                  >
+                    <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: unionPrefs.leadsSignalsColumn ? 'translateX(20px)' : 'translateX(0)' }} />
+                  </button>
+                </div>
+                <div className="flex items-center justify-between p-4 rounded-xl" style={{ border: '1px solid var(--color-border)' }}>
+                  <div>
+                    <div style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
+                      Derived scores &amp; synthesis
+                    </div>
+                    <div style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+                      AI-derived signal scores, readiness and synthesis narratives — off until real scoring lands.
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => setDerivedIntel(!unionPrefs.derivedIntel)}
+                    role="switch"
+                    aria-checked={unionPrefs.derivedIntel}
+                    aria-label="Toggle derived scores and synthesis"
+                    className="relative rounded-full transition-colors flex-shrink-0"
+                    style={{ width: 44, height: 24, background: unionPrefs.derivedIntel ? 'var(--color-primary)' : 'var(--color-border)' }}
+                  >
+                    <span className="absolute rounded-full bg-[var(--color-surface-raised)] shadow transition-transform" style={{ width: 18, height: 18, top: 3, left: 3, transform: unionPrefs.derivedIntel ? 'translateX(20px)' : 'translateX(0)' }} />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ) : (
             <div className="space-y-5">
               <div>
                 <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
@@ -170,7 +261,7 @@ export default function Account() {
                 })}
               </div>
             </div>
-          )}
+          ))}
 
           {activeTab === 'company' && (
             <div className="space-y-5">

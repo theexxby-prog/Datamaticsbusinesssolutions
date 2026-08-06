@@ -2,14 +2,15 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   ArrowLeft, Mail, Phone, Globe2, BrainCircuit, AlertTriangle, MessageSquare,
-  Heart, Compass, ShieldQuestion, Target, Sparkles, MapPin, Award, Layers,
-  CheckCircle, XCircle, Clock, User as UserIcon,
+  Heart, Compass, ShieldQuestion, Sparkles, MapPin, Award, Layers,
+  CheckCircle, XCircle, Clock, User as UserIcon, ChevronLeft, ChevronRight,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
 import { showFutureModules } from '../config/demo';
 import {
-  signalContactFromLeadId, getSignalAccount, getSynthesis, signalMeta, isSignalLeadId,
+  signalContactFromLeadId, getSignalAccount, getSynthesis, signalMeta,
+  getCommittee, signalLeadId,
 } from '../data/signalRoom';
 import { mockLeads, type Lead } from '../mockData';
 import { getRelishIntel } from '../data/relish';
@@ -17,8 +18,9 @@ import { RelishCompanyPanel } from '../components/relish/RelishCompanyPanel';
 import { RelishContactPanel } from '../components/relish/RelishContactPanel';
 import { SynthesisBlock } from '../components/signal/SynthesisBlock';
 import { CommitteeStrip } from '../components/signal/CommitteeStrip';
-import { Section, BulletList, AccountFactStrip, AccountDetailSections } from '../components/signal/BriefingSections';
+import { Section, BulletList, accountFactLine } from '../components/signal/BriefingSections';
 import { IntentChip, RoleDot } from '../components/signal/signalMeta';
+import { useUnionPrefs } from '../config/unionPrefs';
 import { formatDateLong, formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 
@@ -50,9 +52,17 @@ export default function LeadBriefingPage() {
 
 function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
   const navigate = useNavigate();
+  const { derivedIntel } = useUnionPrefs();
   const contact = signalContactFromLeadId(contactLeadId)!;
   const account = getSignalAccount(contact.companySlug);
   const synthesis = getSynthesis(contact.id);
+
+  // Prev/next through the buying committee in strip order — work the sequence
+  // on a call without bouncing back to the list.
+  const committee = getCommittee(contact);
+  const committeeIdx = committee.findIndex(m => m.id === contact.id);
+  const prevMember = committeeIdx > 0 ? committee[committeeIdx - 1] : undefined;
+  const nextMember = committeeIdx >= 0 && committeeIdx < committee.length - 1 ? committee[committeeIdx + 1] : undefined;
 
   const jump = (id: string) => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
@@ -68,10 +78,9 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             <ArrowLeft className="h-4 w-4" /> Leads
           </button>
           {[
-            ['sec-synth', 'Synthesis'],
+            ...(derivedIntel && synthesis ? [['sec-synth', 'Synthesis']] : []),
             ...(account && account.contactIds.length > 1 ? [['sec-committee', 'Committee']] : []),
             ['sec-person', 'Person'],
-            ['sec-company', 'Company'],
           ].map(([id, label]) => (
             <button
               key={id}
@@ -83,10 +92,37 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             </button>
           ))}
         </div>
-        <span className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-          <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--color-primary)' }} />
-          {signalMeta.campaign} · enriched by {signalMeta.enrichedBy}
-        </span>
+        <div className="flex items-center gap-2">
+          <span className="hidden items-center gap-1.5 text-[11px] sm:flex" style={{ color: 'var(--color-text-muted)' }}>
+            <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--color-primary)' }} />
+            {signalMeta.campaign} · enriched by {signalMeta.enrichedBy}
+          </span>
+          {(prevMember || nextMember) && (
+            <span className="flex items-center gap-1">
+              <button
+                disabled={!prevMember}
+                onClick={() => prevMember && navigate(`/leads/${signalLeadId(prevMember.id)}`)}
+                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+                title={prevMember ? `Previous on the committee: ${prevMember.name}` : undefined}
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+                <span className="hidden max-w-[110px] truncate md:inline">{prevMember?.name.split(' ')[0] ?? 'Prev'}</span>
+              </button>
+              <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>
+                {committeeIdx + 1}/{committee.length}
+              </span>
+              <button
+                disabled={!nextMember}
+                onClick={() => nextMember && navigate(`/leads/${signalLeadId(nextMember.id)}`)}
+                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+                title={nextMember ? `Next on the committee: ${nextMember.name}` : undefined}
+              >
+                <span className="hidden max-w-[110px] truncate md:inline">{nextMember?.name.split(' ')[0] ?? 'Next'}</span>
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Header — identity in one tight block */}
@@ -98,13 +134,24 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
           <span className="text-[14px]" style={{ color: 'var(--color-text-secondary)' }}>{contact.title}</span>
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-          {synthesis && <IntentChip type={synthesis.intentType} />}
+          {derivedIntel && synthesis && <IntentChip type={synthesis.intentType} />}
           <span className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold" style={{ borderColor: 'var(--color-border)' }}>
             <RoleDot roleClass={contact.roleClass} /> {contact.influence}
           </span>
           <span className="inline-flex items-center gap-1.5">
             <Globe2 className="h-3.5 w-3.5" style={{ color: 'var(--color-text-muted)' }} />
-            {contact.company} · {contact.country}
+            {account ? (
+              <button
+                onClick={() => navigate(`/leads/account/${account.slug}`)}
+                className="font-semibold underline-offset-2 transition-colors hover:text-[var(--color-primary)] hover:underline"
+                title={`Open the ${account.name} account briefing`}
+              >
+                {contact.company}
+              </button>
+            ) : (
+              contact.company
+            )}
+            {' '}· {contact.country}
           </span>
           <a href={`mailto:${contact.email}`} className="inline-flex items-center gap-1.5 hover:text-[var(--color-primary)]">
             <Mail className="h-3.5 w-3.5" style={{ color: 'var(--color-text-muted)' }} />
@@ -115,9 +162,14 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             {contact.phone}
           </a>
         </div>
+        {account && (
+          <p className="mt-1.5 text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
+            {accountFactLine(account, false)}
+          </p>
+        )}
       </div>
 
-      <div id="sec-synth">{synthesis && <SynthesisBlock synthesis={synthesis} />}</div>
+      {derivedIntel && synthesis && <div id="sec-synth"><SynthesisBlock synthesis={synthesis} /></div>}
 
       {account && <CommitteeStrip account={account} anchor={contact} currentContactId={contact.id} />}
 
@@ -129,14 +181,9 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
         <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.roleAnalysis}</p>
       </Section>
       <div className="grid gap-4 md:grid-cols-2">
-        <Section icon={AlertTriangle} title="Pain points">
-          <BulletList items={contact.painPoints} />
+        <Section icon={Compass} title="Recommended approach">
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.approach}</p>
         </Section>
-        <Section icon={MessageSquare} title="Talking points">
-          <BulletList items={contact.talkingPoints} />
-        </Section>
-      </div>
-      <div className="grid gap-4 md:grid-cols-2">
         <Section icon={Heart} title="Motivations">
           <div className="space-y-2.5">
             {contact.motivations.map(motivation => (
@@ -152,8 +199,13 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             ))}
           </div>
         </Section>
-        <Section icon={Compass} title="Recommended approach">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.approach}</p>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <Section icon={AlertTriangle} title="Pain points">
+          <BulletList items={contact.painPoints} />
+        </Section>
+        <Section icon={MessageSquare} title="Talking points">
+          <BulletList items={contact.talkingPoints} />
         </Section>
       </div>
       <Section icon={ShieldQuestion} title="Objection handling">
@@ -166,19 +218,6 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
           ))}
         </div>
       </Section>
-      <Section icon={Target} title="Seller fit">
-        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.sellerFit}</p>
-      </Section>
-
-      {account && (
-        <>
-          <h2 id="sec-company" className="pt-1 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
-            Company — {account.name}
-          </h2>
-          <AccountFactStrip account={account} />
-          <AccountDetailSections account={account} />
-        </>
-      )}
     </div>
   );
 }
@@ -335,7 +374,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
           <Section icon={UserIcon} title="Notes">
             <div className="space-y-2.5">
               {[
-                { author: 'Renuka Lawless', date: '2026-02-28', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
+                { author: 'Jordan Blake', date: '2026-02-28', text: 'Very interested in our cybersecurity solutions. Follow up next week.' },
                 { author: 'Brijesh Singh', date: '2026-02-26', text: 'Company matches ICP perfectly. High potential for conversion.' },
               ].map(note => (
                 <div key={note.text} className="rounded-xl border p-3" style={{ borderColor: 'var(--color-border-light)' }}>

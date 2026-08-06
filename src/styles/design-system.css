@@ -11,6 +11,7 @@
 --color-primary-glow: rgba(186, 32, 39, 0.20);
 
 --color-sidebar-bg: #F8F7F7;
+--color-chart-2: #3E5C8A;
 --color-sidebar-border: rgba(0,0,0,0.06);
 --color-main-bg: #EFF0F4;
 --color-surface: rgba(255, 255, 255, 0.72);
@@ -449,3 +450,51 @@ input[type="checkbox"]:disabled {
    is invisible on a dark ground, and the selectors matched the very token
    classes that replaced them. Text colour comes from the tokens, and
    `.text-gray-*` flips with the mirrored ramp in dark.css. */
+/* ─── UNION retail brand — Tech Blue ─────────────────────────────────────────
+   The retail product's primary is Tech Blue per the Datamatics design
+   guidelines (red/black become ancillary accents). Placeholder hex until the
+   final value from the guidelines/Karan; swap it here only. Stamped on <html>
+   as data-brand="union" by AppLayout for the UNION login. Error/overdue stays
+   red via --color-error, untouched. */
+:root[data-brand="union"] {
+  /* Action blue — filled pills, links, bars */
+  --color-primary: #1464E8;
+  --color-primary-dark: #0E4FC4;
+  --color-primary-light: #4A8CF0;
+  --color-primary-tint: rgba(20, 100, 232, 0.08);
+  --color-primary-glow: rgba(20, 100, 232, 0.24);
+  /* Navy ink for words — fixes the washed-out grey text */
+  --color-text-primary: #10203A;
+  --color-text-secondary: #42526B;
+  --color-text-muted: #67758D;
+  /* Arctic canvas + structure: blue-tinted instead of neutral grey */
+  --color-main-bg: #EDF1F8;
+  --color-surface: #F3F7FC;
+  --background-muted: #E3EAF5;
+  --color-chart-2: #24478F;
+  /* Deep-navy sidebar anchor */
+  --color-sidebar-bg: #14213D;
+  --color-sidebar-border: rgba(255, 255, 255, 0.08);
+}
+
+/* Sidebar subtree under the union brand: re-scope the text/surface tokens so
+   nav items read light on navy without touching any component. */
+:root[data-brand="union"] .app-sidebar {
+  --color-text-primary: #E9EFFA;
+  --color-text-secondary: #BAC8E2;
+  --color-text-muted: #98ABCE;
+  --color-primary: #5B96F2;
+  --color-primary-tint: rgba(91, 150, 242, 0.16);
+  --color-surface: rgba(255, 255, 255, 0.06);
+  --color-border: rgba(255, 255, 255, 0.10);
+  --color-border-light: rgba(255, 255, 255, 0.08);
+  --background-muted: rgba(255, 255, 255, 0.08);
+}
+
+:root[data-brand="union"][data-theme="dark"] {
+  --color-primary: #5B96F2;
+  --color-primary-dark: #3D7DE8;
+  --color-primary-light: #83B1F6;
+  --color-primary-tint: rgba(91, 150, 242, 0.16);
+  --color-primary-glow: rgba(91, 150, 242, 0.32);
+}

@@ -12,6 +12,11 @@ import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
+import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgrammaticTab';
+import { CampaignDemographics } from '../components/campaign/CampaignDemographics';
+import { showFutureModules } from '../config/demo';
+import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from '../data/propensity';
+import { campaignTypeFor } from '../data/outcomes';
 import { useCampaignThread } from '../context/CampaignThreadContext';
 import { useAuth } from '../context/AuthContext';
 import { useUnionLens } from '../hooks/useUnionLens';
@@ -72,6 +77,22 @@ export default function CampaignDetail() {
   const cpl = (campaign as any).cpl ?? (campaign.budget && targetLeads ? Math.round(campaign.budget / targetLeads) : 50);
   const totalBillable = cpl * deliveredLeads;
   
+  // UNION preview: Programmatic merged into Campaigns. Crosswalk-paired
+  // campaigns grow a Programmatic tab, an Impressions bar on the funnel, and
+  // audience demographics; Renuka and the TCC build see none of this.
+  const showFuture = showFutureModules(currentUser);
+  const pairedAbm = showFuture
+    ? ABM_SYNDICATION_CROSSWALK.find(x => x.syndicationCampaignId === campaign.id)
+    : undefined;
+  const abmImpressions = pairedAbm
+    ? getAssetAnalytics()
+        .filter(a => a.abmCampaignId === pairedAbm.abmCampaignId)
+        .reduce((sum, a) => sum + a.impressions, 0)
+    : undefined;
+  // Self-serve (clone / new campaign) is hidden in the UNION preview —
+  // leadership hasn't approved client-initiated campaigns yet.
+  const hideSelfServe = showFuture && currentUser?.role === 'client';
+
   const health = getCampaignHealth(campaign);
   const activities = lens(getActivitiesForCampaign(campaign.id));
   const replacementStats = getReplacementStats(campaign.id);
@@ -136,6 +157,14 @@ export default function CampaignDetail() {
             </div>
             <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pl-1">
               <span className={getStatusColor(campaign.status)}>{formatStatus(campaign.status)}</span>
+              {showFuture && (
+                <span
+                  className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
+                  style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                >
+                  {campaignTypeFor(campaign.id)}
+                </span>
+              )}
               <CampaignHealthBadge health={health} showDetails />
               {campaign.startDate && campaign.endDate && (
                 <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
@@ -165,10 +194,12 @@ export default function CampaignDetail() {
               <FileText className="w-4 h-4" />
               Job Card
             </button>
-            <button onClick={() => setShowCloneModal(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
-              <Copy className="w-4 h-4" />
-              Clone
-            </button>
+            {!hideSelfServe && (
+              <button onClick={() => setShowCloneModal(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
+                <Copy className="w-4 h-4" />
+                Clone
+              </button>
+            )}
             <button
               onClick={() => toast.success('Exporting report… your download will begin shortly.')}
               className="btn-primary px-3.5 py-2 flex items-center justify-center gap-2"
@@ -181,6 +212,7 @@ export default function CampaignDetail() {
 
         {/* KPI band — absorbs the old donut card and Delivery Pace card. */}
         <CampaignKpiBand
+          hideOps={showFuture}
           billable={fmtMoney(totalBillable)}
           cpl={fmtMoney(cpl)}
           delivered={deliveredLeads}
@@ -242,7 +274,13 @@ export default function CampaignDetail() {
                 tabs={[
                   Boolean(campaign.outreachMetrics) && {
                     key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
-                    content: <OutreachFunnel metrics={campaign.outreachMetrics!} deliveredLeads={deliveredLeads} />,
+                    content: (
+                      <OutreachFunnel
+                        metrics={campaign.outreachMetrics!}
+                        deliveredLeads={deliveredLeads}
+                        impressions={abmImpressions}
+                      />
+                    ),
                   },
                   {
                     key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
@@ -252,6 +290,10 @@ export default function CampaignDetail() {
                     key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
                     content: <ConvertrQAStats {...convertrStats} />,
                   },
+                  Boolean(pairedAbm) && {
+                    key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
+                    content: <CampaignProgrammaticTab abmCampaignId={pairedAbm!.abmCampaignId} />,
+                  },
                 ]}
               />
 
@@ -260,6 +302,8 @@ export default function CampaignDetail() {
                 totalReplaced={replacementStats.totalReplaced}
                 remaining={replacementStats.remaining}
               />
+
+              {showFuture && <CampaignDemographics campaignName={campaign.name} />}
             </div>
           )}
 

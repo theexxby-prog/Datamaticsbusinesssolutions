@@ -1,4 +1,4 @@
-import { createBrowserRouter, type RouteObject } from 'react-router';
+import { createBrowserRouter, Navigate, type RouteObject } from 'react-router';
 import { lazy, Suspense } from 'react';
 import { RouteLoader } from './components/RouteLoader';
 import { ProtectedRoute } from './components/ProtectedRoute';
@@ -40,9 +40,12 @@ const DemographicsEntryPage = lazy(() => import('./pages/DemographicsEntryPage')
 // UNION-preview modules: registered for everyone, but AppLayout redirects any
 // non-UNION visit to /dashboard (same pattern as internal routes in demo mode).
 // The briefing pages additionally self-guard on unknown ids.
-const ProgrammaticPage = lazy(() => import('./pages/ProgrammaticPage'));
 const LeadBriefingPage = lazy(() => import('./pages/LeadBriefingPage'));
 const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
+// UNION OPS mirror: registered for everyone, but AppLayout bounces any
+// non-UNION-OPS visit to /dashboard (isUnionOpsPath guard).
+const UnionOpsDashboard = lazy(() => import('./pages/ops/UnionOpsDashboard'));
+const UnionOpsIntake = lazy(() => import('./pages/ops/UnionOpsIntake'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
 // RouteLoader is a 2px brand-coloured bar that's barely noticeable and
@@ -135,8 +138,18 @@ const appRoutes: RouteObject[] = [
     Component: withSuspense(Account),
   },
   {
+    // Programmatic merged into Campaigns — the standalone page retired, old
+    // links and bookmarks land on the campaign list instead.
     path: '/programmatic',
-    Component: withSuspense(ProgrammaticPage),
+    element: <Navigate to="/campaigns" replace />,
+  },
+  {
+    path: '/ops-union',
+    Component: withSuspense(UnionOpsDashboard),
+  },
+  {
+    path: '/ops-union/intake',
+    Component: withSuspense(UnionOpsIntake),
   },
   {
     path: '/internal/dashboard',
