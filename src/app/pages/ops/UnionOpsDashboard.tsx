@@ -29,11 +29,10 @@ function HealthStrip() {
       {integrationStatuses.map(integration => {
         const meta = STATE_META[integration.state];
         return (
-          <div
-            key={integration.key}
-            className="rounded-xl border px-3.5 py-3"
-            style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
-          >
+          // .kpi-card rather than a bespoke bordered div: the hand-rolled
+          // version missed the blur, the brand's card shadow and its glass
+          // wash, so this strip read flat against the rest of the page.
+          <div key={integration.key} className="kpi-card" style={{ padding: '12px 14px' }}>
             <div className="flex items-center justify-between gap-2">
               <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
                 {integration.name}

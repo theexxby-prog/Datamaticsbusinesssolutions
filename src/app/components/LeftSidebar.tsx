@@ -221,14 +221,16 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
       </div>
 
       {/* Navigation */}
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
-        {Object.entries(groupedNav).map(([section, items]) => {
+      <div className="flex-1 overflow-y-auto px-4 py-5 space-y-7">
+        {Object.entries(groupedNav).map(([section, items], sectionIndex) => {
           const isCollapsed = collapsedSections[section];
-          const canCollapse = section === 'ORGANIZATION';
+          // The first section is the primary nav and always stays open; every
+          // subsequent section is collapsible. Data-driven — no magic strings.
+          const canCollapse = sectionIndex > 0;
 
           return (
             <div key={section}>
-              {/* Section Header - Collapsible for ORGANIZATION */}
+              {/* Section header — small-caps, muted; collapsible past the first */}
               <AnimatePresence>
                 {isExpanded && (
                   <motion.div
@@ -269,7 +271,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                     animate={{ opacity: 1, height: 'auto' }}
                     exit={{ opacity: 0, height: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="space-y-1"
+                    className="space-y-1.5"
                   >
                     {items.map((item) => {
                       const isActive =
@@ -286,15 +288,15 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                             onMouseEnter={() => handleItemMouseEnter(item.name)}
                             onMouseLeave={handleItemMouseLeave}
                             className={`w-full flex items-center gap-3 rounded-xl relative group transition-all duration-100 ${
-                              isExpanded ? 'px-3 py-2.5' : 'px-0 py-2.5 justify-center'
+                              isExpanded ? 'px-3 py-3' : 'px-0 py-3 justify-center'
                             } ${
                               isActive
-                                ? 'bg-[var(--color-primary)]/[0.10] text-[var(--color-primary)] border-l-2 border-[var(--color-primary)]'
-                                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary)]/[0.09] hover:text-[var(--color-primary)] border-l-2 border-transparent'
+                                ? 'bg-[var(--color-primary)]/[0.10] text-[var(--color-primary)]'
+                                : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary)]/[0.09] hover:text-[var(--color-primary)]'
                             }`}
                             style={{
                               fontSize: '14px',
-                              fontWeight: isActive ? 600 : 450,
+                              fontWeight: isActive ? 650 : 450,
                               letterSpacing: '-0.01em',
                             }}
                             whileTap={{ scale: 0.98 }}
@@ -415,7 +417,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               )}
             </AnimatePresence>
             
-            <div className="space-y-1">
+            <div className="space-y-1.5">
               {assignedClients.map((client) => (
                 <div key={client.id} className="relative">
                   <motion.button
@@ -680,7 +682,9 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
           backdropFilter: 'blur(24px)',
           WebkitBackdropFilter: 'blur(24px)',
           borderRight: '1px solid var(--color-sidebar-border)',
-          boxShadow: isExpanded ? '4px 0 24px rgba(0,0,0,0.06)' : '2px 0 8px rgba(0,0,0,0.03)',
+          boxShadow: isExpanded
+            ? 'var(--sidebar-shadow, var(--sidebar-shadow-expanded))'
+            : 'var(--sidebar-shadow, var(--sidebar-shadow-collapsed))',
           willChange: 'width',
           transform: 'translateZ(0)'
         }}
