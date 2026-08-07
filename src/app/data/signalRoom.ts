@@ -26,6 +26,53 @@ export const INTENT_TYPE_LABEL: Record<IntentType, string> = {
   'weak-fit': 'Weak fit',
 };
 
+/** Engagement Priority, per the delivered column's P1/P2/P3 vocabulary. */
+export type EngagementPriority = 'P1' | 'P2' | 'P3';
+
+// ── Field → delivered column map ─────────────────────────────────────────────
+// The Relish Enrichment API v1.0 delivers 31 columns per record. Our identifiers
+// are shorter than the delivered column names, so this records the correspondence
+// rather than renaming ~1,900 lines of call sites. Grouping follows the doc.
+//
+//   Lead Identity (6)
+//     contact.name            → Contact Name
+//     contact.title           → Job Title
+//     meta.leadFor.name       → Lead For Company      (the seller — see below)
+//     meta.leadFor.domain     → Lead For Domain
+//     account.name            → Lead Against Company
+//     account.domain          → Lead Against Domain
+//   Contact Intelligence (8)
+//     contact.roleAnalysis    → Role Analysis
+//     contact.influence       → Decision Influence
+//     contact.painPoints      → Pain Points
+//     contact.motivations     → Motivations
+//     contact.commStyle       → Communication Style
+//     contact.approach        → Recommended Approach
+//     contact.talkingPoints   → Talking Points
+//     contact.objections      → Objection Handling
+//   Target Account Intelligence (15)
+//     account.summary/industry/employees/revenue/hq
+//                             → Target Summary / Industry / Employee Count (est.)
+//                               / Revenue (est.) / Headquarters
+//     account.painPoints      → Target Pain Points
+//     account.buyingSignals   → Target Buying Signals
+//     account.engagementPriority → Engagement Priority
+//     account.sellerFit       → Seller Fit
+//     account.competitiveOps  → Target Competitive Opportunities
+//     account.currentVendors  → Likely Current Vendors
+//     account.dmRoles         → Likely Decision-Maker Roles
+//     account.techStack       → Target Technology Stack
+//     account.securityPosture → Target Security Posture
+//     account.recentNews      → Target Recent News
+//   Verified Signals (2)
+//     account.triggers        → Trigger Events
+//     account.signalFreshness → Signal Freshness
+//
+// Seller Fit and Engagement Priority are account-level in the contract. They
+// used to sit on SignalContact here, where sellerFit was duplicated verbatim
+// across every contact at an account (Lonza carried the same string five times)
+// and priority was the constant "High" on all 20 rows.
+
 export interface SignalContact {
   id: number;
   srNo: string;
@@ -51,8 +98,6 @@ export interface SignalContact {
   talkingPoints: string[];
   motivations: Array<{ kind: string; text: string }>;
   objections: Array<{ q: string; a: string }>;
-  sellerFit: string;
-  priority: string;
   signalScore: number;
 }
 
@@ -76,6 +121,8 @@ export interface SignalAccount {
   recentNews: string[];
   triggers: Array<{ text: string; date?: string; source?: string; kind?: string }>;
   signalFreshness: string;
+  sellerFit: string;
+  engagementPriority: EngagementPriority;
   contactIds: number[];
 }
 
@@ -104,6 +151,19 @@ export interface SignalRoomMeta {
   rows: number;
   companies: number;
   sampleOf: number;
+  /**
+   * `companyFor` in the API — the seller the intelligence is generated *for*.
+   * The contract is directional and warns that swapping it with the target
+   * account "enriches every pair backwards", so it is worth naming on screen:
+   * the talking points, seller fit, approach and objection handling are all
+   * computed against this company, which is what separates them from generic
+   * firmographics.
+   *
+   * One batch is one seller, so this lives on meta rather than being repeated
+   * on every contact. The value is the seller this sample was actually run for
+   * — every sellerFit string in the data names it.
+   */
+  leadFor: { name: string; domain: string };
 }
 
 const data = raw as unknown as {

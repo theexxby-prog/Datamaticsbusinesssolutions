@@ -4,20 +4,100 @@ import {
   RadioTower, Swords, Package, Layers,
   ShieldCheck, Newspaper, AlertTriangle, UserCheck, CalendarClock, ExternalLink,
 } from 'lucide-react';
-import type { SignalAccount } from '../../data/signalRoom';
+import type { SignalAccount, EngagementPriority } from '../../data/signalRoom';
 import { fmtSignalDate } from './signalMeta';
 
 // Token-styled section primitives shared by the contact and account briefings.
+// Section titles follow the delivered column names in the Relish Enrichment API
+// so a reader can map a panel to a column without a translation step.
 
-export function Section({ icon: Icon, title, id, children }: { icon: LucideIcon; title: string; id?: string; children: ReactNode }) {
+const PRIORITY_STYLE: Record<EngagementPriority, { bg: string; fg: string; label: string }> = {
+  P1: { bg: 'var(--color-error-bg)', fg: 'var(--color-error)', label: 'P1 · Engage now' },
+  P2: { bg: 'var(--color-warning-bg)', fg: 'var(--color-warning)', label: 'P2 · Nurture' },
+  P3: { bg: 'var(--color-info-bg)', fg: 'var(--color-info)', label: 'P3 · Monitor' },
+};
+
+/** Engagement Priority — an account-level column in the contract. */
+export function PriorityPill({ priority }: { priority: EngagementPriority }) {
+  const style = PRIORITY_STYLE[priority];
+  if (!style) return null;
+  return (
+    <span
+      className="inline-flex flex-shrink-0 items-center rounded-full px-2.5 py-0.5 text-[11px] font-bold"
+      style={{ background: style.bg, color: style.fg }}
+    >
+      {style.label}
+    </span>
+  );
+}
+
+/**
+ * Signal Freshness — the newest verified signal date on the account. The
+ * contract delivers it "so reps can sort by who is hot now", so it is worth
+ * saying plainly how old that is; a high-readiness account whose newest signal
+ * is nine months old is a different proposition from one that moved last week.
+ */
+export function freshnessAgeDays(signalFreshness: string, now = new Date()): number | null {
+  const then = new Date(signalFreshness);
+  if (Number.isNaN(then.getTime())) return null;
+  return Math.max(0, Math.round((now.getTime() - then.getTime()) / 86_400_000));
+}
+
+export function freshnessLabel(signalFreshness: string, now = new Date()): string {
+  const days = freshnessAgeDays(signalFreshness, now);
+  if (days === null) return fmtSignalDate(signalFreshness);
+  if (days < 31) return `${fmtSignalDate(signalFreshness)} · ${days}d ago`;
+  const months = Math.round(days / 30.44);
+  return `${fmtSignalDate(signalFreshness)} · ${months}mo ago`;
+}
+
+/** Past this, a signal is old enough that the UI should say so out loud. */
+export const STALE_SIGNAL_DAYS = 120;
+
+/** A source may arrive as a bare hostname or a full URL; accept both. */
+export function sourceHref(source: string): string {
+  return /^https?:\/\//i.test(source) ? source : `https://${source}`;
+}
+
+export function sourceLabel(source: string): string {
+  try {
+    return new URL(sourceHref(source)).hostname.replace(/^www\./, '');
+  } catch {
+    return source;
+  }
+}
+
+/** `note` captions the section — used to attribute seller-specific columns. */
+export function Section({ icon: Icon, title, id, note, children }: {
+  icon: LucideIcon; title: string; id?: string; note?: ReactNode; children: ReactNode;
+}) {
   return (
     <div id={id} className="glass-card p-5">
-      <h3 className="mb-3 flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
+      <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
         <Icon className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
         {title}
       </h3>
+      {note ? (
+        <p className="mb-3 mt-0.5 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{note}</p>
+      ) : (
+        <div className="mb-3" />
+      )}
       {children}
     </div>
+  );
+}
+
+/**
+ * Attribution for the columns computed against the seller rather than the
+ * account on its own. Without it these read as generic advice; the whole point
+ * of the pairing is that they are not.
+ */
+export function SellerLens({ seller, account }: { seller: string; account?: string }) {
+  return (
+    <>
+      Computed for <span className="font-semibold">{seller}</span>
+      {account ? <> against <span className="font-semibold">{account}</span></> : null}
+    </>
   );
 }
 
@@ -73,34 +153,71 @@ export function ChipList({ items }: { items: string[] }) {
   );
 }
 
-/** Compact "Industry · HQ · N employees · Revenue" line for briefing headers. */
+/**
+ * Compact "Industry · HQ · ~N employees · ~Revenue" line for briefing headers.
+ *
+ * Employee count and revenue are delivered as estimates ("(est.)" in the
+ * contract), so they carry a `~`; industry and HQ are not.
+ *
+ * Every part is dropped when empty rather than assumed present. Datamatics has
+ * asked Relish about suppressing the company fields that overlap its own data
+ * (size, HQ, revenue) — if that lands, this line must thin out rather than
+ * render "· undefined employees ·".
+ */
 export function accountFactLine(account: SignalAccount, includeHq = true): string {
-  const clean = (value: string) => value.replace(/\s*\([^)]*\)/g, '').trim();
+  const clean = (value?: string) => (value ?? '').replace(/\s*\([^)]*\)/g, '').trim();
+  const employees = clean(account.employees);
+  const revenue = clean(account.revenue);
   return [
-    account.industry,
-    ...(includeHq ? [account.hq] : []),
-    `${clean(account.employees)} employees`,
-    clean(account.revenue),
-  ].join(' · ');
+    clean(account.industry),
+    ...(includeHq ? [clean(account.hq)] : []),
+    employees && `~${employees} employees`,
+    revenue && `~${revenue}`,
+  ]
+    .filter(Boolean)
+    .join(' · ');
+}
+
+/**
+ * Signal Freshness, stated above the trigger list it describes. Loud when the
+ * newest verified signal is old — that is the case the column exists to catch,
+ * and the one most likely to be missed when an account otherwise scores well.
+ */
+export function SignalFreshnessLine({ signalFreshness }: { signalFreshness: string }) {
+  if (!signalFreshness) return null;
+  const days = freshnessAgeDays(signalFreshness);
+  const stale = days !== null && days > STALE_SIGNAL_DAYS;
+  return (
+    <p
+      className="mb-3 flex flex-wrap items-center gap-1.5 text-[11.5px]"
+      style={{ color: stale ? 'var(--color-warning)' : 'var(--color-text-muted)' }}
+    >
+      <CalendarClock className="h-3.5 w-3.5 flex-shrink-0" />
+      <span className="font-semibold">Signal Freshness:</span>
+      <span>{freshnessLabel(signalFreshness)}</span>
+      {stale && <span className="font-semibold">· going cold</span>}
+    </p>
+  );
 }
 
 /** The account intelligence stack, owned by the account briefing. */
 export function AccountDetailSections({ account }: { account: SignalAccount }) {
   return (
     <div className="space-y-4">
-      <Section icon={Newspaper} title="Recent news">
+      <Section icon={Newspaper} title="Target Recent News">
         <BulletList items={account.recentNews} linkFor={item => newsSearchUrl(account.name, item)} />
       </Section>
 
-      <Section icon={RadioTower} title="Buying signals">
+      <Section icon={RadioTower} title="Target Buying Signals">
         <BulletList items={account.buyingSignals} />
       </Section>
 
-      <Section icon={AlertTriangle} title="Account pain points">
+      <Section icon={AlertTriangle} title="Target Pain Points">
         <BulletList items={account.painPoints} />
       </Section>
 
-      <Section icon={CalendarClock} title="Trigger events">
+      <Section icon={CalendarClock} title="Trigger Events">
+        <SignalFreshnessLine signalFreshness={account.signalFreshness} />
         <div className="space-y-3">
           {account.triggers.map(trigger => (
             <div key={trigger.text} className="flex items-start gap-3">
@@ -118,13 +235,13 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
                     <>
                       {trigger.date ? ' · ' : ''}
                       <a
-                        href={`https://${trigger.source}`}
+                        href={sourceHref(trigger.source)}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="underline-offset-2 transition-colors hover:text-[var(--color-primary)] hover:underline"
-                        title={`Open ${trigger.source} in a new tab`}
+                        title={`Open ${sourceLabel(trigger.source)} in a new tab`}
                       >
-                        {trigger.source}
+                        {sourceLabel(trigger.source)}
                       </a>
                     </>
                   )}
@@ -135,24 +252,24 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
         </div>
       </Section>
 
-      <Section icon={Swords} title="Competitive openings">
+      <Section icon={Swords} title="Target Competitive Opportunities">
         <BulletList items={account.competitiveOps} />
       </Section>
 
       <div className="grid gap-4 md:grid-cols-2">
-        <Section icon={Layers} title="Technology stack">
+        <Section icon={Layers} title="Target Technology Stack">
           <ChipList items={account.techStack} />
         </Section>
-        <Section icon={Package} title="Likely current vendors">
+        <Section icon={Package} title="Likely Current Vendors">
           <ChipList items={account.currentVendors} />
         </Section>
       </div>
 
-      <Section icon={UserCheck} title="Decision-maker roles">
+      <Section icon={UserCheck} title="Likely Decision-Maker Roles">
         <BulletList items={account.dmRoles} />
       </Section>
 
-      <Section icon={ShieldCheck} title="Security posture">
+      <Section icon={ShieldCheck} title="Target Security Posture">
         <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{account.securityPosture}</p>
       </Section>
     </div>

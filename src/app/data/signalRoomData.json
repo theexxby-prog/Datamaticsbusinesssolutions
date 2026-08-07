@@ -75,8 +75,6 @@
      "a": "That's exactly the right time to talk to us. Your transformation is the perfect opportunity to build the right governance framework from the start, rather than retrofitting it later. Keepit can be deployed in days, not months, and integrates seamlessly with M365, Google, and Salesforce. It's a low-friction, high-impact project that directly supports the risk management and compliance goals of your transformation program. We can help you define the data protection governance standards for the new environment."
     }
    ],
-   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -151,8 +149,6 @@
      "a": "Keepit is designed for seamless integration with existing SaaS environments like Microsoft 365, Google Workspace, and Salesforce. Our deployment is non-disruptive, and we offer dedicated migration support to minimize any operational impact. You can run Keepit alongside your current tools initially, then transition at your own pace."
     }
    ],
-   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -229,8 +225,6 @@
      "a": "That's exactly why Keepit is a strong fit. Our flat-rate, all-inclusive pricing model is the most predictable in the industry. You won't see surprise costs for data egress, API calls, or long-term retention. This allows you to accurately forecast your data protection costs and avoid the budget overruns common with hyperscaler-native or per-user licensed tools. In many cases, we can provide a lower total cost of ownership while delivering a higher level of data integrity and compliance assurance."
     }
    ],
-   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
-   "priority": "High",
    "signalScore": 96
   },
   {
@@ -310,8 +304,6 @@
      "a": "That makes sense, Georg. You're the one on the ground ensuring the Visp site and global engineering run smoothly. You are the key influencer who understands the operational pain. We're not asking you to make the final purchase decision. We're asking you to be the champion who brings a solution to the central team that solves *your* specific problems, like reducing recovery time for a critical M365 mailbox during an audit, or guaranteeing a clean backup for a GxP batch record. Would you be open to a 15-minute technical briefing so you can evaluate if this is something worth escalating to the security team?"
     }
    ],
-   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -385,8 +377,6 @@
      "a": "I understand margin pressure is a reality. That's actually why our model works well for you. Unlike hyperscalers that charge unpredictable egress and API fees, Keepit offers a transparent, flat-rate price for unlimited retention. You get a single, predictable line item in your budget. More importantly, what is the cost of one hour of downtime for a blockbuster drug production line? Our solution is an insurance policy against that multi-million dollar risk, with a fixed, manageable premium."
     }
    ],
-   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -466,8 +456,6 @@
      "a": "And we complement it perfectly. Fortinet is the best at prevention. Keepit is the best at guaranteed recovery. We are not a replacement, we are an essential layer of defense. In fact, after the recent incidents, many of your peers are actively looking for an independent, vendor-neutral backup solution to de-risk their reliance on a single ecosystem. Think of us as the 'insurance policy' for your Security Fabric investment, ensuring that if the unthinkable happens, you have a guaranteed way back to a clean state."
     }
    ],
-   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -547,8 +535,6 @@
      "a": "I understand, but recent events show that even the best prevention can fail. The credential harvesting campaign and CVE exploitation prove that recovery is now a top concern for your customers. By partnering with Keepit, you can offer a complete resilience story, prevention from Fortinet and guaranteed recovery from Keepit, building trust and differentiating your value proposition in the market."
     }
    ],
-   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -631,8 +617,6 @@
      "a": "Keepit offers flat-rate, predictable pricing with no hidden egress or API fees. For a company of Fortinet's size, the cost of a single data loss incident, in terms of engineering downtime, customer trust, and regulatory fines, far exceeds the investment in Keepit. Plus, our unlimited retention means you won't face surprise costs for long-term archives. We can provide a quick, no-obligation quote to show how it fits within your budget."
     }
    ],
-   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -710,8 +694,6 @@
      "a": "Keepit is designed to be simple and non-disruptive. It integrates seamlessly with SaaS applications and requires no agents or changes to your existing infrastructure. Our flat-rate pricing and unlimited retention also eliminate billing surprises, making it a low-overhead addition to your resilience strategy."
     }
    ],
-   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -793,8 +775,6 @@
      "a": "I appreciate the budget reality. But consider the cost of a single breach that you can't recover from cleanly. The June 2026 campaign alone likely cost Fortinet millions in remediation, legal fees, and lost customer trust. Keepit's flat-rate, predictable pricing with no hidden egress fees means you can budget accurately. It's a fraction of the cost of a single major incident. We can also start with a targeted pilot for your most critical SaaS data (e.g., M365 for your executive team) to prove value before a full rollout."
     }
    ],
-   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -876,8 +856,6 @@
      "a": "Absolutely. Keepit operates its own data centers in the UK (and other regions globally), so your member data never leaves UK jurisdiction. We don't rely on AWS or Azure for storage, which means we can guarantee data sovereignty and protect against extraterritorial access (e.g., US CLOUD Act). This is a key differentiator for regulated financial institutions like Royal London. I can provide a data residency certificate and our UK data center locations in our proposal."
     }
    ],
-   "sellerFit": "Excellent fit. Keepit's immutable, vendor-neutral backup cloud directly addresses Royal London's critical pain points: ransomware resilience (blockchain-verified immutability), regulatory compliance (FCA/PRA operational resilience), cloud concentration risk (independent from Azure), and cost efficiency (flat-rate pricing with no egress fees). The mutual's member-owned structure aligns perfectly with Keepit's predictable pricing model. The timing is optimal given active digital transformation and cloud migration initiatives that create natural entry points for re-evaluating backup strategies.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -962,8 +940,6 @@
      "a": "We have wholly-owned data centers in Brazil, so your data never leaves the country. Our blockchain-anchored encryption keys provide mathematically verifiable proof that your data hasn't been tampered with, giving you a clear audit trail for LGPD compliance. Unlike hyperscalers, we don't store your backups on shared infrastructure that could be subject to foreign jurisdiction."
     }
    ],
-   "sellerFit": "Excellent fit: CPFL's heavy Microsoft ecosystem dependency, cybersecurity modernization focus, LGPD compliance needs, and financial capacity align perfectly with Keepit's value proposition of independent, immutable, blockchain-verified SaaS backup. The absence of a documented backup vendor creates a greenfield opportunity to position Keepit as the essential cyber-recovery layer for their critical energy infrastructure.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -1044,8 +1020,6 @@
      "a": "That's exactly why Keepit is the right fit. Our blockchain-verified immutability provides a mathematically provable audit trail that is superior to what any other backup vendor offers. We have dedicated data centers in Germany and Europe to guarantee data sovereignty. We would be happy to provide you with our SOC 2 reports, ISO certifications, and a detailed compliance matrix that maps directly to FDA, EU MDR, and GDPR requirements."
     }
    ],
-   "sellerFit": "Exceptional fit. Keepit's independent, immutable, ransomware-immune backup cloud directly addresses Dräger's most critical pain points: ensuring absolute data integrity and business continuity for life-supporting systems. Keepit's blockchain-verified immutability aligns with Dräger's security-first culture and CMMC certification. The vendor-neutral architecture fills the SaaS data protection gap in Dräger's Azure migration, while flat-rate pricing and guaranteed data sovereignty appeal to compliance and IT leaders. Keepit is uniquely positioned as the recovery layer that guarantees the integrity of Dräger's safety systems.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -1133,8 +1107,6 @@
      "a": "Those are great tools, but they were originally designed for on-premise environments and adapted for SaaS. Keepit is the only platform built exclusively for SaaS data protection, with its own independent cloud infrastructure, not reliant on AWS or Azure. This means faster recovery, true data separation, and no egress fees. I'd invite you to compare our blockchain-verified immutability and unlimited retention against any other solution. We're confident you'll see the difference in both security and cost predictability."
     }
    ],
-   "sellerFit": "Keepit A/S is an ideal fit for SalMar ASA due to the critical alignment between SalMar's digital transformation risks and Keepit's unique value proposition. SalMar's heavy reliance on Microsoft 365 and Azure for core operations, combined with its IoT/OT data dependencies and strict regulatory compliance needs, directly maps to Keepit's strengths in providing independent, immutable, and blockchain-verified backup for SaaS data. Keepit's vendor-neutral architecture, guaranteed data sovereignty in Norwegian/European data centers, and predictable flat-rate pricing address SalMar's key pain points around ransomware recovery, supply chain attack resilience, and compliance. The timing is optimal given SalMar's recent strategic investments and focus on operational resilience.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -1212,8 +1184,6 @@
      "a": "I understand budget constraints. Keepit's flat-rate pricing is predictable and often more cost-effective than legacy tools when you factor in egress fees and management overhead. Plus, the cost of a ransomware incident or compliance failure far outweighs the investment. Let's run a quick ROI analysis to show the savings."
     }
    ],
-   "sellerFit": "Excellent fit. Keepit's independent, vendor-neutral backup platform directly addresses MinRes's critical pain points: ransomware immunity for SaaS data, supply-chain data integrity, immutable backups for compliance (SOCI Act), and long-term archival with predictable pricing. The presence of a dedicated CISO (Richard Asch) and aggressive digital transformation make MinRes an ideal target for Keepit's value proposition of true data separation and blockchain-verified recovery.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -1287,8 +1257,6 @@
      "a": "That makes perfect sense, and I respect that. In fact, that's exactly why many IT leaders in your position reach out to us. After an incident, the priority shifts to ensuring it can't happen again. Keepit is designed to be the final safety net-simple to deploy, low maintenance, and it gives you verifiable proof that your backups are clean. We can start with a small pilot for just your critical Teams or SharePoint data to prove the value without disrupting your current operations."
     }
    ],
-   "sellerFit": "Strong fit. Keepit's immutable, blockchain-verified backup directly addresses Clarion's critical pain points: ransomware immunity for expanded attack surface, UK GDPR compliance with data sovereignty, and protection for Microsoft 365 data. The post-breach context makes Clarion highly receptive to independent backup solutions. Keepit's predictable flat-rate pricing aligns with Clarion's non-profit budget constraints. The 2026 digital transformation creates a timely trigger for engagement.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -1366,8 +1334,6 @@
      "a": "I understand budget constraints. Keepit's flat-rate pricing actually helps you predict and control costs better than variable models. Many of our clients find that the savings from eliminating egress fees and reducing IT support tickets more than covers the investment. Could we do a quick ROI analysis based on your current backup spend and support ticket volume?"
     }
    ],
-   "sellerFit": "Keepit A/S is an excellent fit for Regions Financial Corp. due to its independent, vendor-neutral cloud platform that provides blockchain-verified, immutable backups immune to ransomware and supply-chain attacks. Regions' explicit focus on ransomware defense, data integrity, and compliance aligns perfectly with Keepit's value proposition. The recent M&A activity and CFO transition create a timely opportunity to present Keepit's predictable flat-rate pricing and guaranteed data sovereignty as a strategic solution for financial and operational resilience.",
-   "priority": "High",
    "signalScore": 88
   },
   {
@@ -1447,8 +1413,6 @@
      "a": "That's excellent, and a strong SOC is critical. But prevention and detection are not the same as guaranteed recovery. Even the best SOC can be bypassed. The question isn't 'if' an attack will get through, but 'when' it does, can you recover your *data* instantly and with 100% integrity? Most security tools focus on the endpoint. Keepit focuses on the data itself, providing an immutable, independent copy that your own SOC can use as a clean source for recovery, even if your primary systems are destroyed. It's the missing piece in a mature security strategy."
     }
    ],
-   "sellerFit": "Keepit is uniquely positioned to address DFDS's most critical vulnerabilities. The persistent daily cyber threats create an urgent need for an immutable, ransomware-proof backup solution that guarantees data integrity and rapid recovery. Keepit's vendor-independent cloud, blockchain-verified immutability, and predictable flat-rate pricing directly counter DFDS's pain points of data integrity gaps, regulatory pressure, and unpredictable costs. The recent compliance failure further amplifies the need for audit-ready, verifiable data protection that Keepit provides. DFDS's mature security team and active solution search make them a high-priority target for Keepit's differentiated offering.",
-   "priority": "High",
    "signalScore": 99
   },
   {
@@ -1526,8 +1490,6 @@
      "a": "The $75.7M cybersecurity funding was specifically allocated to address weaknesses exposed by the 2021 attack, including backup immutability. Keepit directly fills that verified gap. Additionally, the $87M legacy decommissioning budget includes replacing on-premise backup solutions, Keepit can replace those tools with a modern, cloud-native solution that integrates with Azure. The budget is there, and the mandate is clear."
     }
    ],
-   "sellerFit": "Exceptional fit. Keepit's core value proposition - a truly independent, vendor-neutral, immutable backup cloud - directly addresses the single most critical vulnerability exposed by the 2021 ransomware attack. The organization has verified budget ($75.7M), a documented mandate to fix backup immutability, and is actively migrating to the cloud platforms (Azure/M365) that Keepit protects. Keepit's blockchain-verified immutability and independent cloud architecture provide the exact solution needed to prevent a repeat of the 2021 disaster. The timing is optimal as the organization is actively decommissioning legacy backup solutions and implementing new cloud security architecture.",
-   "priority": "High",
    "signalScore": 94
   },
   {
@@ -1610,8 +1572,6 @@
      "a": "That's actually the perfect time to evaluate Keepit. As you migrate your data management systems to dedicated cloud infrastructure in Switzerland, you have a unique opportunity to architect a truly independent backup layer from the start. Keepit is designed to integrate seamlessly with your new cloud environment, ensuring data sovereignty and ransomware immunity from day one. We can help you avoid the costly mistake of building a backup strategy that is tied to a single vendor."
     }
    ],
-   "sellerFit": "Excellent fit: Keepit's blockchain-verified immutable backup directly addresses Cornèr Banca's need for ransomware immunity and data integrity for SaaS data. The vendor-neutral, independent cloud architecture aligns with the bank's supply-chain risk mitigation needs and Swiss data sovereignty requirements. Keepit's predictable flat-rate pricing supports the bank's cost efficiency mandate, while the SaaS-exclusive platform can displace legacy backup tools and consolidate point solutions. The bank's active digital transformation and cybersecurity investments signal a receptive audience for Keepit's modern, cloud-native backup solution.",
-   "priority": "High",
    "signalScore": 99
   }
  ],
@@ -1701,7 +1661,9 @@
     2,
     3,
     4
-   ]
+   ],
+   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
+   "engagementPriority": "P1"
   },
   {
    "slug": "fortinet",
@@ -1827,7 +1789,9 @@
     7,
     8,
     9
-   ]
+   ],
+   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
+   "engagementPriority": "P1"
   },
   {
    "slug": "royal-london",
@@ -1912,7 +1876,9 @@
    "signalFreshness": "2026-03-11",
    "contactIds": [
     10
-   ]
+   ],
+   "sellerFit": "Excellent fit. Keepit's immutable, vendor-neutral backup cloud directly addresses Royal London's critical pain points: ransomware resilience (blockchain-verified immutability), regulatory compliance (FCA/PRA operational resilience), cloud concentration risk (independent from Azure), and cost efficiency (flat-rate pricing with no egress fees). The mutual's member-owned structure aligns perfectly with Keepit's predictable pricing model. The timing is optimal given active digital transformation and cloud migration initiatives that create natural entry points for re-evaluating backup strategies.",
+   "engagementPriority": "P1"
   },
   {
    "slug": "cpfl-energia",
@@ -2005,7 +1971,9 @@
    "signalFreshness": "2026-03-01",
    "contactIds": [
     11
-   ]
+   ],
+   "sellerFit": "Excellent fit: CPFL's heavy Microsoft ecosystem dependency, cybersecurity modernization focus, LGPD compliance needs, and financial capacity align perfectly with Keepit's value proposition of independent, immutable, blockchain-verified SaaS backup. The absence of a documented backup vendor creates a greenfield opportunity to position Keepit as the essential cyber-recovery layer for their critical energy infrastructure.",
+   "engagementPriority": "P1"
   },
   {
    "slug": "dragerwerk-ag",
@@ -2110,7 +2078,9 @@
    "signalFreshness": "2026-05-08",
    "contactIds": [
     12
-   ]
+   ],
+   "sellerFit": "Exceptional fit. Keepit's independent, immutable, ransomware-immune backup cloud directly addresses Dräger's most critical pain points: ensuring absolute data integrity and business continuity for life-supporting systems. Keepit's blockchain-verified immutability aligns with Dräger's security-first culture and CMMC certification. The vendor-neutral architecture fills the SaaS data protection gap in Dräger's Azure migration, while flat-rate pricing and guaranteed data sovereignty appeal to compliance and IT leaders. Keepit is uniquely positioned as the recovery layer that guarantees the integrity of Dräger's safety systems.",
+   "engagementPriority": "P1"
   },
   {
    "slug": "salmar",
@@ -2229,7 +2199,9 @@
    "signalFreshness": "2026-06-23",
    "contactIds": [
     13
-   ]
+   ],
+   "sellerFit": "Keepit A/S is an ideal fit for SalMar ASA due to the critical alignment between SalMar's digital transformation risks and Keepit's unique value proposition. SalMar's heavy reliance on Microsoft 365 and Azure for core operations, combined with its IoT/OT data dependencies and strict regulatory compliance needs, directly maps to Keepit's strengths in providing independent, immutable, and blockchain-verified backup for SaaS data. Keepit's vendor-neutral architecture, guaranteed data sovereignty in Norwegian/European data centers, and predictable flat-rate pricing address SalMar's key pain points around ransomware recovery, supply chain attack resilience, and compliance. The timing is optimal given SalMar's recent strategic investments and focus on operational resilience.",
+   "engagementPriority": "P2"
   },
   {
    "slug": "mineral-resources-limited",
@@ -2338,7 +2310,9 @@
    "signalFreshness": "2026-04-30",
    "contactIds": [
     14
-   ]
+   ],
+   "sellerFit": "Excellent fit. Keepit's independent, vendor-neutral backup platform directly addresses MinRes's critical pain points: ransomware immunity for SaaS data, supply-chain data integrity, immutable backups for compliance (SOCI Act), and long-term archival with predictable pricing. The presence of a dedicated CISO (Richard Asch) and aggressive digital transformation make MinRes an ideal target for Keepit's value proposition of true data separation and blockchain-verified recovery.",
+   "engagementPriority": "P2"
   },
   {
    "slug": "clarion-housing-group",
@@ -2432,7 +2406,9 @@
    "signalFreshness": "2026-03-01",
    "contactIds": [
     15
-   ]
+   ],
+   "sellerFit": "Strong fit. Keepit's immutable, blockchain-verified backup directly addresses Clarion's critical pain points: ransomware immunity for expanded attack surface, UK GDPR compliance with data sovereignty, and protection for Microsoft 365 data. The post-breach context makes Clarion highly receptive to independent backup solutions. Keepit's predictable flat-rate pricing aligns with Clarion's non-profit budget constraints. The 2026 digital transformation creates a timely trigger for engagement.",
+   "engagementPriority": "P2"
   },
   {
    "slug": "regions-bank",
@@ -2511,7 +2487,9 @@
    "signalFreshness": "2026-04-01",
    "contactIds": [
     16
-   ]
+   ],
+   "sellerFit": "Keepit A/S is an excellent fit for Regions Financial Corp. due to its independent, vendor-neutral cloud platform that provides blockchain-verified, immutable backups immune to ransomware and supply-chain attacks. Regions' explicit focus on ransomware defense, data integrity, and compliance aligns perfectly with Keepit's value proposition. The recent M&A activity and CFO transition create a timely opportunity to present Keepit's predictable flat-rate pricing and guaranteed data sovereignty as a strategic solution for financial and operational resilience.",
+   "engagementPriority": "P3"
   },
   {
    "slug": "dfds",
@@ -2614,7 +2592,9 @@
    "signalFreshness": "2026-07-01",
    "contactIds": [
     17
-   ]
+   ],
+   "sellerFit": "Keepit is uniquely positioned to address DFDS's most critical vulnerabilities. The persistent daily cyber threats create an urgent need for an immutable, ransomware-proof backup solution that guarantees data integrity and rapid recovery. Keepit's vendor-independent cloud, blockchain-verified immutability, and predictable flat-rate pricing directly counter DFDS's pain points of data integrity gaps, regulatory pressure, and unpredictable costs. The recent compliance failure further amplifies the need for audit-ready, verifiable data protection that Keepit provides. DFDS's mature security team and active solution search make them a high-priority target for Keepit's differentiated offering.",
+   "engagementPriority": "P2"
   },
   {
    "slug": "waikato-district-health-board",
@@ -2696,7 +2676,9 @@
    "signalFreshness": "2025-11-01",
    "contactIds": [
     18
-   ]
+   ],
+   "sellerFit": "Exceptional fit. Keepit's core value proposition - a truly independent, vendor-neutral, immutable backup cloud - directly addresses the single most critical vulnerability exposed by the 2021 ransomware attack. The organization has verified budget ($75.7M), a documented mandate to fix backup immutability, and is actively migrating to the cloud platforms (Azure/M365) that Keepit protects. Keepit's blockchain-verified immutability and independent cloud architecture provide the exact solution needed to prevent a repeat of the 2021 disaster. The timing is optimal as the organization is actively decommissioning legacy backup solutions and implementing new cloud security architecture.",
+   "engagementPriority": "P1"
   },
   {
    "slug": "corner-banca-sa",
@@ -2794,7 +2776,9 @@
    "signalFreshness": "2026-05-01",
    "contactIds": [
     19
-   ]
+   ],
+   "sellerFit": "Excellent fit: Keepit's blockchain-verified immutable backup directly addresses Cornèr Banca's need for ransomware immunity and data integrity for SaaS data. The vendor-neutral, independent cloud architecture aligns with the bank's supply-chain risk mitigation needs and Swiss data sovereignty requirements. Keepit's predictable flat-rate pricing supports the bank's cost efficiency mandate, while the SaaS-exclusive platform can displace legacy backup tools and consolidate point solutions. The bank's active digital transformation and cybersecurity investments signal a receptive audience for Keepit's modern, cloud-native backup solution.",
+   "engagementPriority": "P1"
   }
  ],
  "meta": {
@@ -2802,7 +2786,11 @@
   "enrichedBy": "Datamatics Business Solutions",
   "rows": 20,
   "companies": 12,
-  "sampleOf": 252
+  "sampleOf": 252,
+  "leadFor": {
+   "name": "Keepit A/S",
+   "domain": "keepit.com"
+  }
  },
  "synth": {
   "0": {

@@ -8,7 +8,7 @@ import {
   getSignalAccount, getAccountInsight, getSignalContact, signalLeadId, signalMeta,
   type SignalContact,
 } from '../data/signalRoom';
-import { Section, AccountDetailSections, accountFactLine } from '../components/signal/BriefingSections';
+import { Section, AccountDetailSections, accountFactLine, PriorityPill } from '../components/signal/BriefingSections';
 import { ROLE_META } from '../components/signal/signalMeta';
 import { useUnionPrefs } from '../config/unionPrefs';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -34,7 +34,6 @@ export default function AccountBriefingPage() {
   if (!allowed || !account) return null;
 
   const insight = getAccountInsight(account.slug);
-  const anchor = getSignalContact(account.contactIds[0]);
 
   // Committee merged with the recommended engagement sequence: sequenced
   // contacts first (with their "why"), then any remaining committee members.
@@ -62,7 +61,7 @@ export default function AccountBriefingPage() {
         </button>
         <span className="flex items-center gap-1.5 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
           <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--color-primary)' }} />
-          {signalMeta.campaign} · enriched by {signalMeta.enrichedBy}
+          {signalMeta.campaign} · leads for {signalMeta.leadFor.name} · enriched by {signalMeta.enrichedBy}
         </span>
       </div>
 
@@ -79,11 +78,18 @@ export default function AccountBriefingPage() {
         </p>
       </div>
 
-      {/* Seller fit — account-level narrative (from the anchor contact) */}
-      {anchor && (
-        <Section icon={Target} title="Seller fit">
-          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{anchor.sellerFit}</p>
-          {derivedIntel && insight && (
+      {/* Seller fit — an account-level column in the contract. It reads as a
+          judgement about this seller against this account, so it carries the
+          pairing explicitly rather than leaving the reader to infer it. */}
+      <Section icon={Target} title="Seller Fit">
+        <div className="mb-2 flex flex-wrap items-center gap-2">
+          <PriorityPill priority={account.engagementPriority} />
+          <span className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+            {signalMeta.leadFor.name} → {account.name}
+          </span>
+        </div>
+        <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{account.sellerFit}</p>
+        {derivedIntel && insight && (
             <div className="mt-3 flex items-center gap-3 rounded-xl border p-3" style={{ borderColor: 'var(--color-border-light)' }}>
               <div className="flex-shrink-0 text-center">
                 <div className="text-2xl font-extrabold leading-none" style={{ color: 'var(--color-primary)', fontVariantNumeric: 'tabular-nums' }}>
@@ -94,8 +100,7 @@ export default function AccountBriefingPage() {
               <p className="text-[13px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{insight.readinessNote}</p>
             </div>
           )}
-        </Section>
-      )}
+      </Section>
 
       {/* Buying committee, in recommended engagement order */}
       {engageList.length > 0 && (
