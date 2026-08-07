@@ -400,7 +400,7 @@ function StandardHomePage() {
                     <span className="text-sm text-[var(--color-text-secondary)]">total</span>
                   </div>
                 </div>
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-info)]/20 to-[#60A5FA]/10 flex items-center justify-center flex-shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[var(--color-info)]/20 to-[var(--color-info)]/5 flex items-center justify-center flex-shrink-0">
                   <BarChart3 className="w-4 h-4 text-[var(--color-info)]" />
                 </div>
               </div>
@@ -471,8 +471,11 @@ function StandardHomePage() {
                 <motion.button
                   onClick={() => navigate('/campaigns', { state: { statusFilter: 'Completed' } })}
                   className="w-full flex items-center justify-between px-2.5 py-1.5 rounded-lg group"
-                  style={{ background: 'rgba(59,130,246,0.05)', border: '1px solid rgba(59,130,246,0.12)' }}
-                  whileHover={{ background: 'rgba(59,130,246,0.09)' }}
+                  style={{
+                    background: 'color-mix(in srgb, var(--color-info) 5%, transparent)',
+                    border: '1px solid color-mix(in srgb, var(--color-info) 12%, transparent)',
+                  }}
+                  whileHover={{ background: 'color-mix(in srgb, var(--color-info) 9%, transparent)' }}
                   whileTap={{ scale: 0.98 }}
                 >
                   <div className="flex items-center gap-1.5">

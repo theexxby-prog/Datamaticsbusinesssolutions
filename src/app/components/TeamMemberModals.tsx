@@ -543,7 +543,10 @@ export function AddMemberModal({ isOpen, onClose, onSave }: AddMemberModalProps)
             </div>
           </FormField>
 
-          <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: 'rgba(37,99,235,0.05)', border: '1px solid rgba(37,99,235,0.15)' }}>
+          {/* Mixed from --color-info so the note's ground tracks the token its
+              own icon and text already use — the old literal froze it to the
+              Datamatics blue and drifted under data-brand="union". */}
+          <div className="p-3 rounded-xl flex items-start gap-2" style={{ background: 'color-mix(in srgb, var(--color-info) 5%, transparent)', border: '1px solid color-mix(in srgb, var(--color-info) 15%, transparent)' }}>
             <Activity className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: 'var(--color-info)' }} />
             <p style={{ fontSize: '12px', color: 'var(--color-info)', margin: 0, lineHeight: '1.5' }}>
               The new member will be added as <strong>Active</strong>. You can assign clients to them after creation.

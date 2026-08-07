@@ -127,25 +127,25 @@ export default function UnionDashboard() {
       go: () => navigate('/leads?status=Pending%20Review&data=all'),
     },
     topOverdue && {
-      icon: AlertCircle, tone: 'var(--color-error)', bg: 'rgba(239,68,68,0.07)',
+      icon: AlertCircle, tone: 'var(--color-error)', bg: 'var(--color-error-bg)',
       label: 'Overdue invoice',
       text: `${topOverdue.invoiceNumber} · ${fmtMoney(topOverdue.total)}`,
       go: () => navigate('/invoices'),
     },
     topSignature && {
-      icon: FilePenLine, tone: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)',
+      icon: FilePenLine, tone: 'var(--color-warning)', bg: 'var(--color-warning-bg)',
       label: 'Signature required',
       text: `${topSignature.id} · ${topSignature.campaignName}`,
       go: () => navigate('/documents'),
     },
     atRiskForecast && {
-      icon: TrendingDown, tone: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)',
+      icon: TrendingDown, tone: 'var(--color-warning)', bg: 'var(--color-warning-bg)',
       label: 'Delivery at risk',
       text: `${atRiskForecast.campaign.name} · projected ${atRiskForecast.projected} of ${atRiskForecast.target}`,
       go: () => navigate(`/campaigns/${atRiskForecast.campaign.id}`),
     },
     latestTrigger && {
-      icon: Megaphone, tone: 'var(--color-info)', bg: 'rgba(8,145,178,0.08)',
+      icon: Megaphone, tone: 'var(--color-info)', bg: 'var(--color-info-bg)',
       label: `Fresh signal · ${latestTrigger.account.name}`,
       text: latestTrigger.text,
       go: () => navigate(`/leads/account/${latestTrigger.account.slug}`),
@@ -474,8 +474,8 @@ export default function UnionDashboard() {
                   <span
                     className="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
                     style={inv.stage === 'overdue'
-                      ? { background: 'rgba(239,68,68,0.10)', color: 'var(--color-error)' }
-                      : { background: 'rgba(217,119,6,0.10)', color: 'var(--color-warning)' }}
+                      ? { background: 'var(--color-error-bg)', color: 'var(--color-error)' }
+                      : { background: 'var(--color-warning-bg)', color: 'var(--color-warning)' }}
                   >
                     {inv.stage === 'overdue' ? 'Overdue' : `Due ${formatDateShort(inv.dueDate)}`}
                   </span>

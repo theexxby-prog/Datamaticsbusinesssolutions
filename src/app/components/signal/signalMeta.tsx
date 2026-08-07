@@ -7,10 +7,10 @@ import { formatDate } from '../../utils/formatDate';
 // chips, dots, and card edges.
 
 export const INTENT_META: Record<IntentType, { label: string; color: string; bg: string }> = {
-  'compliance-driven': { label: INTENT_TYPE_LABEL['compliance-driven'], color: 'var(--color-info)', bg: 'rgba(8,145,178,0.10)' },
-  'event-triggered': { label: INTENT_TYPE_LABEL['event-triggered'], color: 'var(--color-warning)', bg: 'rgba(217,119,6,0.12)' },
-  'company-driven': { label: INTENT_TYPE_LABEL['company-driven'], color: 'var(--color-success)', bg: 'rgba(5,150,105,0.10)' },
-  'personal-career': { label: INTENT_TYPE_LABEL['personal-career'], color: 'var(--color-accent-purple)', bg: 'rgba(124,58,237,0.10)' },
+  'compliance-driven': { label: INTENT_TYPE_LABEL['compliance-driven'], color: 'var(--color-info)', bg: 'var(--color-info-bg)' },
+  'event-triggered': { label: INTENT_TYPE_LABEL['event-triggered'], color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
+  'company-driven': { label: INTENT_TYPE_LABEL['company-driven'], color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
+  'personal-career': { label: INTENT_TYPE_LABEL['personal-career'], color: 'var(--color-accent-purple)', bg: 'var(--color-accent-purple-bg)' },
   'weak-fit': { label: INTENT_TYPE_LABEL['weak-fit'], color: 'var(--color-text-secondary)', bg: 'rgba(100,116,139,0.12)' },
 };
 

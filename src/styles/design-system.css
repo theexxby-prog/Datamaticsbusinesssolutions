@@ -59,6 +59,16 @@
 --color-accent-purple: #7C3AED;
 --color-accent-purple-bg: rgba(124, 58, 237, 0.10);
 
+/* Cool accent ramp — sequenced stages that are neither brand nor status (the
+   outreach funnel's email rows). These carry the exact literal blues that
+   funnel used to hardcode as `blue-500` / `indigo-500` / `indigo-400`, so the
+   Datamatics portal renders unchanged; the union block re-points them so the
+   same bars follow the retail brand instead of staying stuck on Tailwind's
+   default palette. */
+--color-cool: #3B82F6;
+--color-cool-deep: #6366F1;
+--color-cool-soft: #818CF8;
+
 /* ── Categorical chart palette ────────────────────────────────────────────────
    Eight slots for series identity, assigned in fixed order and never cycled.
    Validated against the surfaces charts actually render on (light #F1F6FD, the
@@ -540,7 +550,28 @@ input[type="checkbox"]:disabled {
     #E6EEFA;
   --color-main-bg: #E6EEFA;
   --background-muted: #DCE7F6;
-  --color-chart-2: #24478F;
+  /* Info goes cyan. The default #2563EB sits one hue off the union primary,
+     and two near-identical blues read as a mistake rather than a distinction.
+     Cyan stays in the cool family while being unmistakably not-the-brand — and
+     it is what the rgba(8,145,178,…) chip tints already scattered through the
+     union pages assumed, against a token that was still blue. 4.9:1 on the
+     union card surface (#F1F6FD). */
+  --color-info: #0E7490;
+  --color-info-bg: rgba(14, 116, 144, 0.10);
+  /* Secondary series colour. The old #24478F navy was a *third* blue in the
+     same stacked bar as --color-primary and --color-info (see
+     SpendChannelsSection); borrowing the validated violet slot separates all
+     three without inventing an unvalidated hue. */
+  --color-chart-2: var(--chart-cat-7);
+  /* Cool ramp, re-pointed off Tailwind's blues into the union family. Values
+     are picked to match the *weight* of the literals they replace against the
+     union card (#F1F6FD) rather than to look right in isolation, so the funnel
+     keeps the same read on both brands: 3.63 / 4.45 / 3.07 here against the
+     defaults' 3.62 / 4.39 / 2.93. Hues stay ~10° more azure than Tailwind's
+     indigos so the ramp belongs to this brand. */
+  --color-cool: #3F7FE0;
+  --color-cool-deep: #5566DE;
+  --color-cool-soft: #4A8CF0;
   /* Translucent surfaces so the canvas shows through the card blur */
   --color-surface: rgba(255, 255, 255, 0.55);
   --color-surface-raised: rgba(255, 255, 255, 0.68);
@@ -602,6 +633,15 @@ input[type="checkbox"]:disabled {
     #1A1D3D;
   --color-main-bg: #1A1D3D;
   --background-muted: rgba(255, 255, 255, 0.08);
+  /* Cyan info, lifted for the indigo ground — 8.1:1 on the dark union card
+     (#232647), and far enough from the #6BA5F8 primary to stay a distinct
+     signal. --color-chart-2 needs no entry here: it points at --chart-cat-7,
+     which dark.css already re-tunes. */
+  --color-info: #22D3EE;
+  --color-info-bg: rgba(34, 211, 238, 0.15);
+  --color-cool: #6BA5F8;
+  --color-cool-deep: #8FA9F5;
+  --color-cool-soft: #A9BEF9;
   --color-surface: rgba(255, 255, 255, 0.055);
   --color-surface-raised: rgba(255, 255, 255, 0.075);
   --color-surface-overlay: rgba(255, 255, 255, 0.05);

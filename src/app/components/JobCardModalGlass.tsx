@@ -43,7 +43,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
     >
       <div className="bg-[var(--color-surface-raised)] backdrop-blur-lg rounded-2xl w-full max-w-[800px] max-h-[90vh] overflow-y-auto shadow-2xl">
         {/* Header */}
-        <div className="bg-gradient-to-r from-purple-600 to-blue-600 p-6 rounded-t-2xl relative">
+        <div className="bg-[image:var(--gradient-primary)] p-6 rounded-t-2xl relative">
           <button
             onClick={onClose}
             className="absolute top-4 right-4 text-white/80 hover:text-white transition-colors z-10"
@@ -93,23 +93,23 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
             <div className="bg-gray-50 p-4 rounded-lg">
               <ul className="space-y-2 text-sm text-gray-700">
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 mt-1">•</span>
+                  <span className="text-[var(--color-primary)] mt-1">•</span>
                   <span>Generate and deliver {campaign.target} qualified leads</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 mt-1">•</span>
+                  <span className="text-[var(--color-primary)] mt-1">•</span>
                   <span>Conduct BANT verification on all leads before delivery</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 mt-1">•</span>
+                  <span className="text-[var(--color-primary)] mt-1">•</span>
                   <span>Provide weekly delivery batches with detailed lead information</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 mt-1">•</span>
+                  <span className="text-[var(--color-primary)] mt-1">•</span>
                   <span>30-day replacement guarantee for rejected leads</span>
                 </li>
                 <li className="flex items-start gap-2">
-                  <span className="text-purple-600 mt-1">•</span>
+                  <span className="text-[var(--color-primary)] mt-1">•</span>
                   <span>Weekly progress reports and campaign updates</span>
                 </li>
               </ul>
@@ -150,7 +150,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
           {/* Commercial Terms */}
           <div>
             <h3 className="text-lg font-semibold mb-3 text-gray-900">Commercial Terms</h3>
-            <div className="bg-purple-50 p-4 rounded-lg space-y-2">
+            <div className="bg-[var(--color-primary-tint)] p-4 rounded-lg space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-gray-700">Cost Per Lead</span>
                 <span className="font-bold text-gray-900">${campaign.pricing?.cpl || 45}/lead</span>
@@ -159,9 +159,9 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
                 <span className="text-gray-700">Target Volume</span>
                 <span className="font-bold text-gray-900">{campaign.target} leads</span>
               </div>
-              <div className="border-t border-purple-200 pt-2 flex justify-between items-center">
+              <div className="border-t border-[color-mix(in_srgb,var(--color-primary)_20%,transparent)] pt-2 flex justify-between items-center">
                 <span className="text-gray-700 font-semibold">Total Campaign Value</span>
-                <span className="font-bold text-purple-600 text-xl">
+                <span className="font-bold text-[var(--color-primary)] text-xl">
                   ${((campaign.pricing?.cpl || 45) * campaign.target).toLocaleString()}
                 </span>
               </div>
@@ -205,7 +205,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
           <div className="flex gap-4">
             <button
               onClick={handleSendForSignature}
-              className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-6 py-4 rounded-xl font-semibold transition-all shadow-lg shadow-purple-500/30 flex items-center justify-center gap-2"
+              className="flex-1 bg-[image:var(--gradient-primary)] hover:brightness-110 text-white px-6 py-4 rounded-xl font-semibold transition-all shadow-[0_10px_24px_var(--color-primary-glow)] flex items-center justify-center gap-2"
             >
               <Send className="w-5 h-5" />
               Send for E-Signature

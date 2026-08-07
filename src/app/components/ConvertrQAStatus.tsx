@@ -19,7 +19,7 @@ export function ConvertrQAStats({ totalProcessed, valid, caution, invalid, footn
     <div className="glass-card p-5">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-indigo-500" />
+          <Shield className="w-5 h-5 text-[var(--color-info)]" />
           <h3 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
             Automated QA Results
           </h3>

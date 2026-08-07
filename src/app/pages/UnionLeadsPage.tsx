@@ -30,10 +30,10 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 type Lens = 'accounts' | 'people';
 
 const STATUS_META: Record<string, { bg: string; color: string }> = {
-  'Pending Review': { bg: 'rgba(217,119,6,0.10)', color: 'var(--color-warning)' },
-  Accepted: { bg: 'rgba(5,150,105,0.10)', color: 'var(--color-success)' },
-  Rejected: { bg: 'rgba(239,68,68,0.10)', color: 'var(--color-error)' },
-  Contacted: { bg: 'rgba(8,145,178,0.10)', color: 'var(--color-info)' },
+  'Pending Review': { bg: 'var(--color-warning-bg)', color: 'var(--color-warning)' },
+  Accepted: { bg: 'var(--color-success-bg)', color: 'var(--color-success)' },
+  Rejected: { bg: 'var(--color-error-bg)', color: 'var(--color-error)' },
+  Contacted: { bg: 'var(--color-info-bg)', color: 'var(--color-info)' },
 };
 
 const LIVE_CHANNELS = CLIENT_DELIVERY_CHANNELS.filter(c => c.status === 'available');

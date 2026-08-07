@@ -35,11 +35,18 @@ export function OutreachFunnel({ metrics, deliveredLeads, impressions }: Outreac
           rateColor: '',
         }]
       : []),
+    // The two email stages take their blues from the cool ramp rather than
+    // Tailwind's palette classes: a stock `blue-500` is a fixed hex, so it
+    // cannot follow the token layer's re-point under data-brand="union" (nor
+    // the dark override). The defaults behind these tokens are byte-identical
+    // to the palette classes they replace, so the Datamatics portal is
+    // unchanged — except the closing purple, which now shares the very
+    // --color-accent-purple already used by this stage's rateColor.
     {
       label: 'Emails Sent',
       count: metrics.emailsSent,
       width: hasImpressions ? 72 : 100,
-      gradient: 'from-blue-500 to-indigo-500',
+      gradient: 'from-[var(--color-cool)] to-[var(--color-cool-deep)]',
       rate: null as number | null,
       rateColor: '',
     },
@@ -47,7 +54,7 @@ export function OutreachFunnel({ metrics, deliveredLeads, impressions }: Outreac
       label: 'Opened Emails',
       count: metrics.emailsOpened,
       width: metrics.openRate,
-      gradient: 'from-indigo-400 to-purple-500',
+      gradient: 'from-[var(--color-cool-soft)] to-[var(--color-accent-purple)]',
       rate: metrics.openRate,
       rateColor: 'var(--color-accent-purple)',
     },

@@ -40,9 +40,14 @@ type ExtendedMember = TeamMemberRecord;
 
 function RoleBadge({ role }: { role: string }) {
   const styles: Record<string, React.CSSProperties> = {
-    'Campaign Manager':  { background: 'rgba(37,99,235,0.08)',  color: 'var(--color-info)', border: '1px solid rgba(37,99,235,0.2)'  },
+    // The info and primary tints are mixed from their own tokens rather than
+    // written as literals: both flip under data-brand="union", and a frozen
+    // rgba left this badge with (say) a red ground under blue text on the
+    // UNION OPS screens. Same alphas as before, so Datamatics is unchanged.
+    // Accent-purple stays a literal — it does not vary by brand.
+    'Campaign Manager':  { background: 'color-mix(in srgb, var(--color-info) 8%, transparent)',    color: 'var(--color-info)', border: '1px solid color-mix(in srgb, var(--color-info) 20%, transparent)'  },
     'Campaign Backup':   { background: 'rgba(124,58,237,0.08)', color: 'var(--color-accent-purple)', border: '1px solid rgba(124,58,237,0.2)' },
-    'Operations Manager':{ background: 'rgba(186,32,39,0.08)',  color: 'var(--color-primary)', border: '1px solid rgba(186,32,39,0.2)'  },
+    'Operations Manager':{ background: 'color-mix(in srgb, var(--color-primary) 8%, transparent)', color: 'var(--color-primary)', border: '1px solid color-mix(in srgb, var(--color-primary) 20%, transparent)'  },
   };
   return (
     <span
@@ -293,9 +298,9 @@ export default function TeamManagementPage() {
   const activeMembers = members.filter(m => (m.status as string) !== 'Inactive');
 
   const stats = [
-    { label: 'Team Members',  value: members.length,                                                   icon: <Users className="w-5 h-5" />,    colour: 'var(--color-info)', bg: 'rgba(37,99,235,0.08)'   },
+    { label: 'Team Members',  value: members.length,                                                   icon: <Users className="w-5 h-5" />,    colour: 'var(--color-info)', bg: 'color-mix(in srgb, var(--color-info) 8%, transparent)'   },
     { label: 'Managers',       value: activeMembers.filter(m => m.role === 'Campaign Manager').length,  icon: <BarChart3 className="w-5 h-5" />, colour: 'var(--color-success)', bg: 'rgba(5,150,105,0.08)'   },
-    { label: 'Backups',        value: activeMembers.filter(m => m.role === 'Campaign Backup').length,   icon: <Shield className="w-5 h-5" />,    colour: 'var(--color-primary)', bg: 'rgba(186,32,39,0.08)'   },
+    { label: 'Backups',        value: activeMembers.filter(m => m.role === 'Campaign Backup').length,   icon: <Shield className="w-5 h-5" />,    colour: 'var(--color-primary)', bg: 'color-mix(in srgb, var(--color-primary) 8%, transparent)'   },
     { label: 'Ops',            value: activeMembers.filter(m => m.role === 'Operations Manager').length,icon: <Settings className="w-5 h-5" />,  colour: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)'   },
   ];
 

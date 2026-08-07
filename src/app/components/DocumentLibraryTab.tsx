@@ -107,19 +107,19 @@ const mockDocuments: Document[] = [
 ];
 
 const typeConfig: Record<Document['type'], { color: string; bg: string; icon: React.ElementType }> = {
-  Contract: { color: 'var(--color-info)', bg: 'rgba(8,145,178,0.1)', icon: FileText },
-  SOW: { color: 'var(--color-accent-purple)', bg: 'rgba(124,58,237,0.1)', icon: FileText },
-  NDA: { color: 'var(--color-primary)', bg: 'rgba(186,32,39,0.1)', icon: Lock },
-  Invoice: { color: 'var(--color-success)', bg: 'rgba(15,157,88,0.1)', icon: FileText },
-  Report: { color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)', icon: FileSpreadsheet },
-  Campaign: { color: 'var(--color-primary)', bg: 'rgba(186,32,39,0.1)', icon: FileSpreadsheet },
+  Contract: { color: 'var(--color-info)', bg: 'var(--color-info-bg)', icon: FileText },
+  SOW: { color: 'var(--color-accent-purple)', bg: 'var(--color-accent-purple-bg)', icon: FileText },
+  NDA: { color: 'var(--color-primary)', bg: 'var(--color-primary-tint)', icon: Lock },
+  Invoice: { color: 'var(--color-success)', bg: 'var(--color-success-bg)', icon: FileText },
+  Report: { color: 'var(--color-warning)', bg: 'var(--color-warning-bg)', icon: FileSpreadsheet },
+  Campaign: { color: 'var(--color-primary)', bg: 'var(--color-primary-tint)', icon: FileSpreadsheet },
   Other: { color: 'var(--color-text-secondary)', bg: 'rgba(107,114,128,0.1)', icon: FileText },
 };
 
 const statusConfig: Record<Document['status'], { label: string; color: string; bg: string }> = {
-  Active: { label: 'Active', color: 'var(--color-success)', bg: 'rgba(15,157,88,0.1)' },
-  Expired: { label: 'Expired', color: 'var(--color-primary)', bg: 'rgba(186,32,39,0.1)' },
-  Pending: { label: 'Pending', color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)' },
+  Active: { label: 'Active', color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
+  Expired: { label: 'Expired', color: 'var(--color-primary)', bg: 'var(--color-primary-tint)' },
+  Pending: { label: 'Pending', color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
   Archived: { label: 'Archived', color: 'var(--color-text-secondary)', bg: 'rgba(107,114,128,0.1)' },
 };
 
@@ -234,8 +234,8 @@ export function DocumentLibraryTab() {
           {[
             { label: 'Total Documents', value: documents.length, icon: FileText, color: 'var(--color-primary)', bg: 'var(--color-primary-tint)' },
             { label: 'Active', value: totalActive, icon: Check, color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
-            { label: 'Contracts & Legal', value: totalContracts, icon: Lock, color: 'var(--color-accent-purple)', bg: 'rgba(124,58,237,0.1)' },
-            { label: 'Reports', value: documents.filter(d => d.type === 'Report').length, icon: FileSpreadsheet, color: 'var(--color-warning)', bg: 'rgba(245,158,11,0.1)' },
+            { label: 'Contracts & Legal', value: totalContracts, icon: Lock, color: 'var(--color-accent-purple)', bg: 'var(--color-accent-purple-bg)' },
+            { label: 'Reports', value: documents.filter(d => d.type === 'Report').length, icon: FileSpreadsheet, color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
           ].map(({ label, value, icon: Icon, color, bg }, i) => (
             <div key={label} className="kpi-card animate-slideInUp" style={{ animationDelay: `${i * 80}ms` }}>
               <div className="flex items-center justify-between mb-3">
@@ -313,7 +313,7 @@ export function DocumentLibraryTab() {
                 fontSize: 'var(--font-size-sm)',
                 fontWeight: showStarredOnly ? 600 : 400,
                 borderColor: showStarredOnly ? 'var(--color-warning)' : 'var(--color-border)',
-                background: showStarredOnly ? 'rgba(245,158,11,0.08)' : 'transparent',
+                background: showStarredOnly ? 'var(--color-warning-bg)' : 'transparent',
                 color: showStarredOnly ? 'var(--color-warning)' : 'var(--color-text-secondary)',
               }}
             >
