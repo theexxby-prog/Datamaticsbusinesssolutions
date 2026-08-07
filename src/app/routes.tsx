@@ -48,6 +48,7 @@ const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
 // non-UNION-OPS visit to /dashboard (isUnionOpsPath guard).
 const UnionOpsDashboard = lazy(() => import('./pages/ops/UnionOpsDashboard'));
 const UnionOpsIntake = lazy(() => import('./pages/ops/UnionOpsIntake'));
+const UnionOpsEnrichment = lazy(() => import('./pages/ops/UnionOpsEnrichment'));
 const UnionOpsCampaign = lazy(() => import('./pages/ops/UnionOpsCampaign'));
 const UnionOpsNewCampaign = lazy(() => import('./pages/ops/UnionOpsNewCampaign'));
 
@@ -166,6 +167,10 @@ const appRoutes: RouteObject[] = [
     // Declared before :id so "new" is never read as a campaign id.
     path: '/ops-union/campaigns/new',
     Component: withSuspense(UnionOpsNewCampaign),
+  },
+  {
+    path: '/ops-union/enrichment',
+    Component: withSuspense(UnionOpsEnrichment),
   },
   {
     path: '/ops-union/campaigns/:id',

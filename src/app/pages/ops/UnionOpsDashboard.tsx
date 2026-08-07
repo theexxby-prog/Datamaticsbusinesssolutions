@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import {
-  Eye, AlertTriangle, ArrowRight, ClipboardList, RefreshCw, Plus,
+  Eye, AlertTriangle, ArrowRight, ClipboardList, RefreshCw, Plus, Layers,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
@@ -9,6 +9,7 @@ import {
   type CampaignPipeline, type IntegrationStatus, type OpsTask,
 } from '../../data/unionOps';
 import { CampaignTypeChip } from '../../components/ops/CampaignTypeChip';
+import { enrichmentBatches } from '../../data/unionEnrichment';
 import { PipelineStages } from '../../components/ops/PipelineStages';
 import { UNION_COMPANY } from '../../data/unionClient';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
@@ -156,6 +157,11 @@ export default function UnionOpsDashboard() {
   };
 
   const attention = integrationStatuses.filter(i => i.state === 'attention').length;
+  // Anything the API rejected or dropped records on — the reason to open the
+  // batch screen rather than assume the enrichment side is quiet.
+  const batchesNeedingAttention = enrichmentBatches.filter(
+    b => b.status === 'failed' || b.failed > 0 || b.invalidLeads > 0,
+  ).length;
 
   return (
     <div className="max-w-[1600px] mx-auto page-content space-y-4">
@@ -173,7 +179,23 @@ export default function UnionOpsDashboard() {
             )}
           </p>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            onClick={() => navigate('/ops-union/enrichment')}
+            className="btn-ghost flex min-h-[38px] items-center gap-2 rounded-xl border px-3.5 text-sm font-semibold"
+            style={{ borderColor: 'var(--color-border)' }}
+          >
+            <Layers className="h-4 w-4" />
+            Enrichment batches
+            {batchesNeedingAttention > 0 && (
+              <span
+                className="inline-flex min-w-[18px] items-center justify-center rounded-full px-1.5 text-[11px] font-bold"
+                style={{ background: 'var(--color-error-bg)', color: 'var(--color-error)' }}
+              >
+                {batchesNeedingAttention}
+              </span>
+            )}
+          </button>
           <button
             onClick={() => preview('/dashboard')}
             className="btn-outline flex items-center gap-2 px-4 py-2 text-sm"
