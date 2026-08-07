@@ -6,5 +6,12 @@ dist/
 .env*.local
 *.log
 .vite/
-.claude/
+# Personal Claude Code state stays local, but the session-start hook and its
+# registration have to be tracked — they are what repair a fresh container's
+# toolchain, so they are useless untracked. Note this must be `.claude/*` and
+# not `.claude/`: git will not re-include a file whose parent directory is
+# itself excluded, so the negations below would silently do nothing.
+.claude/*
+!.claude/settings.json
+!.claude/hooks/
 scripts/.panel-shots/
