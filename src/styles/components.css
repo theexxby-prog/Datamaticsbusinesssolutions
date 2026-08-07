@@ -506,3 +506,56 @@
   color: var(--color-text-muted);
   line-height: 1.4;
 }
+/* ============================================
+   TYPE SCALE
+   ============================================
+   Five steps, and only five. The UNION dashboard previously carried eleven
+   distinct font sizes (9.5 → 20px) on one page; at that spread size stops
+   signalling anything and every element reads as equally important, which is
+   most of what "information overload" actually is.
+
+   Use these instead of ad-hoc text-[12.5px]. Sizes are deliberately far apart
+   so that a step change is legible as a change in rank.
+
+     t-hero   the single number that answers the page's main question
+     t-title  section headings
+     t-body   default text and list rows
+     t-meta   labels and secondary detail
+     t-micro  chips and units only — never a sentence
+*/
+.t-hero {
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  color: var(--color-text-primary);
+  font-variant-numeric: tabular-nums;
+}
+.t-title {
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.3;
+  color: var(--color-text-primary);
+}
+.t-body {
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: var(--color-text-secondary);
+}
+.t-meta {
+  font-size: 11.5px;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-text-muted);
+}
+.t-micro {
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+/* Numbers inside body/meta rows should still align in columns. */
+.t-num { font-variant-numeric: tabular-nums; }
