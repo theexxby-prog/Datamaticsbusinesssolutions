@@ -269,9 +269,9 @@ function StandardHomePage() {
             <button
               onClick={() => setShowDigest(true)}
               className="flex-shrink-0 flex items-center gap-2 px-4 py-2 rounded-xl text-white font-semibold text-sm transition-colors w-full sm:w-auto justify-center"
-              style={{ background: 'var(--color-primary)', boxShadow: '0 2px 8px rgba(186,32,39,0.25)' }}
+              style={{ background: 'var(--color-primary-solid)', boxShadow: '0 2px 8px rgba(186,32,39,0.25)' }}
               onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-primary)')}
+              onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-primary-solid)')}
             >
               📊 Weekly Digest
             </button>

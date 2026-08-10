@@ -62,7 +62,11 @@ function PeriodSwitch({ value, onChange }: { value: Period; onChange: (p: Period
             aria-pressed={on}
             className="rounded-lg px-3.5 py-1.5 text-[13px] font-bold transition-colors"
             style={{
-              background: on ? 'var(--color-primary)' : 'transparent',
+              // primary-solid, not primary: this pill is a brand *fill* with
+              // white text on it. --color-primary is lightened in dark mode so
+              // it reads as an accent on a dark ground, which drops white text
+              // on it to 2.8:1.
+              background: on ? 'var(--color-primary-solid)' : 'transparent',
               color: on ? '#FFFFFF' : 'var(--color-text-muted)',
             }}
           >
@@ -276,9 +280,9 @@ export default function Dashboard() {
             <button
               onClick={() => setIsNewCampaignModalOpen(true)}
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition-colors sm:w-auto"
-              style={{ background: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-primary-solid)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary-solid)')}
             >
               <Plus className="h-4 w-4" strokeWidth={2.6} /> New campaign
             </button>
