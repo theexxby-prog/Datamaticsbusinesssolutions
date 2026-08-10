@@ -4,15 +4,14 @@ import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, M
 } from 'lucide-react';
 import { JobCardModal } from '../components/JobCardModalGlass';
 import { CampaignDiscussionPanel } from '../components/CampaignDiscussionPanel';
-import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
 import { NewCampaignModal, type CampaignFormData } from '../components/NewCampaignModal';
 import { CampaignHealthBadge, ReplacementTracker } from '../components/CampaignHealthBadge';
 import { CampaignThread } from '../components/thread/CampaignThread';
 import { TalBadge } from '../components/thread/TalBadge';
-import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
+import { DeliveryAndQuality } from '../components/campaign/DeliveryAndQuality';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgrammaticTab';
 import { showFutureModules } from '../config/demo';
@@ -260,12 +259,10 @@ export default function CampaignDetail() {
                 ),
               },
               {
-                key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
-                content: <DeliveryScheduleSection campaign={campaign} bare />,
-              },
-              isConvertr && {
-                key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
-                content: <ConvertrQAStats {...convertrStats} />,
+                // Delivery and Quality were two sparse tabs that between them
+                // printed the same delivery three times. One tab now.
+                key: 'delivery', label: 'Delivery & QA', Icon: TAB_ICONS.delivery,
+                content: <DeliveryAndQuality campaign={campaign} qa={isConvertr ? convertrStats : undefined} />,
               },
               Boolean(pairedAbm) && {
                 key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
