@@ -47,16 +47,12 @@ export function AppLayout() {
   // is exactly right: the preview shows only what the client can see.
   const blockedOpsUnion = isUnionOpsPath(location.pathname) && !isUnionOps(currentUser);
 
-  // The retail brand: UNION previews the future product, which is Tech Blue.
-  // Stamping <html> lets the token layer flip every primary-coloured element
-  // without touching components; all other logins keep Datamatics red. The
-  // ops mirror is the same product's kitchen, so it shares the brand.
-  useEffect(() => {
-    const root = document.documentElement;
-    if (showFutureModules(currentUser) || isUnionOps(currentUser)) root.setAttribute('data-brand', 'union');
-    else root.removeAttribute('data-brand');
-    return () => root.removeAttribute('data-brand');
-  }, [currentUser]);
+  // UNION used to stamp data-brand="union" here, which swapped the token layer
+  // over to a blue palette with a gradient canvas and translucent cards. That
+  // treatment is gone: every login now shares the Datamatics red-on-white
+  // identity, so there is no brand attribute to set. The token layer is the
+  // only place colour was defined, so removing the stamp and its rules was the
+  // whole revert — no component changed.
 
   useEffect(() => {
     if (gateClosed) {

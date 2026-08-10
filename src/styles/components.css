@@ -102,17 +102,6 @@
   box-shadow: var(--kpi-shadow-hover);
 }
 
-/* Union brand: the KPI boxes carry a top-light wash instead of a flat fill, so
-   they read as glass catching light rather than as opaque tiles on a gradient.
-   Scoped to the brand — every other login keeps the flat surface. */
-:root[data-brand="union"] .kpi-card {
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.58) 100%);
-}
-
-:root[data-brand="union"][data-theme="dark"] .kpi-card {
-  background: linear-gradient(165deg, rgba(255, 255, 255, 0.10) 0%, rgba(255, 255, 255, 0.04) 100%);
-}
-
 /* Reduce blur on mobile */
 @media (max-width: 767px) {
   .kpi-card {
