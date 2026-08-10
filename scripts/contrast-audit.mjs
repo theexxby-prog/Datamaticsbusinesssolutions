@@ -15,10 +15,37 @@
  *
  * Exits non-zero when anything fails, so it can gate a build if wanted.
  */
-import { chromium } from 'playwright';
-
 const BASE = process.env.AUDIT_BASE ?? 'http://127.0.0.1:3000';
 const BROWSER = process.env.PLAYWRIGHT_CHROMIUM ?? '/opt/pw-browsers/chromium';
+
+/**
+ * Playwright is not a dependency of this project — it is a dev-machine tool, and
+ * adding it would put a browser download in everyone's install. Resolve it from
+ * wherever it happens to live: a local devDependency, a global install, or an
+ * explicit path.
+ */
+async function loadChromium() {
+  const candidates = [
+    process.env.PLAYWRIGHT_MODULE,
+    'playwright',
+    '/opt/node22/lib/node_modules/playwright/index.js',
+  ].filter(Boolean);
+  for (const candidate of candidates) {
+    try {
+      // Playwright is CommonJS, so a dynamic import may surface its exports as
+      // named or only under .default depending on how it was resolved.
+      const mod = await import(candidate);
+      const chromium = mod.chromium ?? mod.default?.chromium;
+      if (chromium) return chromium;
+    } catch { /* try the next candidate */ }
+  }
+  console.error(
+    'Could not load playwright. Install it (npm i -D playwright) or point\n' +
+    'PLAYWRIGHT_MODULE at an existing install.',
+  );
+  process.exit(2);
+}
+const chromium = await loadChromium();
 
 const ROUTES = [
   ['u9', '/dashboard'], ['u9', '/campaigns'], ['u9', '/campaigns/46888'],
