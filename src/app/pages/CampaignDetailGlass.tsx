@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound } from 'lucide-react';
+import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare
+} from 'lucide-react';
 import { JobCardModal } from '../components/JobCardModalGlass';
+import { CampaignDiscussionPanel } from '../components/CampaignDiscussionPanel';
 import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
 import { NewCampaignModal, type CampaignFormData } from '../components/NewCampaignModal';
@@ -20,7 +22,6 @@ import { campaignTypeFor } from '../data/outcomes';
 import { useCampaignThread } from '../context/CampaignThreadContext';
 import { useAuth } from '../context/AuthContext';
 import { useUnionLens } from '../hooks/useUnionLens';
-import { useIsMobile } from '../components/ui/use-mobile';
 import { resolveCampaignForUser } from '../data/unionClient';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
@@ -37,10 +38,9 @@ export default function CampaignDetail() {
   const [showNewCampaignModal, setShowNewCampaignModal] = useState(false);
   const [clonePrefill, setClonePrefill] = useState<Partial<CampaignFormData> | undefined>(undefined);
   const { openRequestsFor } = useCampaignThread();
-  const isMobile = useIsMobile();
   // Phones can't fit analytics and the conversation side by side; a segmented
   // switch shows one at a time instead of stacking a very long page.
-  const [mobileSection, setMobileSection] = useState<'overview' | 'discussion'>('overview');
+  const [showDiscussion, setShowDiscussion] = useState(false);
   
   // Find the campaign across all clients, under this login's identity
   const resolved = resolveCampaignForUser(currentUser, id);
@@ -190,6 +190,24 @@ export default function CampaignDetail() {
           </div>
 
           <div className="grid flex-shrink-0 grid-cols-3 gap-2 sm:flex sm:flex-row">
+            {/* The conversation is now opened deliberately rather than occupying
+                two of five columns on every visit. The badge is what makes that
+                safe — an open request stays visible without the panel being. */}
+            <button
+              onClick={() => setShowDiscussion(true)}
+              className="btn-outline relative px-3.5 py-2 flex items-center justify-center gap-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Discussion
+              {openRequestsFor(campaign.id) > 0 && (
+                <span
+                  className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
+                  style={{ background: 'var(--color-primary)' }}
+                >
+                  {openRequestsFor(campaign.id)}
+                </span>
+              )}
+            </button>
             <button onClick={() => setShowJobCard(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
               <FileText className="w-4 h-4" />
               Job Card
@@ -224,107 +242,56 @@ export default function CampaignDetail() {
           paceLabel={health.label}
           qaValidPercent={isConvertr ? Math.round((convertrStats.valid / convertrStats.totalProcessed) * 100) : undefined}
           openRequests={openRequestsFor(campaign.id)}
-          onOpenRequests={() => {
-            if (isMobile) setMobileSection('discussion');
-            // Defer so the thread exists before scrolling on mobile.
-            requestAnimationFrame(() =>
-              document.getElementById('campaign-discussion')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-            );
-          }}
+          onOpenRequests={() => setShowDiscussion(true)}
         />
 
-        {/* Mobile section switch — Overview | Discussion */}
-        {isMobile && (
-          <div
-            className="mb-4 grid grid-cols-2 gap-1 rounded-xl p-1"
-            style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}
-          >
-            {([['overview', 'Overview'], ['discussion', 'Discussion']] as const).map(([key, label]) => (
-              <button
-                key={key}
-                onClick={() => setMobileSection(key)}
-                className={`min-h-[40px] rounded-lg text-sm font-semibold transition-all ${
-                  mobileSection === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'
-                }`}
-              >
-                {label}
-                {key === 'discussion' && openRequestsFor(campaign.id) > 0 && (
-                  <span
-                    className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold"
-                    style={
-                      mobileSection === key
-                        ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
-                        : { background: 'var(--color-primary)', color: '#fff' }
-                    }
-                  >
-                    {openRequestsFor(campaign.id)}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
+        {/* Analytics now own the full width. The conversation used to sit here
+            as a permanent two-of-five column; it opens from the header instead. */}
+        <div className="space-y-5">
+          <CampaignAnalyticsTabs
+            tabs={[
+              Boolean(campaign.outreachMetrics) && {
+                key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
+                content: (
+                  <OutreachFunnel
+                    metrics={campaign.outreachMetrics!}
+                    deliveredLeads={deliveredLeads}
+                    impressions={abmImpressions}
+                  />
+                ),
+              },
+              {
+                key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
+                content: <DeliveryScheduleSection campaign={campaign} bare />,
+              },
+              isConvertr && {
+                key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
+                content: <ConvertrQAStats {...convertrStats} />,
+              },
+              Boolean(pairedAbm) && {
+                key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
+                content: <CampaignProgrammaticTab abmCampaignId={pairedAbm!.abmCampaignId} />,
+              },
+            ]}
+          />
 
-        {/* Analytics on the left, the conversation pinned alongside it —
-            or, on mobile, one section at a time via the switch above. */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-          {(!isMobile || mobileSection === 'overview') && (
-            <div className="lg:col-span-3 space-y-5">
-              <CampaignAnalyticsTabs
-                tabs={[
-                  Boolean(campaign.outreachMetrics) && {
-                    key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
-                    content: (
-                      <OutreachFunnel
-                        metrics={campaign.outreachMetrics!}
-                        deliveredLeads={deliveredLeads}
-                        impressions={abmImpressions}
-                      />
-                    ),
-                  },
-                  {
-                    key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
-                    content: <DeliveryScheduleSection campaign={campaign} bare />,
-                  },
-                  isConvertr && {
-                    key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
-                    content: <ConvertrQAStats {...convertrStats} />,
-                  },
-                  Boolean(pairedAbm) && {
-                    key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
-                    content: <CampaignProgrammaticTab abmCampaignId={pairedAbm!.abmCampaignId} />,
-                  },
-                ]}
-              />
+          <ReplacementTracker
+            totalRejected={replacementStats.totalRejected}
+            totalReplaced={replacementStats.totalReplaced}
+            remaining={replacementStats.remaining}
+          />
 
-              <ReplacementTracker
-                totalRejected={replacementStats.totalRejected}
-                totalReplaced={replacementStats.totalReplaced}
-                remaining={replacementStats.remaining}
-              />
-
-              {showFuture && <CampaignDemographics campaignName={campaign.name} />}
-            </div>
-          )}
-
-          {/* The thread scrolls inside itself so the page height no longer
-              depends on how much the client and the campaign manager talk. It
-              stretches with the row rather than sticking to the viewport, so it
-              bottom-aligns with the analytics column beside it — sticky plus a
-              viewport-height cap left it ending short of that column. */}
-          {(!isMobile || mobileSection === 'discussion') && (
-            <div id="campaign-discussion" className="lg:relative lg:col-span-2">
-              <CampaignThread
-                campaignId={campaign.id}
-                campaignName={campaign.name}
-                activities={activities}
-                variant="rail"
-                fill
-              />
-            </div>
-          )}
+          {showFuture && <CampaignDemographics campaignName={campaign.name} />}
         </div>
       </div>
+
+      <CampaignDiscussionPanel
+        open={showDiscussion}
+        onClose={() => setShowDiscussion(false)}
+        campaignId={campaign.id}
+        campaignName={campaign.name}
+        activities={activities}
+      />
 
       {/* Job Card Modal */}
       <JobCardModal
