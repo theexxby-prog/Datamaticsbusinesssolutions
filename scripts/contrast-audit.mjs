@@ -135,14 +135,18 @@ for (const theme of ['light', 'dark']) {
     const ctx = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
     const page = await ctx.newPage();
     try {
-      await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded' });
+      await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded', timeout: 15000 });
       await page.evaluate(([u, t]) => {
         sessionStorage.setItem('signed-in-user-id', u);
         sessionStorage.setItem('demo-gate-passed', '1');
         localStorage.setItem('pulse-theme', t);
       }, [user, theme]);
-      await page.goto(BASE + path, { waitUntil: 'networkidle' });
-      await page.waitForTimeout(900);
+      // Not networkidle: the app loads external images, and anywhere those are
+      // slow or blocked (a proxy, an offline box) the page never goes idle and
+      // every route burns its full timeout. A fixed settle is both faster and
+      // far more predictable for what this measures.
+      await page.goto(BASE + path, { waitUntil: 'domcontentloaded', timeout: 15000 });
+      await page.waitForTimeout(1200);
       // Sections animate in on scroll; visit the bottom so they mount.
       await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
       await page.waitForTimeout(600);
