@@ -9,7 +9,8 @@ import {
   AreaChart, Area, PieChart, Pie, Cell, BarChart, Bar, LabelList,
   XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
-import { getCampaignDemographics, getPacing, campaignsForScope, type CampaignStatus } from '../data/demographics';
+import { toDemographics, type CampaignStatus } from '../data/demographics';
+import { reportCampaigns, entryForSelection, metricsForSelection } from '../data/reportCampaigns';
 import { getPortalClient } from '../data/unionClient';
 import { AnimatedCounter } from '../components/AnimatedCounter';
 import { UnifiedKpiCard } from '../components/UnifiedKpiCard';
@@ -59,166 +60,29 @@ export default function ReportsPage() {
   const [period, setPeriod] = useState<'month' | 'quarter' | 'year'>('month');
 
   // Campaign-specific data
-  const campaignMetrics: Record<string, any> = {
-    'all': {
-      totalLeads: 1265,
-      acceptance: 93,
-      conversions: 168,
-      revenue: 198250,
-      activeCampaigns: 3,
-      completedCampaigns: 1,
-      monthlyData: [
-        { month: 'Jan', revenue: 18000, leads: 350, conversions: 65 },
-        { month: 'Feb', revenue: 24500, leads: 520, conversions: 95 },
-        { month: 'Mar', revenue: 29000, leads: 680, conversions: 115 },
-        { month: 'Apr', revenue: 36500, leads: 820, conversions: 142 },
-        { month: 'May', revenue: 42000, leads: 1050, conversions: 185 },
-        { month: 'Jun', revenue: 48250, leads: 1280, conversions: 224 },
-      ],
-      titleDistribution: [
-        { title: 'C-Level', percentage: 18 },
-        { title: 'VP/Director', percentage: 30 },
-        { title: 'Manager', percentage: 24 },
-        { title: 'Senior Specialist', percentage: 18 },
-        { title: 'Other', percentage: 10 }
-      ],
-      companySizeData: [
-        { size: 'Enterprise (10K+)', percentage: 24 },
-        { size: 'Large (1K-10K)', percentage: 30 },
-        { size: 'Mid-Market', percentage: 30 },
-        { size: 'SMB (<100)', percentage: 16 }
-      ]
-    },
-    'IT Security': {
-      totalLeads: 320,
-      acceptance: 88,
-      conversions: 45,
-      revenue: 52000,
-      activeCampaigns: 1,
-      completedCampaigns: 0,
-      monthlyData: [
-        { month: 'Jan', revenue: 5000, leads: 80, conversions: 12 },
-        { month: 'Feb', revenue: 7200, leads: 105, conversions: 18 },
-        { month: 'Mar', revenue: 9500, leads: 135, conversions: 24 },
-        { month: 'Apr', revenue: 10800, leads: 160, conversions: 28 },
-        { month: 'May', revenue: 11500, leads: 185, conversions: 32 },
-        { month: 'Jun', revenue: 8000, leads: 95, conversions: 16 },
-      ],
-      titleDistribution: [
-        { title: 'C-Level', percentage: 35 },
-        { title: 'VP/Director', percentage: 30 },
-        { title: 'Manager', percentage: 20 },
-        { title: 'Senior Specialist', percentage: 10 },
-        { title: 'Other', percentage: 5 }
-      ],
-      companySizeData: [
-        { size: 'Enterprise (10K+)', percentage: 45 },
-        { size: 'Large (1K-10K)', percentage: 35 },
-        { size: 'Mid-Market', percentage: 15 },
-        { size: 'SMB (<100)', percentage: 5 }
-      ]
-    },
-    'Healthcare Synd.': {
-      totalLeads: 850,
-      acceptance: 95,
-      conversions: 95,
-      revenue: 128000,
-      activeCampaigns: 1,
-      completedCampaigns: 0,
-      monthlyData: [
-        { month: 'Jan', revenue: 12000, leads: 240, conversions: 42 },
-        { month: 'Feb', revenue: 15800, leads: 350, conversions: 62 },
-        { month: 'Mar', revenue: 17200, leads: 480, conversions: 78 },
-        { month: 'Apr', revenue: 22500, leads: 580, conversions: 98 },
-        { month: 'May', revenue: 28000, leads: 780, conversions: 135 },
-        { month: 'Jun', revenue: 32500, leads: 1050, conversions: 178 },
-      ],
-      titleDistribution: [
-        { title: 'C-Level', percentage: 12 },
-        { title: 'VP/Director', percentage: 28 },
-        { title: 'Manager', percentage: 35 },
-        { title: 'Senior Specialist', percentage: 20 },
-        { title: 'Other', percentage: 5 }
-      ],
-      companySizeData: [
-        { size: 'Enterprise (10K+)', percentage: 70 },
-        { size: 'Large (1K-10K)', percentage: 20 },
-        { size: 'Mid-Market', percentage: 8 },
-        { size: 'SMB (<100)', percentage: 2 }
-      ]
-    },
-    'Financial BANT': {
-      totalLeads: 65,
-      acceptance: 92,
-      conversions: 18,
-      revenue: 12500,
-      activeCampaigns: 1,
-      completedCampaigns: 0,
-      monthlyData: [
-        { month: 'Jan', revenue: 800, leads: 15, conversions: 5 },
-        { month: 'Feb', revenue: 1200, leads: 28, conversions: 8 },
-        { month: 'Mar', revenue: 2000, leads: 35, conversions: 10 },
-        { month: 'Apr', revenue: 2500, leads: 42, conversions: 12 },
-        { month: 'May', revenue: 3000, leads: 52, conversions: 15 },
-        { month: 'Jun', revenue: 3000, leads: 65, conversions: 18 },
-      ],
-      titleDistribution: [
-        { title: 'C-Level', percentage: 69 },
-        { title: 'VP/Director', percentage: 20 },
-        { title: 'Manager', percentage: 8 },
-        { title: 'Senior Specialist', percentage: 2 },
-        { title: 'Other', percentage: 1 }
-      ],
-      companySizeData: [
-        { size: 'Enterprise (10K+)', percentage: 85 },
-        { size: 'Large (1K-10K)', percentage: 12 },
-        { size: 'Mid-Market', percentage: 3 },
-        { size: 'SMB (<100)', percentage: 0 }
-      ]
-    },
-    'SaaS Appts': {
-      totalLeads: 30,
-      acceptance: 89,
-      conversions: 10,
-      revenue: 5750,
-      activeCampaigns: 0,
-      completedCampaigns: 1,
-      monthlyData: [
-        { month: 'Jan', revenue: 200, leads: 5, conversions: 1 },
-        { month: 'Feb', revenue: 300, leads: 8, conversions: 2 },
-        { month: 'Mar', revenue: 300, leads: 10, conversions: 3 },
-        { month: 'Apr', revenue: 700, leads: 12, conversions: 4 },
-        { month: 'May', revenue: 2500, leads: 18, conversions: 6 },
-        { month: 'Jun', revenue: 1750, leads: 30, conversions: 10 },
-      ],
-      titleDistribution: [
-        { title: 'C-Level', percentage: 72 },
-        { title: 'VP/Director', percentage: 22 },
-        { title: 'Manager', percentage: 6 },
-        { title: 'Senior Specialist', percentage: 0 },
-        { title: 'Other', percentage: 0 }
-      ],
-      companySizeData: [
-        { size: 'Enterprise (10K+)', percentage: 50 },
-        { size: 'Large (1K-10K)', percentage: 30 },
-        { size: 'Mid-Market', percentage: 15 },
-        { size: 'SMB (<100)', percentage: 5 }
-      ]
-    }
-  };
 
-  const currentMetrics = campaignMetrics[selectedCampaign] || campaignMetrics['all'];
+  // The drill-down is built from the client's own campaigns. It used to come
+  // from REPORT_CAMPAIGNS — four hardcoded legacy keys — so every client, UNION
+  // included, was offered another client's campaign names, and selecting one
+  // missed the metrics table and silently fell back to the all-campaigns row.
+  const portalCampaigns = getPortalClient(currentUser)?.campaigns ?? [];
+  const scoped = reportCampaigns(portalCampaigns, scope);
 
-  // Geo/Industry/Size/Title — manually entered via the Demographics module,
-  // computed (and scope-aggregated for 'all') from the demographics store.
-  const demographics = getCampaignDemographics(selectedCampaign, scope);
-  const pacing = getPacing(selectedCampaign, scope);
+  // Switching scope can strand a selection that no longer exists in it.
+  const selection = scoped.some(c => c.key === selectedCampaign) ? selectedCampaign : 'all';
+
+  const currentMetrics = metricsForSelection(selection, scoped);
+
+  // Geo/Industry/Size/Title: ops-entered data where it exists, otherwise
+  // derived per campaign. 'all' is the true sum of the scoped campaigns.
+  const entry = entryForSelection(selection, scoped);
+  const demographics = toDemographics(entry);
+  const pacing = entry.pacing;
   const pacingPct = pacing.monthTarget > 0 ? Math.round((pacing.monthDelivered / pacing.monthTarget) * 100) : 0;
 
-  // Campaigns matching the chosen scope + search, for the drill-down dropdown.
-  const scopedCampaigns = campaignsForScope(scope).filter((c) =>
-    c.toLowerCase().includes(search.trim().toLowerCase()),
-  );
+  const scopedCampaigns = scoped
+    .map(c => c.key)
+    .filter(c => c.toLowerCase().includes(search.trim().toLowerCase()));
 
   // KPI movement vs the previous month in the series.
   const md = currentMetrics.monthlyData || [];
@@ -245,11 +109,8 @@ export default function ReportsPage() {
   const rejectedPct = Math.round((100 - acceptedPct) * 10) / 10;
   const rejectedCount = Math.round((currentMetrics.totalLeads * (100 - acceptedPct)) / 100);
 
-  // Campaign counts come from the portal's own campaign list, not the mock
-  // metrics table above — those carried literal 3/1 figures that stayed put
-  // however many campaigns the client actually had. getPortalClient applies the
-  // brand's campaign renaming, so this is safe to read on a UNION login.
-  const portalCampaigns = getPortalClient(currentUser)?.campaigns ?? [];
+  // getPortalClient applies the brand's campaign renaming, so portalCampaigns
+  // above is safe to read on a UNION login.
   const activeCampaigns = portalCampaigns.filter(c => c.status === 'active').length;
   const completedCount = portalCampaigns.filter(c => c.status === 'completed').length;
   const totalCampaigns = activeCampaigns + completedCount;
@@ -261,7 +122,7 @@ export default function ReportsPage() {
     clientName: currentUser?.company || currentUser?.name || 'Client',
     asOf: 'Jun 14, 2026',
     scope: scope.charAt(0).toUpperCase() + scope.slice(1),
-    campaignLabel: selectedCampaign === 'all' ? `All ${scope} campaigns` : selectedCampaign,
+    campaignLabel: selection === 'all' ? `All ${scope} campaigns` : selection,
     kpis: [
       { label: 'Total Leads', value: currentMetrics.totalLeads.toLocaleString(), delta: `${leadDelta >= 0 ? '▲' : '▼'} ${Math.abs(leadDelta)}%`, up: leadDelta >= 0 },
       { label: 'Acceptance', value: `${currentMetrics.acceptance}%`, delta: `${acceptanceDelta >= 0 ? '▲' : '▼'} ${Math.abs(acceptanceDelta)} pts`, up: acceptanceDelta >= 0 },
@@ -482,14 +343,14 @@ export default function ReportsPage() {
         </div>
         </Reveal>
 
-        {/* Monthly Pacing + Conversion — paired on one row */}
+        {/* Delivery vs target + Conversion — paired on one row */}
         <Reveal>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-            {/* Monthly Pacing */}
+            {/* Delivery against target for the selection */}
             <div className="glass-card p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
                 <h3 className="flex items-center gap-2" style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                  <Target className="w-4 h-4 text-[var(--color-primary)]" /> Monthly Pacing
+                  <Target className="w-4 h-4 text-[var(--color-primary)]" /> Delivery vs Target
                 </h3>
                 <span
                   className="text-xs font-semibold px-2.5 py-1 rounded-lg flex items-center gap-1"

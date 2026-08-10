@@ -15,7 +15,6 @@ import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgrammaticTab';
-import { CampaignDemographics } from '../components/campaign/CampaignDemographics';
 import { showFutureModules } from '../config/demo';
 import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from '../data/propensity';
 import { campaignTypeFor } from '../data/outcomes';
@@ -281,7 +280,6 @@ export default function CampaignDetail() {
             remaining={replacementStats.remaining}
           />
 
-          {showFuture && <CampaignDemographics campaignName={campaign.name} />}
         </div>
       </div>
 

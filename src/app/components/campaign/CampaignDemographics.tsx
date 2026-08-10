@@ -2,12 +2,21 @@ import { Globe, Building2, IdCard, Users } from 'lucide-react';
 import { DistributionBars } from '../DistributionBars';
 import { getCampaignDemographics, REPORT_CAMPAIGNS } from '../../data/demographics';
 
-// ─── Audience demographics on the campaign detail page ───────────────────────
-// The four distribution widgets the Reports page renders (geo / industry /
-// title / company size), reused here in a compact 2×2 grid. The demographics
-// store keys by the Reports-page campaign key; when this campaign has no
-// per-campaign entry (the UNION campaigns don't yet), it falls back to the
-// all-campaigns aggregate — same data, wider scope, labelled as such.
+// ─── Audience demographics for a single campaign ─────────────────────────────
+// NOT currently mounted. Reports is the single home for demographics: it has
+// the campaign drill-down and the scope control, so it answers both "this
+// campaign" and "all campaigns" in one place.
+//
+// This was on the campaign detail page, where it could not do its job. The
+// store is keyed by campaign name and no UNION campaign had an entry, so every
+// one of the twelve rendered the identical all-campaigns aggregate — a
+// page-level total sitting on a per-campaign page, twelve times over.
+//
+// Kept, rather than deleted, because per-campaign demographics are real: ops
+// enter them through the Demographics module. The guard below now returns null
+// instead of falling back to the aggregate, so if this is ever mounted again it
+// shows this campaign's data or nothing — never someone else's numbers wearing
+// this campaign's heading.
 
 interface CampaignDemographicsProps {
   /** The campaign's display name, matched against the demographics store keys. */
@@ -16,7 +25,8 @@ interface CampaignDemographicsProps {
 
 export function CampaignDemographics({ campaignName }: CampaignDemographicsProps) {
   const hasOwnEntry = REPORT_CAMPAIGNS.some(c => c.key === campaignName);
-  const demographics = getCampaignDemographics(hasOwnEntry ? campaignName : 'all');
+  if (!hasOwnEntry) return null;
+  const demographics = getCampaignDemographics(campaignName);
 
   return (
     <div>
@@ -25,7 +35,7 @@ export function CampaignDemographics({ campaignName }: CampaignDemographicsProps
           Audience demographics
         </h2>
         <span style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
-          {hasOwnEntry ? 'This campaign' : 'Across all active campaigns'}
+          This campaign
         </span>
       </div>
       <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
