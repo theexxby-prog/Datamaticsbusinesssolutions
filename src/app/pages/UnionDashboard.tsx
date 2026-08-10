@@ -275,7 +275,7 @@ export default function UnionDashboard() {
                         <span className="t-body truncate font-semibold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
                         <span
                           className="t-micro flex-shrink-0 rounded-full px-1.5 py-0.5"
-                          style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                          style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
                         >
                           {campaignTypeFor(c.id)}
                         </span>

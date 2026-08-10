@@ -175,7 +175,7 @@ export default function Dashboard() {
           {showTypeChip && (
             <span
               className="rounded-full px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide"
-              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               {campaignTypeFor(r.id)}
             </span>

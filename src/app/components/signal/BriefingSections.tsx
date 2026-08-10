@@ -106,7 +106,7 @@ export function AccountDetailSections({ account }: { account: SignalAccount }) {
             <div key={trigger.text} className="flex items-start gap-3">
               <span
                 className="mt-0.5 flex-shrink-0 rounded-md px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide"
-                style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
               >
                 {trigger.kind ?? 'Signal'}
               </span>

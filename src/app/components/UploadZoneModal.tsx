@@ -102,10 +102,10 @@ export function UploadZoneModal({ isOpen, onClose }: UploadZoneModalProps) {
                   <p className="text-sm font-medium mb-2 text-gray-900">
                     {uploadProgress === 100 ? 'Upload Complete!' : 'Uploading...'}
                   </p>
-                  <div className="w-full h-2 rounded-full overflow-hidden bg-gray-200">
+                  <div className="w-full h-2 rounded-full overflow-hidden" style={{ background: 'var(--color-progress-track)' }}>
                     <div
-                      className="h-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)] transition-all duration-300"
-                      style={{ width: `${uploadProgress}%` }}
+                      className="h-full transition-all duration-300"
+                      style={{ width: `${uploadProgress}%`, background: 'var(--color-progress)' }}
                     />
                   </div>
                   <p className="text-xs mt-2 text-gray-600">{uploadProgress}%</p>

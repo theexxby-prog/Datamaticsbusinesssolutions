@@ -321,7 +321,7 @@ export default function UnionOpsCampaign() {
             </h1>
             <span
               className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
-              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               #{campaign.id}
             </span>

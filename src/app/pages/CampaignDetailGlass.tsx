@@ -160,7 +160,7 @@ export default function CampaignDetail() {
               {showFuture && (
                 <span
                   className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
-                  style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                  style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
                 >
                   {campaignTypeFor(campaign.id)}
                 </span>

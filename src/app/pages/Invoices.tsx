@@ -79,7 +79,7 @@ function InvoiceCard({
             </span>
             <span
               className="inline-flex items-center px-2 py-0.5 rounded-full"
-              style={{ fontSize: '11px', fontWeight: 500, background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ fontSize: '11px', fontWeight: 500, background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
               title={GROUPING_META[invoice.grouping].hint}
             >
               {groupingLabel}

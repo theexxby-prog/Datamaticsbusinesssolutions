@@ -509,10 +509,10 @@ export default function ReportsPage() {
                   / {pacing.monthTarget.toLocaleString()} target · {pacingPct}%
                 </span>
               </div>
-              <div className="w-full h-3.5 rounded-full overflow-hidden mt-auto" style={{ background: 'var(--background-muted)' }}>
+              <div className="w-full h-3.5 rounded-full overflow-hidden mt-auto" style={{ background: 'var(--color-progress-track)' }}>
                 <motion.div
                   className="h-full rounded-full"
-                  style={{ background: 'var(--color-primary)' }}
+                  style={{ background: 'var(--color-progress)' }}
                   initial={reduce ? false : { width: 0 }}
                   whileInView={{ width: `${Math.min(100, pacingPct)}%` }}
                   viewport={{ once: true, amount: 0.4 }}
@@ -520,7 +520,7 @@ export default function ReportsPage() {
                 />
               </div>
               <div className="flex gap-5 mt-2.5" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
-                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: 'var(--color-primary)' }} />Delivered {pacingPct}%</span>
+                <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm" style={{ background: 'var(--color-progress)' }} />Delivered {pacingPct}%</span>
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded-sm border" style={{ background: 'var(--background-muted)', borderColor: 'var(--color-border)' }} />Remaining {Math.max(0, 100 - pacingPct)}%</span>
               </div>
             </div>

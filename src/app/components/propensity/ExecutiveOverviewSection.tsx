@@ -47,7 +47,7 @@ export function ExecutiveOverviewSection() {
               navigate(`/campaigns/${xw.syndicationCampaignId}`);
             }}
             className="inline-flex max-w-[220px] items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold transition-colors hover:bg-[var(--color-primary)]/[0.16]"
-            style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+            style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             title={`Content syndication: ${xw.syndicationCampaignName}`}
           >
             <Link2 className="h-3 w-3 flex-shrink-0" />
