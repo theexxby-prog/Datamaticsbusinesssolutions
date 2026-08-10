@@ -101,10 +101,10 @@ export function DeliveryScheduleSection({ campaign, bare = false }: DeliverySche
             {progressPercentage}%
           </span>
         </div>
-        <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--color-border)' }}>
+        <div className="h-3 rounded-full overflow-hidden" style={{ background: 'var(--color-progress-track)' }}>
           <motion.div
             className="h-full rounded-full"
-            style={{ background: 'var(--color-primary)' }}
+            style={{ background: 'var(--color-progress)' }}
             initial={{ width: 0 }}
             animate={{ width: `${progressPercentage}%` }}
             transition={{ duration: 1, ease: 'easeOut' }}

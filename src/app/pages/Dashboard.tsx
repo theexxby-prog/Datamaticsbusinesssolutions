@@ -214,8 +214,8 @@ export default function Dashboard() {
         const pct = r.target ? Math.min(100, Math.round((r.delivered / r.target) * 100)) : 0;
         return (
           <div className="flex items-center gap-2.5">
-            <div className="h-1.5 w-[74px] overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
-              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: r.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-primary)' }} />
+            <div className="h-1.5 w-[74px] overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: r.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-progress)' }} />
             </div>
             <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums', minWidth: 34 }}>{pct}%</span>
           </div>

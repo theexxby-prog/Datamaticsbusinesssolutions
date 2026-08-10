@@ -628,8 +628,8 @@ export default function Invoices() {
                   <b style={{ color: 'var(--color-primary)' }}>{formatUSD(pos.remaining)}</b> remaining
                 </span>
               </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                <div className="h-full rounded-full" style={{ width: `${pos.pct}%`, background: 'var(--color-primary)' }} />
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+                <div className="h-full rounded-full" style={{ width: `${pos.pct}%`, background: 'var(--color-progress)' }} />
               </div>
             </div>
           );

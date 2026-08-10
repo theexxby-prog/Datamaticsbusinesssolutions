@@ -65,7 +65,9 @@ export function CampaignKpiBand({
       value: `${delivered.toLocaleString()} / ${target.toLocaleString()}`,
       sub: remaining > 0 ? `${remaining.toLocaleString()} to go · ${progressPercent}%` : `Target met · ${progressPercent}%`,
       Icon: TrendingUp,
-      tone: 'var(--color-primary)',
+      // The only tile here whose bar is progress toward a target. Pace and
+      // acceptance below carry verdicts, so they keep their semantic colours.
+      tone: 'var(--color-progress)',
       toneBg: 'var(--color-primary-tint)',
       bar: { pct: progressPercent },
     },
@@ -155,7 +157,7 @@ export function CampaignKpiBand({
             {tile.bar && (
               <div
                 className="mt-2 h-1.5 w-full overflow-hidden rounded-full"
-                style={{ background: 'var(--color-border-light)' }}
+                style={{ background: 'var(--color-progress-track)' }}
               >
                 {/* On the Pace tile the muted marker is elapsed time, so a
                     coloured bar short of it reads as "behind" at a glance. */}

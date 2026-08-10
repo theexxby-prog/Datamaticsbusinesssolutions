@@ -37,6 +37,11 @@
   --color-text-inverse: #17141A;
 
   /* Semantic — brightened for dark */
+  /* Progress: lifted well off the dark ground — the light-mode slate is far
+     too dark to read as a filled bar here. Track lightens to stay visible. */
+  --color-progress: #7FA3D8;
+  --color-progress-track: #333842;
+
   --color-success: #34D399;
   --color-success-bg: rgba(52, 211, 153, 0.15);
   --color-warning: #FBBF24;

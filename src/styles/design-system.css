@@ -48,6 +48,24 @@
    ground the logo sits on. */
 --logo-wordmark: #5a555d;
 
+/* ── Progress ───────────────────────────────────────────────────────────────
+   One colour, used only for "how far through are we" bars — delivery against a
+   target, billing against a commitment. Deliberately NOT the brand: a bar that
+   is the same red as an overdue invoice reads as a warning when it is only a
+   measurement, and the bar was the same red whether a campaign was pacing or
+   failing, so the colour carried no information at all.
+
+   A desaturated slate rather than a saturated blue: it has to sit beside the
+   brand red without competing with it, and it must not read as the Tech Blue
+   identity that was tried and dropped. Semantic bars (QA composition, pace,
+   acceptance) keep their own colours — this token is for quantity, not verdict.
+
+   --color-progress-track is firmer than --background-muted on purpose. The old
+   track was near-invisible on a white card, so a campaign at 20% looked like an
+   empty row rather than one that had started. */
+--color-progress: #3E5C88;
+--color-progress-track: #E4E7EC;
+
 --color-success: #059669;
 --color-success-bg: rgba(5, 150, 105, 0.10);
 --color-warning: #D97706;
@@ -430,9 +448,9 @@
 .progress-bar {
   width: 100%;
   height: 6px;
-  /* The track must read against the card it sits on, so it follows the gray
-     ramp (which mirrors) rather than a surface token (which matches the card). */
-  background: var(--color-gray-200);
+  /* The track has its own token rather than following the grey ramp: it must
+     stay firm enough that a bar at 20% still reads as started. */
+  background: var(--color-progress-track);
   border-radius: 999px;
   overflow: hidden;
 }

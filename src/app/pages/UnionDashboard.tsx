@@ -58,12 +58,12 @@ function OutcomeStep({
         )}
       </div>
       <span className="t-micro truncate">{label}</span>
-      <span className="h-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+      <span className="h-1 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
         <span
           className="block h-full rounded-full"
           style={{
             width: `${Math.max(2, pct)}%`,
-            background: last ? 'var(--color-success)' : 'var(--gradient-primary)',
+            background: last ? 'var(--color-success)' : 'var(--color-progress)',
           }}
         />
       </span>
@@ -191,8 +191,8 @@ export default function UnionDashboard() {
                 <span className="mx-1.5" aria-hidden="true">·</span>
                 <span style={{ color: 'var(--color-success)' }}>{fmtMoney(stats.remainingYear)} remaining</span>
               </div>
-              <div className="mt-2 h-1.5 w-full max-w-[420px] overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                <div className="h-full rounded-full" style={{ width: `${committedPct}%`, background: 'var(--gradient-primary)' }} />
+              <div className="mt-2 h-1.5 w-full max-w-[420px] overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+                <div className="h-full rounded-full" style={{ width: `${committedPct}%`, background: 'var(--color-progress)' }} />
               </div>
             </div>
 
@@ -284,10 +284,10 @@ export default function UnionDashboard() {
                         {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')}
                       </span>
                     </div>
-                    <div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                    <div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
                       <div
                         className="h-full rounded-full"
-                        style={{ width: `${pct}%`, background: c.status === 'completed' ? 'var(--color-text-muted)' : 'var(--gradient-primary)' }}
+                        style={{ width: `${pct}%`, background: c.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-progress)' }}
                       />
                     </div>
                     <span className="t-meta mt-1 block" style={{ color: paceTone }}>{pace}</span>
