@@ -7,10 +7,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm i          # Install dependencies
 npm run dev    # Start dev server on port 3000
-npm run build  # Production build (output: dist/)
+npm run build  # Production build (output: dist/) — ~43s
 ```
 
 No test framework is configured.
+
+**`npm run build` is `tsc --noEmit && vite build`.** Running `npm run typecheck`
+and then `npm run build` typechecks the project twice for no benefit — that is
+20 wasted seconds every iteration. While iterating, `npm run typecheck` (~21s)
+is the whole gate; run the full build once before pushing.
 
 ## Architecture
 
@@ -81,6 +86,26 @@ Run `npm run audit:contrast` (with `npm run dev` up) to check. It walks 18
 routes across four personas in both themes, composites translucent backgrounds
 properly, and groups failures by colour pair so the output names the offending
 token rather than listing every node.
+
+**Scope it while iterating; sweep before pushing.** The full run is ~43s, but a
+colour change usually touches one or two screens:
+
+```bash
+npm run audit:contrast -- --user=u9 --theme=dark --route=/campaigns   # ~10s
+npm run audit:contrast                                                # full, ~43s
+```
+
+`--route` is a substring match, so `--route=/campaigns` also covers
+`/campaigns/:id`. The run prints how many text nodes it measured; that count is
+reproducible node-for-node between runs, so a sudden drop means the audit
+stopped seeing part of the page, not that the page got simpler.
+
+Two things in the script exist for speed and must not be "simplified" away: it
+aborts every off-origin request (the app pulls ~14 external images that hang in
+a browser with no proxy — that alone was 60% of the old 108s runtime), and it
+waits for the DOM to stop changing rather than sleeping a fixed 2.1s per route.
+The settle needs *three* consecutive stable samples; at two, a mid-mount lull
+reads as "finished" and late sections drop out of the audit silently.
 
 Two structural rules the audit exists to protect:
 

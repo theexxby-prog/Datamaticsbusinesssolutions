@@ -1,8 +1,9 @@
 /**
  * Contrast audit — WCAG AA across the whole portal.
  *
- *   npm run dev                       # in one terminal
- *   node scripts/contrast-audit.mjs   # in another
+ *   npm run dev                          # in one terminal
+ *   npm run audit:contrast               # in another — the full sweep
+ *   npm run audit:contrast -- --user=u9 --theme=dark --route=/campaigns
  *
  * Walks every route below for four personas in both themes, and for each piece
  * of text computes the real contrast ratio against its *composited* background
@@ -14,9 +15,30 @@
  * >=18.66px bold). Icons, bars and dots are not text and are not checked here.
  *
  * Exits non-zero when anything fails, so it can gate a build if wanted.
+ *
+ * ── Why this is structured the way it is ────────────────────────────────────
+ * The first version took ~7 minutes, which is long enough that you stop running
+ * it, which defeats the point. Three things cost that time, none of them the
+ * measurement itself:
+ *
+ *  1. Every external image request hung. The app pulls ~14 URLs from Unsplash
+ *     and friends; the browser has no proxy configured, so each one sat there
+ *     until it timed out. Aborting off-origin requests up front is the single
+ *     biggest win, and it costs nothing here — an <img> is not text, and the
+ *     background compositing below reads colours, never bitmaps.
+ *  2. A fresh BrowserContext per route meant 36 browser setups and 36 throwaway
+ *     navigations to seed sessionStorage. Storage survives same-origin
+ *     navigation within a tab, so one context per (persona, theme) seeds once
+ *     and then just walks its routes.
+ *  3. A flat 2.1s of sleep per route. Polling until the DOM stops changing
+ *     returns in ~200ms on a settled page and still waits when it needs to.
+ *
+ * Routes are grouped by (persona, theme) and the groups run concurrently.
  */
 const BASE = process.env.AUDIT_BASE ?? 'http://127.0.0.1:3000';
 const BROWSER = process.env.PLAYWRIGHT_CHROMIUM ?? '/opt/pw-browsers/chromium';
+/** 4 is a good default on a 4-core box; the work is I/O-bound, not CPU-bound. */
+const PARALLEL = Number(process.env.AUDIT_PARALLEL ?? 4);
 
 /**
  * Playwright is not a dependency of this project — it is a dev-machine tool, and
@@ -45,7 +67,6 @@ async function loadChromium() {
   );
   process.exit(2);
 }
-const chromium = await loadChromium();
 
 const ROUTES = [
   ['u9', '/dashboard'], ['u9', '/campaigns'], ['u9', '/campaigns/46888'],
@@ -55,6 +76,26 @@ const ROUTES = [
   ['u1', '/dashboard'], ['u1', '/invoices'], ['u1', '/documents'], ['u1', '/reports'],
   ['u2', '/dashboard/manager'], ['u2', '/internal/campaigns'],
 ];
+
+// ── Scope flags ─────────────────────────────────────────────────────────────
+// A three-line colour change does not need all 36 page-loads. Narrowing to the
+// pages you touched turns the check into something you run while editing.
+const flag = name => {
+  const hit = process.argv.find(a => a.startsWith(`--${name}=`));
+  return hit ? hit.slice(name.length + 3) : null;
+};
+const onlyUser = flag('user');
+const onlyTheme = flag('theme');
+const onlyRoute = flag('route');
+
+const themes = ['light', 'dark'].filter(t => !onlyTheme || t === onlyTheme);
+const routes = ROUTES.filter(([u, p]) =>
+  (!onlyUser || u === onlyUser) && (!onlyRoute || p.includes(onlyRoute)));
+
+if (!themes.length || !routes.length) {
+  console.error('No routes match those filters.');
+  process.exit(2);
+}
 
 /** Runs in the page. Kept self-contained so it can be pasted into devtools. */
 const AUDIT = () => {
@@ -102,6 +143,7 @@ const AUDIT = () => {
   };
 
   const out = [];
+  let checked = 0;
   document.querySelectorAll('body *').forEach(el => {
     if (el.children.length) return;
     const text = (el.textContent || '').trim();
@@ -112,6 +154,7 @@ const AUDIT = () => {
     if (cs.visibility === 'hidden' || cs.display === 'none' || +cs.opacity === 0) return;
     const fg = parse(cs.color);
     if (!fg) return;
+    checked++;
     const bg = effBg(el);
     const composited = fg.a < 1 ? over(fg, bg) : fg;
     const cr = ratio(composited, bg);
@@ -125,41 +168,101 @@ const AUDIT = () => {
       });
     }
   });
-  return out;
+  // `checked` is the coverage number. A speed change that quietly measures
+  // fewer nodes would turn into a silent PASS, so the count is reported rather
+  // than trusted.
+  return { checked, fails: out };
 };
 
+/**
+ * Wait for the page to stop changing rather than for a fixed duration. Entrance
+ * animations and lazy sections settle in a couple of frames; a flat sleep pays
+ * the worst case on every route.
+ */
+const settle = page => page.evaluate(async () => {
+  const count = () => document.querySelectorAll('body *').length;
+  // Three consecutive equal samples, not two. Under parallel load a page can
+  // sit still for one interval mid-mount, and two samples then read that lull
+  // as "finished" — which silently drops a late section from the audit. The
+  // floor and the sample width are what make repeat runs agree node-for-node.
+  let last = -1, stable = 0;
+  await new Promise(r => setTimeout(r, 300));
+  for (let i = 0; i < 24 && stable < 3; i++) {
+    await new Promise(r => setTimeout(r, 150));
+    const n = count();
+    stable = n === last ? stable + 1 : 0;
+    last = n;
+  }
+});
+
+const chromium = await loadChromium();
 const browser = await chromium.launch({ executablePath: BROWSER });
-const all = [];
-for (const theme of ['light', 'dark']) {
-  for (const [user, path] of ROUTES) {
-    const ctx = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
-    const page = await ctx.newPage();
-    try {
-      await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded', timeout: 15000 });
-      await page.evaluate(([u, t]) => {
-        sessionStorage.setItem('signed-in-user-id', u);
-        sessionStorage.setItem('demo-gate-passed', '1');
-        localStorage.setItem('pulse-theme', t);
-      }, [user, theme]);
-      // Not networkidle: the app loads external images, and anywhere those are
-      // slow or blocked (a proxy, an offline box) the page never goes idle and
-      // every route burns its full timeout. A fixed settle is both faster and
-      // far more predictable for what this measures.
-      await page.goto(BASE + path, { waitUntil: 'domcontentloaded', timeout: 15000 });
-      await page.waitForTimeout(1200);
-      // Sections animate in on scroll; visit the bottom so they mount.
-      await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-      await page.waitForTimeout(600);
-      await page.evaluate(() => window.scrollTo(0, 0));
-      await page.waitForTimeout(300);
-      (await page.evaluate(AUDIT)).forEach(f => all.push({ ...f, theme, user, path }));
-    } catch (err) {
-      console.log(`  ! ${user} ${path} — ${String(err).slice(0, 70)}`);
-    }
-    await ctx.close();
+
+// Group by (persona, theme): storage is seeded once per group and then survives
+// every same-origin navigation inside it.
+const groups = [];
+for (const theme of themes) {
+  for (const user of [...new Set(routes.map(r => r[0]))]) {
+    const paths = routes.filter(r => r[0] === user).map(r => r[1]);
+    if (paths.length) groups.push({ user, theme, paths });
   }
 }
+
+const all = [];
+let checked = 0;
+const started = Date.now();
+
+async function runGroup({ user, theme, paths }) {
+  const ctx = await browser.newContext({ viewport: { width: 1440, height: 1100 } });
+  // Abort everything that is not the dev server. Without this the ~14 external
+  // images hang on a box with no direct egress, and every route pays for it.
+  await ctx.route('**/*', route => {
+    const url = route.request().url();
+    route[url.startsWith(BASE) || url.startsWith('data:') || url.startsWith('blob:')
+      ? 'continue' : 'abort']();
+  });
+  const page = await ctx.newPage();
+  try {
+    await page.goto(`${BASE}/`, { waitUntil: 'domcontentloaded', timeout: 15000 });
+    await page.evaluate(([u, t]) => {
+      sessionStorage.setItem('signed-in-user-id', u);
+      sessionStorage.setItem('demo-gate-passed', '1');
+      localStorage.setItem('pulse-theme', t);
+    }, [user, theme]);
+
+    for (const path of paths) {
+      try {
+        await page.goto(BASE + path, { waitUntil: 'domcontentloaded', timeout: 15000 });
+        await settle(page);
+        // Sections animate in on scroll; visit the bottom so they mount.
+        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+        await settle(page);
+        await page.evaluate(() => window.scrollTo(0, 0));
+        const res = await page.evaluate(AUDIT);
+        if (process.env.AUDIT_VERBOSE) console.log(`COUNT ${user} ${theme} ${path} ${res.checked}`);
+        checked += res.checked;
+        res.fails.forEach(f => all.push({ ...f, theme, user, path }));
+      } catch (err) {
+        console.log(`  ! ${user} ${path} [${theme}] — ${String(err).slice(0, 70)}`);
+      }
+    }
+  } catch (err) {
+    console.log(`  ! ${user} [${theme}] setup — ${String(err).slice(0, 70)}`);
+  }
+  await ctx.close();
+}
+
+// Simple worker pool over the groups.
+const queue = [...groups];
+await Promise.all(
+  Array.from({ length: Math.min(PARALLEL, queue.length) }, async () => {
+    for (let g = queue.shift(); g; g = queue.shift()) await runGroup(g);
+  }),
+);
 await browser.close();
+
+const elapsed = ((Date.now() - started) / 1000).toFixed(1);
+const scope = `${routes.length} route${routes.length === 1 ? '' : 's'} × ${themes.join('+')}, ${checked} text nodes`;
 
 const byPair = new Map();
 for (const f of all) {
@@ -170,10 +273,10 @@ for (const f of all) {
 }
 
 if (all.length === 0) {
-  console.log(`PASS — every text node meets WCAG AA across ${ROUTES.length} routes in both themes.`);
+  console.log(`PASS — every text node meets WCAG AA across ${scope}.  (${elapsed}s)`);
   process.exit(0);
 }
-console.log(`FAIL — ${all.length} text nodes below AA, across ${byPair.size} colour pairs\n`);
+console.log(`FAIL — ${all.length} text nodes below AA, across ${byPair.size} colour pairs  (${scope}, ${elapsed}s)\n`);
 for (const [pair, e] of [...byPair].sort((a, b) => b[1].n - a[1].n)) {
   console.log(`${String(e.n).padStart(4)}×  ${pair}  ratio ${e.ratio} (needs ${e.need})  [${[...e.themes].join('+')}]`);
   console.log(`        e.g. "${[...e.samples].slice(0, 3).join('" / "')}"`);
