@@ -200,7 +200,7 @@ export default function CampaignDetail() {
               {openRequestsFor(campaign.id) > 0 && (
                 <span
                   className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
-                  style={{ background: 'var(--color-primary)' }}
+                  style={{ background: 'var(--color-primary-solid)' }}
                 >
                   {openRequestsFor(campaign.id)}
                 </span>

@@ -245,7 +245,7 @@ function StandardHomePage() {
             <div className="flex items-center gap-4 min-w-0">
               <div
                 className="w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 select-none"
-                style={{ background: 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)', boxShadow: '0 4px 14px rgba(186,32,39,0.28)', color: '#fff', fontSize: '15px', fontWeight: 700 }}
+                style={{ background: 'var(--gradient-primary)', boxShadow: '0 4px 14px rgba(186,32,39,0.28)', color: '#fff', fontSize: '15px', fontWeight: 700 }}
               >
                 {initials}
               </div>
@@ -261,7 +261,7 @@ function StandardHomePage() {
                 </div>
                 <div className="flex items-center gap-2 flex-wrap">
                   <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>{currentUser?.company ?? 'Datamatics Business Solutions'}</span>
-                  <span style={{ color: 'var(--color-border)' }}>·</span>
+                  <span style={{ color: 'var(--color-text-muted)' }} aria-hidden="true">·</span>
                   <span style={{ fontSize: '13px', color: 'var(--color-text-secondary)' }}>{formattedDate}</span>
                 </div>
               </div>
@@ -292,7 +292,7 @@ function StandardHomePage() {
                 <button
                   key={p}
                   onClick={() => { setLeadsPeriod(p); setBizPeriod(p); }}
-                  className={`min-h-[32px] rounded-md px-3 transition-all ${active ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'}`}
+                  className={`min-h-[32px] rounded-md px-3 transition-all ${active ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'}`}
                   style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
                 >
                   {p === 'month' ? 'Month' : 'Year'}
@@ -326,7 +326,7 @@ function StandardHomePage() {
                   <button
                     key={p}
                     onClick={() => setLeadsPeriod(p)}
-                    className={`px-2.5 py-1 rounded-md transition-all ${leadsPeriod === p ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'}`}
+                    className={`px-2.5 py-1 rounded-md transition-all ${leadsPeriod === p ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'}`}
                     style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
                   >
                     {p === 'month' ? 'Month' : 'Year'}
@@ -365,7 +365,7 @@ function StandardHomePage() {
                   <button
                     key={p}
                     onClick={() => setBizPeriod(p)}
-                    className={`px-2.5 py-1 rounded-md transition-all ${bizPeriod === p ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'}`}
+                    className={`px-2.5 py-1 rounded-md transition-all ${bizPeriod === p ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'}`}
                     style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
                   >
                     {p === 'month' ? 'Month' : 'Year'}

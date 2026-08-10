@@ -91,7 +91,7 @@ export function NotificationBell() {
       {unreadCount > 0 && (
         <span
           className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center"
-          style={{ background: 'var(--color-primary)', fontSize: '10px', fontWeight: 700, color: '#fff' }}
+          style={{ background: 'var(--color-primary-solid)', fontSize: '10px', fontWeight: 700, color: '#fff' }}
         >
           {unreadCount > 9 ? '9+' : unreadCount}
         </span>
@@ -178,7 +178,7 @@ export function NotificationPanel({
                 <Bell className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />
                 <span style={{ fontWeight: 700, fontSize: '16px', color: 'var(--color-text-primary)' }}>Notifications</span>
                 {unreadCount > 0 && (
-                  <span className="px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--color-primary)', fontSize: '12px', fontWeight: 700 }}>
+                  <span className="px-2 py-0.5 rounded-full text-white" style={{ background: 'var(--color-primary-solid)', fontSize: '12px', fontWeight: 700 }}>
                     {unreadCount}
                   </span>
                 )}
@@ -262,7 +262,7 @@ export function NotificationPanel({
                 {unreadCount > 0 && (
                   <span
                     className="px-1.5 py-0.5 rounded-full text-white"
-                    style={{ background: 'var(--color-primary)', fontSize: '11px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary-solid)', fontSize: '11px', fontWeight: 700 }}
                   >
                     {unreadCount}
                   </span>

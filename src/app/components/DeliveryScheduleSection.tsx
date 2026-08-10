@@ -227,7 +227,7 @@ export function DeliveryScheduleSection({ campaign, bare = false }: DeliverySche
                     </div>
                   </div>
                   {isNext && (
-                    <div className="ml-3 px-3 py-1 rounded-full" style={{ background: 'var(--color-primary)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'white' }}>
+                    <div className="ml-3 px-3 py-1 rounded-full" style={{ background: 'var(--color-primary-solid)', fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'white' }}>
                       Next
                     </div>
                   )}

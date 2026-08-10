@@ -136,7 +136,7 @@ export default function UnionOpsIntake() {
                 aria-selected={source === key}
                 onClick={() => changeSource(key)}
                 className={`flex min-h-[36px] items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors ${
-                  source === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
+                  source === key ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />

@@ -75,7 +75,7 @@ export function ThreadEntryCard({ entry, canResolve, onSetStatus }: ThreadEntryC
       {/* Avatar */}
       <div
         className={`flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold text-white ${
-          isClient ? 'bg-[var(--color-primary)]' : 'bg-[var(--brand-gray)]'
+          isClient ? 'bg-[var(--color-primary-solid)]' : 'bg-[var(--brand-gray)]'
         }`}
       >
         {initials(entry.author.name)}
@@ -135,7 +135,7 @@ export function ThreadEntryCard({ entry, canResolve, onSetStatus }: ThreadEntryC
                 <button
                   type="button"
                   onClick={() => onSetStatus(entry.id, next.to)}
-                  className="ml-auto rounded-lg bg-[var(--color-primary)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
+                  className="ml-auto rounded-lg bg-[var(--color-primary-solid)] px-3 py-1.5 text-xs font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
                 >
                   {next.label}
                 </button>

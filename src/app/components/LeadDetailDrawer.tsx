@@ -170,7 +170,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
               key={t.key}
               onClick={() => setTab(t.key)}
               className={`min-h-[36px] rounded-lg text-sm font-semibold transition-all ${
-                tab === t.key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                tab === t.key ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-gray-600 hover:text-gray-900'
               }`}
             >
               {t.label}
@@ -369,7 +369,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
                 className="w-full px-4 py-3 rounded-lg border resize-none bg-[var(--color-surface-raised)] border-gray-200 text-gray-900 placeholder-gray-500 outline-none focus:border-[var(--color-primary)] transition-colors"
                 rows={3}
               />
-              <button className="mt-3 px-4 py-2 bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white rounded-lg transition-colors text-sm font-medium">
+              <button className="mt-3 px-4 py-2 bg-[var(--color-primary-solid)] hover:bg-[var(--color-primary-dark)] text-white rounded-lg transition-colors text-sm font-medium">
                 Add Note
               </button>
             </div>

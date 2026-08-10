@@ -342,7 +342,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                               <motion.span
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                className="bg-[var(--color-primary)] text-white rounded-full flex items-center justify-center flex-shrink-0"
+                                className="bg-[var(--color-primary-solid)] text-white rounded-full flex items-center justify-center flex-shrink-0"
                                 style={{ fontSize: '11px', fontWeight: 700, minWidth: '20px', height: '20px', padding: '0 6px' }}
                               >
                                 {item.badge}
@@ -360,7 +360,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                                   e.stopPropagation();
                                   item.quickActionHandler?.();
                                 }}
-                                className="w-5 h-5 rounded-md bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white flex items-center justify-center transition-colors ml-1 cursor-pointer flex-shrink-0"
+                                className="w-5 h-5 rounded-md bg-[var(--color-primary-solid)] hover:bg-[var(--color-primary-dark)] text-white flex items-center justify-center transition-colors ml-1 cursor-pointer flex-shrink-0"
                               >
                                 <QuickActionIcon className="w-3 h-3" />
                               </motion.div>
@@ -489,7 +489,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                 {unreadCount > 0 && (
                   <span
                     className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center text-white"
-                    style={{ background: 'var(--color-primary)', fontSize: '10px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary-solid)', fontSize: '10px', fontWeight: 700 }}
                   >
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>

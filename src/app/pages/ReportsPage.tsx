@@ -233,7 +233,7 @@ export default function ReportsPage() {
                     onClick={() => { setScope(s); setSelectedCampaign('all'); }}
                     className="px-4 py-2 text-sm font-semibold capitalize transition-colors"
                     style={{
-                      background: scope === s ? 'var(--color-primary)' : 'transparent',
+                      background: scope === s ? 'var(--color-primary-solid)' : 'transparent',
                       color: scope === s ? '#fff' : 'var(--color-text-secondary)',
                     }}
                   >
@@ -276,7 +276,7 @@ export default function ReportsPage() {
                     onClick={() => setPeriod(p)}
                     className="px-4 py-2 text-sm font-semibold capitalize transition-colors"
                     style={{
-                      background: period === p ? 'var(--color-primary)' : 'transparent',
+                      background: period === p ? 'var(--color-primary-solid)' : 'transparent',
                       color: period === p ? '#fff' : 'var(--color-text-secondary)',
                     }}
                   >

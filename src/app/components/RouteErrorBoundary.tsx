@@ -55,7 +55,7 @@ function ErrorCard({ error }: { error: unknown }) {
         <div className="flex flex-col gap-2 sm:flex-row sm:justify-center">
           <button
             onClick={() => window.location.reload()}
-            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:bg-[#8A181D] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
+            className="inline-flex items-center justify-center gap-2 rounded-lg bg-[var(--color-primary-solid)] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:bg-[#8A181D] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2"
           >
             <RotateCw className="h-4 w-4" />
             Reload this page

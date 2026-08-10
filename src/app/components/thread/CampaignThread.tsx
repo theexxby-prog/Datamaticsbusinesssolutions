@@ -214,7 +214,7 @@ export function CampaignThread({ campaignId, campaignName, activities = [], vari
             aria-pressed={filter === key}
             className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] ${
               filter === key
-                ? 'bg-[var(--color-primary)] text-white'
+                ? 'bg-[var(--color-primary-solid)] text-white'
                 : 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)]'
             }`}
           >

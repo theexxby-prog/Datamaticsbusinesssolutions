@@ -68,7 +68,7 @@ export function DocumentViewerModal({ isOpen, onClose, document }: DocumentViewe
             {(document.type === 'SOW' || document.type === 'Contract') && (
               <button
                 onClick={() => toast.info('DocuSign integration coming soon')}
-                className="px-3 py-2 rounded-lg transition-all flex items-center gap-2 text-sm font-medium bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] text-white"
+                className="px-3 py-2 rounded-lg transition-all flex items-center gap-2 text-sm font-medium bg-[var(--color-primary-solid)] hover:bg-[var(--color-primary-dark)] text-white"
                 title="Sign with DocuSign"
               >
                 <Pen className="w-4 h-4" />

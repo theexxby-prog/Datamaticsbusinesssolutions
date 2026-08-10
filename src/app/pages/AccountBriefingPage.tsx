@@ -109,7 +109,7 @@ export default function AccountBriefingPage() {
               >
                 <span
                   className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[12px] font-extrabold text-white"
-                  style={{ background: 'var(--color-primary)' }}
+                  style={{ background: 'var(--color-primary-solid)' }}
                 >
                   {index + 1}
                 </span>

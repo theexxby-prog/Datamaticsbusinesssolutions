@@ -193,7 +193,7 @@
 
 .btn-primary {
   /* Flat solid — matches production (pulse.datamaticsbpm.com) */
-  background: var(--color-primary);
+  background: var(--color-primary-solid);
   color: white;
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-sm);

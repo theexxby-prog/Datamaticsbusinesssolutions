@@ -33,7 +33,10 @@ export function TaxInvoiceDocument({ invoice }: { invoice: TaxInvoice }) {
         <div className="text-right flex-shrink-0">
           <div
             className="inline-block px-3 py-1 rounded text-[11px] font-bold tracking-[0.14em] text-white"
-            style={{ background: 'var(--color-primary)' }}
+            /* Literal, not a token: this is a printed document and must not
+               follow the theme. On a token it rendered white-on-#F07377 in
+               dark mode. */
+            style={{ background: '#BA2027' }}
           >
             TAX INVOICE
           </div>

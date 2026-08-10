@@ -51,7 +51,7 @@ export function DateRangePicker({ value, onChange }: DateRangePickerProps) {
                   }}
                   className={`w-full text-left px-4 py-2.5 rounded-lg text-sm transition-all ${
                     value === range.value
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary-solid)] text-white'
                       : 'text-gray-700 hover:bg-gray-100'
                   }`}
                 >

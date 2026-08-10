@@ -70,3 +70,29 @@ No test framework is configured.
 - Buttons need hover and active states; form inputs need focus states using the brand color.
 - Keep files small — extract reusable components and helpers into their own files.
 - Use flexbox/grid for layout; avoid absolute positioning unless truly necessary.
+
+## Readability
+
+**Every text/background pair must clear WCAG AA** — 4.5:1 for body text, 3:1 for
+large text (≥24px, or ≥18.66px bold). Icons, bars and dots are not text and are
+held to 3:1 as non-text contrast.
+
+Run `npm run audit:contrast` (with `npm run dev` up) to check. It walks 18
+routes across four personas in both themes, composites translucent backgrounds
+properly, and groups failures by colour pair so the output names the offending
+token rather than listing every node.
+
+Two structural rules the audit exists to protect:
+
+- **`--color-primary` is the brand as *type*; `--color-primary-solid` is the
+  brand as a *fill under white text*.** They cannot be one token: in dark mode
+  text on the ground wants to be light and a fill under white wants to be dark.
+  `--gradient-primary` is built from the solid ramp for the same reason. Any
+  `background` set to `--color-primary` with white text on it is a bug.
+- **A token only does the job it is named for.** A border colour as a text
+  colour measured 1.19:1; `--color-gray-400` as a KPI label measured 2.53:1.
+
+The semantic colours (`--color-success` / `-warning` / `-error` / `-info`) are
+tuned so they are legible *as words* on white, on the app ground and on their
+own 10% tint — they are used as type in roughly 300 places, so a value picked
+only for hue fails most of them.

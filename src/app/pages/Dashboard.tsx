@@ -227,7 +227,7 @@ export default function Dashboard() {
       sortValue: r => r.manager, text: r => r.manager,
       render: r => (
         <span className="inline-flex items-center gap-2.5">
-          <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[11px] font-extrabold text-white" style={{ background: 'var(--color-primary)' }}>
+          <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[11px] font-extrabold text-white" style={{ background: 'var(--color-primary-solid)' }}>
             {r.manager.split(' ').map(n => n[0]).join('').slice(0, 2)}
           </span>
           <span style={{ color: 'var(--color-text-secondary)' }}>{r.manager}</span>
