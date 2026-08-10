@@ -169,28 +169,6 @@ export default function UnionDashboard() {
         </div>
       )}
 
-      {/* Exceptions — absent entirely on a good day */}
-      {exceptions.length > 0 && (
-        <div className="flex flex-col gap-px overflow-hidden rounded-xl border" style={{ borderColor: 'var(--color-border-light)' }}>
-          {exceptions.map(item => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.key}
-                onClick={item.go}
-                className="flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
-                style={{ background: 'var(--color-surface-raised)' }}
-              >
-                <Icon className="h-4 w-4 flex-shrink-0" style={{ color: item.tone }} />
-                <span className="t-meta w-[150px] flex-shrink-0" style={{ color: item.tone }}>{item.label}</span>
-                <span className="t-body min-w-0 flex-1 truncate" style={{ color: 'var(--color-text-primary)' }}>{item.text}</span>
-                <ArrowRight className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
-              </button>
-            );
-          })}
-        </div>
-      )}
-
       {/* ── Question 1: am I getting what I paid for? ────────────────────────
           One band. This replaced three KPI tiles and a five-row funnel that
           between them printed the delivered figure twice — the funnel's first
@@ -362,6 +340,30 @@ export default function UnionDashboard() {
           </div>
         )}
       </div>
+
+      {/* Exceptions — moved below the work they refer to. At the top they
+          competed with the headline figure for the first read; here they act
+          as a footer that only exists when something is actually wrong. */}
+      {exceptions.length > 0 && (
+        <div className="flex flex-col gap-px overflow-hidden rounded-xl border" style={{ borderColor: 'var(--color-border-light)' }}>
+          {exceptions.map(item => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.key}
+                onClick={item.go}
+                className="flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
+                style={{ background: 'var(--color-surface-raised)' }}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" style={{ color: item.tone }} />
+                <span className="t-meta w-[150px] flex-shrink-0" style={{ color: item.tone }}>{item.label}</span>
+                <span className="t-body min-w-0 flex-1 truncate" style={{ color: 'var(--color-text-primary)' }}>{item.text}</span>
+                <ArrowRight className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
