@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  ArrowLeft, Building2, Calendar, ChevronDown, FileText,
+  ArrowLeft, Building2, Calendar, ChevronDown, CloudCog, FileText,
   Layers, Loader2, Plus, Radio, Shapes, Users, Wallet,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -37,8 +37,8 @@ const TYPE_ICONS: Record<CampaignTypeCode, typeof FileText> = {
   PG: Radio,
 };
 
-const FIELD_LABEL = 'block text-[12px] font-semibold mb-1';
-const INPUT = 'input-base h-[36px] w-full px-3 text-sm';
+const FIELD_LABEL = 'block text-[12.5px] font-semibold mb-1.5';
+const INPUT = 'input-base h-[42px] w-full px-3.5 text-sm';
 
 // Each section gets its own colour so the eye can land without reading:
 // an icon chip on the section's tint plus a matching left edge on the card.
@@ -48,6 +48,7 @@ const TONES: Record<string, SectionTone> = {
   info: { color: 'var(--color-info)', bg: 'var(--color-info-bg)' },
   success: { color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
   warning: { color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
+  muted: { color: 'var(--color-text-muted)', bg: 'var(--color-gray-100)' },
 };
 
 function SectionHead({ icon: Icon, tone, children }: {
@@ -56,9 +57,9 @@ function SectionHead({ icon: Icon, tone, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <h2 className="flex flex-wrap items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-secondary)' }}>
-      <span className="flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg" style={{ background: tone.bg }}>
-        <Icon className="h-3.5 w-3.5" style={{ color: tone.color }} />
+    <h2 className="flex flex-wrap items-center gap-2 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-secondary)' }}>
+      <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg" style={{ background: tone.bg }}>
+        <Icon className="h-4 w-4" style={{ color: tone.color }} />
       </span>
       {children}
     </h2>
@@ -84,6 +85,8 @@ export default function UnionOpsNewCampaign() {
 
   const [cplTarget, setCplTarget] = useState('');
   const [budget, setBudget] = useState('');
+  const [sfOpp, setSfOpp] = useState('');
+  const [sfOli, setSfOli] = useState('');
 
   const [saving, setSaving] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
@@ -123,8 +126,8 @@ export default function UnionOpsNewCampaign() {
         endDate,
         targetLeads: typeMeta.takesLeads && targetLeads ? Number(targetLeads) : null,
         targetImpressions: typeMeta.takesImpressions && targetImpressions ? Number(targetImpressions) : null,
-        sfOpportunityId: null,
-        sfOpportunityLineItemId: null,
+        sfOpportunityId: sfOpp.trim() || null,
+        sfOpportunityLineItemId: sfOli.trim() || null,
         commercials: {
           cplTarget: cplTarget ? Number(cplTarget) : null,
           budget: budget ? Number(budget) : null,
@@ -184,8 +187,8 @@ export default function UnionOpsNewCampaign() {
         </div>
       </div>
 
-      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.primary)}>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <div className="glass-card space-y-4 p-5" style={cardStyle(TONES.primary)}>
           <SectionHead icon={Building2} tone={TONES.primary}>1 · Campaign &amp; client</SectionHead>
           <div>
             <label htmlFor="nc-name" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
@@ -276,9 +279,9 @@ export default function UnionOpsNewCampaign() {
           </div>
         </div>
 
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.info)}>
+        <div className="glass-card space-y-4 p-5" style={cardStyle(TONES.info)}>
           <SectionHead icon={Shapes} tone={TONES.info}>2 · Campaign type</SectionHead>
-          <div role="radiogroup" aria-label="Campaign type" className="grid grid-cols-2 gap-2">
+          <div role="radiogroup" aria-label="Campaign type" className="grid grid-cols-2 gap-2.5">
             {CAMPAIGN_TYPES_META.map(t => {
               const Icon = TYPE_ICONS[t.code];
               const on = type === t.code;
@@ -289,7 +292,7 @@ export default function UnionOpsNewCampaign() {
                   role="radio"
                   aria-checked={on}
                   onClick={() => setType(t.code)}
-                  className="flex items-start gap-2 rounded-xl border p-2.5 text-left transition-colors hover:border-[var(--color-primary)]"
+                  className="flex items-start gap-2.5 rounded-xl border p-3.5 text-left transition-colors hover:border-[var(--color-primary)]"
                   style={{
                     borderColor: on ? 'var(--color-primary)' : 'var(--color-border)',
                     background: on ? 'var(--color-primary-tint)' : 'transparent',
@@ -299,10 +302,10 @@ export default function UnionOpsNewCampaign() {
                     className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg"
                     style={{ background: on ? 'var(--color-primary-solid)' : 'var(--color-primary-tint)' }}
                   >
-                    <Icon className="h-3 w-3" style={{ color: on ? '#FFFFFF' : 'var(--color-primary)' }} />
+                    <Icon className="h-3.5 w-3.5" style={{ color: on ? '#FFFFFF' : 'var(--color-primary)' }} />
                   </span>
                   <span className="min-w-0">
-                    <span className="flex flex-wrap items-center gap-1 text-[12.5px] font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+                    <span className="flex flex-wrap items-center gap-1 text-[13.5px] font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
                       {t.label}
                       <span
                         className="rounded px-1 py-px font-mono text-[9.5px] font-bold"
@@ -311,7 +314,7 @@ export default function UnionOpsNewCampaign() {
                         {t.code}
                       </span>
                     </span>
-                    <span className="mt-0.5 block text-[10.5px] leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
+                    <span className="mt-1 block text-[11.5px] leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
                       {t.blurb}
                     </span>
                   </span>
@@ -324,7 +327,7 @@ export default function UnionOpsNewCampaign() {
           )}
         </div>
 
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.success)}>
+        <div className="glass-card space-y-4 p-5" style={cardStyle(TONES.success)}>
           <SectionHead icon={Calendar} tone={TONES.success}>3 · Schedule &amp; targets</SectionHead>
           <div className="grid grid-cols-2 gap-2.5">
             <div>
@@ -382,9 +385,13 @@ export default function UnionOpsNewCampaign() {
           )}
         </div>
 
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.warning)}>
+        </div>
+
+      {/* Row 2: commercials + the future Salesforce connection, side by side */}
+      <div className="grid gap-4 lg:grid-cols-2">
+        <div className="glass-card space-y-4 p-5" style={cardStyle(TONES.warning)}>
           <SectionHead icon={Wallet} tone={TONES.warning}>4 · Commercials</SectionHead>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-4">
             <div>
               <label htmlFor="nc-cpl" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>CPL ($)</label>
               <input id="nc-cpl" type="number" min={0} value={cplTarget} onChange={e => setCplTarget(e.target.value)} placeholder="55" className={INPUT} />
@@ -394,10 +401,37 @@ export default function UnionOpsNewCampaign() {
               <input id="nc-budget" type="number" min={0} value={budget} onChange={e => setBudget(e.target.value)} placeholder="22,000" className={INPUT} />
             </div>
           </div>
-          <p className="text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Ops only — the client sees one combined spend figure with margins applied.
-            Creation aligns contacts and data to the campaign; the ICP, files and delivery
-            rules stay off Pulse for this release.
+          <p className="text-[12px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            Ops only — the client sees one combined spend figure with margins applied. Creation aligns
+            contacts and data to the campaign; the ICP, files and delivery rules stay off Pulse for this release.
+          </p>
+        </div>
+
+        {/* Deliberately grey: not connected yet. IDs captured now mean the
+            campaign links up by itself the day Salesforce is connected. */}
+        <div className="glass-card space-y-4 p-5" style={cardStyle(TONES.muted)}>
+          <SectionHead icon={CloudCog} tone={TONES.muted}>
+            5 · Salesforce
+            <span
+              className="rounded-full px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal"
+              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
+            >
+              Optional · future connection
+            </span>
+          </SectionHead>
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label htmlFor="nc-opp" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>Opportunity</label>
+              <input id="nc-opp" type="text" value={sfOpp} onChange={e => setSfOpp(e.target.value)} placeholder="0064x000ABc1DeF" className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="nc-oli" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>Opportunity line item</label>
+              <input id="nc-oli" type="text" value={sfOli} onChange={e => setSfOli(e.target.value)} placeholder="00k4x000GHi2JkL" className={INPUT} />
+            </div>
+          </div>
+          <p className="text-[12px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+            Not connected yet — IDs entered now link automatically when Salesforce connects later.
+            MSA clients have no per-campaign opportunity; leave blank and the campaign ID stands alone.
           </p>
         </div>
       </div>
