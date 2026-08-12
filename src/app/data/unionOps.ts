@@ -444,3 +444,128 @@ export function getMonthRollup(liveJobs: RelishJob[] = []): OpsMonthRollup {
     openExceptions: openExceptionCount(),
   };
 }
+
+// ── Campaign initiation (ops-only) ──────────────────────────────────────────
+// Campaigns are minted here, not in Salesforce: clients on a master service
+// agreement never get a per-campaign opportunity, so Pulse is the system of
+// record for campaign identity. The ID is the naming convention —
+// {CLIENT}-{TYPE}-{YYYYMM}-{SEQ} — and everything else (segment, budgets,
+// Convertr usage) is a field on the record, never part of the name. Same
+// in-memory subscribe store as the Relish queue above: refresh resets the
+// demo, which is fine.
+
+export type CampaignTypeCode = 'CS' | 'SA' | 'SS' | 'PG';
+
+export interface CampaignTypeMeta {
+  code: CampaignTypeCode;
+  label: string;
+  blurb: string;
+  /** Which target fields the type takes. */
+  takesLeads: boolean;
+  takesImpressions: boolean;
+  /** Which data flows will attach once the campaign runs. */
+  flows: string[];
+}
+
+export const CAMPAIGN_TYPES_META: CampaignTypeMeta[] = [
+  {
+    code: 'CS',
+    label: 'Content syndication',
+    blurb: 'Lead delivery against a target count',
+    takesLeads: true,
+    takesImpressions: false,
+    flows: ['Ops lead uploads', 'Relish enrichment'],
+  },
+  {
+    code: 'SA',
+    label: 'Social activation',
+    blurb: 'Leads plus paid social air cover',
+    takesLeads: true,
+    takesImpressions: true,
+    flows: ['Ops lead uploads', 'Propensity engagement', 'Relish enrichment'],
+  },
+  {
+    code: 'SS',
+    label: 'Short stack',
+    blurb: 'Compact multi-channel burst',
+    takesLeads: true,
+    takesImpressions: true,
+    flows: ['Ops lead uploads', 'Propensity engagement', 'Relish enrichment'],
+  },
+  {
+    code: 'PG',
+    label: 'Programmatic',
+    blurb: 'Display advertising via Propensity',
+    takesLeads: false,
+    takesImpressions: true,
+    flows: ['Propensity engagement', 'Propensity daily delivery'],
+  },
+];
+
+export interface CreatedCampaign {
+  /** The minted ID, e.g. UNION-CS-202609-001. */
+  id: string;
+  name: string;
+  clientName: string;
+  clientSlug: string;
+  type: CampaignTypeCode;
+  startDate: string; // ISO
+  endDate: string; // ISO
+  targetLeads: number | null;
+  targetImpressions: number | null;
+  sfOpportunityId: string | null;
+  sfOpportunityLineItemId: string | null;
+  createdLabel: string;
+}
+
+/** Slugs already assigned. A slug is minted once per client and never reused. */
+const CLIENT_SLUGS: Record<string, string> = {
+  [UNION_COMPANY]: 'UNION',
+};
+
+/** Slug for a client: the assigned one, else derived from the name. */
+export function slugForClient(clientName: string): string {
+  const known = CLIENT_SLUGS[clientName];
+  if (known) return known;
+  const letters = clientName.toUpperCase().replace(/[^A-Z]/g, '');
+  return letters.slice(0, 6) || 'CLIENT';
+}
+
+/**
+ * Mint the next campaign ID for client + type + start month. The sequence
+ * counts within that triple, so UNION-CS-202609-001 and UNION-PG-202609-001
+ * coexist and a second September syndication campaign becomes -002.
+ */
+export function mintCampaignId(clientSlug: string, type: CampaignTypeCode, startDate: string): string {
+  const month = (startDate || '').slice(0, 7).replace('-', '');
+  const prefix = `${clientSlug}-${type}-${month}-`;
+  const existing = createdCampaigns.filter(c => c.id.startsWith(prefix)).length;
+  return `${prefix}${String(existing + 1).padStart(3, '0')}`;
+}
+
+let createdCampaigns: CreatedCampaign[] = [];
+const campaignListeners = new Set<() => void>();
+
+export function createCampaign(input: Omit<CreatedCampaign, 'id' | 'clientSlug' | 'createdLabel'>): CreatedCampaign {
+  const clientSlug = slugForClient(input.clientName);
+  const record: CreatedCampaign = {
+    ...input,
+    clientSlug,
+    id: mintCampaignId(clientSlug, input.type, input.startDate),
+    createdLabel: 'Created just now',
+  };
+  createdCampaigns = [record, ...createdCampaigns];
+  campaignListeners.forEach(l => l());
+  return record;
+}
+
+export function useCreatedCampaigns(): CreatedCampaign[] {
+  return useSyncExternalStore(
+    cb => {
+      campaignListeners.add(cb);
+      return () => campaignListeners.delete(cb);
+    },
+    () => createdCampaigns,
+    () => createdCampaigns,
+  );
+}

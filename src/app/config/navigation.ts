@@ -14,6 +14,7 @@ import {
   Layers,
   MessageSquare,
   ClipboardCheck,
+  PlusCircle,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '../context/AuthContext';
@@ -95,6 +96,7 @@ export function getNavForRole(role: UserRole | undefined, showFuture = false, un
   if (unionOps) {
     return [
       { name: 'Pipeline', icon: LayoutDashboard, path: '/ops-union', section: 'PLATFORM' },
+      { name: 'New Campaign', icon: PlusCircle, path: '/ops-union/campaigns/new', section: 'PLATFORM' },
       { name: 'Data Intake', icon: Upload, path: '/ops-union/intake', section: 'PLATFORM', primary: true },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
     ];
@@ -230,6 +232,7 @@ const DETAIL_ROUTES: Array<{ pattern: RegExp; meta: PageMeta }> = [
   // nav item is visible (the routes themselves are gated in AppLayout).
   { pattern: /^\/programmatic$/, meta: { title: 'Programmatic', showBack: false } },
   { pattern: /^\/ops-union$/, meta: { title: 'Pipeline', showBack: false } },
+  { pattern: /^\/ops-union\/campaigns\/new$/, meta: { title: 'New Campaign', showBack: true } },
   { pattern: /^\/ops-union\/intake$/, meta: { title: 'Data Intake', showBack: false } },
   { pattern: /^\/ops-union\/campaigns\/[^/]+$/, meta: { title: 'Campaign', showBack: true } },
   { pattern: /^\/leads\/account\/[^/]+$/, meta: { title: 'Account briefing', showBack: true } },

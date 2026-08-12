@@ -1,11 +1,12 @@
 import { useNavigate } from 'react-router';
 import {
-  Eye, CircleCheck, AlertTriangle, ArrowRight, ClipboardList, RefreshCw,
+  Eye, CircleCheck, AlertTriangle, ArrowRight, ClipboardList, RefreshCw, Plus,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
   integrationStatuses, campaignPipelines, opsTasks, useRelishJobs, jobsFor,
   exceptionsFor, getMonthRollup, OPS_MONTH_LABEL,
+  useCreatedCampaigns, CAMPAIGN_TYPES_META,
   type CampaignPipeline, type IntegrationStatus, type OpsTask,
 } from '../../data/unionOps';
 import { PipelineStages } from '../../components/ops/PipelineStages';
@@ -171,15 +172,26 @@ export default function UnionOpsDashboard() {
             )}
           </p>
         </div>
-        <button
-          onClick={() => preview('/dashboard')}
-          className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
-        >
-          <Eye className="h-4 w-4" /> Preview client view
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => preview('/dashboard')}
+            className="btn-outline flex items-center gap-2 px-4 py-2 text-sm"
+          >
+            <Eye className="h-4 w-4" /> Preview client view
+          </button>
+          <button
+            onClick={() => navigate('/ops-union/campaigns/new')}
+            className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
+            data-testid="new-campaign"
+          >
+            <Plus className="h-4 w-4" /> New campaign
+          </button>
+        </div>
       </div>
 
       <HealthStrip />
+
+      <RecentlyCreated />
 
       <div className="flex items-center gap-2 pt-1">
         <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
@@ -206,6 +218,58 @@ export default function UnionOpsDashboard() {
         </div>
         <MonthRollupCard />
       </div>
+    </div>
+  );
+}
+
+// Campaigns minted this session, newest first. They have no pipeline yet —
+// intake hasn't run — so they render as a compact strip above the board with
+// the minted ID front and centre, and a jump straight into data intake.
+function RecentlyCreated() {
+  const navigate = useNavigate();
+  const created = useCreatedCampaigns();
+  if (created.length === 0) return null;
+
+  return (
+    <div className="space-y-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        Recently created
+      </h2>
+      {created.map(c => {
+        const meta = CAMPAIGN_TYPES_META.find(t => t.code === c.type);
+        return (
+          <div key={c.id} className="glass-card flex flex-wrap items-center gap-x-4 gap-y-2 p-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[13px] font-bold" style={{ color: 'var(--color-primary)' }}>
+                  {c.id}
+                </span>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
+                  style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
+                >
+                  {meta?.label ?? c.type}
+                </span>
+              </div>
+              <div className="mt-0.5 truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {c.name}
+              </div>
+              <div className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                {c.clientName} · {c.startDate} → {c.endDate}
+                {c.targetLeads ? ` · ${c.targetLeads.toLocaleString('en-US')} leads` : ''}
+                {c.targetImpressions ? ` · ${c.targetImpressions.toLocaleString('en-US')} impressions` : ''}
+                {' · '}{c.createdLabel}
+              </div>
+            </div>
+            <button
+              onClick={() => navigate(`/ops-union/intake?campaign=${c.id}`)}
+              className="btn-outline inline-flex flex-shrink-0 items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold"
+            >
+              Start intake <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          </div>
+        );
+      })}
     </div>
   );
 }
