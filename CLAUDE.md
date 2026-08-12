@@ -194,3 +194,10 @@ exclamation mark is fine where the tone actually calls for one.
 Spell them out the first time and put the short form in brackets after, like
 "Application Programming Interface (API)". In documents written for people
 outside engineering, avoid them entirely where a plain phrase works.
+
+## Delivering work
+
+End every piece of finished work with its link, without being asked. Code
+changes get the Vercel preview links once pushed; documents get their artifact
+links; files get sent as attachments. Vishal should never have to ask "where
+is it" after something is built.
