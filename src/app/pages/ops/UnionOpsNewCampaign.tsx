@@ -6,7 +6,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
-  CAMPAIGN_TYPES_META, createCampaign, mintCampaignId, slugForClient,
+  CAMPAIGN_TYPES_META, createCampaign, mintCampaignId, slugForClient, clientIdFor,
   type CampaignTypeCode,
 } from '../../data/unionOps';
 import { UNION_COMPANY } from '../../data/unionClient';
@@ -387,6 +387,12 @@ export default function UnionOpsNewCampaign() {
             >
               {idParts.join('-')}
             </p>
+            {client.trim() && (
+              <p className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+                Client ID <span className="font-mono font-semibold" style={{ color: 'var(--color-text-primary)' }}>{clientIdFor(client.trim())}</span>
+                {' '}— every campaign record carries both keys
+              </p>
+            )}
             <p className="mt-2 text-[11.5px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
               client · type · start month · sequence. Minted at save, never changes; wholesale or retail, budgets and tooling are fields on the record, not part of the name.
             </p>

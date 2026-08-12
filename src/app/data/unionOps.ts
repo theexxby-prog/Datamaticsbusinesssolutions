@@ -474,7 +474,9 @@ export const CAMPAIGN_TYPES_META: CampaignTypeMeta[] = [
     blurb: 'Lead delivery against a target count',
     takesLeads: true,
     takesImpressions: false,
-    flows: ['Ops lead uploads', 'Relish enrichment'],
+    // Convertr is a wholesale tool, and not even every wholesale client is on
+    // it — retail uploads always come in directly.
+    flows: ['Lead uploads — CSV, or Convertr report where used', 'Relish enrichment'],
   },
   {
     code: 'SA',
@@ -482,7 +484,7 @@ export const CAMPAIGN_TYPES_META: CampaignTypeMeta[] = [
     blurb: 'Leads plus paid social air cover',
     takesLeads: true,
     takesImpressions: true,
-    flows: ['Ops lead uploads', 'Propensity engagement', 'Relish enrichment'],
+    flows: ['Lead uploads — CSV, or Convertr report where used', 'Propensity engagement', 'Relish enrichment'],
   },
   {
     code: 'SS',
@@ -490,7 +492,7 @@ export const CAMPAIGN_TYPES_META: CampaignTypeMeta[] = [
     blurb: 'Compact multi-channel burst',
     takesLeads: true,
     takesImpressions: true,
-    flows: ['Ops lead uploads', 'Propensity engagement', 'Relish enrichment'],
+    flows: ['Lead uploads — CSV, or Convertr report where used', 'Propensity engagement', 'Relish enrichment'],
   },
   {
     code: 'PG',
@@ -507,6 +509,8 @@ export interface CreatedCampaign {
   id: string;
   name: string;
   clientName: string;
+  /** Every campaign carries both keys: its own ID and the client's. */
+  clientId: string;
   clientSlug: string;
   type: CampaignTypeCode;
   startDate: string; // ISO
@@ -531,6 +535,12 @@ export function slugForClient(clientName: string): string {
   return letters.slice(0, 6) || 'CLIENT';
 }
 
+/** Client record IDs. Northwind already has one; new clients derive theirs. */
+export function clientIdFor(clientName: string): string {
+  if (clientName === UNION_COMPANY) return UNION_CLIENT_ID;
+  return `client_${slugForClient(clientName).toLowerCase()}`;
+}
+
 /**
  * Mint the next campaign ID for client + type + start month. The sequence
  * counts within that triple, so UNION-CS-202609-001 and UNION-PG-202609-001
@@ -546,11 +556,12 @@ export function mintCampaignId(clientSlug: string, type: CampaignTypeCode, start
 let createdCampaigns: CreatedCampaign[] = [];
 const campaignListeners = new Set<() => void>();
 
-export function createCampaign(input: Omit<CreatedCampaign, 'id' | 'clientSlug' | 'createdLabel'>): CreatedCampaign {
+export function createCampaign(input: Omit<CreatedCampaign, 'id' | 'clientId' | 'clientSlug' | 'createdLabel'>): CreatedCampaign {
   const clientSlug = slugForClient(input.clientName);
   const record: CreatedCampaign = {
     ...input,
     clientSlug,
+    clientId: clientIdFor(input.clientName),
     id: mintCampaignId(clientSlug, input.type, input.startDate),
     createdLabel: 'Created just now',
   };

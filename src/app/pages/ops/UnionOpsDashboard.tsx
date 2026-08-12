@@ -255,7 +255,7 @@ function RecentlyCreated() {
                 {c.name}
               </div>
               <div className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
-                {c.clientName} · {c.startDate} → {c.endDate}
+                {c.clientName} (<span className="font-mono">{c.clientId}</span>) · {c.startDate} → {c.endDate}
                 {c.targetLeads ? ` · ${c.targetLeads.toLocaleString('en-US')} leads` : ''}
                 {c.targetImpressions ? ` · ${c.targetImpressions.toLocaleString('en-US')} impressions` : ''}
                 {' · '}{c.createdLabel}
