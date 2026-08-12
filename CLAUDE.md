@@ -121,3 +121,76 @@ The semantic colours (`--color-success` / `-warning` / `-error` / `-info`) are
 tuned so they are legible *as words* on white, on the app ground and on their
 own 10% tint — they are used as type in roughly 300 places, so a value picked
 only for hue fails most of them.
+
+## Writing style for anything a person reads
+
+Applies to every document, artifact page, email draft, commit message, pull
+request body and chat reply written for Vishal or his colleagues. Code comments
+are the one exception; those match the surrounding code.
+
+The goal is prose that reads as if a person wrote it. Most of the tells below
+are not wrong English, they are just the specific habits that mark text as
+machine-written, so they get avoided even where they would otherwise be fine.
+
+### Words and phrases to avoid
+
+**Stock phrases.** "in today's fast-paced world", "in the ever-evolving world",
+"in the realm of", "it's important to note", "aims to explore", "when it comes
+to", "at the end of the day", "navigating the landscape", "because of this",
+"in other words", "overall".
+
+**Inflated adjectives.** revolutionary, groundbreaking, cutting-edge,
+paradigm-shifting, transformative, game-changing, disruptive, innovative,
+comprehensive, robust, seamless, holistic, pivotal, crucial, paramount,
+quintessential, remarkable, amazing, striking, captivating, significant,
+substantial, notable, considerable, meticulous, intricate, multifaceted,
+profound.
+
+**Verbs.** delve, dive, unlock, unleash, harness, leverage, orchestrate,
+streamline, facilitate, enhance, showcase, underscore, spearhead,
+revolutionize, transcend, galvanize, cultivate, proliferate, utilize,
+strategize, synthesize, delineate, articulate, conceptualize, manifest,
+elucidate, inquire, discern, unveil.
+
+**Nouns.** journey, landscape, realm, tapestry, symphony, odyssey, paradigm,
+nexus, spectrum, trajectory, synergy, alignment, benchmark, milestone, facet,
+epitome, pinnacle, testament, gusto.
+
+**Transitions and hedges.** moreover, furthermore, therefore, consequently,
+subsequently, accordingly, nevertheless, however, indeed, notably,
+particularly, additionally, "it seems that", "it appears", "one could argue",
+"might", "can be", "tends to", "appears to be", "could potentially", "seems to
+suggest".
+
+Write plainly instead. Vary sentence length, mixing short ones with long ones.
+Use ordinary transitions like also, then, so and but. Use contractions. Use I,
+you and we. Give concrete examples and real numbers rather than descriptions of
+how important something is. A rhetorical question or a slightly loose sentence
+is fine; it reads as human.
+
+### Punctuation
+
+**No em dashes.** This is the single biggest tell. Use a comma, a period, a
+semicolon or parentheses instead. Never stack them, never use one where a comma
+would do.
+
+**No colons in titles or headings,** and none before a short list or a casual
+explanation. Reach for "such as", "for example" or "including" instead.
+
+**Straight quotes and apostrophes only** (" and '), never curly ones.
+
+Parentheses are for real asides, used sparingly. Semicolons are fine and should
+be used naturally to join related clauses. Quotation marks are for actual quotes,
+dialogue and citations, not for emphasis or paraphrase.
+
+Don't default to bullet points, especially nested ones. Flowing prose is better
+for anything that explains or narrates; keep lists for things that genuinely
+are lists. Perfect, uniform punctuation reads as machine output, so some
+variation is good. Ellipses are fine for a genuine trailing thought, and an
+exclamation mark is fine where the tone actually calls for one.
+
+### Abbreviations
+
+Spell them out the first time and put the short form in brackets after, like
+"Application Programming Interface (API)". In documents written for people
+outside engineering, avoid them entirely where a plain phrase works.
