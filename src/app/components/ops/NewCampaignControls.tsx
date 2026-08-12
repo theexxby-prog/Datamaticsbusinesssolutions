@@ -13,40 +13,51 @@ interface ChipSelectProps {
   values: string[];
   onChange: (next: string[]) => void;
   error?: string;
+  /** Label sits left of the chips in a fixed column — halves the row height. */
+  inline?: boolean;
 }
 
-export function ChipSelect({ label, required, options, values, onChange, error }: ChipSelectProps) {
+export function ChipSelect({ label, required, options, values, onChange, error, inline = false }: ChipSelectProps) {
   const toggle = (opt: string) =>
     onChange(values.includes(opt) ? values.filter(v => v !== opt) : [...values, opt]);
 
+  const chips = (
+    <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
+      {options.map(opt => {
+        const on = values.includes(opt);
+        return (
+          <button
+            key={opt}
+            type="button"
+            aria-pressed={on}
+            onClick={() => toggle(opt)}
+            className="flex min-h-[28px] items-center gap-1 rounded-full border px-2.5 text-[12px] font-semibold transition-colors hover:border-[var(--color-primary)]"
+            style={{
+              borderColor: on ? 'var(--color-primary)' : 'var(--color-border)',
+              background: on ? 'var(--color-primary-tint)' : 'transparent',
+              color: on ? 'var(--color-primary)' : 'var(--color-text-secondary)',
+            }}
+          >
+            {on && <Check className="h-3 w-3" />}
+            {opt}
+          </button>
+        );
+      })}
+    </div>
+  );
+  const labelEl = (
+    <span
+      className={`text-[12px] font-semibold ${inline ? 'w-[96px] flex-shrink-0 pt-[5px]' : 'mb-1.5 block'}`}
+      style={{ color: 'var(--color-text-primary)' }}
+    >
+      {label} {required && <span style={{ color: 'var(--color-error)' }}>*</span>}
+    </span>
+  );
+
   return (
     <div>
-      <span className="mb-1.5 block text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-        {label} {required && <span style={{ color: 'var(--color-error)' }}>*</span>}
-      </span>
-      <div className="flex flex-wrap gap-1.5" role="group" aria-label={label}>
-        {options.map(opt => {
-          const on = values.includes(opt);
-          return (
-            <button
-              key={opt}
-              type="button"
-              aria-pressed={on}
-              onClick={() => toggle(opt)}
-              className="flex min-h-[32px] items-center gap-1.5 rounded-full border px-3 text-[12.5px] font-semibold transition-colors hover:border-[var(--color-primary)]"
-              style={{
-                borderColor: on ? 'var(--color-primary)' : 'var(--color-border)',
-                background: on ? 'var(--color-primary-tint)' : 'transparent',
-                color: on ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-              }}
-            >
-              {on && <Check className="h-3 w-3" />}
-              {opt}
-            </button>
-          );
-        })}
-      </div>
-      {error && <p className="mt-1.5 text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>{error}</p>}
+      {inline ? <div className="flex items-start gap-2">{labelEl}<div className="min-w-0 flex-1">{chips}</div></div> : <>{labelEl}{chips}</>}
+      {error && <p className={`mt-1 text-[12px] font-medium ${inline ? 'ml-[104px]' : ''}`} style={{ color: 'var(--color-error)' }}>{error}</p>}
     </div>
   );
 }
@@ -160,7 +171,7 @@ export function FileSlot({ label, hint, canned, attached, onChange, multi = fals
         <button
           type="button"
           onClick={attach}
-          className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed px-3 py-3 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-tint)]"
+          className="flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed px-3 py-2 transition-colors hover:border-[var(--color-primary)] hover:bg-[var(--color-primary-tint)]"
           style={{ borderColor: error ? 'var(--color-error)' : 'var(--color-border)' }}
         >
           <FileUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
