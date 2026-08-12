@@ -1,7 +1,7 @@
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  ArrowLeft, Building2, Check, ChevronDown, Crosshair, FileText,
+  ArrowLeft, Building2, ChevronDown, Crosshair, FileText,
   Layers, ListChecks, Loader2, Paperclip, Plus, Radio, Users, Wallet,
 } from 'lucide-react';
 import { toast } from 'sonner';
@@ -19,8 +19,9 @@ import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 // clients on a master service agreement never get a per-campaign opportunity.
 // The rest of the form is the job card: the ICP that bounds who a lead may
 // be, the delivery rules, the files (suppression, TAL, assets) and the
-// commercials. Ops-only, and laid out dense on purpose — ops fills this
-// several times a week, so it's built to fit in as little scroll as possible.
+// commercials. Ops-only, and laid out dense on purpose: full width, no side
+// rail, the live ID and the save button pinned in the header — ops fills
+// this several times a week and it should fit in about one screen.
 
 const KNOWN_CLIENTS = [
   UNION_COMPANY,
@@ -121,7 +122,7 @@ export default function UnionOpsNewCampaign() {
   const isNewClient = client.trim().length > 0
     && !KNOWN_CLIENTS.some(c => c.toLowerCase() === client.trim().toLowerCase());
 
-  // The ID assembles live so ops sees what will be minted before saving.
+  // The ID assembles live in the header so ops sees what will be minted.
   const slug = client.trim() ? slugForClient(client.trim()) : null;
   const month = startDate ? startDate.slice(0, 7).replace('-', '') : null;
   const previewId = slug && type && month ? mintCampaignId(slug, type, startDate) : null;
@@ -172,11 +173,11 @@ export default function UnionOpsNewCampaign() {
   };
 
   const err = (bad: boolean) => showErrors && bad;
-  const filesAttached = suppression.length + tal.length + assets.length;
 
   return (
-    <div className="mx-auto max-w-[1280px] page-content space-y-3">
-      <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+    <div className="mx-auto max-w-[1400px] page-content space-y-3">
+      {/* Header: identity, the live ID, and the actions in one row */}
+      <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
         <button
           onClick={() => navigate('/ops-union')}
           className="btn-ghost inline-flex min-h-[32px] items-center gap-1.5 px-2 text-sm font-semibold"
@@ -186,464 +187,395 @@ export default function UnionOpsNewCampaign() {
         <h1 className="text-[20px] font-extrabold leading-tight tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
           New campaign
         </h1>
-        <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
-          — the full job card; Pulse mints the campaign ID at save
+        <span
+          className="rounded-lg px-2.5 py-1 font-mono text-[13px] font-bold"
+          style={{
+            background: 'var(--color-primary-tint)',
+            color: previewId ? 'var(--color-primary)' : 'var(--color-text-muted)',
+          }}
+          data-testid="campaign-id-preview"
+          title="Minted at save; the Propensity ad campaign's name must begin with this ID"
+        >
+          {idParts.join('-')}
         </span>
-        <span className="ml-auto text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-          Ops only
-        </span>
+        {client.trim() && (
+          <span className="hidden text-[11px] xl:inline" style={{ color: 'var(--color-text-muted)' }}>
+            + <span className="font-mono font-semibold">{clientIdFor(client.trim())}</span> — both keys on the record
+          </span>
+        )}
+        <div className="ml-auto flex items-center gap-2">
+          <button onClick={() => navigate('/ops-union')} className="btn-outline px-3.5 py-1.5 text-sm">
+            Cancel
+          </button>
+          <button
+            onClick={save}
+            disabled={saving}
+            className="btn-primary flex items-center gap-2 px-3.5 py-1.5 text-sm disabled:opacity-60"
+            data-testid="create-campaign"
+          >
+            {saving
+              ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating…</>
+              : <><Plus className="h-4 w-4" /> Create campaign</>}
+          </button>
+        </div>
       </div>
 
-      <div className="grid gap-3 lg:grid-cols-[1fr_290px]">
-        {/* ── Form column ── */}
-        <div className="space-y-3">
-          <div className="grid gap-3 md:grid-cols-2">
-            <div className="glass-card space-y-2.5 p-3.5">
-              <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
-                1 · Campaign &amp; client
-              </h2>
-              <div>
-                <label htmlFor="nc-name" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
-                  Campaign name <span style={{ color: 'var(--color-error)' }}>*</span>
-                </label>
-                <input
-                  id="nc-name"
-                  type="text"
-                  value={name}
-                  onChange={e => setName(e.target.value)}
-                  placeholder="Q4 enterprise security push"
-                  className={INPUT}
-                  aria-invalid={err(!name.trim())}
-                />
-                {err(!name.trim()) && (
-                  <p className="mt-1 text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>Enter a campaign name</p>
-                )}
-              </div>
-              <div className="relative">
-                <label htmlFor="nc-client" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
-                  Client <span style={{ color: 'var(--color-error)' }}>*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    id="nc-client"
-                    ref={clientInputRef}
-                    type="text"
-                    autoComplete="off"
-                    role="combobox"
-                    aria-expanded={clientOpen}
-                    aria-controls="nc-client-list"
-                    value={client}
-                    onChange={e => { setClient(e.target.value); setClientOpen(true); }}
-                    onFocus={() => setClientOpen(true)}
-                    onBlur={() => window.setTimeout(() => setClientOpen(false), 120)}
-                    placeholder="Search or enter a client name"
-                    className={`${INPUT} pr-9`}
-                    aria-invalid={err(!client.trim())}
-                  />
-                  <ChevronDown
-                    className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2"
-                    style={{ color: 'var(--color-text-muted)' }}
-                  />
-                </div>
-                {clientOpen && (
-                  <div
-                    id="nc-client-list"
-                    role="listbox"
-                    className="absolute inset-x-0 top-full z-20 mt-1 max-h-[210px] overflow-y-auto rounded-xl border shadow-lg"
-                    style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
-                  >
-                    {isNewClient && (
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={false}
-                        onMouseDown={e => { e.preventDefault(); setClientOpen(false); clientInputRef.current?.blur(); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] transition-colors hover:bg-[var(--color-primary-tint)]"
-                        style={{ color: 'var(--color-text-primary)' }}
-                      >
-                        <Plus className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
-                        Create "{client.trim()}" · slug {slugForClient(client.trim())}
-                      </button>
-                    )}
-                    {clientMatches.map(c => (
-                      <button
-                        key={c}
-                        type="button"
-                        role="option"
-                        aria-selected={c === client}
-                        onMouseDown={e => { e.preventDefault(); setClient(c); setClientOpen(false); clientInputRef.current?.blur(); }}
-                        className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] transition-colors hover:bg-[var(--color-primary-tint)]"
-                        style={{ color: 'var(--color-text-primary)' }}
-                      >
-                        <Building2 className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
-                        {c}
-                        <span className="ml-auto text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{slugForClient(c)}</span>
-                      </button>
-                    ))}
-                    {!isNewClient && clientMatches.length === 0 && (
-                      <div className="px-3 py-2 text-[12.5px]" style={{ color: 'var(--color-text-muted)' }}>No clients match</div>
-                    )}
-                  </div>
-                )}
-                <p className="mt-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-                  Type a new name to create it — its slug is minted once, never reused
-                </p>
-              </div>
-            </div>
-
-            <div className="glass-card space-y-2.5 p-3.5">
-              <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
-                2 · Campaign type
-              </h2>
-              <div role="radiogroup" aria-label="Campaign type" className="grid grid-cols-2 gap-2">
-                {CAMPAIGN_TYPES_META.map(t => {
-                  const Icon = TYPE_ICONS[t.code];
-                  const on = type === t.code;
-                  return (
-                    <button
-                      key={t.code}
-                      type="button"
-                      role="radio"
-                      aria-checked={on}
-                      onClick={() => setType(t.code)}
-                      className="flex items-start gap-2 rounded-xl border p-2.5 text-left transition-colors hover:border-[var(--color-primary)]"
-                      style={{
-                        borderColor: on ? 'var(--color-primary)' : 'var(--color-border)',
-                        background: on ? 'var(--color-primary-tint)' : 'transparent',
-                      }}
-                    >
-                      <span
-                        className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg"
-                        style={{ background: on ? 'var(--color-primary-solid)' : 'var(--color-primary-tint)' }}
-                      >
-                        <Icon className="h-3 w-3" style={{ color: on ? '#FFFFFF' : 'var(--color-primary)' }} />
-                      </span>
-                      <span className="min-w-0">
-                        <span className="flex flex-wrap items-center gap-1 text-[12.5px] font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
-                          {t.label}
-                          <span
-                            className="rounded px-1 py-px font-mono text-[9.5px] font-bold"
-                            style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
-                          >
-                            {t.code}
-                          </span>
-                        </span>
-                        <span className="mt-0.5 block text-[10.5px] leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
-                          {t.blurb}
-                        </span>
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-              {err(!type) && (
-                <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>Choose a campaign type</p>
-              )}
-            </div>
-          </div>
-
-          <div className="glass-card space-y-2.5 p-3.5">
-            <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
-              3 · Schedule &amp; targets
-            </h2>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-              <div>
-                <label htmlFor="nc-start" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
-                  Start <span style={{ color: 'var(--color-error)' }}>*</span>
-                </label>
-                <input id="nc-start" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className={INPUT} />
-              </div>
-              <div>
-                <label htmlFor="nc-end" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
-                  End <span style={{ color: 'var(--color-error)' }}>*</span>
-                </label>
-                <input id="nc-end" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className={INPUT} aria-invalid={err(!dateOrderOk)} />
-              </div>
-              <div>
-                <label htmlFor="nc-leads" className={FIELD_LABEL} style={{ color: typeMeta && !typeMeta.takesLeads ? 'var(--color-text-muted)' : 'var(--color-text-primary)' }}>
-                  Lead target
-                </label>
-                <input
-                  id="nc-leads"
-                  type="number"
-                  min={0}
-                  step={1}
-                  value={targetLeads}
-                  onChange={e => setTargetLeads(e.target.value)}
-                  placeholder="250"
-                  disabled={!!typeMeta && !typeMeta.takesLeads}
-                  className={`${INPUT} disabled:opacity-50`}
-                />
-              </div>
-              <div>
-                <label htmlFor="nc-imps" className={FIELD_LABEL} style={{ color: typeMeta && !typeMeta.takesImpressions ? 'var(--color-text-muted)' : 'var(--color-text-primary)' }}>
-                  Impressions
-                </label>
-                <input
-                  id="nc-imps"
-                  type="number"
-                  min={0}
-                  step={1000}
-                  value={targetImpressions}
-                  onChange={e => setTargetImpressions(e.target.value)}
-                  placeholder="1,000,000"
-                  disabled={!typeMeta || !typeMeta.takesImpressions}
-                  className={`${INPUT} disabled:opacity-50`}
-                />
-              </div>
-            </div>
-            {err(!dateOrderOk) && (
-              <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>End date is before the start date</p>
-            )}
-            {typeMeta && !typeMeta.takesLeads && (
-              <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-                Programmatic campaigns deliver impressions, not a lead count
-              </p>
+      {/* Row 1: identity · type · schedule */}
+      <div className="grid gap-3 lg:grid-cols-3">
+        <div className="glass-card space-y-2.5 p-3.5">
+          <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
+            1 · Campaign &amp; client
+          </h2>
+          <div>
+            <label htmlFor="nc-name" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
+              Campaign name <span style={{ color: 'var(--color-error)' }}>*</span>
+            </label>
+            <input
+              id="nc-name"
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              placeholder="Q4 enterprise security push"
+              className={INPUT}
+              aria-invalid={err(!name.trim())}
+            />
+            {err(!name.trim()) && (
+              <p className="mt-1 text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>Enter a campaign name</p>
             )}
           </div>
-
-          <div className="glass-card space-y-2.5 p-3.5">
-            <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
-              <Crosshair className="h-3.5 w-3.5" /> 4 · Targeting — the ICP
-              <span className="font-normal normal-case tracking-normal" style={{ color: 'var(--color-text-muted)' }}>
-                · QA holds every delivered lead against this
-              </span>
-            </h2>
-            <ChipSelect
-              inline label="Geography" required options={GEOS} values={geos} onChange={setGeos}
-              error={err(geos.length === 0) ? 'Pick at least one region' : undefined}
-            />
-            <ChipSelect
-              inline label="Industry" required options={INDUSTRIES} values={industries} onChange={setIndustries}
-              error={err(industries.length === 0) ? 'Pick at least one industry' : undefined}
-            />
-            <ChipSelect inline label="Employees" options={EMPLOYEE_BANDS} values={employeeBands} onChange={setEmployeeBands} />
-            <ChipSelect inline label="Revenue" options={REVENUE_BANDS} values={revenueBands} onChange={setRevenueBands} />
-            <ChipSelect inline label="Function" options={JOB_FUNCTIONS} values={jobFunctions} onChange={setJobFunctions} />
-            <ChipSelect inline label="Seniority" options={SENIORITY} values={seniority} onChange={setSeniority} />
-            <TagInput
-              label="Install base / tech stack"
-              placeholder="Optional — e.g. AWS, Salesforce, SAP · press Enter to add"
-              values={techKeywords}
-              onChange={setTechKeywords}
-            />
-          </div>
-
-          <div className="grid gap-3 lg:grid-cols-2">
-            <div className="glass-card space-y-2.5 p-3.5">
-              <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
-                <ListChecks className="h-3.5 w-3.5" /> 5 · Delivery rules &amp; compliance
-              </h2>
-              <div className="grid grid-cols-2 gap-2.5">
-                <div>
-                  <span className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Touch</span>
-                  <div
-                    className="grid grid-cols-2 gap-1 rounded-xl p-1"
-                    style={{ background: 'var(--background-muted)' }}
-                    role="radiogroup"
-                    aria-label="Touch type"
+          <div className="relative">
+            <label htmlFor="nc-client" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
+              Client <span style={{ color: 'var(--color-error)' }}>*</span>
+            </label>
+            <div className="relative">
+              <input
+                id="nc-client"
+                ref={clientInputRef}
+                type="text"
+                autoComplete="off"
+                role="combobox"
+                aria-expanded={clientOpen}
+                aria-controls="nc-client-list"
+                value={client}
+                onChange={e => { setClient(e.target.value); setClientOpen(true); }}
+                onFocus={() => setClientOpen(true)}
+                onBlur={() => window.setTimeout(() => setClientOpen(false), 120)}
+                placeholder="Search or enter a client name"
+                className={`${INPUT} pr-9`}
+                aria-invalid={err(!client.trim())}
+              />
+              <ChevronDown
+                className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2"
+                style={{ color: 'var(--color-text-muted)' }}
+              />
+            </div>
+            {clientOpen && (
+              <div
+                id="nc-client-list"
+                role="listbox"
+                className="absolute inset-x-0 top-full z-20 mt-1 max-h-[210px] overflow-y-auto rounded-xl border shadow-lg"
+                style={{ borderColor: 'var(--color-border)', background: 'var(--color-surface)' }}
+              >
+                {isNewClient && (
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={false}
+                    onMouseDown={e => { e.preventDefault(); setClientOpen(false); clientInputRef.current?.blur(); }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] transition-colors hover:bg-[var(--color-primary-tint)]"
+                    style={{ color: 'var(--color-text-primary)' }}
                   >
-                    {(['single', 'double'] as const).map(t => (
-                      <button
-                        key={t}
-                        type="button"
-                        role="radio"
-                        aria-checked={touch === t}
-                        onClick={() => setTouch(t)}
-                        className={`min-h-[30px] rounded-lg px-2 text-[12px] font-semibold capitalize transition-colors ${
-                          touch === t ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
-                        }`}
-                      >
-                        {t}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <label htmlFor="nc-cap" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Lead cap / account</label>
-                  <input id="nc-cap" type="number" min={1} value={leadCap} onChange={e => setLeadCap(e.target.value)} className={INPUT} />
-                </div>
-                <div>
-                  <label htmlFor="nc-cadence" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Cadence</label>
-                  <select id="nc-cadence" value={cadence} onChange={e => setCadence(e.target.value as typeof cadence)} className={INPUT}>
-                    <option>Weekly</option>
-                    <option>Biweekly</option>
-                    <option>At completion</option>
-                  </select>
-                </div>
-                <div>
-                  <label htmlFor="nc-format" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Delivery format</label>
-                  <select id="nc-format" value={format} onChange={e => setFormat(e.target.value as typeof format)} className={INPUT}>
-                    <option>Portal</option>
-                    <option>CSV export</option>
-                    <option>CRM push</option>
-                  </select>
-                </div>
+                    <Plus className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
+                    Create "{client.trim()}" · slug {slugForClient(client.trim())}
+                  </button>
+                )}
+                {clientMatches.map(c => (
+                  <button
+                    key={c}
+                    type="button"
+                    role="option"
+                    aria-selected={c === client}
+                    onMouseDown={e => { e.preventDefault(); setClient(c); setClientOpen(false); clientInputRef.current?.blur(); }}
+                    className="flex w-full items-center gap-2 px-3 py-2 text-left text-[13px] transition-colors hover:bg-[var(--color-primary-tint)]"
+                    style={{ color: 'var(--color-text-primary)' }}
+                  >
+                    <Building2 className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+                    {c}
+                    <span className="ml-auto text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{slugForClient(c)}</span>
+                  </button>
+                ))}
+                {!isNewClient && clientMatches.length === 0 && (
+                  <div className="px-3 py-2 text-[12.5px]" style={{ color: 'var(--color-text-muted)' }}>No clients match</div>
+                )}
               </div>
-              <TagInput
-                label="Custom qualifying questions"
-                placeholder='e.g. "Cloud migration timeline?" · Enter to add'
-                values={customQuestions}
-                onChange={setCustomQuestions}
-              />
-              <ChipSelect inline label="Consent" options={CONSENT} values={consent} onChange={setConsent} />
-              <p className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
-                Double touch = verification call on every lead · consent = standards the leads must meet
-              </p>
-            </div>
-
-            <div className="glass-card space-y-2.5 p-3.5">
-              <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
-                <Paperclip className="h-3.5 w-3.5" /> 6 · Files
-              </h2>
-              <FileSlot
-                label="Suppression list"
-                hint="Never-touch domains — applies from day one"
-                canned={CANNED_SUPPRESSION}
-                attached={suppression}
-                onChange={setSuppression}
-              />
-              <FileSlot
-                label="Target account list (TAL)"
-                hint="Optional — restricts delivery to named accounts"
-                canned={CANNED_TAL}
-                attached={tal}
-                onChange={setTal}
-              />
-              <FileSlot
-                label="Assets"
-                hint="Content for syndication, creatives for ads"
-                canned={CANNED_ASSETS}
-                attached={assets}
-                onChange={setAssets}
-                multi
-                error={err(assets.length === 0) ? 'Every campaign needs at least one asset' : undefined}
-              />
-            </div>
-          </div>
-
-          <div className="glass-card space-y-2.5 p-3.5">
-            <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
-              <Wallet className="h-3.5 w-3.5" /> 7 · Commercials &amp; Salesforce
-              <span className="font-normal normal-case tracking-normal" style={{ color: 'var(--color-text-muted)' }}>
-                · ops only — the client sees one combined spend figure
-              </span>
-            </h2>
-            <div className="grid grid-cols-2 gap-2.5 md:grid-cols-5">
-              <div>
-                <label htmlFor="nc-cpl" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>CPL ($)</label>
-                <input id="nc-cpl" type="number" min={0} value={cplTarget} onChange={e => setCplTarget(e.target.value)} placeholder="55" className={INPUT} />
-              </div>
-              <div>
-                <label htmlFor="nc-budget" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Budget ($)</label>
-                <input id="nc-budget" type="number" min={0} value={budget} onChange={e => setBudget(e.target.value)} placeholder="22,000" className={INPUT} />
-              </div>
-              <div>
-                <label htmlFor="nc-io" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>IO / PO</label>
-                <input id="nc-io" type="text" value={ioNumber} onChange={e => setIoNumber(e.target.value)} placeholder="IO-2026-0917" className={INPUT} />
-              </div>
-              <div>
-                <label htmlFor="nc-opp" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>SF opportunity</label>
-                <input id="nc-opp" type="text" value={sfOpp} onChange={e => setSfOpp(e.target.value)} placeholder="optional" className={INPUT} />
-              </div>
-              <div>
-                <label htmlFor="nc-oli" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>SF line item</label>
-                <input id="nc-oli" type="text" value={sfOli} onChange={e => setSfOli(e.target.value)} placeholder="optional" className={INPUT} />
-              </div>
-            </div>
-            <p className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
-              MSA clients won't have a per-campaign opportunity — leave the Salesforce fields blank and the campaign ID stands alone
+            )}
+            <p className="mt-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+              Type a new name to create it — slug minted once, never reused
             </p>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-end gap-2.5 pb-2">
-            <button onClick={() => navigate('/ops-union')} className="btn-outline px-4 py-2 text-sm">
-              Cancel
-            </button>
-            <button
-              onClick={save}
-              disabled={saving}
-              className="btn-primary flex items-center gap-2 px-4 py-2 text-sm disabled:opacity-60"
-              data-testid="create-campaign"
-            >
-              {saving
-                ? <><Loader2 className="h-4 w-4 animate-spin" /> Creating…</>
-                : <><Plus className="h-4 w-4" /> Create campaign</>}
-            </button>
           </div>
         </div>
 
-        {/* ── Summary rail — one card, everything at a glance ── */}
-        <aside className="lg:sticky lg:top-4 lg:self-start">
-          <div className="glass-card space-y-3 p-3.5">
-            <div>
-              <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
-                Campaign ID
-              </h2>
-              <p
-                className="mt-1.5 break-all font-mono text-[16px] font-bold tracking-tight"
-                style={{ color: previewId ? 'var(--color-primary)' : 'var(--color-text-muted)' }}
-                data-testid="campaign-id-preview"
-              >
-                {idParts.join('-')}
-              </p>
-              {client.trim() && (
-                <p className="mt-1 text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
-                  Client ID <span className="font-mono font-semibold" style={{ color: 'var(--color-text-primary)' }}>{clientIdFor(client.trim())}</span>
-                  {' '}— every record carries both keys
-                </p>
-              )}
-            </div>
-
-            <div className="border-t pt-2.5" style={{ borderColor: 'var(--color-border-light)' }}>
-              <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
-                ICP snapshot
-              </h2>
-              {geos.length + industries.length + seniority.length + jobFunctions.length > 0 ? (
-                <div className="mt-1.5 space-y-1 text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-                  {geos.length > 0 && <p><b style={{ color: 'var(--color-text-primary)' }}>Geo</b> — {geos.join(', ')}</p>}
-                  {industries.length > 0 && <p><b style={{ color: 'var(--color-text-primary)' }}>Industry</b> — {industries.join(', ')}</p>}
-                  {(employeeBands.length > 0 || revenueBands.length > 0) && (
-                    <p><b style={{ color: 'var(--color-text-primary)' }}>Company</b> — {[...employeeBands, ...revenueBands].join(', ')}</p>
-                  )}
-                  {(jobFunctions.length > 0 || seniority.length > 0) && (
-                    <p><b style={{ color: 'var(--color-text-primary)' }}>People</b> — {[...seniority, ...jobFunctions].join(', ')}</p>
-                  )}
-                  {techKeywords.length > 0 && <p><b style={{ color: 'var(--color-text-primary)' }}>Tech</b> — {techKeywords.join(', ')}</p>}
-                  {filesAttached > 0 && (
-                    <p><b style={{ color: 'var(--color-text-primary)' }}>Files</b> — {filesAttached} attached{suppression.length > 0 ? ', suppression active from day one' : ''}</p>
-                  )}
-                </div>
-              ) : (
-                <p className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
-                  Builds as you set the targeting
-                </p>
-              )}
-            </div>
-
-            {typeMeta && (
-              <div className="border-t pt-2.5" style={{ borderColor: 'var(--color-border-light)' }}>
-                <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
-                  What this creates
-                </h2>
-                <ul className="mt-1.5 space-y-1">
-                  {typeMeta.flows.map(flow => (
-                    <li key={flow} className="flex items-center gap-1.5 text-[11.5px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
-                      <Check className="h-3 w-3 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
-                      {flow}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <p className="border-t pt-2.5 text-[11px] leading-relaxed" style={{ borderColor: 'var(--color-border-light)', color: 'var(--color-text-secondary)' }}>
-              <b style={{ color: 'var(--color-text-primary)' }}>Propensity rule:</b> the ad campaign's name
-              must begin with this ID — some of their responses carry only the name, and the ID inside it
-              is the way back.
-            </p>
+        <div className="glass-card space-y-2.5 p-3.5">
+          <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
+            2 · Campaign type
+          </h2>
+          <div role="radiogroup" aria-label="Campaign type" className="grid grid-cols-2 gap-2">
+            {CAMPAIGN_TYPES_META.map(t => {
+              const Icon = TYPE_ICONS[t.code];
+              const on = type === t.code;
+              return (
+                <button
+                  key={t.code}
+                  type="button"
+                  role="radio"
+                  aria-checked={on}
+                  onClick={() => setType(t.code)}
+                  className="flex items-start gap-2 rounded-xl border p-2.5 text-left transition-colors hover:border-[var(--color-primary)]"
+                  style={{
+                    borderColor: on ? 'var(--color-primary)' : 'var(--color-border)',
+                    background: on ? 'var(--color-primary-tint)' : 'transparent',
+                  }}
+                >
+                  <span
+                    className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg"
+                    style={{ background: on ? 'var(--color-primary-solid)' : 'var(--color-primary-tint)' }}
+                  >
+                    <Icon className="h-3 w-3" style={{ color: on ? '#FFFFFF' : 'var(--color-primary)' }} />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="flex flex-wrap items-center gap-1 text-[12.5px] font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+                      {t.label}
+                      <span
+                        className="rounded px-1 py-px font-mono text-[9.5px] font-bold"
+                        style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                      >
+                        {t.code}
+                      </span>
+                    </span>
+                    <span className="mt-0.5 block text-[10.5px] leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
+                      {t.blurb}
+                    </span>
+                  </span>
+                </button>
+              );
+            })}
           </div>
-        </aside>
+          {err(!type) && (
+            <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>Choose a campaign type</p>
+          )}
+        </div>
+
+        <div className="glass-card space-y-2.5 p-3.5">
+          <h2 className={SECTION_H} style={{ color: 'var(--color-text-muted)' }}>
+            3 · Schedule &amp; targets
+          </h2>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <label htmlFor="nc-start" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
+                Start <span style={{ color: 'var(--color-error)' }}>*</span>
+              </label>
+              <input id="nc-start" type="date" value={startDate} onChange={e => setStartDate(e.target.value)} className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="nc-end" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
+                End <span style={{ color: 'var(--color-error)' }}>*</span>
+              </label>
+              <input id="nc-end" type="date" value={endDate} onChange={e => setEndDate(e.target.value)} className={INPUT} aria-invalid={err(!dateOrderOk)} />
+            </div>
+            <div>
+              <label htmlFor="nc-leads" className={FIELD_LABEL} style={{ color: typeMeta && !typeMeta.takesLeads ? 'var(--color-text-muted)' : 'var(--color-text-primary)' }}>
+                Lead target
+              </label>
+              <input
+                id="nc-leads"
+                type="number"
+                min={0}
+                step={1}
+                value={targetLeads}
+                onChange={e => setTargetLeads(e.target.value)}
+                placeholder="250"
+                disabled={!!typeMeta && !typeMeta.takesLeads}
+                className={`${INPUT} disabled:opacity-50`}
+              />
+            </div>
+            <div>
+              <label htmlFor="nc-imps" className={FIELD_LABEL} style={{ color: typeMeta && !typeMeta.takesImpressions ? 'var(--color-text-muted)' : 'var(--color-text-primary)' }}>
+                Impressions
+              </label>
+              <input
+                id="nc-imps"
+                type="number"
+                min={0}
+                step={1000}
+                value={targetImpressions}
+                onChange={e => setTargetImpressions(e.target.value)}
+                placeholder="1,000,000"
+                disabled={!typeMeta || !typeMeta.takesImpressions}
+                className={`${INPUT} disabled:opacity-50`}
+              />
+            </div>
+          </div>
+          {err(!dateOrderOk) && (
+            <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>End date is before the start date</p>
+          )}
+          {typeMeta && !typeMeta.takesLeads && (
+            <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
+              Programmatic delivers impressions, not a lead count
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Row 2: the ICP, full width — two chip columns, rows barely wrap */}
+      <div className="glass-card space-y-2 p-3.5">
+        <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
+          <Crosshair className="h-3.5 w-3.5" /> 4 · Targeting — the ICP
+          <span className="font-normal normal-case tracking-normal" style={{ color: 'var(--color-text-muted)' }}>
+            · QA holds every delivered lead against this
+          </span>
+        </h2>
+        <div className="grid gap-x-6 gap-y-2 xl:grid-cols-2">
+          <ChipSelect
+            inline label="Geography" required options={GEOS} values={geos} onChange={setGeos}
+            error={err(geos.length === 0) ? 'Pick at least one region' : undefined}
+          />
+          <ChipSelect inline label="Employees" options={EMPLOYEE_BANDS} values={employeeBands} onChange={setEmployeeBands} />
+          <ChipSelect
+            inline label="Industry" required options={INDUSTRIES} values={industries} onChange={setIndustries}
+            error={err(industries.length === 0) ? 'Pick at least one industry' : undefined}
+          />
+          <ChipSelect inline label="Revenue" options={REVENUE_BANDS} values={revenueBands} onChange={setRevenueBands} />
+          <ChipSelect inline label="Function" options={JOB_FUNCTIONS} values={jobFunctions} onChange={setJobFunctions} />
+          <ChipSelect inline label="Seniority" options={SENIORITY} values={seniority} onChange={setSeniority} />
+        </div>
+        <TagInput
+          label="Install base / tech stack"
+          placeholder="Optional — e.g. AWS, Salesforce, SAP · press Enter to add"
+          values={techKeywords}
+          onChange={setTechKeywords}
+        />
+      </div>
+
+      {/* Row 3: rules · files · commercials, three across */}
+      <div className="grid gap-3 lg:grid-cols-3">
+        <div className="glass-card space-y-2.5 p-3.5">
+          <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
+            <ListChecks className="h-3.5 w-3.5" /> 5 · Delivery rules
+          </h2>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <span className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Touch</span>
+              <div
+                className="grid grid-cols-2 gap-1 rounded-xl p-1"
+                style={{ background: 'var(--background-muted)' }}
+                role="radiogroup"
+                aria-label="Touch type"
+              >
+                {(['single', 'double'] as const).map(t => (
+                  <button
+                    key={t}
+                    type="button"
+                    role="radio"
+                    aria-checked={touch === t}
+                    onClick={() => setTouch(t)}
+                    className={`min-h-[30px] rounded-lg px-2 text-[12px] font-semibold capitalize transition-colors ${
+                      touch === t ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <label htmlFor="nc-cap" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Lead cap / account</label>
+              <input id="nc-cap" type="number" min={1} value={leadCap} onChange={e => setLeadCap(e.target.value)} className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="nc-cadence" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Cadence</label>
+              <select id="nc-cadence" value={cadence} onChange={e => setCadence(e.target.value as typeof cadence)} className={INPUT}>
+                <option>Weekly</option>
+                <option>Biweekly</option>
+                <option>At completion</option>
+              </select>
+            </div>
+            <div>
+              <label htmlFor="nc-format" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Delivery format</label>
+              <select id="nc-format" value={format} onChange={e => setFormat(e.target.value as typeof format)} className={INPUT}>
+                <option>Portal</option>
+                <option>CSV export</option>
+                <option>CRM push</option>
+              </select>
+            </div>
+          </div>
+          <TagInput
+            label="Custom qualifying questions"
+            placeholder='e.g. "Cloud migration timeline?" · Enter to add'
+            values={customQuestions}
+            onChange={setCustomQuestions}
+          />
+          <ChipSelect inline label="Consent" options={CONSENT} values={consent} onChange={setConsent} />
+        </div>
+
+        <div className="glass-card space-y-2.5 p-3.5">
+          <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
+            <Paperclip className="h-3.5 w-3.5" /> 6 · Files
+          </h2>
+          <FileSlot
+            label="Suppression list"
+            hint="Never-touch domains — applies from day one"
+            canned={CANNED_SUPPRESSION}
+            attached={suppression}
+            onChange={setSuppression}
+          />
+          <FileSlot
+            label="Target account list (TAL)"
+            hint="Optional — restricts delivery to named accounts"
+            canned={CANNED_TAL}
+            attached={tal}
+            onChange={setTal}
+          />
+          <FileSlot
+            label="Assets"
+            hint="Content for syndication, creatives for ads"
+            canned={CANNED_ASSETS}
+            attached={assets}
+            onChange={setAssets}
+            multi
+            error={err(assets.length === 0) ? 'Every campaign needs at least one asset' : undefined}
+          />
+        </div>
+
+        <div className="glass-card space-y-2.5 p-3.5">
+          <h2 className={`${SECTION_H} flex items-center gap-2`} style={{ color: 'var(--color-text-muted)' }}>
+            <Wallet className="h-3.5 w-3.5" /> 7 · Commercials &amp; Salesforce
+          </h2>
+          <div className="grid grid-cols-2 gap-2.5">
+            <div>
+              <label htmlFor="nc-cpl" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>CPL ($)</label>
+              <input id="nc-cpl" type="number" min={0} value={cplTarget} onChange={e => setCplTarget(e.target.value)} placeholder="55" className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="nc-budget" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Budget ($)</label>
+              <input id="nc-budget" type="number" min={0} value={budget} onChange={e => setBudget(e.target.value)} placeholder="22,000" className={INPUT} />
+            </div>
+            <div className="col-span-2">
+              <label htmlFor="nc-io" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>IO / PO number</label>
+              <input id="nc-io" type="text" value={ioNumber} onChange={e => setIoNumber(e.target.value)} placeholder="IO-2026-0917" className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="nc-opp" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>SF opportunity</label>
+              <input id="nc-opp" type="text" value={sfOpp} onChange={e => setSfOpp(e.target.value)} placeholder="optional" className={INPUT} />
+            </div>
+            <div>
+              <label htmlFor="nc-oli" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>SF line item</label>
+              <input id="nc-oli" type="text" value={sfOli} onChange={e => setSfOli(e.target.value)} placeholder="optional" className={INPUT} />
+            </div>
+          </div>
+          <p className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+            Ops only — the client sees one combined spend figure. MSA clients have no per-campaign opportunity; leave the Salesforce fields blank.
+          </p>
+        </div>
       </div>
     </div>
   );
