@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
   ArrowLeft, ArrowRight, Eye, UploadCloud, FileImage, Calendar, ShieldAlert,
-  ChevronLeft, ChevronRight, Send, CircleCheck, Link2, RefreshCw,
+  ChevronLeft, ChevronRight, Send, CircleCheck, Link2, RefreshCw, Wallet,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
@@ -21,6 +21,7 @@ import { getCampaignHealth } from '../../utils/campaignHealth';
 import { formatDateShort } from '../../utils/formatDate';
 import { formatMoney as fmtMoney } from '../../utils/format';
 import { PipelineStages } from '../../components/ops/PipelineStages';
+import { DeliveryAcceptanceTab } from '../../components/ops/DeliveryAcceptanceTab';
 import { CampaignKpiBand } from '../../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../../components/campaign/CampaignAnalyticsTabs';
 import { CampaignProgrammaticTab } from '../../components/campaign/CampaignProgrammaticTab';
@@ -432,6 +433,12 @@ export default function UnionOpsCampaign() {
                     </p>
                   </div>
                 ),
+              },
+              {
+                // Ops-entered acceptance & billing — remounts per campaign so
+                // draft inputs never leak across prev/next navigation.
+                key: 'billing', label: 'Delivery & Billing', Icon: Wallet,
+                content: <DeliveryAcceptanceTab key={campaign.id} campaign={campaign} />,
               },
               paired && {
                 key: 'assets', label: 'Assets', Icon: FileImage,

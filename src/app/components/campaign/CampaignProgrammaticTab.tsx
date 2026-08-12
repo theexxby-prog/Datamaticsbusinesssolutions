@@ -82,6 +82,11 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
           view shows only the summed totals above, never the waves. */}
       {opsView && <CohortBreakdown abmCampaignId={abmCampaignId} />}
 
+      {/* Ad → lead funnel — ops only. An ad hit is never billed directly:
+          engaged people route into the content syndication motion, and only a
+          positive response there becomes a lead the client pays for. */}
+      {opsView && <AdToLeadFunnel abmCampaignId={abmCampaignId} />}
+
       {/* Target-account engagement (account-wide feed) */}
       <AccountsSection />
 
@@ -90,6 +95,51 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
 
       {/* Syndication → ABM influence via the crosswalk */}
       <SyndicationInfluenceSection />
+    </div>
+  );
+}
+
+function AdToLeadFunnel({ abmCampaignId }: { abmCampaignId: string }) {
+  const abm = getAbmSummary().find(c => c.id === abmCampaignId);
+  if (!abm) return null;
+  // Deterministic off the campaign's engaged-accounts figure so this strip
+  // always agrees with the summary tiles above it.
+  const engagedContacts = abm.engagedAccounts * 3;
+  const inOutreach = Math.round(engagedContacts * 0.42);
+  const converted = Math.round(inOutreach * 0.16);
+  const steps = [
+    { label: 'Engaged with ads', value: engagedContacts, sub: 'contacts, via Propensity' },
+    { label: 'In syndication outreach', value: inOutreach, sub: 'routed automatically' },
+    { label: 'Became billable leads', value: converted, sub: 'positive response' },
+  ];
+
+  return (
+    <div className="glass-card p-4">
+      <h3 className="flex items-center gap-2 text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+        <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+        From ads to billable leads
+      </h3>
+      <div className="mt-2.5 flex flex-wrap items-center gap-2">
+        {steps.map((step, i) => (
+          <div key={step.label} className="flex items-center gap-2">
+            {i > 0 && <span className="text-[13px]" style={{ color: 'var(--color-text-muted)' }}>→</span>}
+            <div
+              className="rounded-xl border px-3.5 py-2"
+              style={{ borderColor: 'var(--color-border)', background: i === steps.length - 1 ? 'var(--color-primary-tint)' : 'var(--background-muted)' }}
+            >
+              <div className="text-[16px] font-extrabold leading-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                {step.value.toLocaleString('en-US')}
+              </div>
+              <div className="text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{step.label}</div>
+              <div className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>{step.sub}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+        Ad engagement is never billed directly — it fills the top of the funnel, syndication converts it,
+        and the client pays only for leads that come out the far end.
+      </p>
     </div>
   );
 }

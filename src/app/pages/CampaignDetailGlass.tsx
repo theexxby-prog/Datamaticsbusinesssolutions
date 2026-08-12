@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare
+import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare, Clock3
 } from 'lucide-react';
 import { JobCardModal } from '../components/JobCardModalGlass';
 import { CampaignDiscussionPanel } from '../components/CampaignDiscussionPanel';
@@ -21,6 +21,7 @@ import { useCampaignThread } from '../context/CampaignThreadContext';
 import { useAuth } from '../context/AuthContext';
 import { useUnionLens } from '../hooks/useUnionLens';
 import { resolveCampaignForUser } from '../data/unionClient';
+import { useDeliveryOverrides, overrideFor } from '../data/unionOps';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
 import { toast } from 'sonner';
@@ -60,20 +61,28 @@ export default function CampaignDetail() {
     );
   }
 
-  const acceptanceRate = campaign.acceptanceRate || 0;
-  
+  // Ops-entered delivery & acceptance figures win over the feed: acceptance is
+  // manual for clients without Convertr, suppressed leads are never charged,
+  // and ops's entry is the number the portal stands behind.
+  const override = overrideFor(campaign.id, useDeliveryOverrides());
+  const acceptanceRate = override?.accepted != null && override?.delivered
+    ? Math.round((override.accepted / override.delivered) * 100)
+    : campaign.acceptanceRate || 0;
+
   // Use goalLeads/deliveredLeads if available, otherwise fall back to target/delivered
   const targetLeads = campaign.goalLeads || campaign.target || campaign.totalLeads || 0;
-  const deliveredLeads = campaign.deliveredLeads || campaign.delivered || campaign.totalLeads || 0;
-  
+  const deliveredLeads = override?.delivered ?? (campaign.deliveredLeads || campaign.delivered || campaign.totalLeads || 0);
+
   const progressPercentage = targetLeads > 0
     ? Math.min(100, Math.round((deliveredLeads / targetLeads) * 100))
     : 0;
 
-  // CPL × delivered leads = total billable to the client (client-facing "revenue").
+  // CPL × billable leads = total billable to the client (client-facing "revenue").
+  // Billable is what the client accepted — suppressed leads are never charged.
   // CPL derives from the agreed budget ÷ target when not set explicitly.
   const cpl = (campaign as any).cpl ?? (campaign.budget && targetLeads ? Math.round(campaign.budget / targetLeads) : 50);
-  const totalBillable = cpl * deliveredLeads;
+  const billableLeads = override?.accepted ?? deliveredLeads;
+  const totalBillable = cpl * billableLeads;
   
   // UNION preview: Programmatic merged into Campaigns. Crosswalk-paired
   // campaigns grow a Programmatic tab, an Impressions bar on the funnel, and
@@ -225,6 +234,24 @@ export default function CampaignDetail() {
             </button>
           </div>
         </div>
+
+        {/* Delivery under client review — some clients hold blind suppression
+            lists, so final acceptance can take a couple of days. Shown plainly
+            rather than pretending the numbers are final. */}
+        {override?.status === 'awaiting_client' && (
+          <div
+            className="flex items-center gap-2.5 rounded-xl border px-4 py-2.5"
+            style={{ borderColor: 'var(--color-warning)', background: 'var(--color-warning-bg)' }}
+          >
+            <Clock3 className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
+            <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+              Latest delivery under your team's review
+            </span>
+            <span className="hidden text-[12px] sm:inline" style={{ color: 'var(--color-text-secondary)' }}>
+              — accepted counts update once the review lands
+            </span>
+          </div>
+        )}
 
         {/* KPI band — absorbs the old donut card and Delivery Pace card. */}
         <CampaignKpiBand

@@ -176,8 +176,9 @@ function EngagedColleagues({ slug }: { slug: string }) {
       </div>
       <p className="mt-2.5 text-[11.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
         Reached by the ad campaign and matched to this account by company domain. They aren't in your
-        lead count — engagement only attaches to an individual lead on an exact work-email match, so a
-        colleague's activity informs the account, never a person.
+        lead count — an ad hit isn't a lead. Engaged people flow into the syndication outreach, and
+        only a positive response there becomes a lead you pay for; until then, a colleague's activity
+        informs the account, never a person.
       </p>
     </Section>
   );

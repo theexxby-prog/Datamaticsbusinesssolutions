@@ -17,6 +17,7 @@ import {
   campaignTypeFor, type StatPeriod,
 } from '../data/outcomes';
 import { useUnionPrefs } from '../config/unionPrefs';
+import { useDeliveryOverrides } from '../data/unionOps';
 import { mockLeads } from '../mockData';
 import { formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
@@ -78,10 +79,12 @@ export default function UnionDashboard() {
   const prefs = useUnionPrefs();
 
   const [period, setPeriod] = useState<StatPeriod>('month');
-  const stats = getPeriodStats(period);
+  // Ops-entered delivery/acceptance figures flow into every count on this page.
+  const deliveryOverrides = useDeliveryOverrides();
+  const stats = getPeriodStats(period, deliveryOverrides);
   const outcomes = getLeadOutcomes(stats.leads);
 
-  const forecasts = getCampaignForecasts();
+  const forecasts = getCampaignForecasts(deliveryOverrides);
   // Reads every campaign, not the slice rendered below, so one cannot slip out
   // of the warning by falling off the list.
   const atRiskForecast = forecasts.find(f => f.atRisk);

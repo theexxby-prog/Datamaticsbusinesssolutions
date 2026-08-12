@@ -306,6 +306,13 @@ export const opsTasks: OpsTask[] = [
     campaignId: '46888',
     kind: 'review',
   },
+  {
+    id: 'task-6',
+    label: 'Enter acceptance for batch 7',
+    sub: `${CAMPAIGN_RENAMES['46901']} · client checking their suppression list — due back Aug 14`,
+    campaignId: '46901',
+    kind: 'review',
+  },
 ];
 
 // ── Batch history ───────────────────────────────────────────────────────────
@@ -586,4 +593,92 @@ export function useCreatedCampaigns(): CreatedCampaign[] {
     () => createdCampaigns,
     () => createdCampaigns,
   );
+}
+
+// ── Delivery & acceptance overrides (ops-entered) ───────────────────────────
+// The number the client sees is decided by ops, not by a feed. Clients without
+// Convertr have no automated acceptance path, review can take days, and blind
+// suppression lists mean some delivered leads are never chargeable — so ops
+// records the outreach metrics and the final delivered/accepted/suppressed
+// split here, and every client-facing count reads through this store. Billable
+// is always what the client accepted. Same live-store pattern as above; the
+// old /internal/ops-override wrote localStorage and mutated shared objects,
+// which never reached the UNION screens mid-session — this store is why an
+// ops save shows up on the client view instantly.
+
+export interface DeliveryOverride {
+  campaignId: string;
+  emailsSent: number | null;
+  emailsOpened: number | null;
+  emailsClicked: number | null;
+  delivered: number | null;
+  accepted: number | null;
+  suppressed: number | null;
+  /** awaiting_client: delivery under client review (suppression list etc.) */
+  status: 'awaiting_client' | 'final';
+  note: string;
+  updatedLabel: string;
+}
+
+// Beacon Edge's batch 7 sits with the client — the days-long review is part
+// of the business, so the demo starts with one delivery in that state.
+const SEED_OVERRIDES: Record<string, DeliveryOverride> = {
+  '46901': {
+    campaignId: '46901',
+    emailsSent: null,
+    emailsOpened: null,
+    emailsClicked: null,
+    delivered: null,
+    accepted: null,
+    suppressed: null,
+    status: 'awaiting_client',
+    note: 'Client checking batch 7 against their suppression list — expected back Aug 14',
+    updatedLabel: 'Aug 12',
+  },
+};
+
+// Unlike the queues above, an acceptance entry must survive switching logins
+// (which reloads the app) or the demo story falls apart mid-walkthrough —
+// so this one store round-trips through sessionStorage. Closing the tab
+// still resets the demo.
+const OVERRIDE_STORAGE_KEY = 'union-delivery-overrides';
+
+function hydrateOverrides(): Record<string, DeliveryOverride> {
+  try {
+    const raw = sessionStorage.getItem(OVERRIDE_STORAGE_KEY);
+    if (raw) return { ...SEED_OVERRIDES, ...(JSON.parse(raw) as Record<string, DeliveryOverride>) };
+  } catch { /* private mode etc. — fall through to the seed */ }
+  return SEED_OVERRIDES;
+}
+
+let deliveryOverrides: Record<string, DeliveryOverride> = hydrateOverrides();
+const overrideListeners = new Set<() => void>();
+
+export function saveDeliveryOverride(input: Omit<DeliveryOverride, 'updatedLabel'>): void {
+  deliveryOverrides = {
+    ...deliveryOverrides,
+    [input.campaignId]: { ...input, updatedLabel: 'just now' },
+  };
+  try {
+    sessionStorage.setItem(OVERRIDE_STORAGE_KEY, JSON.stringify(deliveryOverrides));
+  } catch { /* storage full or blocked — the in-memory copy still works */ }
+  overrideListeners.forEach(l => l());
+}
+
+export function useDeliveryOverrides(): Record<string, DeliveryOverride> {
+  return useSyncExternalStore(
+    cb => {
+      overrideListeners.add(cb);
+      return () => overrideListeners.delete(cb);
+    },
+    () => deliveryOverrides,
+    () => deliveryOverrides,
+  );
+}
+
+export function overrideFor(
+  campaignId: string | undefined,
+  map: Record<string, DeliveryOverride>,
+): DeliveryOverride | undefined {
+  return campaignId ? map[campaignId] : undefined;
 }

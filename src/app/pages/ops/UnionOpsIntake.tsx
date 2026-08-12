@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   ArrowLeft, UploadCloud, FileSpreadsheet, Database, Check, ShieldCheck,
-  Sparkles, Loader2, RefreshCw, ChevronRight, BookOpen,
+  Sparkles, Loader2, RefreshCw, ChevronRight, BookOpen, AlertTriangle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CAMPAIGN_RENAMES } from '../../data/unionClient';
@@ -61,6 +61,9 @@ export default function UnionOpsIntake() {
   const ledgerAccounts = Math.round(qaValid * 0.73);
   const ledgerReused = Math.round(ledgerAccounts * 0.68);
   const ledgerNew = ledgerAccounts - ledgerReused;
+  // Accounts researched before but outside the 90-day window: they go to
+  // Relish and bill again, but never silently — the flag makes it a choice.
+  const ledgerStale = Math.max(1, Math.round(ledgerNew * 0.04));
 
   const loadBatch = () => {
     setStep('loading');
@@ -284,6 +287,17 @@ export default function UnionOpsIntake() {
               Relish dedups inside a batch, not across batches — this check is what stops a corrected
               re-upload from paying twice for the same companies.
             </p>
+            <div
+              className="mt-2.5 flex items-start gap-2 rounded-xl border px-3.5 py-2.5"
+              style={{ borderColor: 'var(--color-warning)', background: 'var(--color-warning-bg)' }}
+            >
+              <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
+              <p className="text-[12px]" style={{ color: 'var(--color-text-primary)' }}>
+                <b>{ledgerStale} of the new accounts {ledgerStale === 1 ? 'was' : 'were'} researched before</b>, more than
+                90 days ago. Sending {ledgerStale === 1 ? 'it' : 'them'} again bills again — flagged so a re-research is
+                a decision, never an accident.
+              </p>
+            </div>
           </div>
 
           {/* 5 · Save + send */}
