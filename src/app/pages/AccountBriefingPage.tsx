@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router';
-import { ArrowLeft, ListOrdered, Sparkles, Target } from 'lucide-react';
+import { ArrowLeft, ListOrdered, Radio, Sparkles, Target } from 'lucide-react';
+import { getEngagedColleagues } from '../data/propensity';
 import { useAuth } from '../context/AuthContext';
 import { showFutureModules } from '../config/demo';
 import {
@@ -134,7 +135,50 @@ export default function AccountBriefingPage() {
         </Section>
       )}
 
+      {/* Ad-engaged colleagues — account intelligence, deliberately NOT leads.
+          Only an exact work-email match attaches engagement to a person; a
+          company-domain match informs the account instead, which is what this
+          section is. Nothing here is in the lead count. */}
+      <EngagedColleagues slug={account.slug} />
+
       <AccountDetailSections account={account} />
     </div>
+  );
+}
+
+function EngagedColleagues({ slug }: { slug: string }) {
+  const colleagues = getEngagedColleagues(slug);
+  if (colleagues.length === 0) return null;
+
+  return (
+    <Section icon={Radio} title="Engaged at this account — not yet leads">
+      <div className="space-y-2">
+        {colleagues.map(person => (
+          <div
+            key={person.name}
+            className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded-xl border px-3 py-2.5"
+            style={{ borderColor: 'var(--color-border-light)' }}
+          >
+            <span className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>{person.name}</span>
+            <span className="text-[12px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{person.title}</span>
+            <span
+              className="rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase"
+              style={{
+                background: person.warmth === 'hot' ? 'var(--color-error-bg)' : 'var(--color-warning-bg)',
+                color: person.warmth === 'hot' ? 'var(--color-error)' : 'var(--color-warning)',
+              }}
+            >
+              {person.warmth}
+            </span>
+            <span className="ml-auto text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>{person.activity}</span>
+          </div>
+        ))}
+      </div>
+      <p className="mt-2.5 text-[11.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+        Reached by the ad campaign and matched to this account by company domain. They aren't in your
+        lead count — engagement only attaches to an individual lead on an exact work-email match, so a
+        colleague's activity informs the account, never a person.
+      </p>
+    </Section>
   );
 }

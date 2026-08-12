@@ -439,7 +439,7 @@ export default function UnionOpsCampaign() {
               },
               paired && {
                 key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
-                content: <CampaignProgrammaticTab abmCampaignId={paired.abmCampaignId} />,
+                content: <CampaignProgrammaticTab abmCampaignId={paired.abmCampaignId} opsView />,
               },
             ]}
           />

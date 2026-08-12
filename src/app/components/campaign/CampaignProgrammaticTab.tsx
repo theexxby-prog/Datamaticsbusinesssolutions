@@ -1,9 +1,10 @@
-import { Wallet, Activity, Building2, TrendingUp, Radar } from 'lucide-react';
+import { Wallet, Activity, Building2, TrendingUp, Radar, Layers } from 'lucide-react';
 import { AccountsSection } from '../propensity/AccountsSection';
 import { SpendChannelsSection } from '../propensity/SpendChannelsSection';
 import { SyndicationInfluenceSection } from '../propensity/SyndicationInfluenceSection';
-import { getAbmSummary, PROPENSITY_SYNC_LABEL } from '../../data/propensity';
+import { getAbmSummary, getCohortBreakdown, PROPENSITY_SYNC_LABEL } from '../../data/propensity';
 import { formatMoney as fmtMoney } from '../../utils/format';
+import { format, parseISO } from 'date-fns';
 
 // ─── Programmatic tab on the campaign detail page ────────────────────────────
 // The standalone Programmatic page merged into Campaigns: each crosswalk-paired
@@ -17,9 +18,11 @@ import { formatMoney as fmtMoney } from '../../utils/format';
 interface CampaignProgrammaticTabProps {
   /** The paired ABM campaign (from ABM_SYNDICATION_CROSSWALK). */
   abmCampaignId: string;
+  /** Ops workspace only: shows the per-cohort breakdown. Clients see totals. */
+  opsView?: boolean;
 }
 
-export function CampaignProgrammaticTab({ abmCampaignId }: CampaignProgrammaticTabProps) {
+export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: CampaignProgrammaticTabProps) {
   const abm = getAbmSummary().find(c => c.id === abmCampaignId);
   if (!abm) return null;
 
@@ -74,6 +77,11 @@ export function CampaignProgrammaticTab({ abmCampaignId }: CampaignProgrammaticT
         </div>
       </div>
 
+      {/* Cohort breakdown — ops only. Propensity delivers a campaign as waves
+          and reports per cohort; one campaign, cohorts roll up. The client
+          view shows only the summed totals above, never the waves. */}
+      {opsView && <CohortBreakdown abmCampaignId={abmCampaignId} />}
+
       {/* Target-account engagement (account-wide feed) */}
       <AccountsSection />
 
@@ -82,6 +90,60 @@ export function CampaignProgrammaticTab({ abmCampaignId }: CampaignProgrammaticT
 
       {/* Syndication → ABM influence via the crosswalk */}
       <SyndicationInfluenceSection />
+    </div>
+  );
+}
+
+function CohortBreakdown({ abmCampaignId }: { abmCampaignId: string }) {
+  const cohorts = getCohortBreakdown(abmCampaignId);
+  if (cohorts.length === 0) return null;
+  const total = cohorts.reduce(
+    (acc, c) => ({ impressions: acc.impressions + c.impressions, clicks: acc.clicks + c.clicks, spend: acc.spend + c.spend }),
+    { impressions: 0, clicks: 0, spend: 0 },
+  );
+  const num = (n: number) => n.toLocaleString('en-US');
+
+  return (
+    <div className="glass-card p-4">
+      <h3 className="flex items-center gap-2 text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+        <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+        Delivery by cohort
+      </h3>
+      <p className="mt-1 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+        Propensity runs a campaign as waves and reports each separately, keyed by name. One campaign,
+        cohorts roll up — the client sees the total only.
+      </p>
+      <div className="mt-2.5 overflow-x-auto">
+        <table className="w-full min-w-[440px] text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <thead>
+            <tr className="text-left text-[10.5px] font-bold uppercase tracking-[0.06em]" style={{ color: 'var(--color-text-muted)' }}>
+              <th className="py-1.5 pr-3 font-bold">Cohort</th>
+              <th className="py-1.5 pr-3 font-bold">Started</th>
+              <th className="py-1.5 pr-3 text-right font-bold">Impressions</th>
+              <th className="py-1.5 pr-3 text-right font-bold">Clicks</th>
+              <th className="py-1.5 text-right font-bold">Spend</th>
+            </tr>
+          </thead>
+          <tbody style={{ fontVariantNumeric: 'tabular-nums' }}>
+            {cohorts.map(c => (
+              <tr key={c.cohort} className="border-t" style={{ borderColor: 'var(--color-border-light)' }}>
+                <td className="py-1.5 pr-3 font-semibold" style={{ color: 'var(--color-text-primary)' }}>Cohort {c.cohort}</td>
+                <td className="py-1.5 pr-3">{format(parseISO(c.startDate), 'MMM d, yyyy')}</td>
+                <td className="py-1.5 pr-3 text-right">{num(c.impressions)}</td>
+                <td className="py-1.5 pr-3 text-right">{num(c.clicks)}</td>
+                <td className="py-1.5 text-right">{fmtMoney(c.spend)}</td>
+              </tr>
+            ))}
+            <tr className="border-t font-bold" style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-primary)' }}>
+              <td className="py-1.5 pr-3">Campaign total</td>
+              <td className="py-1.5 pr-3" style={{ color: 'var(--color-text-muted)' }}>what the client sees</td>
+              <td className="py-1.5 pr-3 text-right">{num(total.impressions)}</td>
+              <td className="py-1.5 pr-3 text-right">{num(total.clicks)}</td>
+              <td className="py-1.5 text-right">{fmtMoney(total.spend)}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

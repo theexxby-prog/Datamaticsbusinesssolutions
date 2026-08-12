@@ -299,6 +299,13 @@ export const opsTasks: OpsTask[] = [
     campaignId: '46888',
     kind: 'qa',
   },
+  {
+    id: 'task-5',
+    label: 'Review 14 unmatched ad contacts',
+    sub: `${CAMPAIGN_RENAMES['46888']} · exact-email match found no lead — held at account level`,
+    campaignId: '46888',
+    kind: 'review',
+  },
 ];
 
 // ── Batch history ───────────────────────────────────────────────────────────

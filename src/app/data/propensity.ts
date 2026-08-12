@@ -394,3 +394,63 @@ export function getSyndicationInfluence(): SyndicationInfluence {
 
 /** The freshness line shown on the Programmatic page. */
 export const PROPENSITY_SYNC_LABEL = 'Synced Jul 30, 2026 · api.propensity.com';
+
+// ── Cohort breakdown ────────────────────────────────────────────────────────
+// Propensity reports per cohort — waves inside one campaign, keyed by name
+// strings like "…-Cohort 2" — and the campaign total is ours to add up. The
+// rule the ops screen exists to teach: one campaign, cohorts roll up; the
+// client only ever sees the sum. Splits are deterministic and sum exactly to
+// the AbmCampaign totals, so the cohort table and the summary tiles above it
+// can never disagree.
+
+export interface AbmCohort {
+  cohort: number;
+  startDate: string; // ISO
+  impressions: number;
+  clicks: number;
+  spend: number;
+}
+
+export function getCohortBreakdown(abmCampaignId: string): AbmCohort[] {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  // Wave 2 carries 42% of delivery; remainders land on wave 1 so sums are exact.
+  const imp2 = Math.round(abm.impressions * 0.42);
+  const clk2 = Math.round(abm.clicks * 0.42);
+  const spend2 = Math.round(abm.spendToDate * 0.42);
+  const start2 = `${abm.startDate.slice(0, 7)}-28`;
+  return [
+    { cohort: 1, startDate: abm.startDate, impressions: abm.impressions - imp2, clicks: abm.clicks - clk2, spend: abm.spendToDate - spend2 },
+    { cohort: 2, startDate: start2, impressions: imp2, clicks: clk2, spend: spend2 },
+  ];
+}
+
+// ── Engaged colleagues (account-level, not leads) ───────────────────────────
+// The contact-matching rule made visible: only an exact work-email match
+// attaches ad engagement to an individual lead. People the ad campaign
+// reached whose email matches no lead are held at the ACCOUNT level — kept,
+// shown, never merged onto a person and never counted as leads.
+
+export interface EngagedColleague {
+  name: string;
+  title: string;
+  warmth: 'hot' | 'warm';
+  activity: string;
+}
+
+const COLLEAGUE_POOL: EngagedColleague[] = [
+  { name: 'Priya Raman', title: 'Director, IT Procurement', warmth: 'warm', activity: '3 site visits · 14 ad impressions in 90 days' },
+  { name: 'Tom Okafor', title: 'Security Architect', warmth: 'hot', activity: '2 ad clicks · visited the pricing page twice' },
+  { name: 'Elena Vasquez', title: 'VP Infrastructure', warmth: 'warm', activity: '9 ad impressions · followed on LinkedIn' },
+  { name: 'Mark Delaney', title: 'Head of Platform Engineering', warmth: 'warm', activity: '6 ad impressions · 1 site visit' },
+  { name: 'Sofia Lindqvist', title: 'Procurement Analyst', warmth: 'hot', activity: '4 site visits · downloaded a spec sheet' },
+];
+
+/** 2–3 engaged non-lead colleagues for an account, stable per slug. */
+export function getEngagedColleagues(accountSlug: string): EngagedColleague[] {
+  let h = 0;
+  for (let i = 0; i < accountSlug.length; i++) h = (h * 31 + accountSlug.charCodeAt(i)) >>> 0;
+  const count = 2 + (h % 2);
+  const start = h % COLLEAGUE_POOL.length;
+  return Array.from({ length: count }, (_, i) => COLLEAGUE_POOL[(start + i) % COLLEAGUE_POOL.length]);
+}
