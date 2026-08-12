@@ -518,6 +518,34 @@ export const CAMPAIGN_TYPES_META: CampaignTypeMeta[] = [
   },
 ];
 
+/** The ICP — who the campaign is allowed to bring back. */
+export interface CampaignTargeting {
+  geos: string[];
+  industries: string[];
+  employeeBands: string[];
+  revenueBands: string[];
+  jobFunctions: string[];
+  seniority: string[];
+  techKeywords: string[];
+}
+
+/** How leads are qualified and handed over. */
+export interface CampaignRules {
+  touch: 'single' | 'double';
+  leadCapPerAccount: number | null;
+  cadence: 'Weekly' | 'Biweekly' | 'At completion';
+  format: 'Portal' | 'CSV export' | 'CRM push';
+  customQuestions: string[];
+  consent: string[];
+}
+
+/** Everything uploaded at initiation. Mock filenames stand in for real files. */
+export interface CampaignFiles {
+  suppression: string | null;
+  tal: string | null;
+  assets: string[];
+}
+
 export interface CreatedCampaign {
   /** The minted ID, e.g. UNION-CS-202609-001. */
   id: string;
@@ -533,6 +561,11 @@ export interface CreatedCampaign {
   targetImpressions: number | null;
   sfOpportunityId: string | null;
   sfOpportunityLineItemId: string | null;
+  targeting?: CampaignTargeting;
+  rules?: CampaignRules;
+  files?: CampaignFiles;
+  /** Ops-only commercials — never client-facing. */
+  commercials?: { cplTarget: number | null; budget: number | null; ioNumber: string | null };
   createdLabel: string;
 }
 

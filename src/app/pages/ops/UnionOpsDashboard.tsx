@@ -260,6 +260,17 @@ function RecentlyCreated() {
                 {c.targetImpressions ? ` · ${c.targetImpressions.toLocaleString('en-US')} impressions` : ''}
                 {' · '}{c.createdLabel}
               </div>
+              {c.targeting && (
+                <div className="text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+                  {c.targeting.geos.join(' · ')}
+                  {c.targeting.industries.length > 0 && (
+                    <> · {c.targeting.industries[0]}{c.targeting.industries.length > 1 ? ` +${c.targeting.industries.length - 1}` : ''}</>
+                  )}
+                  {c.files?.suppression && ' · suppression list on'}
+                  {c.files?.tal && ' · TAL'}
+                  {c.files && c.files.assets.length > 0 && ` · ${c.files.assets.length} asset${c.files.assets.length > 1 ? 's' : ''}`}
+                </div>
+              )}
             </div>
             <button
               onClick={() => navigate(`/ops-union/intake?campaign=${c.id}`)}
