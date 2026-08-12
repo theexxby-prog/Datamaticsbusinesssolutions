@@ -260,15 +260,12 @@ function RecentlyCreated() {
                 {c.targetImpressions ? ` · ${c.targetImpressions.toLocaleString('en-US')} impressions` : ''}
                 {' · '}{c.createdLabel}
               </div>
-              {c.targeting && (
+              {/* Why creation exists (per Ben): aligning data to the campaign.
+                  Ad-bearing types surface their one pending alignment step. */}
+              {c.type !== 'CS' && (
                 <div className="text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-                  {c.targeting.geos.join(' · ')}
-                  {c.targeting.industries.length > 0 && (
-                    <> · {c.targeting.industries[0]}{c.targeting.industries.length > 1 ? ` +${c.targeting.industries.length - 1}` : ''}</>
-                  )}
-                  {c.files?.suppression && ' · suppression list on'}
-                  {c.files?.tal && ' · TAL'}
-                  {c.files && c.files.assets.length > 0 && ` · ${c.files.assets.length} asset${c.files.assets.length > 1 ? 's' : ''}`}
+                  Awaiting Propensity link — the ad campaign's name must start with{' '}
+                  <span className="font-mono font-semibold">{c.id}</span>
                 </div>
               )}
             </div>

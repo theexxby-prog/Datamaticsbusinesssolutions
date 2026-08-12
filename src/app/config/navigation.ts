@@ -14,7 +14,6 @@ import {
   Layers,
   MessageSquare,
   ClipboardCheck,
-  PlusCircle,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '../context/AuthContext';
@@ -95,8 +94,10 @@ export function useNavBadges(): NavBadges {
 export function getNavForRole(role: UserRole | undefined, showFuture = false, unionOps = false): NavItem[] {
   if (unionOps) {
     return [
+      // New Campaign is deliberately not a nav item: creation is occasional
+      // (it exists to align contacts and data to a campaign) and lives as the
+      // primary button on the Pipeline header instead.
       { name: 'Pipeline', icon: LayoutDashboard, path: '/ops-union', section: 'PLATFORM' },
-      { name: 'New Campaign', icon: PlusCircle, path: '/ops-union/campaigns/new', section: 'PLATFORM' },
       { name: 'Data Intake', icon: Upload, path: '/ops-union/intake', section: 'PLATFORM', primary: true },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
     ];

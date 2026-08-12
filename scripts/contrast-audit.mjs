@@ -72,7 +72,7 @@ const ROUTES = [
   ['u9', '/dashboard'], ['u9', '/campaigns'], ['u9', '/campaigns/46888'],
   ['u9', '/leads'], ['u9', '/leads/SR-0'], ['u9', '/leads/account/lonza-ag'],
   ['u9', '/reports'], ['u9', '/account'], ['u9', '/support'],
-  ['u10', '/ops-union'], ['u10', '/ops-union/enrichment'], ['u10', '/ops-union/intake'],
+  ['u10', '/ops-union'], ['u10', '/ops-union/intake'],
   ['u10', '/ops-union/campaigns/new'], ['u10', '/ops-union/campaigns/46888'],
   ['u1', '/dashboard'], ['u1', '/invoices'], ['u1', '/documents'], ['u1', '/reports'],
   ['u2', '/dashboard/manager'], ['u2', '/internal/campaigns'],

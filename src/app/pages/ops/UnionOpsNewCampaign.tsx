@@ -1,8 +1,8 @@
 import { useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  ArrowLeft, Building2, Calendar, ChevronDown, CloudCog, Crosshair, FileText,
-  Layers, ListChecks, Loader2, Paperclip, Plus, Radio, Shapes, Users, Wallet,
+  ArrowLeft, Building2, Calendar, ChevronDown, FileText,
+  Layers, Loader2, Plus, Radio, Shapes, Users, Wallet,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import {
@@ -10,18 +10,16 @@ import {
   type CampaignTypeCode,
 } from '../../data/unionOps';
 import { UNION_COMPANY } from '../../data/unionClient';
-import { ChipSelect, TagInput, FileSlot } from '../../components/ops/NewCampaignControls';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
 
 // ─── UNION OPS · campaign initiation ─────────────────────────────────────────
 // Campaigns are born here. Pulse mints the campaign ID at save — the naming
 // convention {CLIENT}-{TYPE}-{YYYYMM}-{SEQ} — because Salesforce cannot:
 // clients on a master service agreement never get a per-campaign opportunity.
-// The rest of the form is the job card: the ICP that bounds who a lead may
-// be, the delivery rules, the files (suppression, TAL, assets) and the
-// commercials. Ops-only, and laid out dense on purpose: full width, no side
-// rail, the live ID and the save button pinned in the header — ops fills
-// this several times a week and it should fit in about one screen.
+// Deliberately minimal for the first release (per Ben, Aug 12): creation
+// exists to align contacts and data to a campaign, not to hold the job card.
+// Identity, type, schedule, CPL + budget — the ICP, files and delivery rules
+// stay off Pulse until a later release.
 
 const KNOWN_CLIENTS = [
   UNION_COMPANY,
@@ -39,48 +37,23 @@ const TYPE_ICONS: Record<CampaignTypeCode, typeof FileText> = {
   PG: Radio,
 };
 
-// The ICP vocabulary — the same bands the QA rules and job cards use.
-const GEOS = ['NAM', 'EMEA', 'APAC', 'LATAM'] as const;
-const INDUSTRIES = [
-  'Software & SaaS', 'Financial services', 'Healthcare & life sciences', 'Manufacturing',
-  'Retail & ecommerce', 'Energy & utilities', 'Telecom & media', 'Public sector',
-] as const;
-const EMPLOYEE_BANDS = ['1-99', '100-499', '500-999', '1,000-4,999', '5,000+'] as const;
-const REVENUE_BANDS = ['<$10M', '$10M-50M', '$50M-250M', '$250M-1B', '$1B+'] as const;
-const JOB_FUNCTIONS = ['IT & infrastructure', 'Security', 'Finance', 'Operations', 'Marketing', 'Procurement', 'HR'] as const;
-const SENIORITY = ['C-level', 'VP', 'Director', 'Manager', 'Practitioner'] as const;
-const CONSENT = ['GDPR', 'CCPA', 'CASL'] as const;
-
-// Mock uploads — clicking a slot attaches the next canned file.
-const CANNED_SUPPRESSION = ['northwind-global-suppression.csv · 1,204 domains'] as const;
-const CANNED_TAL = ['q4-named-accounts.csv · 350 accounts'] as const;
-const CANNED_ASSETS = [
-  'zero-trust-buyers-guide.pdf',
-  'infra-modernization-webinar.mp4',
-  'display-banners-q4.zip',
-] as const;
-
 const FIELD_LABEL = 'block text-[12px] font-semibold mb-1';
 const INPUT = 'input-base h-[36px] w-full px-3 text-sm';
 
 // Each section gets its own colour so the eye can land without reading:
 // an icon chip on the section's tint plus a matching left edge on the card.
-// All from the token set — the semantic colours are tuned to be legible on
-// their own tints in both themes.
 interface SectionTone { color: string; bg: string }
 const TONES: Record<string, SectionTone> = {
   primary: { color: 'var(--color-primary)', bg: 'var(--color-primary-tint)' },
   info: { color: 'var(--color-info)', bg: 'var(--color-info-bg)' },
   success: { color: 'var(--color-success)', bg: 'var(--color-success-bg)' },
   warning: { color: 'var(--color-warning)', bg: 'var(--color-warning-bg)' },
-  muted: { color: 'var(--color-text-muted)', bg: 'var(--color-gray-100)' },
 };
 
-function SectionHead({ icon: Icon, tone, children, note }: {
+function SectionHead({ icon: Icon, tone, children }: {
   icon: typeof FileText;
   tone: SectionTone;
   children: React.ReactNode;
-  note?: string;
 }) {
   return (
     <h2 className="flex flex-wrap items-center gap-2 text-[11.5px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-secondary)' }}>
@@ -88,63 +61,29 @@ function SectionHead({ icon: Icon, tone, children, note }: {
         <Icon className="h-3.5 w-3.5" style={{ color: tone.color }} />
       </span>
       {children}
-      {note && (
-        <span className="font-normal normal-case tracking-normal" style={{ color: 'var(--color-text-muted)' }}>
-          · {note}
-        </span>
-      )}
     </h2>
   );
 }
 
-/** Card with the section's colour on its left edge. */
 const cardStyle = (tone: SectionTone) => ({ borderLeft: `3px solid ${tone.color}` });
 
 export default function UnionOpsNewCampaign() {
   useDocumentTitle('New Campaign');
   const navigate = useNavigate();
 
-  // 1 · Campaign & client
   const [name, setName] = useState('');
   const [client, setClient] = useState(UNION_COMPANY);
   const [clientOpen, setClientOpen] = useState(false);
   const clientInputRef = useRef<HTMLInputElement>(null);
 
-  // 2 · Type + 3 · Schedule & targets
   const [type, setType] = useState<CampaignTypeCode | null>(null);
   const [startDate, setStartDate] = useState('2026-09-01');
   const [endDate, setEndDate] = useState('2026-11-30');
   const [targetLeads, setTargetLeads] = useState('');
   const [targetImpressions, setTargetImpressions] = useState('');
 
-  // 4 · Targeting (the ICP)
-  const [geos, setGeos] = useState<string[]>([]);
-  const [industries, setIndustries] = useState<string[]>([]);
-  const [employeeBands, setEmployeeBands] = useState<string[]>([]);
-  const [revenueBands, setRevenueBands] = useState<string[]>([]);
-  const [jobFunctions, setJobFunctions] = useState<string[]>([]);
-  const [seniority, setSeniority] = useState<string[]>([]);
-  const [techKeywords, setTechKeywords] = useState<string[]>([]);
-
-  // 5 · Delivery rules & compliance
-  const [touch, setTouch] = useState<'single' | 'double'>('single');
-  const [leadCap, setLeadCap] = useState('3');
-  const [cadence, setCadence] = useState<'Weekly' | 'Biweekly' | 'At completion'>('Weekly');
-  const [format, setFormat] = useState<'Portal' | 'CSV export' | 'CRM push'>('Portal');
-  const [customQuestions, setCustomQuestions] = useState<string[]>([]);
-  const [consent, setConsent] = useState<string[]>([]);
-
-  // 6 · Files
-  const [suppression, setSuppression] = useState<string[]>([]);
-  const [tal, setTal] = useState<string[]>([]);
-  const [assets, setAssets] = useState<string[]>([]);
-
-  // 7 · Commercials & Salesforce
   const [cplTarget, setCplTarget] = useState('');
   const [budget, setBudget] = useState('');
-  const [ioNumber, setIoNumber] = useState('');
-  const [sfOpp, setSfOpp] = useState('');
-  const [sfOli, setSfOli] = useState('');
 
   const [saving, setSaving] = useState(false);
   const [showErrors, setShowErrors] = useState(false);
@@ -166,8 +105,7 @@ export default function UnionOpsNewCampaign() {
 
   const dateOrderOk = !startDate || !endDate || startDate <= endDate;
   const valid = name.trim().length > 0 && client.trim().length > 0 && type !== null
-    && !!startDate && !!endDate && dateOrderOk
-    && geos.length > 0 && industries.length > 0 && assets.length > 0;
+    && !!startDate && !!endDate && dateOrderOk;
 
   const save = () => {
     if (!valid || !typeMeta) {
@@ -185,22 +123,12 @@ export default function UnionOpsNewCampaign() {
         endDate,
         targetLeads: typeMeta.takesLeads && targetLeads ? Number(targetLeads) : null,
         targetImpressions: typeMeta.takesImpressions && targetImpressions ? Number(targetImpressions) : null,
-        sfOpportunityId: sfOpp.trim() || null,
-        sfOpportunityLineItemId: sfOli.trim() || null,
-        targeting: { geos, industries, employeeBands, revenueBands, jobFunctions, seniority, techKeywords },
-        rules: {
-          touch,
-          leadCapPerAccount: leadCap ? Number(leadCap) : null,
-          cadence,
-          format,
-          customQuestions,
-          consent,
-        },
-        files: { suppression: suppression[0] ?? null, tal: tal[0] ?? null, assets },
+        sfOpportunityId: null,
+        sfOpportunityLineItemId: null,
         commercials: {
           cplTarget: cplTarget ? Number(cplTarget) : null,
           budget: budget ? Number(budget) : null,
-          ioNumber: ioNumber.trim() || null,
+          ioNumber: null,
         },
       });
       toast.success(`${record.id} created — ${record.name}`);
@@ -256,8 +184,7 @@ export default function UnionOpsNewCampaign() {
         </div>
       </div>
 
-      {/* Row 1: identity · type · schedule */}
-      <div className="grid gap-3 lg:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
         <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.primary)}>
           <SectionHead icon={Building2} tone={TONES.primary}>1 · Campaign &amp; client</SectionHead>
           <div>
@@ -454,123 +381,9 @@ export default function UnionOpsNewCampaign() {
             </p>
           )}
         </div>
-      </div>
 
-      {/* Row 2: the ICP, full width — two chip columns, rows barely wrap */}
-      <div className="glass-card space-y-2 p-3.5" style={cardStyle(TONES.warning)}>
-        <SectionHead icon={Crosshair} tone={TONES.warning} note="QA holds every delivered lead against this">
-          4 · Targeting — the ICP
-        </SectionHead>
-        <div className="grid gap-x-6 gap-y-2 xl:grid-cols-2">
-          <ChipSelect
-            inline label="Geography" required options={GEOS} values={geos} onChange={setGeos}
-            error={err(geos.length === 0) ? 'Pick at least one region' : undefined}
-          />
-          <ChipSelect inline label="Employees" options={EMPLOYEE_BANDS} values={employeeBands} onChange={setEmployeeBands} />
-          <ChipSelect
-            inline label="Industry" required options={INDUSTRIES} values={industries} onChange={setIndustries}
-            error={err(industries.length === 0) ? 'Pick at least one industry' : undefined}
-          />
-          <ChipSelect inline label="Revenue" options={REVENUE_BANDS} values={revenueBands} onChange={setRevenueBands} />
-          <ChipSelect inline label="Function" options={JOB_FUNCTIONS} values={jobFunctions} onChange={setJobFunctions} />
-          <ChipSelect inline label="Seniority" options={SENIORITY} values={seniority} onChange={setSeniority} />
-        </div>
-        <TagInput
-          label="Install base / tech stack"
-          placeholder="Optional — e.g. AWS, Salesforce, SAP · press Enter to add"
-          values={techKeywords}
-          onChange={setTechKeywords}
-        />
-      </div>
-
-      {/* Row 3: rules · files · commercials · salesforce */}
-      <div className="grid gap-3 lg:grid-cols-2 xl:grid-cols-4">
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.info)}>
-          <SectionHead icon={ListChecks} tone={TONES.info}>5 · Delivery rules</SectionHead>
-          <div className="grid grid-cols-2 gap-2.5">
-            <div>
-              <span className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Touch</span>
-              <div
-                className="grid grid-cols-2 gap-1 rounded-xl p-1"
-                style={{ background: 'var(--background-muted)' }}
-                role="radiogroup"
-                aria-label="Touch type"
-              >
-                {(['single', 'double'] as const).map(t => (
-                  <button
-                    key={t}
-                    type="button"
-                    role="radio"
-                    aria-checked={touch === t}
-                    onClick={() => setTouch(t)}
-                    className={`min-h-[30px] rounded-lg px-2 text-[12px] font-semibold capitalize transition-colors ${
-                      touch === t ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
-                    }`}
-                  >
-                    {t}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div>
-              <label htmlFor="nc-cap" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Lead cap / account</label>
-              <input id="nc-cap" type="number" min={1} value={leadCap} onChange={e => setLeadCap(e.target.value)} className={INPUT} />
-            </div>
-            <div>
-              <label htmlFor="nc-cadence" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Cadence</label>
-              <select id="nc-cadence" value={cadence} onChange={e => setCadence(e.target.value as typeof cadence)} className={INPUT}>
-                <option>Weekly</option>
-                <option>Biweekly</option>
-                <option>At completion</option>
-              </select>
-            </div>
-            <div>
-              <label htmlFor="nc-format" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Delivery format</label>
-              <select id="nc-format" value={format} onChange={e => setFormat(e.target.value as typeof format)} className={INPUT}>
-                <option>Portal</option>
-                <option>CSV export</option>
-                <option>CRM push</option>
-              </select>
-            </div>
-          </div>
-          <TagInput
-            label="Custom qualifying questions"
-            placeholder='e.g. "Cloud migration timeline?" · Enter to add'
-            values={customQuestions}
-            onChange={setCustomQuestions}
-          />
-          <ChipSelect inline label="Consent" options={CONSENT} values={consent} onChange={setConsent} />
-        </div>
-
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.success)}>
-          <SectionHead icon={Paperclip} tone={TONES.success}>6 · Files</SectionHead>
-          <FileSlot
-            label="Suppression list"
-            hint="Never-touch domains — applies from day one"
-            canned={CANNED_SUPPRESSION}
-            attached={suppression}
-            onChange={setSuppression}
-          />
-          <FileSlot
-            label="Target account list (TAL)"
-            hint="Optional — restricts delivery to named accounts"
-            canned={CANNED_TAL}
-            attached={tal}
-            onChange={setTal}
-          />
-          <FileSlot
-            label="Assets"
-            hint="Content for syndication, creatives for ads"
-            canned={CANNED_ASSETS}
-            attached={assets}
-            onChange={setAssets}
-            multi
-            error={err(assets.length === 0) ? 'Every campaign needs at least one asset' : undefined}
-          />
-        </div>
-
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.primary)}>
-          <SectionHead icon={Wallet} tone={TONES.primary}>7 · Commercials</SectionHead>
+        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.warning)}>
+          <SectionHead icon={Wallet} tone={TONES.warning}>4 · Commercials</SectionHead>
           <div className="grid grid-cols-2 gap-2.5">
             <div>
               <label htmlFor="nc-cpl" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>CPL ($)</label>
@@ -580,39 +393,11 @@ export default function UnionOpsNewCampaign() {
               <label htmlFor="nc-budget" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Budget ($)</label>
               <input id="nc-budget" type="number" min={0} value={budget} onChange={e => setBudget(e.target.value)} placeholder="22,000" className={INPUT} />
             </div>
-            <div className="col-span-2">
-              <label htmlFor="nc-io" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>IO / PO number</label>
-              <input id="nc-io" type="text" value={ioNumber} onChange={e => setIoNumber(e.target.value)} placeholder="IO-2026-0917" className={INPUT} />
-            </div>
-          </div>
-          <p className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
-            Ops only — the client sees one combined spend figure with margins applied
-          </p>
-        </div>
-
-        {/* Deliberately grey: not connected yet. The IDs captured here mean
-            campaigns link up by themselves the day Salesforce is connected. */}
-        <div className="glass-card space-y-2.5 p-3.5" style={cardStyle(TONES.muted)}>
-          <SectionHead icon={CloudCog} tone={TONES.muted}>
-            8 · Salesforce
-            <span
-              className="rounded-full px-2 py-0.5 text-[9.5px] font-bold normal-case tracking-normal"
-              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
-            >
-              Optional
-            </span>
-          </SectionHead>
-          <div>
-            <label htmlFor="nc-opp" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>Opportunity</label>
-            <input id="nc-opp" type="text" value={sfOpp} onChange={e => setSfOpp(e.target.value)} placeholder="0064x000ABc1DeF" className={INPUT} />
-          </div>
-          <div>
-            <label htmlFor="nc-oli" className={FIELD_LABEL} style={{ color: 'var(--color-text-secondary)' }}>Opportunity line item</label>
-            <input id="nc-oli" type="text" value={sfOli} onChange={e => setSfOli(e.target.value)} placeholder="00k4x000GHi2JkL" className={INPUT} />
           </div>
           <p className="text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Not connected yet — IDs entered now link automatically when Salesforce connects later.
-            MSA clients have no per-campaign opportunity; leave blank and the campaign ID stands alone.
+            Ops only — the client sees one combined spend figure with margins applied.
+            Creation aligns contacts and data to the campaign; the ICP, files and delivery
+            rules stay off Pulse for this release.
           </p>
         </div>
       </div>
