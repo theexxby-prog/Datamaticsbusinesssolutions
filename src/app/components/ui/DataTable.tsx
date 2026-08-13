@@ -219,10 +219,16 @@ export function DataTable<T>({
                     .filter(c => c.key !== primaryCol.key && !c.mobileHidden)
                     .map(col => (
                       <div key={col.key} className="flex min-h-[24px] items-center justify-between gap-3">
-                        <span className="inline-flex items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+                        <span className="inline-flex flex-shrink-0 items-center gap-1.5 text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
                           {col.icon && <col.icon className="h-3.5 w-3.5" />}{col.header}
                         </span>
-                        <span className="text-sm" style={{ color: 'var(--color-text-primary)' }}>
+                        {/* min-w-0 is load-bearing. A flex child defaults to
+                            min-width:auto, so a long value ignores its own
+                            `truncate` and pushes past the card: an account's
+                            location ran 78px off a 390px screen and was clipped
+                            away entirely. The label takes flex-shrink-0 so the
+                            value gives way rather than the header. */}
+                        <span className="min-w-0 text-right text-sm" style={{ color: 'var(--color-text-primary)' }}>
                           {(col.mobileRender ?? col.render)(row)}
                         </span>
                       </div>
