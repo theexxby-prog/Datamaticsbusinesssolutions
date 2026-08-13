@@ -1,6 +1,10 @@
-import { Briefcase, Factory, Layers, UserRound, Users } from 'lucide-react';
+import { Briefcase, Building2, Factory, Layers, Repeat, UserRound, Users } from 'lucide-react';
 import { DistributionBars } from '../DistributionBars';
-import { getBuyingCentre, getIndustryMix } from '../../data/propensity';
+import { InsightStrip } from '../ui/InsightStrip';
+import { getAudienceInsights } from '../../data/insights';
+import {
+  getBuyingCentre, getIndustryMix, getReachedCompanies, getTouchesPerAccount,
+} from '../../data/propensity';
 
 // ─── Audience tab ────────────────────────────────────────────────────────────
 // Not "how many people" but "which people". A campaign that reaches one
@@ -11,12 +15,16 @@ import { getBuyingCentre, getIndustryMix } from '../../data/propensity';
 export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }) {
   const centre = getBuyingCentre(abmCampaignId);
   const industries = getIndustryMix(abmCampaignId);
+  const companies = getReachedCompanies(abmCampaignId);
+  const touches = getTouchesPerAccount(abmCampaignId);
+  const insights = getAudienceInsights(abmCampaignId);
   if (!centre) return null;
 
   const tiles = [
     { Icon: Users, label: 'People reached', value: centre.stakeholders.toLocaleString('en-US'), sub: 'inside engaged accounts' },
     { Icon: Layers, label: 'Buying-centre depth', value: `${centre.avgPerAccount}`, sub: 'stakeholders per account' },
     { Icon: UserRound, label: 'Director and above', value: `${centre.directorPlusPct}%`, sub: 'of everyone reached' },
+    { Icon: Repeat, label: 'Touches per account', value: touches.toLocaleString('en-US'), sub: 'impressions, on average' },
     { Icon: Factory, label: 'Verticals engaged', value: `${industries.filter(i => i.accounts > 0).length}`, sub: 'industries represented' },
   ];
 
@@ -26,7 +34,7 @@ export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }
 
   return (
     <div className="space-y-4">
-      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
         {tiles.map(t => (
           <div key={t.label} className="glass-card flex flex-col p-3.5">
             <t.Icon className="mb-1 h-4 w-4" style={{ color: 'var(--color-text-muted)' }} />
@@ -78,10 +86,50 @@ export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }
             </div>
           ))}
         </div>
-        <p className="mt-3 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
-          Director and above accounts for {centre.directorPlusPct}% of everyone the campaign has reached.
-        </p>
+        <InsightStrip insights={insights} />
       </div>
+
+      {/* Named companies, as chips rather than a table. At this length a reader
+          wants to scan for a name they recognise, not sort a column. */}
+      {companies.length > 0 && (
+        <div className="glass-card p-5">
+          <h3
+            className="mb-1 flex items-center gap-2"
+            style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}
+          >
+            <Building2 className="h-4 w-4" />
+            Companies reached
+          </h3>
+          <p className="mb-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+            The {companies.length} highest-intent accounts the campaign has landed with
+          </p>
+          <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+            {companies.map(company => (
+              <div
+                key={company.name}
+                className="flex items-center gap-2.5 rounded-lg border px-2.5 py-2"
+                style={{ borderColor: 'var(--color-border-light)' }}
+              >
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                    {company.name}
+                  </div>
+                  <div className="truncate text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                    {company.industry}
+                  </div>
+                </div>
+                <span
+                  className="flex-shrink-0 text-[13px] font-extrabold"
+                  style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
+                  title={`Intent score ${company.intentScore} out of 100`}
+                >
+                  {company.intentScore}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       <div className="grid gap-4 lg:grid-cols-2">
         <DistributionBars

@@ -1,15 +1,17 @@
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import {
-  Activity, Building2, Eye, Gauge, Layers, MousePointerClick, Radar, TrendingUp, Wallet,
+  Activity, Building2, Eye, Gauge, Layers, MousePointerClick, Radar, Sparkle, TrendingUp, Wallet,
 } from 'lucide-react';
 import { AssetsSection } from '../propensity/AssetsSection';
 import { SpendChannelsSection } from '../propensity/SpendChannelsSection';
 import { SyndicationInfluenceSection } from '../propensity/SyndicationInfluenceSection';
 import { ChartCard, TOOLTIP_STYLE } from '../ChartCard';
 import { useIsMobile } from '../ui/use-mobile';
+import { InsightStrip } from '../ui/InsightStrip';
+import { getAdvertisingInsights } from '../../data/insights';
 import {
-  getAbmSummary, getChannelPerformance, getCohortBreakdown, getFrequencyDistribution,
-  PROPENSITY_SYNC_LABEL,
+  getAbmSummary, getAudienceOverlap, getChannelPerformance, getCohortBreakdown,
+  getCreativePerformance, getFrequencyDistribution, PROPENSITY_SYNC_LABEL,
 } from '../../data/propensity';
 import { formatMoney as fmtMoney } from '../../utils/format';
 import { format, parseISO } from 'date-fns';
@@ -55,6 +57,9 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
   ];
 
   const sweetSpot = frequency.find(f => f.inSweetSpot);
+  const overlap = getAudienceOverlap(abmCampaignId);
+  const creatives = getCreativePerformance(abmCampaignId, opsView);
+  const insights = getAdvertisingInsights(abmCampaignId);
 
   return (
     <div className="space-y-4">
@@ -119,7 +124,48 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
           Engagement peaks between 7 and 12 impressions per account, where {sweetSpot?.accounts ?? 0} accounts currently
           sit. Below that they don't remember you; above it, returns flatten.
         </p>
+        <InsightStrip insights={insights} />
       </ChartCard>
+
+      {/* How many channels each reached account has actually seen. The
+          single-channel group is the one with room to grow; the three-plus
+          group is where multi-touch campaigns earn their premium. */}
+      {overlap.length > 0 && (
+        <div className="glass-card p-4">
+          <h3
+            className="mb-3 flex items-center gap-2"
+            style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}
+          >
+            <Layers className="h-4 w-4" />
+            Channel overlap
+          </h3>
+          <div className="grid grid-cols-3 gap-3">
+            {overlap.map((band, i) => (
+              <div key={band.label} className="rounded-xl border p-3" style={{ borderColor: 'var(--color-border)' }}>
+                <div
+                  className="text-lg font-extrabold leading-tight"
+                  style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
+                >
+                  {band.accounts.toLocaleString('en-US')}
+                </div>
+                <div className="text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{band.label}</div>
+                <div className="mt-1.5 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
+                  <div
+                    className="h-full rounded-full"
+                    style={{
+                      width: `${Math.max(3, band.percentage)}%`,
+                      background: i === overlap.length - 1 ? 'var(--color-success)' : 'var(--color-progress)',
+                    }}
+                  />
+                </div>
+                <div className="mt-1 text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                  {band.percentage}% of reached accounts
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* Channel mix */}
       <div className="glass-card p-4">
@@ -159,7 +205,56 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
         </div>
       </div>
 
-      {/* Creative performance, moved here from its own ops tab */}
+      {/* Best creative on each channel. This is a different axis from
+          AssetsSection below, which splits by creative FORMAT (display /
+          native / video) across the whole campaign — same word, different
+          question. Here it's "what's working where". */}
+      {creatives.length > 0 && (
+        <div className="glass-card p-4">
+          <h3
+            className="mb-1 flex items-center gap-2"
+            style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}
+          >
+            <Sparkle className="h-4 w-4" />
+            Top creative on each channel
+          </h3>
+          <p className="mb-3" style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-secondary)' }}>
+            Ranked by click-through rate, best first
+          </p>
+          <div className="grid gap-2.5 sm:grid-cols-2">
+            {creatives.map(creative => (
+              <div
+                key={creative.channel}
+                className="rounded-xl border p-3"
+                style={{ borderColor: 'var(--color-border)' }}
+                data-testid="creative-card"
+              >
+                <div className="flex items-baseline justify-between gap-2">
+                  <span className="text-[10.5px] font-bold uppercase tracking-[0.06em]" style={{ color: 'var(--color-text-muted)' }}>
+                    {creative.channel}
+                  </span>
+                  <span
+                    className="text-[14px] font-extrabold"
+                    style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
+                  >
+                    {creative.ctr}%
+                  </span>
+                </div>
+                <div className="mt-0.5 truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  {creative.name}
+                </div>
+                <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                  {creative.format} · {creative.clicks.toLocaleString('en-US')} clicks from{' '}
+                  {creative.impressions.toLocaleString('en-US')} impressions
+                  {creative.costPerClick !== undefined && ` · $${creative.costPerClick.toFixed(2)} per click`}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Creative performance by format, moved here from its own ops tab */}
       <AssetsSection abmCampaignId={abmCampaignId} />
 
       {/* Cohort breakdown — ops only. Propensity delivers a campaign as waves

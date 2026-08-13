@@ -18,6 +18,7 @@ const Payment = lazy(() => import('./pages/Payment'));
 const Account = lazy(() => import('./pages/Account'));
 const ReportsPage = lazy(() => import('./pages/ReportsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
+const PriorityAccountsPage = lazy(() => import('./pages/PriorityAccountsPage'));
 const LeadUploadDashboard = lazy(() => import('./pages/LeadUploadDashboard'));
 const Documents = lazy(() => import('./pages/Documents'));
 const Support = lazy(() => import('./pages/Support'));
@@ -98,6 +99,11 @@ const appRoutes: RouteObject[] = [
   {
     path: '/leads',
     Component: withSuspense(LeadsPage),
+  },
+  {
+    // Cross-campaign, so it sits beside Leads rather than under a campaign.
+    path: '/priority-accounts',
+    Component: withSuspense(PriorityAccountsPage),
   },
   {
     path: '/leads/account/:slug',

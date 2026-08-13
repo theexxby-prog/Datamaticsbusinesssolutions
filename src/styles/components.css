@@ -548,3 +548,14 @@
 }
 /* Numbers inside body/meta rows should still align in columns. */
 .t-num { font-variant-numeric: tabular-nums; }
+
+/* ── Recharts legend labels ──────────────────────────────────────────────────
+   Recharts paints each legend LABEL in its series colour, so a chart line
+   tuned as a mark (3:1) ends up as body text (4.5:1) and fails. The swatch
+   beside it already carries the colour, so the text doesn't need to: it reads
+   as type and gets a type token. Set here rather than per-chart because the
+   inline colour Recharts writes has to be beaten, and a new chart shouldn't
+   have to remember. */
+.recharts-legend-item-text {
+  color: var(--color-text-secondary) !important;
+}

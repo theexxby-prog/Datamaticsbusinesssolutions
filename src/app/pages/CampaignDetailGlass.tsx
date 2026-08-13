@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare, Clock3, Target, UsersRound
+import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare, Clock3, Target, UsersRound, CalendarClock
 } from 'lucide-react';
 import { JobCardModal } from '../components/JobCardModalGlass';
 import { CampaignDiscussionPanel } from '../components/CampaignDiscussionPanel';
@@ -16,8 +16,9 @@ import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgrammaticTab';
 import { CampaignReachTab } from '../components/campaign/CampaignReachTab';
 import { CampaignAudienceTab } from '../components/campaign/CampaignAudienceTab';
+import { SyndicationPerformance } from '../components/campaign/SyndicationPerformance';
 import { showFutureModules } from '../config/demo';
-import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from '../data/propensity';
+import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics, getFlightStatus } from '../data/propensity';
 import { campaignTypeFor } from '../data/outcomes';
 import { useCampaignThread } from '../context/CampaignThreadContext';
 import { useAuth } from '../context/AuthContext';
@@ -102,6 +103,7 @@ export default function CampaignDetail() {
   // leadership hasn't approved client-initiated campaigns yet.
   const hideSelfServe = showFuture && currentUser?.role === 'client';
 
+  const flight = pairedAbm ? getFlightStatus(pairedAbm.abmCampaignId, campaign) : null;
   const health = getCampaignHealth(campaign);
   const activities = lens(getActivitiesForCampaign(campaign.id));
   const replacementStats = getReplacementStats(campaign.id);
@@ -178,6 +180,33 @@ export default function CampaignDetail() {
               {campaign.startDate && campaign.endDate && (
                 <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                   {campaign.startDate} – {campaign.endDate}
+                </span>
+              )}
+              {/* Where we are in the flight, and whether reach is keeping up
+                  with the clock. Client-safe: it compares accounts reached to
+                  days elapsed, never spend to budget. */}
+              {flight && (
+                <span
+                  className="inline-flex items-center gap-1.5"
+                  style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}
+                  title={`${flight.reachPct}% of the target list reached, ${flight.elapsedPct}% of the flight elapsed`}
+                >
+                  <CalendarClock className="h-3.5 w-3.5" style={{ color: 'var(--color-text-muted)' }} />
+                  Day {flight.dayOfFlight} of {flight.totalDays}
+                  <span
+                    className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
+                    style={{
+                      color: flight.pace === 'behind' ? 'var(--color-warning)' : 'var(--color-success)',
+                      background: flight.pace === 'behind' ? 'var(--color-warning-bg)' : 'var(--color-success-bg)',
+                    }}
+                  >
+                    {/* "reach" is load-bearing. The Pace tile above measures
+                        LEAD DELIVERY against time; this measures accounts
+                        reached. They can legitimately disagree, and an
+                        unqualified "ahead" beside "On Track" just reads as a
+                        contradiction. */}
+                    reach {flight.pace}
+                  </span>
                 </span>
               )}
               {campaign.budget && (
@@ -294,6 +323,9 @@ export default function CampaignDetail() {
                         impressions={abmImpressions}
                       />
                     )}
+                    {/* Which asset earned the leads, which publisher supplied
+                        them, and what sales did with them afterwards. */}
+                    <SyndicationPerformance campaignId={campaign.id} totalLeads={deliveredLeads} />
                   </div>
                 ),
               },

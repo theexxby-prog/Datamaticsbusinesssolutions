@@ -3,8 +3,12 @@ import { Building2, Radar, Target, TrendingUp, Users } from 'lucide-react';
 import { ChartCard, TOOLTIP_STYLE } from '../ChartCard';
 import { AccountsSection } from '../propensity/AccountsSection';
 import { useIsMobile } from '../ui/use-mobile';
+import { WowBadge } from '../ui/WowBadge';
+import { InsightStrip } from '../ui/InsightStrip';
+import { AwarenessHeatmap } from './AwarenessHeatmap';
+import { getReachInsights } from '../../data/insights';
 import {
-  getAccountFunnel, getUnreachedAccounts, getWeeklyReach,
+  getAccountFunnel, getReachDeltas, getUnreachedAccounts, getWeeklyReach,
 } from '../../data/propensity';
 
 // ─── Reach tab ───────────────────────────────────────────────────────────────
@@ -27,17 +31,21 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
   const funnel = getAccountFunnel(abmCampaignId);
   const unreached = getUnreachedAccounts(abmCampaignId);
   const weekly = getWeeklyReach(abmCampaignId);
+  const deltas = getReachDeltas(abmCampaignId);
+  const insights = getReachInsights(abmCampaignId);
   if (funnel.length === 0) return null;
 
   const targeted = funnel[0].accounts;
   const reached = funnel[1].accounts;
   const salesReady = funnel[funnel.length - 1].accounts;
 
+  // The target list is fixed for the flight, so it carries no delta — a "+0"
+  // pill next to it would imply it could move.
   const tiles = [
-    { Icon: Target, label: 'Accounts targeted', value: targeted, sub: 'named in the audience' },
-    { Icon: Radar, label: 'Reached', value: reached, sub: `${funnel[1].pctOfTargeted}% of the list` },
-    { Icon: Users, label: 'Engaged', value: funnel[2].accounts, sub: 'clicked or visited' },
-    { Icon: TrendingUp, label: 'Sales-ready', value: salesReady, sub: 'hot — worth a call now' },
+    { Icon: Target, label: 'Accounts targeted', value: targeted, sub: 'named in the audience', delta: null },
+    { Icon: Radar, label: 'Reached', value: reached, sub: `${funnel[1].pctOfTargeted}% of the list`, delta: deltas?.reached },
+    { Icon: Users, label: 'Engaged', value: funnel[2].accounts, sub: 'clicked or visited', delta: deltas?.engaged },
+    { Icon: TrendingUp, label: 'Sales-ready', value: salesReady, sub: 'hot — worth a call now', delta: deltas?.salesReady },
   ];
 
   return (
@@ -54,6 +62,11 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
             </div>
             <div className="text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
             <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
+            {t.delta && (
+              <div className="mt-1.5">
+                <WowBadge change={t.delta.change} unit="this week" />
+              </div>
+            )}
           </div>
         ))}
       </div>
@@ -104,7 +117,10 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
             </div>
           ))}
         </div>
+        <InsightStrip insights={insights} />
       </div>
+
+      <AwarenessHeatmap abmCampaignId={abmCampaignId} />
 
       <ChartCard title="Weekly reach build-up" icon={TrendingUp}>
         <ResponsiveContainer width="100%" height={isMobile ? 190 : 240}>

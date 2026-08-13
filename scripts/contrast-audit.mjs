@@ -72,7 +72,9 @@ const ROUTES = [
   ['u9', '/dashboard'], ['u9', '/campaigns'], ['u9', '/campaigns/46888'],
   ['u9', '/leads'], ['u9', '/leads/SR-0'], ['u9', '/leads/account/lonza-ag'],
   ['u9', '/reports'], ['u9', '/account'], ['u9', '/support'],
+  ['u9', '/priority-accounts'],
   ['u10', '/ops-union'], ['u10', '/ops-union/intake'],
+  ['u10', '/priority-accounts'],
   ['u10', '/ops-union/campaigns/new'], ['u10', '/ops-union/campaigns/46888'],
   ['u1', '/dashboard'], ['u1', '/invoices'], ['u1', '/documents'], ['u1', '/reports'],
   ['u2', '/dashboard/manager'], ['u2', '/internal/campaigns'],
@@ -235,14 +237,43 @@ async function runGroup({ user, theme, paths }) {
       try {
         await page.goto(BASE + path, { waitUntil: 'domcontentloaded', timeout: 15000 });
         await settle(page);
-        // Sections animate in on scroll; visit the bottom so they mount.
-        await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
-        await settle(page);
-        await page.evaluate(() => window.scrollTo(0, 0));
-        const res = await page.evaluate(AUDIT);
-        if (process.env.AUDIT_VERBOSE) console.log(`COUNT ${user} ${theme} ${path} ${res.checked}`);
-        checked += res.checked;
-        res.fails.forEach(f => all.push({ ...f, theme, user, path }));
+
+        // Measure the landing view, then every other tab panel. Without this
+        // the campaign pages are audited on their default tab only, which on
+        // /campaigns/:id is one of four — the other three (Reach, Audience,
+        // Advertising) carry most of the page's text and went unmeasured
+        // entirely. Tabs render one panel at a time, so each needs its own pass.
+        // Poll rather than reading the count once. settle() can go quiet while
+        // the page chrome is up but the tab strip is still mounting, and a
+        // single early read then reports "no tabs" and silently audits one
+        // panel — the exact failure this block exists to prevent. Bounded, so
+        // a genuinely tabless route costs 600ms, not a timeout.
+        let tabCount = 0;
+        for (let t = 0; t < 4 && tabCount === 0; t++) {
+          tabCount = await page.evaluate(() => document.querySelectorAll('[role="tab"]').length);
+          if (tabCount === 0) await page.waitForTimeout(200);
+        }
+        for (let i = 0; i < Math.max(1, tabCount); i++) {
+          let label = '';
+          if (tabCount > 0) {
+            label = await page.evaluate(n => {
+              const tab = document.querySelectorAll('[role="tab"]')[n];
+              if (!tab) return '';
+              tab.click();
+              return (tab.textContent ?? '').trim();
+            }, i);
+            await settle(page);
+          }
+          // Sections animate in on scroll; visit the bottom so they mount.
+          await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+          await settle(page);
+          await page.evaluate(() => window.scrollTo(0, 0));
+          const res = await page.evaluate(AUDIT);
+          const where = label ? `${path}#${label}` : path;
+          if (process.env.AUDIT_VERBOSE) console.log(`COUNT ${user} ${theme} ${where} ${res.checked}`);
+          checked += res.checked;
+          res.fails.forEach(f => all.push({ ...f, theme, user, path: where }));
+        }
       } catch (err) {
         console.log(`  ! ${user} ${path} [${theme}] — ${String(err).slice(0, 70)}`);
       }

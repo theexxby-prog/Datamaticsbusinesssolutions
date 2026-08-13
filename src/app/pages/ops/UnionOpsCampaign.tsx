@@ -26,6 +26,7 @@ import { DeliveryAcceptanceTab } from '../../components/ops/DeliveryAcceptanceTa
 import { ConnectionsPanel } from '../../components/ops/ConnectionsPanel';
 import { CampaignReachTab } from '../../components/campaign/CampaignReachTab';
 import { CampaignAudienceTab } from '../../components/campaign/CampaignAudienceTab';
+import { SyndicationPerformance } from '../../components/campaign/SyndicationPerformance';
 import { CampaignKpiBand } from '../../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../../components/campaign/CampaignAnalyticsTabs';
 import { CampaignProgrammaticTab } from '../../components/campaign/CampaignProgrammaticTab';
@@ -436,6 +437,13 @@ export default function UnionOpsCampaign() {
                 content: (
                   <div className="space-y-4" key={campaign.id}>
                     <DeliveryAcceptanceTab campaign={campaign} />
+                    {/* Same section the client sees, plus cost per lead — the
+                        publisher trade-off that decides what gets renewed. */}
+                    <SyndicationPerformance
+                      campaignId={campaign.id}
+                      totalLeads={campaign.deliveredLeads ?? campaign.totalLeads}
+                      opsView
+                    />
                     {campaign.deliverySchedule && campaign.deliverySchedule.length > 0 ? (
                       <DeliveryScheduleSection campaign={campaign} bare />
                     ) : (
