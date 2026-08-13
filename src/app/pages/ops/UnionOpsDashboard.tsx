@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router';
 import {
-  Eye, CircleCheck, AlertTriangle, ArrowRight, ClipboardList, RefreshCw,
+  Eye, AlertTriangle, ArrowRight, ClipboardList, RefreshCw, Plus,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
   integrationStatuses, campaignPipelines, opsTasks, useRelishJobs, jobsFor,
-  exceptionsFor, getMonthRollup, OPS_MONTH_LABEL,
+  adOnlyCampaigns, useCreatedCampaigns, CAMPAIGN_TYPES_META,
   type CampaignPipeline, type IntegrationStatus, type OpsTask,
 } from '../../data/unionOps';
+import { CampaignTypeChip } from '../../components/ops/CampaignTypeChip';
 import { PipelineStages } from '../../components/ops/PipelineStages';
 import { UNION_COMPANY } from '../../data/unionClient';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
@@ -64,16 +65,17 @@ function PipelineRow({
   return (
     <div className="glass-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <button onClick={() => onOpen(pipeline.campaignId)} className="flex items-center gap-2 text-left">
+        <button onClick={() => onOpen(pipeline.campaignId)} className="flex flex-wrap items-center gap-2 text-left">
           <span
             className="text-[14px] font-bold underline-offset-2 hover:underline"
             style={{ color: 'var(--color-text-primary)' }}
           >
             {pipeline.campaignName}
           </span>
+          <CampaignTypeChip type={pipeline.type} />
           <span
             className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
-            style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+            style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
           >
             #{pipeline.campaignId}
           </span>
@@ -171,15 +173,26 @@ export default function UnionOpsDashboard() {
             )}
           </p>
         </div>
-        <button
-          onClick={() => preview('/dashboard')}
-          className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
-        >
-          <Eye className="h-4 w-4" /> Preview client view
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => preview('/dashboard')}
+            className="btn-outline flex items-center gap-2 px-4 py-2 text-sm"
+          >
+            <Eye className="h-4 w-4" /> Preview client view
+          </button>
+          <button
+            onClick={() => navigate('/ops-union/campaigns/new')}
+            className="btn-primary flex items-center gap-2 px-4 py-2 text-sm"
+            data-testid="new-campaign"
+          >
+            <Plus className="h-4 w-4" /> New campaign
+          </button>
+        </div>
       </div>
 
       <HealthStrip />
+
+      <RecentlyCreated />
 
       <div className="flex items-center gap-2 pt-1">
         <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
@@ -198,62 +211,102 @@ export default function UnionOpsDashboard() {
             onPreview={id => preview(`/campaigns/${id}`)}
           />
         ))}
+        {/* Pure programmatic runs have no intake/QA/enrichment — they deliver
+            impressions and bill on them, so the row shows that shape. */}
+        {adOnlyCampaigns.map(c => (
+          <div key={c.campaignId} className="glass-card p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[14px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
+              <CampaignTypeChip type={c.type} />
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+              <span>
+                <b style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                  {c.impressionsDelivered.toLocaleString('en-US')}
+                </b>{' '}
+                of {c.impressionsTarget.toLocaleString('en-US')} impressions
+              </span>
+              <span><b style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>{c.clicks.toLocaleString('en-US')}</b> clicks</span>
+              <span>{c.cohorts} cohorts</span>
+            </div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--color-gray-100)' }}>
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${Math.min(100, Math.round((c.impressionsDelivered / c.impressionsTarget) * 100))}%`,
+                  background: 'var(--color-primary-solid)',
+                }}
+              />
+            </div>
+            <div className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>{c.note}</div>
+          </div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <div className="xl:col-span-2">
-          <TaskQueue />
-        </div>
-        <MonthRollupCard />
-      </div>
+      {/* The month roll-up card is gone on purpose: its one load-bearing
+          number (open QA exceptions) already lives in the CleanRich health
+          tile, and the board itself is the per-campaign truth. */}
+      <TaskQueue />
     </div>
   );
 }
 
-// Derived from the pipelines, so this card and the board can never disagree.
-function MonthRollupCard() {
+// Campaigns minted this session, newest first. They have no pipeline yet —
+// intake hasn't run — so they render as a compact strip above the board with
+// the minted ID front and centre, and a jump straight into data intake.
+function RecentlyCreated() {
   const navigate = useNavigate();
-  const rollup = getMonthRollup(useRelishJobs());
-  const rows: Array<{ label: string; value: string; tone?: string }> = [
-    { label: 'Rows ingested', value: rollup.rowsIngested.toLocaleString('en-US') },
-    { label: 'Sent to Relish', value: rollup.sentToRelish.toLocaleString('en-US') },
-    { label: 'Enriched briefings back', value: rollup.enrichedBack.toLocaleString('en-US') },
-    { label: 'Published to portal', value: rollup.publishedToPortal.toLocaleString('en-US') },
-    { label: 'QA pass rate', value: `${rollup.qaPassRatePct}%`, tone: 'var(--color-success)' },
-  ];
-
-  // The campaign carrying the most exceptions is where the work actually is.
-  const worst = [...campaignPipelines].sort(
-    (a, b) => exceptionsFor(b.campaignId).length - exceptionsFor(a.campaignId).length,
-  )[0];
+  const created = useCreatedCampaigns();
+  if (created.length === 0) return null;
 
   return (
-    <div className="glass-card flex flex-col p-4">
-      <h2 className="flex items-center gap-2 text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-        <CircleCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
-        {OPS_MONTH_LABEL}
+    <div className="space-y-2">
+      <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        Recently created
       </h2>
-      {/* Spreads through the slack rather than pooling it under the last row:
-          this card shares a row with the taller task queue, which sets the
-          height. */}
-      <div className="mt-2 flex flex-1 flex-col justify-around gap-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-        {rows.map(row => (
-          <div key={row.label} className="flex items-center justify-between">
-            <span>{row.label}</span>
-            <b style={{ color: row.tone ?? 'var(--color-text-primary)' }}>{row.value}</b>
+      {created.map(c => {
+        const meta = CAMPAIGN_TYPES_META.find(t => t.code === c.type);
+        return (
+          <div key={c.id} className="glass-card flex flex-wrap items-center gap-x-4 gap-y-2 p-4">
+            <div className="min-w-0 flex-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="font-mono text-[13px] font-bold" style={{ color: 'var(--color-primary)' }}>
+                  {c.id}
+                </span>
+                <span
+                  className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
+                  style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
+                >
+                  {meta?.label ?? c.type}
+                </span>
+              </div>
+              <div className="mt-0.5 truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                {c.name}
+              </div>
+              <div className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                {c.clientName} (<span className="font-mono">{c.clientId}</span>) · {c.startDate} → {c.endDate}
+                {c.targetLeads ? ` · ${c.targetLeads.toLocaleString('en-US')} leads` : ''}
+                {c.targetImpressions ? ` · ${c.targetImpressions.toLocaleString('en-US')} impressions` : ''}
+                {' · '}{c.createdLabel}
+              </div>
+              {/* Why creation exists (per Ben): aligning data to the campaign.
+                  Ad-bearing types surface their one pending alignment step. */}
+              {c.type !== 'CS' && (
+                <div className="text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+                  Awaiting Propensity link — the ad campaign's name must start with{' '}
+                  <span className="font-mono font-semibold">{c.id}</span>
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => navigate(`/ops-union/intake?campaign=${c.id}`)}
+              className="btn-outline inline-flex flex-shrink-0 items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold"
+            >
+              Start intake <ArrowRight className="h-3.5 w-3.5" />
+            </button>
           </div>
-        ))}
-        <button
-          onClick={() => navigate(`/ops-union/campaigns/${worst.campaignId}`)}
-          className="flex w-full items-center justify-between border-t pt-2 text-left transition-colors hover:text-[var(--color-primary)]"
-          style={{ borderColor: 'var(--color-border-light)' }}
-        >
-          <span>QA exceptions open</span>
-          <b style={{ color: rollup.openExceptions > 0 ? 'var(--color-warning)' : 'var(--color-success)' }}>
-            {rollup.openExceptions}
-          </b>
-        </button>
-      </div>
+        );
+      })}
     </div>
   );
 }

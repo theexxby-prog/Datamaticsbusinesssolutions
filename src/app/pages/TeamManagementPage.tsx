@@ -385,7 +385,7 @@ export default function TeamManagementPage() {
                 whileTap={{ scale: 0.98 }}
                 onClick={() => openModal('add-member')}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl"
-                style={{ background: 'var(--color-primary)', color: '#fff', fontWeight: 600, fontSize: '14px', border: 'none', cursor: 'pointer' }}
+                style={{ background: 'var(--color-primary-solid)', color: '#fff', fontWeight: 600, fontSize: '14px', border: 'none', cursor: 'pointer' }}
               >
                 <UserPlus className="w-4 h-4" />
                 Add Member

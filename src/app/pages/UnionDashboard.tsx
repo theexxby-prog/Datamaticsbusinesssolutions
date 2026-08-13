@@ -1,56 +1,73 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import {
-  Users, Layers, TrendingUp, TrendingDown, Sparkles, Radar, ArrowRight, AlertCircle,
-  FilePenLine, Receipt, FolderOpen, ListOrdered, FileBarChart, Megaphone, ClipboardList,
-  CalendarDays, Truck, LayoutGrid,
+  Layers, Sparkles, ArrowRight, AlertCircle, FilePenLine, ClipboardList,
+  TrendingDown, LayoutGrid, Truck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { unionClient, UNION_CLIENT_ID } from '../data/unionClient';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
 import { mockJobCards } from '../data/mockJobCards';
 import {
-  signalMeta, signalContacts, getSynthesis, getAccountsByReadiness,
-  getSignalContact, signalLeadId, getTriggerTimeline,
+  getAccountsByReadiness, getSignalContact, signalLeadId, getTriggerTimeline,
+  type SignalAccount,
 } from '../data/signalRoom';
-import { getAbmSummary } from '../data/propensity';
 import {
-  getLeadOutcomes, getCampaignForecasts, getUpcomingEvents, getAcceptanceTrend,
-  getPeriodStats, campaignTypeFor, hottestLeadFor, getAdDelivery, getPeopleReached,
-  type StatPeriod,
+  getLeadOutcomes, getCampaignForecasts, getUpcomingEvents, getPeriodStats,
+  campaignTypeFor, type StatPeriod,
 } from '../data/outcomes';
 import { useUnionPrefs } from '../config/unionPrefs';
+import { useDeliveryOverrides } from '../data/unionOps';
 import { mockLeads } from '../mockData';
-import { getAccountTeam } from '../data/mockClients';
-import { formatDate, formatDateShort } from '../utils/formatDate';
+import { formatDateShort } from '../utils/formatDate';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { formatMoney as fmtMoney } from '../utils/format';
 
 // ─── UNION dashboard ─────────────────────────────────────────────────────────
-// One compact view of the whole relationship: what needs attention right now,
-// the numbers, syndication campaign delivery, invoices & documents,
-// programmatic, and the enrichment intelligence — everything taps through to
-// its module. Dense by design; nothing here should need a second screen on
-// desktop beyond the signals feed.
+// This page answers three questions and then stops:
+//
+//   1. Am I getting what I paid for?   → the commitment band
+//   2. Does anything need me?          → exceptions, and only when true
+//   3. What is the best next move?     → campaigns + next moves
+//
+// Everything else belongs on its module page. A dashboard that summarises all
+// nine pages competes with all nine and wins against none — the previous
+// version carried ten sections, eighteen KPIs and twelve exits, and repeated
+// the same figures two and three times over. Anything the sidebar already
+// reaches in one click is not repeated here.
+//
+// Sizes come from the five-step scale in components.css (t-hero → t-micro).
+// Do not reintroduce ad-hoc px sizes: the eleven-size spread this page used to
+// carry is what made it read as noise.
 
-
-function PeriodPills({ period, onChange }: { period: StatPeriod; onChange: (p: StatPeriod) => void }) {
+/**
+ * One step of what became of the delivered leads. The hero above already states
+ * the delivered figure, so the progression starts at Accepted — printing
+ * "Delivered" again here would repeat a number that is 40px away, which is the
+ * habit this rewrite exists to break.
+ */
+function OutcomeStep({
+  label, value, money, pct, last,
+}: { label: string; value: number; money?: number; pct: number; last?: boolean }) {
   return (
-    <div className="mb-2.5 flex rounded-full p-0.5" style={{ background: 'var(--background-muted)' }} role="tablist">
-      {(['month', 'quarter', 'year'] as const).map(p => (
-        <button
-          key={p}
-          role="tab"
-          aria-selected={period === p}
-          onClick={() => onChange(p)}
-          className={`flex-1 rounded-full px-2 py-1 text-[10px] font-bold uppercase tracking-wide transition-colors ${
-            period === p ? 'text-white' : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
-          }`}
-          style={period === p ? { background: 'var(--gradient-primary)' } : undefined}
-        >
-          {p}
-        </button>
-      ))}
+    <div className="flex min-w-0 flex-1 flex-col gap-1">
+      <div className="flex items-baseline gap-1.5">
+        <span className="t-title t-num">{value.toLocaleString('en-US')}</span>
+        <span className="t-meta t-num">{pct}%</span>
+        {money !== undefined && (
+          <span className="t-meta" style={{ color: 'var(--color-success)' }}>{fmtMoney(money)}</span>
+        )}
+      </div>
+      <span className="t-micro truncate">{label}</span>
+      <span className="h-1 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+        <span
+          className="block h-full rounded-full"
+          style={{
+            width: `${Math.max(2, pct)}%`,
+            background: last ? 'var(--color-success)' : 'var(--color-progress)',
+          }}
+        />
+      </span>
     </div>
   );
 }
@@ -59,655 +76,296 @@ export default function UnionDashboard() {
   useDocumentTitle('Dashboard');
   const navigate = useNavigate();
   const { currentUser } = useAuth();
-
-  // ── Relationship data (same sources the module pages use) ──────────────────
-  const client = unionClient;
-  const campaigns = client?.campaigns ?? [];
-  const activeCampaigns = campaigns.filter(c => c.status === 'active').length;
-  const leadsThisMonth = campaigns.reduce((sum, c) => sum + (c.leadsThisMonth ?? 0), 0);
   const prefs = useUnionPrefs();
+
   const [period, setPeriod] = useState<StatPeriod>('month');
-  const periodStats = getPeriodStats(period);
-  const outcomes = getLeadOutcomes(periodStats.leads);
-  const adDelivery = getAdDelivery();
-  const forecasts = getCampaignForecasts();
+  // Ops-entered delivery/acceptance figures flow into every count on this page.
+  const deliveryOverrides = useDeliveryOverrides();
+  const stats = getPeriodStats(period, deliveryOverrides);
+  const outcomes = getLeadOutcomes(stats.leads);
+
+  const forecasts = getCampaignForecasts(deliveryOverrides);
+  // Reads every campaign, not the slice rendered below, so one cannot slip out
+  // of the warning by falling off the list.
   const atRiskForecast = forecasts.find(f => f.atRisk);
-  // The dashboard shows the five most recently touched; /campaigns has the full
-  // list with search and filters. atRiskForecast above still reads the whole set,
-  // so a campaign slipping out of this slice can't slip out of the warning.
   const recentForecasts = [...forecasts]
     .sort((a, b) => Date.parse(b.campaign.lastActivity) - Date.parse(a.campaign.lastActivity))
     .slice(0, 5);
+
+  const nextDelivery = getUpcomingEvents().find(e => e.kind === 'delivery');
+
   const pendingLeads = mockLeads.filter(l => l.status === 'Pending Review').length;
-  const upcoming = getUpcomingEvents();
-  const acceptanceTrend = getAcceptanceTrend();
-  const team = getAccountTeam('client_1');
-
-  const myInvoices = mockInvoiceRecords.filter(i => i.clientId === UNION_CLIENT_ID);
-  const overdueInvoices = myInvoices.filter(i => i.stage === 'overdue');
-  const dueInvoices = myInvoices.filter(i => i.stage === 'sent');
-  const openTotal = [...overdueInvoices, ...dueInvoices].reduce((s, i) => s + i.total, 0);
-  const topOverdue = overdueInvoices[0];
-  const latestInvoices = [...overdueInvoices, ...dueInvoices].slice(0, 2);
-
-  const pendingSignatures = mockJobCards.filter(
+  const topOverdue = mockInvoiceRecords.find(i => i.clientId === UNION_CLIENT_ID && i.stage === 'overdue');
+  const topSignature = mockJobCards.find(
     c => c.clientCompany === currentUser?.company && c.type === 'client_signature' && c.stage === 'sent_for_signature',
   );
-  const topSignature = pendingSignatures[0];
 
-  // ── Programmatic + intelligence ────────────────────────────────────────────
-  const abm = getAbmSummary();
-  const abmSpend = abm.reduce((s, c) => s + c.spendToDate, 0);
-  const abmEngaged = abm.reduce((s, c) => s + c.engagedAccounts, 0);
-
-  const ranked = getAccountsByReadiness();
-  const latestTrigger = getTriggerTimeline()[0];
-  // First resolvable step per account — sequences can name contacts outside
-  // the enriched sample, so resolve before ranking/numbering.
-  const nextActions = ranked
-    .map(({ account, insight }) => {
-      const step = insight.sequence.find(s => getSignalContact(s.contactId));
-      const person = step ? getSignalContact(step.contactId) : undefined;
-      return person ? { account, person } : null;
-    })
-    .filter((x): x is NonNullable<typeof x> => Boolean(x))
-    .slice(0, 3);
-  const topAction = nextActions[0];
-
-  const hour = new Date().getHours();
-  const greeting = hour < 12 ? 'Good morning' : hour < 17 ? 'Good afternoon' : 'Good evening';
-  const today = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
-
-  // ── Needs attention — the few things that matter right now ─────────────────
-  const attention = [
+  // ── Question 2: does anything need me? ─────────────────────────────────────
+  // Exceptions only — things that are wrong or owed. Opportunities live in
+  // Next moves. This is the single place an exception appears on the page; the
+  // sections below deliberately do not restate them. When nothing is wrong the
+  // strip does not render at all, which is what makes its presence meaningful.
+  const exceptions = [
     pendingLeads > 0 && {
-      icon: ClipboardList, tone: 'var(--color-primary)', bg: 'var(--color-primary-tint)',
-      label: 'Leads awaiting review',
-      text: `${pendingLeads} lead${pendingLeads === 1 ? '' : 's'} pending your accept/reject`,
+      key: 'leads', icon: ClipboardList, tone: 'var(--color-primary)',
+      label: 'Awaiting your review',
+      text: `${pendingLeads} lead${pendingLeads === 1 ? '' : 's'} to accept or reject`,
       go: () => navigate('/leads?status=Pending%20Review&data=all'),
     },
+    atRiskForecast && {
+      key: 'pace', icon: TrendingDown, tone: 'var(--color-warning)',
+      label: 'Delivery at risk',
+      text: `${atRiskForecast.campaign.name} — projected ${atRiskForecast.projected.toLocaleString('en-US')} of ${atRiskForecast.target.toLocaleString('en-US')}`,
+      go: () => navigate(`/campaigns/${atRiskForecast.campaign.id}`),
+    },
     topOverdue && {
-      icon: AlertCircle, tone: 'var(--color-error)', bg: 'rgba(239,68,68,0.07)',
-      label: 'Overdue invoice',
+      key: 'invoice', icon: AlertCircle, tone: 'var(--color-error)',
+      label: 'Invoice overdue',
       text: `${topOverdue.invoiceNumber} · ${fmtMoney(topOverdue.total)}`,
       go: () => navigate('/invoices'),
     },
     topSignature && {
-      icon: FilePenLine, tone: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)',
+      key: 'sign', icon: FilePenLine, tone: 'var(--color-warning)',
       label: 'Signature required',
-      text: `${topSignature.id} · ${topSignature.campaignName}`,
+      text: topSignature.campaignName,
       go: () => navigate('/documents'),
-    },
-    atRiskForecast && {
-      icon: TrendingDown, tone: 'var(--color-warning)', bg: 'rgba(217,119,6,0.08)',
-      label: 'Delivery at risk',
-      text: `${atRiskForecast.campaign.name} · projected ${atRiskForecast.projected} of ${atRiskForecast.target}`,
-      go: () => navigate(`/campaigns/${atRiskForecast.campaign.id}`),
-    },
-    latestTrigger && {
-      icon: Megaphone, tone: 'var(--color-info)', bg: 'rgba(8,145,178,0.08)',
-      label: `Fresh signal · ${latestTrigger.account.name}`,
-      text: latestTrigger.text,
-      go: () => navigate(`/leads/account/${latestTrigger.account.slug}`),
-    },
-    topAction && {
-      icon: ListOrdered, tone: 'var(--color-primary)', bg: 'var(--color-primary-tint)',
-      label: 'Next best action',
-      text: `Engage ${topAction.person.name} · ${topAction.account.name}`,
-      go: () => navigate(`/leads/${signalLeadId(topAction.person.id)}`),
     },
   ].filter((x): x is NonNullable<typeof x> => Boolean(x));
 
-  const allWidgetsOff = Object.values(prefs.widgets).every(on => !on);
+  // ── Question 3: what is the best next move? ────────────────────────────────
+  // One list, not two. "Top accounts" and "fresh signals" were separate cards
+  // saying the same thing from two angles; an account, the person to contact
+  // and the reason to call now belong on one row.
+  const triggers = getTriggerTimeline();
+  const newestFor = (account: SignalAccount) => triggers.find(t => t.account.slug === account.slug);
+  const nextMoves = getAccountsByReadiness()
+    .map(({ account, insight }) => {
+      const step = insight.sequence.find(s => getSignalContact(s.contactId));
+      const person = step ? getSignalContact(step.contactId) : undefined;
+      return person ? { account, person, trigger: newestFor(account) } : null;
+    })
+    .filter((x): x is NonNullable<typeof x> => Boolean(x))
+    .slice(0, 4);
 
-  // ── Widget grid spans ──────────────────────────────────────────────────────
-  // Six cards share one 3-column grid and every one of them is independently
-  // switchable in Account settings. Hardcoding the spans only fills the rows for
-  // the default combination: turn on Invoices & documents, say, and the last
-  // card can no longer fit beside it, so it wraps and leaves two empty columns
-  // sitting mid-page — a hole, not a trailing gap.
-  //
-  // Instead each card takes its natural span and the *last* rendered one absorbs
-  // whatever is left of its row (a whole row if it starts a fresh one). Every
-  // combination ends flush.
-  const GRID_COLS = 3;
-  const NATURAL_SPAN: Partial<Record<keyof typeof prefs.widgets, number>> = { campaigns: 2 };
-  const SPAN_CLASS: Record<number, string> = { 1: '', 2: 'xl:col-span-2', 3: 'xl:col-span-3' };
-  const gridWidgets = (['campaigns', 'outcomes', 'invoicesDocs', 'programmatic', 'leadsIntel', 'freshSignals'] as const)
-    .filter(key => prefs.widgets[key]);
-  const spanClass: Partial<Record<(typeof gridWidgets)[number], string>> = {};
-  let cellsUsed = 0;
-  gridWidgets.forEach((key, i) => {
-    const remainder = (GRID_COLS - (cellsUsed % GRID_COLS)) % GRID_COLS;
-    const span = i === gridWidgets.length - 1 ? remainder || GRID_COLS : NATURAL_SPAN[key] ?? 1;
-    spanClass[key] = SPAN_CLASS[span];
-    cellsUsed += span;
-  });
+  // Billed-to-date across FY26. stats.billed is period-scoped and stats.remainingYear
+  // is not, so deriving the annual figure from the annual pair keeps the line honest.
+  const billedYear = Math.max(0, stats.contracted - stats.remainingYear);
+  const committedPct = stats.contracted > 0
+    ? Math.min(100, Math.round((billedYear / stats.contracted) * 100))
+    : 0;
+  const pctOf = (n: number) => Math.round((n / Math.max(outcomes.delivered, 1)) * 100);
+
+  const showCampaigns = prefs.widgets.campaigns;
+  const showNextMoves = prefs.widgets.leadsIntel;
+  const allOff = !prefs.widgets.stats && !showCampaigns && !showNextMoves;
 
   return (
-    <div className="max-w-[1600px] mx-auto page-content space-y-4">
-      {/* Greeting */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div className="flex items-center gap-3">
-          <div
-            className="flex h-10 w-10 flex-shrink-0 select-none items-center justify-center rounded-xl text-sm font-bold text-white"
-            style={{ background: 'var(--gradient-primary)' }}
-          >
-            {currentUser?.name?.slice(0, 1) ?? 'U'}
-          </div>
-          <div>
-            <div className="text-[17px] font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
-              {greeting}, {currentUser?.name}
-            </div>
-            <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
-              {currentUser?.company} · {today}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Every section hidden — point at the switch that brings them back */}
-      {allWidgetsOff && (
-        <div
-          className="glass-card flex flex-col items-center gap-2 p-10 text-center"
-          data-testid="dashboard-empty-state"
-        >
+    <div className="max-w-[1240px] mx-auto page-content space-y-4">
+      {allOff && (
+        <div className="glass-card flex flex-col items-center gap-2 p-10 text-center" data-testid="dashboard-empty-state">
           <LayoutGrid className="h-8 w-8" style={{ color: 'var(--color-text-muted)' }} />
-          <div className="text-[15px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-            All dashboard sections are hidden
-          </div>
-          <p className="max-w-sm text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-            Turn sections back on in Account settings — each one has a switch under the Dashboard tab.
-          </p>
+          <div className="t-title">All dashboard sections are hidden</div>
+          <p className="t-body max-w-sm">Turn sections back on under the Dashboard tab in Account settings.</p>
           <button onClick={() => navigate('/account?tab=dashboard')} className="btn-primary mt-1 px-4 py-2 text-sm">
             Open dashboard settings
           </button>
         </div>
       )}
 
-      {/* Needs attention — off by default per Ben; toggleable in Account settings */}
-      {prefs.widgets.attention && attention.length > 0 && (
-        <div className="-mx-4 flex snap-x gap-2.5 overflow-x-auto px-4 pb-1 md:mx-0 md:grid md:grid-cols-2 md:px-0 md:pb-0 xl:flex xl:overflow-visible">
-          {attention.map(item => {
-            const Icon = item.icon;
-            return (
-              <button
-                key={item.label}
-                onClick={item.go}
-                className="flex min-w-[240px] flex-shrink-0 snap-start items-start gap-2.5 rounded-xl border p-3 text-left transition-all hover:shadow-md md:min-w-0 xl:flex-1"
-                style={{ borderColor: 'var(--color-border-light)', background: item.bg }}
-              >
-                <Icon className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: item.tone }} />
-                <span className="min-w-0">
-                  <span className="block text-[11px] font-bold uppercase tracking-wide" style={{ color: item.tone }}>
-                    {item.label}
-                  </span>
-                  <span className="mt-0.5 line-clamp-2 block text-[12.5px] font-medium leading-snug" style={{ color: 'var(--color-text-primary)' }}>
-                    {item.text}
-                  </span>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      )}
-
-      {/* Key numbers — three boxes, one synced Month/Quarter/Year period */}
+      {/* ── Question 1: am I getting what I paid for? ────────────────────────
+          One band. This replaced three KPI tiles and a five-row funnel that
+          between them printed the delivered figure twice — the funnel's first
+          row was literally the leads tile, re-derived. */}
       {prefs.widgets.stats && (
-        <div>
-          <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3 stagger-children">
-            <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
-              <PeriodPills period={period} onChange={setPeriod} />
-              <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.activeCampaigns}</div>
-              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Total campaigns</div>
-            </div>
-            <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
-              <PeriodPills period={period} onChange={setPeriod} />
-              <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '1px' }}>{periodStats.leads.toLocaleString('en-US')}</div>
-              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Leads this {period}</div>
-            </div>
-            <div className="kpi-card animate-slideInUp" style={{ padding: '12px 14px' }}>
-              <PeriodPills period={period} onChange={setPeriod} />
-              <div className="flex items-baseline gap-1.5">
-                <span className="kpi-card__number" style={{ fontSize: '20px', marginBottom: 0 }}>{fmtMoney(periodStats.billed)}</span>
-                <span className="text-[10px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-                  of {fmtMoney(periodStats.contracted)} contracted
-                </span>
+        <div className="glass-card p-5">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <div className="flex items-baseline gap-2">
+                <span className="t-hero">{outcomes.delivered.toLocaleString('en-US')}</span>
+                <span className="t-body">leads delivered this {period}</span>
               </div>
-              <div className="kpi-card__label" style={{ fontSize: '10px', marginTop: 0 }}>Billables</div>
-              <div className="mt-1.5 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                <div
-                  className="h-full rounded-full"
-                  style={{ width: `${Math.min(100, Math.round((periodStats.billed / periodStats.contracted) * 100))}%`, background: 'var(--gradient-primary)' }}
-                />
+              {/* The commitment is annual and stays annual, whatever the period
+                  switcher is showing. `contracted` is always FY26_COMMITMENT
+                  while `billed` is period-scoped, so pairing the two read as
+                  "$0 billed of $148,000 contracted" early in a month — a true
+                  pair of numbers that together stated something false. */}
+              <div className="t-meta mt-1.5">
+                {fmtMoney(billedYear)} billed of {fmtMoney(stats.contracted)} committed for FY26
+                <span className="mx-1.5" aria-hidden="true">·</span>
+                <span style={{ color: 'var(--color-success)' }}>{fmtMoney(stats.remainingYear)} remaining</span>
               </div>
-              <div className="mt-1 text-[10px] font-semibold" style={{ color: 'var(--color-success)' }}>
-                {fmtMoney(periodStats.remainingYear)} remaining on the FY26 commitment
+              <div className="mt-2 h-1.5 w-full max-w-[420px] overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+                <div className="h-full rounded-full" style={{ width: `${committedPct}%`, background: 'var(--color-progress)' }} />
               </div>
             </div>
+
+            {/* One period control for the whole band. There used to be three,
+                each rendering the same switcher bound to the same state. */}
+            <div className="flex rounded-full p-0.5" style={{ background: 'var(--background-muted)' }} role="tablist">
+              {(['month', 'quarter', 'year'] as const).map(p => (
+                <button
+                  key={p}
+                  role="tab"
+                  aria-selected={period === p}
+                  onClick={() => setPeriod(p)}
+                  className={`t-micro rounded-full px-3 py-1.5 transition-colors ${
+                    period === p ? 'text-white' : 'hover:text-[var(--color-text-primary)]'
+                  }`}
+                  style={period === p ? { background: 'var(--gradient-primary)', color: '#fff' } : undefined}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* What happened to those leads. Four steps, not five: "synced to
+              CRM" is plumbing rather than an outcome, and opportunities now
+              carry their own pipeline value instead of it being a separate
+              headline number. */}
+          <div className="mt-4 flex flex-wrap gap-x-5 gap-y-3 border-t pt-3.5" style={{ borderColor: 'var(--color-border-light)' }}>
+            <OutcomeStep label="Accepted" value={outcomes.accepted} pct={pctOf(outcomes.accepted)} />
+            <OutcomeStep label="Opportunities" value={outcomes.opportunities} money={outcomes.pipelineValue} pct={pctOf(outcomes.opportunities)} />
+            <OutcomeStep label="Closed-won" value={outcomes.closedWon} money={outcomes.wonValue} pct={pctOf(outcomes.closedWon)} last />
           </div>
         </div>
       )}
 
-      {/* What we're delivering — campaigns first, everything else around it */}
-      <div className="grid grid-cols-1 gap-3 xl:grid-cols-3">
-        {prefs.widgets.campaigns && (<>
-        {/* Content syndication campaigns */}
-        <div className={`glass-card p-4 ${spanClass.campaigns ?? ''}`}>
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Campaigns
-              <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-                latest {recentForecasts.length}
-              </span>
-            </h3>
-            <button onClick={() => navigate('/campaigns')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              All {forecasts.length} <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          <div className="space-y-2.5">
-            {recentForecasts.map(({ campaign: c, target, delivered, projected, projectedPct, atRisk }) => {
-              const pct = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
-              const active = c.status === 'active';
-              return (
-                <button
-                  key={c.id}
-                  onClick={() => navigate(`/campaigns/${c.id}`)}
-                  className="w-full rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
-                >
-                  <div className="mb-1 flex items-center justify-between gap-2">
-                    <span className="flex min-w-0 items-center gap-1.5">
-                      <span className="truncate text-[12.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
-                      <span
-                        className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide"
-                        style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
-                      >
-                        {campaignTypeFor(c.id)}
-                      </span>
-                    </span>
-                    <span className="flex-shrink-0 text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
-                      {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')}
-                    </span>
-                  </div>
-                  <div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                    <div className="h-full rounded-full" style={{ width: `${pct}%`, background: c.status === 'completed' ? 'var(--color-text-muted)' : 'var(--gradient-primary)' }} />
-                  </div>
-                  <div className="mt-1 flex items-center justify-between gap-2 text-[10.5px] font-semibold">
-                    {/* Not-active covers two opposite states. Before there were
-                        only active campaigns seeded, so everything non-active
-                        fell through to "Flight complete" — which read as done on
-                        a campaign that has not started. */}
-                    <span style={{ color: c.status === 'pending_approval' ? 'var(--color-warning)' : !active ? 'var(--color-text-muted)' : atRisk ? 'var(--color-warning)' : 'var(--color-success)' }}>
-                      {c.status === 'pending_approval'
-                        ? 'Awaiting approval · not yet live'
-                        : !active
-                        ? 'Flight complete'
-                        : atRisk
-                          ? `At risk · projected ${projected.toLocaleString('en-US')} of ${target.toLocaleString('en-US')}`
-                          : `On pace · ${projected.toLocaleString('en-US')} by ${formatDateShort(c.endDate ?? '')}`}
-                    </span>
-                    {active && (
-                      <span style={{ color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>{projectedPct}% of goal</span>
-                    )}
-                  </div>
-                  {(() => {
-                    const hot = hottestLeadFor(c.id);
-                    return hot ? (
-                      <div className="mt-0.5 truncate text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
-                        Hottest lead · <span style={{ color: 'var(--color-text-secondary)', fontWeight: 600 }}>{hot.name}</span> · {hot.company}
-                      </div>
-                    ) : null;
-                  })()}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-        </>)}
-        {prefs.widgets.outcomes && (<>
-        {/* Lead outcomes — what happened after delivery */}
-        <div className={`glass-card flex flex-col p-4 ${spanClass.outcomes ?? ''}`}>
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <TrendingUp className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Lead outcomes
-            </h3>
-            <button onClick={() => navigate('/reports')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Reports <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          <div className="mb-2.5 flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
-            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(outcomes.pipelineValue)}</span>
-            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-              pipeline influenced · {fmtMoney(outcomes.wonValue)} closed-won
-            </span>
-          </div>
-          {/* Grows into the slack: this card sits beside the taller Campaigns
-              card, and without this the extra height pooled as dead space under
-              the last row instead of breathing through the funnel. */}
-          <div className="flex flex-1 flex-col justify-around gap-1.5">
-            {([
-              ['Delivered', outcomes.delivered],
-              ['Accepted', outcomes.accepted],
-              ['Synced to CRM', outcomes.synced],
-              ['Opportunities', outcomes.opportunities],
-              ['Closed-won', outcomes.closedWon],
-            ] as const).map(([label, value]) => {
-              const pct = Math.max(2, Math.round((value / Math.max(outcomes.delivered, 1)) * 100));
-              return (
-                <div key={label} className="flex items-center gap-2">
-                  <span className="w-[92px] flex-shrink-0 text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
-                    {label}
-                  </span>
-                  <span className="h-2 flex-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                    <span className="block h-full rounded-full" style={{ width: `${pct}%`, background: 'var(--gradient-primary)' }} />
-                  </span>
-                  <span className="w-[78px] flex-shrink-0 text-right text-[11.5px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                    {value.toLocaleString('en-US')}
-                    <span className="ml-1 font-semibold" style={{ color: 'var(--color-text-muted)' }}>{pct}%</span>
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-2 flex flex-wrap gap-x-2 gap-y-1 text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
-            <span>{adDelivery.impressions.toLocaleString('en-US')} impressions delivered</span>
-            <span style={{ color: 'var(--color-text-muted)' }}>·</span>
-            <span>{adDelivery.clicks.toLocaleString('en-US')} ad clicks</span>
-          </div>
-          <div className="mt-2.5 flex items-center justify-between gap-2 border-t pt-2" style={{ borderColor: 'var(--color-border-light)' }}>
-            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-              Acceptance rate · 6 mo
-            </span>
-            <span className="flex items-center gap-2">
-              <svg width="90" height="24" viewBox="0 0 90 24" aria-hidden="true">
-                <polyline
-                  fill="none"
-                  stroke="var(--color-success)"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  points={acceptanceTrend
-                    .map((pt, i) => `${4 + (i * 82) / (acceptanceTrend.length - 1)},${20 - ((pt.value - 94.5) / 3) * 16}`)
-                    .join(' ')}
-                />
-              </svg>
-              <span className="rounded-full px-2 py-0.5 text-[11px] font-bold" style={{ background: 'var(--color-success-bg)', color: 'var(--color-success)' }}>
-                {acceptanceTrend[acceptanceTrend.length - 1].value}%
-              </span>
-            </span>
-          </div>
-          <p className="mt-2 text-[10.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Reported back through your CRM sync · updated daily
-          </p>
-        </div>
-        </>)}
-        {prefs.widgets.invoicesDocs && (<>
-        {/* Invoices & documents */}
-        <div className={`glass-card p-4 ${spanClass.invoicesDocs ?? ''}`}>
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <Receipt className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Invoices &amp; documents
-            </h3>
-            <button onClick={() => navigate('/invoices')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Invoices <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          <div className="mb-2.5 flex items-baseline gap-2">
-            <span className="text-xl font-extrabold" style={{ color: 'var(--color-text-primary)' }}>{fmtMoney(openTotal)}</span>
-            <span className="text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
-              outstanding · {overdueInvoices.length} overdue
-            </span>
-          </div>
-          <div className="space-y-1.5">
-            {latestInvoices.map(inv => (
-              <button
-                key={inv.id}
-                onClick={() => navigate('/invoices')}
-                className="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
-              >
-                <span className="truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>{inv.invoiceNumber}</span>
-                <span className="flex flex-shrink-0 items-center gap-2 text-[12px]" style={{ fontVariantNumeric: 'tabular-nums' }}>
-                  <span style={{ color: 'var(--color-text-secondary)' }}>{fmtMoney(inv.total)}</span>
-                  <span
-                    className="rounded-full px-1.5 py-0.5 text-[10px] font-bold"
-                    style={inv.stage === 'overdue'
-                      ? { background: 'rgba(239,68,68,0.10)', color: 'var(--color-error)' }
-                      : { background: 'rgba(217,119,6,0.10)', color: 'var(--color-warning)' }}
-                  >
-                    {inv.stage === 'overdue' ? 'Overdue' : `Due ${formatDateShort(inv.dueDate)}`}
-                  </span>
-                </span>
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-5">
+        {/* Campaigns — the product itself, so it gets the larger share */}
+        {showCampaigns && (
+          <div className={`glass-card p-5 ${showNextMoves ? 'lg:col-span-3' : 'lg:col-span-5'}`}>
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="t-title flex items-center gap-2">
+                <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+                Campaigns
+              </h2>
+              <button onClick={() => navigate('/campaigns')} className="t-meta hover:underline" style={{ color: 'var(--color-primary)' }}>
+                All {forecasts.length} <ArrowRight className="ml-0.5 inline h-3 w-3" />
               </button>
-            ))}
-            <button
-              onClick={() => navigate('/documents')}
-              className="flex w-full items-center justify-between gap-2 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
-            >
-              <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                <FolderOpen className="h-3.5 w-3.5" style={{ color: 'var(--color-text-muted)' }} />
-                Documents
-              </span>
-              <span className="text-[11px] font-semibold" style={{ color: pendingSignatures.length ? 'var(--color-warning)' : 'var(--color-text-muted)' }}>
-                {pendingSignatures.length ? `${pendingSignatures.length} awaiting signature` : 'All signed'}
-              </span>
-            </button>
-          </div>
-        </div>
-        </>)}
-        {prefs.widgets.programmatic && (<>
-        {/* Programmatic mini */}
-        <div className={`glass-card p-4 ${spanClass.programmatic ?? ''}`}>
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <Radar className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Programmatic ABM
-            </h3>
-            <button onClick={() => navigate('/campaigns')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Open <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          <div className="grid grid-cols-3 gap-2 text-center">
-            {[
-              { value: fmtMoney(abmSpend), label: 'Spend to date' },
-              // Blended ROI pulled from the client render pending a methodology
-              // review — people reached takes its place, per Ben.
-              { value: getPeopleReached().toLocaleString('en-US'), label: 'People reached' },
-              { value: String(abmEngaged), label: 'Accounts engaged' },
-            ].map(x => (
-              <div key={x.label} className="rounded-xl border p-2.5" style={{ borderColor: 'var(--color-border-light)' }}>
-                <div className="text-[15px] font-extrabold leading-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>{x.value}</div>
-                <div className="mt-0.5 text-[10px] font-semibold leading-tight" style={{ color: 'var(--color-text-muted)' }}>{x.label}</div>
-              </div>
-            ))}
-          </div>
-          <p className="mt-2.5 text-[11px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
-            {abm.length} ABM campaigns give your syndication programs air cover — spend, reach and engaged accounts read as one story.
-          </p>
-        </div>
-        </>)}
-        {prefs.widgets.leadsIntel && (<>
-        {/* Accounts & next actions */}
-        <div className={`glass-card p-4 ${spanClass.leadsIntel ?? ''}`}>
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <Sparkles className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Leads · {signalMeta.rows} of {signalMeta.sampleOf} enriched
-            </h3>
-            <button onClick={() => navigate('/leads')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Leads <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          {/* Across the full width the accounts list earns the larger share —
-              two equal columns left its industry text truncating while the
-              actions column ran mostly empty. */}
-          <div className={prefs.widgets.freshSignals ? '' : 'md:grid md:grid-cols-[1.6fr_1fr] md:gap-6'}>
-          <div className="space-y-0.5">
-            {ranked.slice(0, 4).map(({ account, insight }) => (
-              <button
-                key={account.slug}
-                onClick={() => navigate(`/leads/account/${account.slug}`)}
-                className="flex w-full items-center gap-3 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
-              >
-                <span className="min-w-0 flex-1 truncate text-[12.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                  {account.name}
-                </span>
-                {prefs.derivedIntel ? (
-                  <>
-                    <span className="h-1.5 w-20 flex-shrink-0 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                      <span className="block h-full rounded-full" style={{ width: `${insight.readiness}%`, background: 'var(--gradient-primary)' }} />
-                    </span>
-                    <span className="w-7 flex-shrink-0 text-right text-[13px] font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
-                      {insight.readiness}
-                    </span>
-                  </>
-                ) : (
-                  <span className="max-w-[45%] flex-shrink-0 truncate text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
-                    {account.industry}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-          <div className={prefs.widgets.freshSignals ? 'mt-2.5 border-t pt-2.5' : 'mt-2.5 border-t pt-2.5 md:mt-0 md:border-0 md:pt-0'} style={{ borderColor: 'var(--color-border-light)' }}>
-            <div className="mb-1.5 flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
-              <ListOrdered className="h-3.5 w-3.5" /> Next best actions
             </div>
-            <div className="space-y-0.5">
-              {nextActions.map(({ account, person }, index) => {
+
+            {nextDelivery && (
+              <p className="t-meta mb-3 inline-flex items-center gap-1.5">
+                <Truck className="h-3.5 w-3.5" style={{ color: 'var(--color-success)' }} />
+                Next delivery {formatDateShort(nextDelivery.date)} · {nextDelivery.sub}
+              </p>
+            )}
+
+            <div className="space-y-3">
+              {recentForecasts.map(({ campaign: c, target, delivered, projected, atRisk }) => {
+                const pct = target > 0 ? Math.min(100, Math.round((delivered / target) * 100)) : 0;
+                const active = c.status === 'active';
+                const pace = c.status === 'pending_approval'
+                  ? 'Awaiting approval'
+                  : !active
+                    ? 'Flight complete'
+                    : atRisk
+                      ? `At risk · ${projected.toLocaleString('en-US')} projected`
+                      : `On pace · ${projected.toLocaleString('en-US')} by ${formatDateShort(c.endDate ?? '')}`;
+                const paceTone = c.status === 'pending_approval'
+                  ? 'var(--color-warning)'
+                  : !active ? 'var(--color-text-muted)'
+                  : atRisk ? 'var(--color-warning)' : 'var(--color-success)';
                 return (
                   <button
-                    key={account.slug}
-                    onClick={() => navigate(`/leads/${signalLeadId(person.id)}`)}
-                    className="flex w-full items-center gap-2 rounded-lg px-2 py-1 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
+                    key={c.id}
+                    onClick={() => navigate(`/campaigns/${c.id}`)}
+                    className="block w-full rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
                   >
-                    <span
-                      className="flex h-4.5 w-4.5 min-h-[18px] min-w-[18px] flex-shrink-0 items-center justify-center rounded-full text-[10px] font-extrabold text-white"
-                      style={{ background: 'var(--gradient-primary)' }}
-                    >
-                      {index + 1}
-                    </span>
-                    <span className="truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
-                      {person.name}
-                      <span className="ml-1.5 text-[11px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{account.name}</span>
-                    </span>
+                    <div className="mb-1.5 flex items-center justify-between gap-2">
+                      <span className="flex min-w-0 items-center gap-2">
+                        <span className="t-body truncate font-semibold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
+                        <span
+                          className="t-micro flex-shrink-0 rounded-full px-1.5 py-0.5"
+                          style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
+                        >
+                          {campaignTypeFor(c.id)}
+                        </span>
+                      </span>
+                      <span className="t-meta t-num flex-shrink-0">
+                        {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')}
+                      </span>
+                    </div>
+                    <div className="h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+                      <div
+                        className="h-full rounded-full"
+                        style={{ width: `${pct}%`, background: c.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-progress)' }}
+                      />
+                    </div>
+                    <span className="t-meta mt-1 block" style={{ color: paceTone }}>{pace}</span>
                   </button>
                 );
               })}
             </div>
           </div>
-          </div>
-        </div>
-        </>)}
-        {prefs.widgets.freshSignals && (<>
-        {/* Fresh signals */}
-        <div className={`glass-card p-4 ${spanClass.freshSignals ?? ''}`}>
-          <div className="mb-2.5 flex items-center justify-between gap-2">
-            <h3 className="flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
-              <FileBarChart className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-              Fresh signals
-            </h3>
-            <button onClick={() => navigate('/leads')} className="text-xs font-semibold hover:underline" style={{ color: 'var(--color-primary)' }}>
-              Timeline <ArrowRight className="ml-0.5 inline h-3 w-3" />
-            </button>
-          </div>
-          <div className="space-y-1">
-            {getTriggerTimeline().slice(0, 5).map(item => (
-              <button
-                key={`${item.account.slug}-${item.date}-${item.text.slice(0, 16)}`}
-                onClick={() => navigate(`/leads/account/${item.account.slug}`)}
-                className="flex w-full items-start gap-2.5 rounded-lg px-2 py-1.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
-              >
-                <span className="mt-0.5 w-[46px] flex-shrink-0 text-[10.5px] font-semibold" style={{ color: 'var(--color-text-muted)', fontVariantNumeric: 'tabular-nums' }}>
-                  {formatDateShort(item.date)}
-                </span>
-                <span className="min-w-0">
-                  <span className="block truncate text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-                    {item.account.name}
-                    {item.kind && (
-                      <span className="ml-1.5 rounded px-1 py-px text-[9.5px] font-bold uppercase" style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}>
-                        {item.kind}
+        )}
+
+        {/* Next moves — one row per account: who to call and why now */}
+        {showNextMoves && (
+          <div className={`glass-card p-5 ${showCampaigns ? 'lg:col-span-2' : 'lg:col-span-5'}`}>
+            <div className="mb-3 flex items-center justify-between gap-2">
+              <h2 className="t-title flex items-center gap-2">
+                <Sparkles className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+                Next moves
+              </h2>
+              <button onClick={() => navigate('/leads')} className="t-meta hover:underline" style={{ color: 'var(--color-primary)' }}>
+                Leads <ArrowRight className="ml-0.5 inline h-3 w-3" />
+              </button>
+            </div>
+            <div className="space-y-1">
+              {nextMoves.map(({ account, person, trigger }, index) => (
+                <button
+                  key={account.slug}
+                  onClick={() => navigate(`/leads/${signalLeadId(person.id)}`)}
+                  className="flex w-full items-start gap-2.5 rounded-lg px-2 py-2 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
+                >
+                  <span
+                    className="t-micro mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full"
+                    style={{ background: 'var(--gradient-primary)', color: '#fff', letterSpacing: 0 }}
+                  >
+                    {index + 1}
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="t-body block truncate font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                      {person.name}
+                    </span>
+                    <span className="t-meta block truncate">{account.name}</span>
+                    {trigger && (
+                      <span className="t-meta mt-0.5 block truncate" style={{ color: 'var(--color-text-secondary)' }}>
+                        {trigger.text}
                       </span>
                     )}
                   </span>
-                  <span className="line-clamp-1 block text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>{item.text}</span>
-                </span>
-              </button>
-            ))}
+                </button>
+              ))}
+            </div>
           </div>
-        </div>
-        </>)}
+        )}
       </div>
 
-      {/* What will happen — at the bottom, per Ben: this page is about what is happening */}
-      {prefs.widgets.comingUp && upcoming.length > 0 && (
-        <div
-          className="flex flex-wrap items-center gap-x-3 gap-y-1.5 rounded-xl border px-3 py-2"
-          style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
-        >
-          <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-            <CalendarDays className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-            Coming up
-          </span>
-          {upcoming.map(ev => (
-            <button
-              key={`${ev.date}-${ev.label}`}
-              onClick={() => navigate(ev.href)}
-              className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-[12px] transition-colors hover:bg-[var(--color-primary-tint)]"
-            >
-              {ev.kind === 'delivery'
-                ? <Truck className="h-3.5 w-3.5" style={{ color: 'var(--color-success)' }} />
-                : <Receipt className="h-3.5 w-3.5" style={{ color: 'var(--color-warning)' }} />}
-              <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>{formatDateShort(ev.date)}</span>
-              <span style={{ color: 'var(--color-text-secondary)' }}>{ev.label}</span>
-              <span className="hidden sm:inline" style={{ color: 'var(--color-text-muted)' }}>· {ev.sub}</span>
-            </button>
-          ))}
+      {/* Exceptions — moved below the work they refer to. At the top they
+          competed with the headline figure for the first read; here they act
+          as a footer that only exists when something is actually wrong. */}
+      {exceptions.length > 0 && (
+        <div className="flex flex-col gap-px overflow-hidden rounded-xl border" style={{ borderColor: 'var(--color-border-light)' }}>
+          {exceptions.map(item => {
+            const Icon = item.icon;
+            return (
+              <button
+                key={item.key}
+                onClick={item.go}
+                className="flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
+                style={{ background: 'var(--color-surface-raised)' }}
+              >
+                <Icon className="h-4 w-4 flex-shrink-0" style={{ color: item.tone }} />
+                <span className="t-meta w-[150px] flex-shrink-0" style={{ color: item.tone }}>{item.label}</span>
+                <span className="t-body min-w-0 flex-1 truncate" style={{ color: 'var(--color-text-primary)' }}>{item.text}</span>
+                <ArrowRight className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
+              </button>
+            );
+          })}
         </div>
-      )}
-
-      {/* Your team — the humans on the account */}
-      {prefs.widgets.team && (
-      <div
-        className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-xl border px-4 py-3"
-        style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
-      >
-        <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-          <Users className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
-          Your team
-        </span>
-        {[
-          { name: team?.manager.name ?? 'Brijesh Singh', role: 'Campaign manager', email: team?.manager.email ?? '' },
-          { name: team?.backup.name ?? 'Arjun Patel', role: 'Backup manager', email: team?.backup.email ?? '' },
-          { name: 'Praful Sanil', role: 'Operations', email: 'praful.sanil@datamaticsbpm.com' },
-        ].map(member => (
-          <a
-            key={member.name}
-            href={member.email ? `mailto:${member.email}` : undefined}
-            className="inline-flex items-center gap-2 rounded-lg px-1.5 py-1 transition-colors hover:bg-[var(--color-primary-tint)]"
-          >
-            <span
-              className="flex h-6 w-6 flex-shrink-0 select-none items-center justify-center rounded-full text-[10px] font-extrabold text-white"
-              style={{ background: 'var(--gradient-primary)' }}
-            >
-              {member.name.split(' ').map(w => w[0]).slice(0, 2).join('')}
-            </span>
-            <span className="leading-tight">
-              <span className="block text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{member.name}</span>
-              <span className="block text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{member.role}</span>
-            </span>
-          </a>
-        ))}
-        <span
-          className="ml-auto inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold"
-          style={{ background: 'var(--color-warning-bg)', color: 'var(--color-warning)' }}
-        >
-          <CalendarDays className="h-3.5 w-3.5" />
-          Next business review · {formatDate('2026-08-14')}
-        </span>
-      </div>
       )}
     </div>
   );

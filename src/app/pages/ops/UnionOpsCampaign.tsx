@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import {
-  ArrowLeft, ArrowRight, Eye, UploadCloud, FileImage, Calendar, ShieldAlert,
-  ChevronLeft, ChevronRight, Send, CircleCheck, Link2, RefreshCw,
+  ArrowLeft, ArrowRight, Eye, UploadCloud, Calendar, ShieldAlert,
+  ChevronLeft, ChevronRight, Send, CircleCheck, Link2, RefreshCw, Wallet,
+  Target, UsersRound,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../../context/AuthContext';
@@ -21,13 +22,17 @@ import { getCampaignHealth } from '../../utils/campaignHealth';
 import { formatDateShort } from '../../utils/formatDate';
 import { formatMoney as fmtMoney } from '../../utils/format';
 import { PipelineStages } from '../../components/ops/PipelineStages';
+import { DeliveryAcceptanceTab } from '../../components/ops/DeliveryAcceptanceTab';
+import { ConnectionsPanel } from '../../components/ops/ConnectionsPanel';
+import { CampaignReachTab } from '../../components/campaign/CampaignReachTab';
+import { CampaignAudienceTab } from '../../components/campaign/CampaignAudienceTab';
+import { SyndicationPerformance } from '../../components/campaign/SyndicationPerformance';
 import { CampaignKpiBand } from '../../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../../components/campaign/CampaignAnalyticsTabs';
 import { CampaignProgrammaticTab } from '../../components/campaign/CampaignProgrammaticTab';
 import { CampaignHealthBadge, ReplacementTracker } from '../../components/CampaignHealthBadge';
 import { DeliveryScheduleSection } from '../../components/DeliveryScheduleSection';
 import { ConvertrQAStats } from '../../components/ConvertrQAStatus';
-import { AssetsSection } from '../../components/propensity/AssetsSection';
 import { CampaignThread } from '../../components/thread/CampaignThread';
 import { TalBadge } from '../../components/thread/TalBadge';
 import { DataTable, type Column } from '../../components/ui/DataTable';
@@ -321,7 +326,7 @@ export default function UnionOpsCampaign() {
             </h1>
             <span
               className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
-              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               #{campaign.id}
             </span>
@@ -409,40 +414,66 @@ export default function UnionOpsCampaign() {
       <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
         <div className="space-y-4 lg:col-span-3">
           <CampaignAnalyticsTabs
+            // Five tabs: the same four the client sees, plus intake. Batches
+            // and exceptions merged (what arrived and what was wrong with it),
+            // as did the delivery schedule and the acceptance entry (what was
+            // promised and what was accepted). Assets moved into Advertising.
             tabs={[
               {
                 // Keyed on the campaign: prev/next keeps this component mounted,
                 // and its local decision state must not carry across campaigns.
-                key: 'exceptions', label: 'Exceptions & QA', Icon: TAB_ICONS.quality,
-                content: <ExceptionsTab key={campaign.id} campaignId={campaign.id} />,
+                key: 'intake', label: 'Intake & QA', Icon: TAB_ICONS.quality,
+                content: (
+                  <div className="space-y-4" key={campaign.id}>
+                    <BatchesTab campaignId={campaign.id} />
+                    <ExceptionsTab campaignId={campaign.id} />
+                  </div>
+                ),
               },
               {
-                key: 'batches', label: 'Batches', Icon: UploadCloud,
-                content: <BatchesTab campaignId={campaign.id} />,
-              },
-              {
-                key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
-                content: campaign.deliverySchedule && campaign.deliverySchedule.length > 0 ? (
-                  <DeliveryScheduleSection campaign={campaign} bare />
-                ) : (
-                  <div className="py-10 text-center">
-                    <Calendar className="mx-auto mb-3 h-10 w-10" style={{ color: 'var(--color-text-muted)' }} />
-                    <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                      No delivery schedule set for this campaign yet.
-                    </p>
+                // Ops-entered acceptance & billing sits with the schedule it
+                // settles. Remounts per campaign so draft inputs never leak.
+                key: 'billing', label: 'Delivery & Billing', Icon: Wallet,
+                content: (
+                  <div className="space-y-4" key={campaign.id}>
+                    <DeliveryAcceptanceTab campaign={campaign} />
+                    {/* Same section the client sees, plus cost per lead — the
+                        publisher trade-off that decides what gets renewed. */}
+                    <SyndicationPerformance
+                      campaignId={campaign.id}
+                      totalLeads={campaign.deliveredLeads ?? campaign.totalLeads}
+                      opsView
+                    />
+                    {campaign.deliverySchedule && campaign.deliverySchedule.length > 0 ? (
+                      <DeliveryScheduleSection campaign={campaign} bare />
+                    ) : (
+                      <div className="py-8 text-center">
+                        <Calendar className="mx-auto mb-3 h-10 w-10" style={{ color: 'var(--color-text-muted)' }} />
+                        <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
+                          No delivery schedule set for this campaign yet.
+                        </p>
+                      </div>
+                    )}
                   </div>
                 ),
               },
               paired && {
-                key: 'assets', label: 'Assets', Icon: FileImage,
-                content: <AssetsSection abmCampaignId={paired.abmCampaignId} />,
+                key: 'reach', label: 'Reach', Icon: Target,
+                content: <CampaignReachTab abmCampaignId={paired.abmCampaignId} />,
               },
               paired && {
-                key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
-                content: <CampaignProgrammaticTab abmCampaignId={paired.abmCampaignId} />,
+                key: 'audience', label: 'Audience', Icon: UsersRound,
+                content: <CampaignAudienceTab abmCampaignId={paired.abmCampaignId} />,
+              },
+              paired && {
+                key: 'advertising', label: 'Advertising', Icon: TAB_ICONS.programmatic,
+                content: <CampaignProgrammaticTab abmCampaignId={paired.abmCampaignId} opsView />,
               },
             ]}
           />
+
+          {/* The linking workflow: convention suggests, ops confirms, the id joins. */}
+          <ConnectionsPanel campaignId={campaign.id} campaignName={pipeline.campaignName} />
 
           <ReplacementTracker
             totalRejected={replacements.totalRejected}

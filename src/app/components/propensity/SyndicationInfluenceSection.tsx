@@ -63,7 +63,7 @@ export function SyndicationInfluenceSection() {
                 <div className="h-2.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
                   <div
                     className="h-full rounded-full transition-all"
-                    style={{ width: `${Math.max(step.pct, 4)}%`, background: 'var(--color-primary)' }}
+                    style={{ width: `${Math.max(step.pct, 4)}%`, background: 'var(--color-progress)' }}
                   />
                 </div>
               </div>

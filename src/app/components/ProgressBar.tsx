@@ -63,14 +63,14 @@ export function ProgressBar({
       {/* Progress Bar Track */}
       <div
         className="w-full rounded-full overflow-hidden"
-        style={{ height: '6px', background: 'rgba(186,32,39,0.12)' }}
+        style={{ height: '6px', background: 'var(--color-progress-track)' }}
       >
         <div
           style={{
             height: '100%',
             width: `${displayWidth}%`,
             borderRadius: '9999px',
-            background: 'linear-gradient(90deg, var(--color-primary), var(--color-primary-light))',
+            background: 'var(--color-progress)',
             transition: 'width 0.75s cubic-bezier(0.4, 0, 0.2, 1)',
           }}
         />
@@ -105,7 +105,7 @@ export function SimpleProgressBar({
 
   return (
     <div className={`relative group w-full rounded-full overflow-hidden ${height}`}
-      style={{ background: 'rgba(186,32,39,0.12)' }}
+      style={{ background: 'var(--color-progress-track)' }}
     >
       <div
         style={{

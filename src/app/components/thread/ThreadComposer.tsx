@@ -127,7 +127,7 @@ export function ThreadComposer({ onComment, onChangeRequest, onAttachment }: Thr
           title={pending ? 'Post the file first, then raise a request' : undefined}
           className={`inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] disabled:cursor-not-allowed disabled:opacity-40 ${
             isRequest
-              ? 'border-[var(--color-primary)] bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]'
+              ? 'border-[var(--color-primary)] bg-[var(--color-primary-solid)] text-white hover:bg-[var(--color-primary-dark)]'
               : 'border-[var(--color-border)] text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)]'
           }`}
         >
@@ -139,7 +139,7 @@ export function ThreadComposer({ onComment, onChangeRequest, onAttachment }: Thr
           type="button"
           onClick={handlePost}
           disabled={!canPost}
-          className="ml-auto inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
+          className="ml-auto inline-flex items-center gap-2 rounded-lg bg-[var(--color-primary-solid)] px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-[var(--color-primary-dark)] active:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Send className="h-4 w-4" />
           {pending ? 'Upload' : isRequest ? 'Send request' : 'Post'}

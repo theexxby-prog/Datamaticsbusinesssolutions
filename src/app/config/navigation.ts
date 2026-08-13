@@ -14,6 +14,7 @@ import {
   Layers,
   MessageSquare,
   ClipboardCheck,
+  Flame,
   type LucideIcon,
 } from 'lucide-react';
 import type { UserRole } from '../context/AuthContext';
@@ -94,8 +95,14 @@ export function useNavBadges(): NavBadges {
 export function getNavForRole(role: UserRole | undefined, showFuture = false, unionOps = false): NavItem[] {
   if (unionOps) {
     return [
+      // New Campaign is deliberately not a nav item: creation is occasional
+      // (it exists to align contacts and data to a campaign) and lives as the
+      // primary button on the Pipeline header instead.
       { name: 'Pipeline', icon: LayoutDashboard, path: '/ops-union', section: 'PLATFORM' },
       { name: 'Data Intake', icon: Upload, path: '/ops-union/intake', section: 'PLATFORM', primary: true },
+      // Cross-campaign, so it can't live in a campaign's tabs. Ops needs the
+      // same ranking the client sees to brief them on it.
+      { name: 'Priority Accounts', icon: Flame, path: '/priority-accounts', section: 'PLATFORM' },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
     ];
   }
@@ -160,6 +167,11 @@ export function getNavForRole(role: UserRole | undefined, showFuture = false, un
     // and the Leads page header (the current lead table) legitimately differ,
     // and showing both side by side reads as a bug.
     { name: 'Leads', icon: Users, path: '/leads', section: 'PLATFORM' },
+    // Ranked off the enrichment preview, so it appears for the UNION persona
+    // only — the same gate the account briefings behind it already sit behind.
+    ...(showFuture
+      ? [{ name: 'Priority Accounts', icon: Flame, path: '/priority-accounts', section: 'PLATFORM' as const }]
+      : []),
     { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
     ...(hideInvoicesDocs
       ? []
@@ -204,6 +216,7 @@ const TAB_SHORT_NAMES: Record<string, string> = {
   'Admin Management': 'Admin',
   'Metrics Override': 'Override',
   'Upload Leads': 'Upload',
+  'Priority Accounts': 'Priority',
   Dashboard: 'Home',
 };
 
@@ -230,8 +243,10 @@ const DETAIL_ROUTES: Array<{ pattern: RegExp; meta: PageMeta }> = [
   // nav item is visible (the routes themselves are gated in AppLayout).
   { pattern: /^\/programmatic$/, meta: { title: 'Programmatic', showBack: false } },
   { pattern: /^\/ops-union$/, meta: { title: 'Pipeline', showBack: false } },
+  { pattern: /^\/ops-union\/campaigns\/new$/, meta: { title: 'New Campaign', showBack: true } },
   { pattern: /^\/ops-union\/intake$/, meta: { title: 'Data Intake', showBack: false } },
   { pattern: /^\/ops-union\/campaigns\/[^/]+$/, meta: { title: 'Campaign', showBack: true } },
+  { pattern: /^\/priority-accounts$/, meta: { title: 'Priority Accounts', showBack: false } },
   { pattern: /^\/leads\/account\/[^/]+$/, meta: { title: 'Account briefing', showBack: true } },
   { pattern: /^\/leads\/[^/]+$/, meta: { title: 'Lead briefing', showBack: true } },
 ];

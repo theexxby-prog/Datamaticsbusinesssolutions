@@ -68,7 +68,7 @@ export function MoreSheet({ open, onOpenChange, items, badges }: MoreSheetProps)
                 {count > 0 && (
                   <span
                     className="flex h-5 min-w-[20px] items-center justify-center rounded-full px-1.5 text-white"
-                    style={{ background: 'var(--color-primary)', fontSize: '11px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary-solid)', fontSize: '11px', fontWeight: 700 }}
                   >
                     {count > 9 ? '9+' : count}
                   </span>

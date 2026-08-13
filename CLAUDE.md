@@ -7,10 +7,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm i          # Install dependencies
 npm run dev    # Start dev server on port 3000
-npm run build  # Production build (output: dist/)
+npm run build  # Production build (output: dist/) — ~43s
 ```
 
 No test framework is configured.
+
+**`npm run build` is `tsc --noEmit && vite build`.** Running `npm run typecheck`
+and then `npm run build` typechecks the project twice for no benefit — that is
+20 wasted seconds every iteration. While iterating, `npm run typecheck` (~21s)
+is the whole gate; run the full build once before pushing.
 
 ## Architecture
 
@@ -21,7 +26,7 @@ No test framework is configured.
 **Entry points:**
 - `src/main.tsx` — bootstraps the app with a splash screen
 - `src/app/App.tsx` — wraps the router with `AuthContext` and `NotificationContext`
-- `src/app/routes.tsx` — defines all 18 routes
+- `src/app/routes.tsx` — defines every route (client, internal ops and the UNION ops mirror)
 
 **Auth & roles:** `src/app/context/AuthContext.tsx` implements mock role-based access with four roles: `ops_manager`, `campaign_manager`, `campaign_backup`, `client`. There is no real backend auth — everything is mocked.
 
@@ -70,3 +75,139 @@ No test framework is configured.
 - Buttons need hover and active states; form inputs need focus states using the brand color.
 - Keep files small — extract reusable components and helpers into their own files.
 - Use flexbox/grid for layout; avoid absolute positioning unless truly necessary.
+
+## Readability
+
+**Every text/background pair must clear WCAG AA** — 4.5:1 for body text, 3:1 for
+large text (≥24px, or ≥18.66px bold). Icons, bars and dots are not text and are
+held to 3:1 as non-text contrast.
+
+Run `npm run audit:contrast` (with `npm run dev` up) to check. It walks 21
+routes across four personas in both themes, composites translucent backgrounds
+properly, and groups failures by colour pair so the output names the offending
+token rather than listing every node.
+
+**It opens every tab panel, not just the landing one.** Tabs render one panel
+at a time, so on `/campaigns/:id` the audit used to measure one of four and the
+other three (Reach, Audience, Advertising) were never checked at all. Failures
+are reported as `route#TabLabel`. This is why the sweep measures ~8,900 nodes
+rather than ~4,000, and it is what caught `--color-chart-2` sitting at 2.25:1
+in dark mode.
+
+**Scope it while iterating; sweep before pushing.** The full run is ~57s, but a
+colour change usually touches one or two screens:
+
+```bash
+npm run audit:contrast -- --user=u9 --theme=dark --route=/campaigns   # ~10s
+npm run audit:contrast                                                # full, ~57s
+```
+
+`--route` is a substring match, so `--route=/campaigns` also covers
+`/campaigns/:id`. The run prints how many text nodes it measured; that count is
+reproducible node-for-node between runs, so a sudden drop means the audit
+stopped seeing part of the page, not that the page got simpler.
+
+Three things in the script exist for correctness or speed and must not be
+"simplified" away. It aborts every off-origin request (the app pulls ~14
+external images that hang in a browser with no proxy — that alone was 60% of
+the old 108s runtime). It waits for the DOM to stop changing rather than
+sleeping a fixed 2.1s per route, and the settle needs *three* consecutive
+stable samples; at two, a mid-mount lull reads as "finished" and late sections
+drop out of the audit silently. And it *polls* for the tab strip instead of
+reading the count once — under parallel load the chrome settles before the tabs
+mount, and a single early read reports "no tabs" and quietly audits one panel.
+
+Two structural rules the audit exists to protect:
+
+- **`--color-primary` is the brand as *type*; `--color-primary-solid` is the
+  brand as a *fill under white text*.** They cannot be one token: in dark mode
+  text on the ground wants to be light and a fill under white wants to be dark.
+  `--gradient-primary` is built from the solid ramp for the same reason. Any
+  `background` set to `--color-primary` with white text on it is a bug.
+- **A token only does the job it is named for.** A border colour as a text
+  colour measured 1.19:1; `--color-gray-400` as a KPI label measured 2.53:1.
+
+The semantic colours (`--color-success` / `-warning` / `-error` / `-info`) are
+tuned so they are legible *as words* on white, on the app ground and on their
+own 10% tint — they are used as type in roughly 300 places, so a value picked
+only for hue fails most of them.
+
+## Writing style for anything a person reads
+
+Applies to every document, artifact page, email draft, commit message, pull
+request body and chat reply written for Vishal or his colleagues. Code comments
+are the one exception; those match the surrounding code.
+
+The goal is prose that reads as if a person wrote it. Most of the tells below
+are not wrong English, they are just the specific habits that mark text as
+machine-written, so they get avoided even where they would otherwise be fine.
+
+### Words and phrases to avoid
+
+**Stock phrases.** "in today's fast-paced world", "in the ever-evolving world",
+"in the realm of", "it's important to note", "aims to explore", "when it comes
+to", "at the end of the day", "navigating the landscape", "because of this",
+"in other words", "overall".
+
+**Inflated adjectives.** revolutionary, groundbreaking, cutting-edge,
+paradigm-shifting, transformative, game-changing, disruptive, innovative,
+comprehensive, robust, seamless, holistic, pivotal, crucial, paramount,
+quintessential, remarkable, amazing, striking, captivating, significant,
+substantial, notable, considerable, meticulous, intricate, multifaceted,
+profound.
+
+**Verbs.** delve, dive, unlock, unleash, harness, leverage, orchestrate,
+streamline, facilitate, enhance, showcase, underscore, spearhead,
+revolutionize, transcend, galvanize, cultivate, proliferate, utilize,
+strategize, synthesize, delineate, articulate, conceptualize, manifest,
+elucidate, inquire, discern, unveil.
+
+**Nouns.** journey, landscape, realm, tapestry, symphony, odyssey, paradigm,
+nexus, spectrum, trajectory, synergy, alignment, benchmark, milestone, facet,
+epitome, pinnacle, testament, gusto.
+
+**Transitions and hedges.** moreover, furthermore, therefore, consequently,
+subsequently, accordingly, nevertheless, however, indeed, notably,
+particularly, additionally, "it seems that", "it appears", "one could argue",
+"might", "can be", "tends to", "appears to be", "could potentially", "seems to
+suggest".
+
+Write plainly instead. Vary sentence length, mixing short ones with long ones.
+Use ordinary transitions like also, then, so and but. Use contractions. Use I,
+you and we. Give concrete examples and real numbers rather than descriptions of
+how important something is. A rhetorical question or a slightly loose sentence
+is fine; it reads as human.
+
+### Punctuation
+
+**No em dashes.** This is the single biggest tell. Use a comma, a period, a
+semicolon or parentheses instead. Never stack them, never use one where a comma
+would do.
+
+**No colons in titles or headings,** and none before a short list or a casual
+explanation. Reach for "such as", "for example" or "including" instead.
+
+**Straight quotes and apostrophes only** (" and '), never curly ones.
+
+Parentheses are for real asides, used sparingly. Semicolons are fine and should
+be used naturally to join related clauses. Quotation marks are for actual quotes,
+dialogue and citations, not for emphasis or paraphrase.
+
+Don't default to bullet points, especially nested ones. Flowing prose is better
+for anything that explains or narrates; keep lists for things that genuinely
+are lists. Perfect, uniform punctuation reads as machine output, so some
+variation is good. Ellipses are fine for a genuine trailing thought, and an
+exclamation mark is fine where the tone actually calls for one.
+
+### Abbreviations
+
+Spell them out the first time and put the short form in brackets after, like
+"Application Programming Interface (API)". In documents written for people
+outside engineering, avoid them entirely where a plain phrase works.
+
+## Delivering work
+
+End every piece of finished work with its link, without being asked. Code
+changes get the Vercel preview links once pushed; documents get their artifact
+links; files get sent as attachments. Vishal should never have to ask "where
+is it" after something is built.

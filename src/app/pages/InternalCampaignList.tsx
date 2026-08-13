@@ -150,8 +150,8 @@ export default function InternalCampaignList() {
                       <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{statusLabel[c.status]}</td>
                       <td className="px-5 py-3" style={{ minWidth: '240px' }}>
                         <div className="flex items-center gap-3">
-                          <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--color-border-light)' }}>
-                            <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: 'var(--color-primary)' }} />
+                          <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--color-progress-track)' }}>
+                            <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: 'var(--color-progress)' }} />
                           </div>
                           <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{pct}%</span>
                         </div>
@@ -209,7 +209,7 @@ export default function InternalCampaignList() {
                   return (
                     <span className="flex w-32 items-center gap-2">
                       <div className="flex-1 h-1.5 rounded-full overflow-hidden" style={{ background: 'var(--color-border-light)' }}>
-                        <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: 'var(--color-primary)' }} />
+                        <div className="h-full rounded-full" style={{ width: `${Math.min(pct, 100)}%`, background: 'var(--color-progress)' }} />
                       </div>
                       <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{pct}%</span>
                     </span>

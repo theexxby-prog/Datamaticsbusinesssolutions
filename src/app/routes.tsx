@@ -18,6 +18,7 @@ const Payment = lazy(() => import('./pages/Payment'));
 const Account = lazy(() => import('./pages/Account'));
 const ReportsPage = lazy(() => import('./pages/ReportsPage'));
 const LeadsPage = lazy(() => import('./pages/LeadsPage'));
+const PriorityAccountsPage = lazy(() => import('./pages/PriorityAccountsPage'));
 const LeadUploadDashboard = lazy(() => import('./pages/LeadUploadDashboard'));
 const Documents = lazy(() => import('./pages/Documents'));
 const Support = lazy(() => import('./pages/Support'));
@@ -47,6 +48,7 @@ const AccountBriefingPage = lazy(() => import('./pages/AccountBriefingPage'));
 const UnionOpsDashboard = lazy(() => import('./pages/ops/UnionOpsDashboard'));
 const UnionOpsIntake = lazy(() => import('./pages/ops/UnionOpsIntake'));
 const UnionOpsCampaign = lazy(() => import('./pages/ops/UnionOpsCampaign'));
+const UnionOpsNewCampaign = lazy(() => import('./pages/ops/UnionOpsNewCampaign'));
 
 // Wraps every lazy page in a Suspense boundary with a slim top-bar loader.
 // RouteLoader is a 2px brand-coloured bar that's barely noticeable and
@@ -97,6 +99,11 @@ const appRoutes: RouteObject[] = [
   {
     path: '/leads',
     Component: withSuspense(LeadsPage),
+  },
+  {
+    // Cross-campaign, so it sits beside Leads rather than under a campaign.
+    path: '/priority-accounts',
+    Component: withSuspense(PriorityAccountsPage),
   },
   {
     path: '/leads/account/:slug',
@@ -151,6 +158,11 @@ const appRoutes: RouteObject[] = [
   {
     path: '/ops-union/intake',
     Component: withSuspense(UnionOpsIntake),
+  },
+  {
+    // Declared before :id so "new" is never read as a campaign id.
+    path: '/ops-union/campaigns/new',
+    Component: withSuspense(UnionOpsNewCampaign),
   },
   {
     path: '/ops-union/campaigns/:id',

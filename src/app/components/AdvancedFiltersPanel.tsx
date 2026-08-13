@@ -106,7 +106,7 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
                   }}
                   className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                     filters.industry.includes(industry)
-                      ? 'bg-[var(--color-primary)] text-white'
+                      ? 'bg-[var(--color-primary-solid)] text-white'
                       : 'bg-gray-100 text-gray-600 border border-gray-300'
                   }`}
                 >

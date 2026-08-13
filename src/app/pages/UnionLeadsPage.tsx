@@ -172,7 +172,7 @@ export default function UnionLeadsPage() {
           return (
             <span
               className="inline-flex max-w-full items-center gap-1 overflow-hidden rounded-full px-2 py-0.5 text-[11px] font-semibold"
-              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
               title="Enriched — opens the full briefing: buying committee, talking points, account signals."
             >
               <Sparkles className="h-3 w-3 flex-shrink-0" />
@@ -201,7 +201,7 @@ export default function UnionLeadsPage() {
           <div className="h-1.5 w-8 overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
             <div
               className="h-full rounded-full"
-              style={{ width: `${l.leadScore}%`, background: l.leadScore >= 85 ? 'var(--color-primary)' : 'var(--color-chart-2)' }}
+              style={{ width: `${l.leadScore}%`, background: l.leadScore >= 85 ? 'var(--color-progress)' : 'var(--color-chart-2)' }}
             />
           </div>
           <span className="w-6 text-right text-[13px] font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>

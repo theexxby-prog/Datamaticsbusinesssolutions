@@ -1,22 +1,27 @@
 import { useSyncExternalStore } from 'react';
 
 // ─── UNION dashboard preferences ─────────────────────────────────────────────
-// Per Ben's direction the dashboard ships lean, but nothing is deleted: every
-// section is a widget the client (or a demo driver) can toggle from Account
-// settings. Defaults below ARE Ben's spec. `derivedIntel` gates the
-// Claude-derived scores/synthesis (hidden until real signal scoring exists).
+// The dashboard is now three sections, and each is a genuine editorial choice
+// rather than a switch standing in for a decision. Ten toggles was itself the
+// symptom: four defaulted off, and the grid needed a span-absorption algorithm
+// purely to survive arbitrary combinations of them.
+//
+// Retired: `attention` (exceptions are not optional — a warning list you can
+// switch off is worthless, so it now renders whenever something is wrong and
+// vanishes when nothing is), `outcomes` (merged into the commitment band),
+// `freshSignals` (merged into Next moves), and `programmatic` / `comingUp` /
+// `team` (module summaries the sidebar already reaches, or content that never
+// changes and so does not belong on a page checked daily).
+//
+// `invoicesDocs` survives with a narrower job: it no longer draws a dashboard
+// card, it governs whether the Invoices and Documents modules appear in the
+// sidebar at all. `derivedIntel` still gates the Claude-derived scores.
 
 export type UnionWidgetKey =
-  | 'attention'
   | 'stats'
   | 'campaigns'
-  | 'outcomes'
   | 'leadsIntel'
-  | 'freshSignals'
-  | 'invoicesDocs'
-  | 'programmatic'
-  | 'comingUp'
-  | 'team';
+  | 'invoicesDocs';
 
 export interface UnionPrefs {
   widgets: Record<UnionWidgetKey, boolean>;
@@ -26,43 +31,25 @@ export interface UnionPrefs {
 }
 
 export const UNION_WIDGET_DESCRIPTIONS: Record<UnionWidgetKey, string> = {
-  attention: 'Action chips at the very top — overdue invoice, pending leads, signatures, at-risk delivery.',
-  stats: 'The three linked Month/Quarter/Year boxes: active campaigns, leads, billed vs contracted.',
-  campaigns: 'Per-campaign progress, pacing forecast, type, and the hottest lead.',
-  outcomes: 'Delivered → accepted → CRM → opportunities → closed-won funnel, impressions, acceptance trend.',
-  leadsIntel: 'Top enriched accounts and the next-best-action list from lead intelligence.',
-  freshSignals: 'Latest buying signals and news events across enriched accounts.',
-  invoicesDocs: 'Outstanding balance and latest invoices — also shows/hides the Invoices and Documents menu items.',
-  programmatic: 'Programmatic ad summary: spend, ROI, accounts engaged.',
-  comingUp: 'The next scheduled lead deliveries and invoice due dates.',
-  team: 'Your campaign manager, backup, and operations contact with the next business review.',
+  stats: 'Leads delivered this period, billing against the commitment, and what became of the leads — delivered, accepted, opportunities, closed-won.',
+  campaigns: 'Per-campaign progress and pacing, plus the next scheduled delivery.',
+  leadsIntel: 'Who to contact next at each enriched account, and the signal that makes now the moment.',
+  invoicesDocs: 'Shows or hides the Invoices and Documents items in the sidebar.',
 };
 
 export const UNION_WIDGET_LABELS: Record<UnionWidgetKey, string> = {
-  attention: 'Needs-attention strip',
-  stats: 'Key numbers (campaigns · leads · billing)',
+  stats: 'Delivery & commitment',
   campaigns: 'Campaigns',
-  outcomes: 'Lead outcomes',
-  leadsIntel: 'Leads intelligence',
-  freshSignals: 'Fresh signals',
-  invoicesDocs: 'Invoices & documents',
-  programmatic: 'Programmatic ABM summary',
-  comingUp: 'Coming up',
-  team: 'Your team',
+  leadsIntel: 'Next moves',
+  invoicesDocs: 'Invoices & Documents modules',
 };
 
 const DEFAULTS: UnionPrefs = {
   widgets: {
-    attention: false,
     stats: true,
     campaigns: true,
-    outcomes: true,
     leadsIntel: true,
-    freshSignals: false,
     invoicesDocs: false,
-    programmatic: false,
-    comingUp: true,
-    team: true,
   },
   derivedIntel: false,
   leadsSignalsColumn: false,
@@ -75,8 +62,16 @@ function load(): UnionPrefs {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return DEFAULTS;
     const parsed = JSON.parse(raw) as Partial<UnionPrefs>;
+    // Spread the stored blob over the defaults, then keep only live keys —
+    // a blob written before the retired widgets were removed would otherwise
+    // reintroduce them into the object the settings screen iterates.
+    const stored = parsed.widgets ?? {};
+    const widgets = { ...DEFAULTS.widgets };
+    for (const key of Object.keys(widgets) as UnionWidgetKey[]) {
+      if (typeof stored[key] === 'boolean') widgets[key] = stored[key] as boolean;
+    }
     return {
-      widgets: { ...DEFAULTS.widgets, ...(parsed.widgets ?? {}) },
+      widgets,
       derivedIntel: parsed.derivedIntel ?? DEFAULTS.derivedIntel,
       leadsSignalsColumn: parsed.leadsSignalsColumn ?? DEFAULTS.leadsSignalsColumn,
     };

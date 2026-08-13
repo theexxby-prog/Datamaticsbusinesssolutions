@@ -79,7 +79,7 @@ function InvoiceCard({
             </span>
             <span
               className="inline-flex items-center px-2 py-0.5 rounded-full"
-              style={{ fontSize: '11px', fontWeight: 500, background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ fontSize: '11px', fontWeight: 500, background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
               title={GROUPING_META[invoice.grouping].hint}
             >
               {groupingLabel}
@@ -628,8 +628,8 @@ export default function Invoices() {
                   <b style={{ color: 'var(--color-primary)' }}>{formatUSD(pos.remaining)}</b> remaining
                 </span>
               </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
-                <div className="h-full rounded-full" style={{ width: `${pos.pct}%`, background: 'var(--color-primary)' }} />
+              <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+                <div className="h-full rounded-full" style={{ width: `${pos.pct}%`, background: 'var(--color-progress)' }} />
               </div>
             </div>
           );

@@ -835,7 +835,7 @@ export default function OpsOverridePage() {
                       <button
                         onClick={handleSave}
                         disabled={hasErrors}
-                        className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-[var(--color-primary)] hover:bg-[var(--color-primary-dark)] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-[var(--color-primary-solid)] hover:bg-[var(--color-primary-dark)] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Save className="w-4 h-4" />
                         Save Changes

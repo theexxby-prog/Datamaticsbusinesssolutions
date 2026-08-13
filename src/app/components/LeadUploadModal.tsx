@@ -164,7 +164,7 @@ export function LeadUploadModal({
                   <div
                     className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-semibold transition-all ${
                       i === visualStepIndex
-                        ? 'bg-[var(--color-primary)] text-white'
+                        ? 'bg-[var(--color-primary-solid)] text-white'
                         : i < visualStepIndex
                         ? 'bg-[var(--color-success)] text-white'
                         : 'bg-muted text-muted-foreground'

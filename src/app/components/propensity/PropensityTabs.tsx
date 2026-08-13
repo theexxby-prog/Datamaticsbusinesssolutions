@@ -61,7 +61,7 @@ export function PropensityTabs({ tabs, initialKey, onChange, fitContent = false 
                 fitContent ? '' : 'md:flex-1'
               } ${
                 selected
-                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  ? 'bg-[var(--color-primary-solid)] text-white shadow-sm'
                   : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)]'
               }`}
             >

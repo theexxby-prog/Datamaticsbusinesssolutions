@@ -321,7 +321,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
 
   const inputCls = "w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all";
   const selectCls = "w-full px-4 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-[var(--color-primary)] focus:border-transparent outline-none transition-all appearance-none cursor-pointer bg-[var(--color-surface-raised)]";
-  const btnPrimary = "px-5 py-2.5 bg-[var(--color-primary)] text-white rounded-xl hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] transition-all font-semibold";
+  const btnPrimary = "px-5 py-2.5 bg-[var(--color-primary-solid)] text-white rounded-xl hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] transition-all font-semibold";
   const btnOutline = "px-5 py-2.5 border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-all font-semibold";
 
   const maskedInput = (fieldKey: string, placeholder: string, label: string, required = false) => (
@@ -785,7 +785,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   <button
                     type="button"
                     onClick={handleAddTitle}
-                    className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors"
+                    className="px-4 py-2 bg-[var(--color-primary-solid)] text-white rounded-lg hover:bg-[var(--color-primary-solid)]/90 transition-colors"
                   >
                     Add
                   </button>
@@ -823,7 +823,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     {formData.titles.map(title => (
                       <span
                         key={title}
-                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--color-primary)] text-white rounded-full text-xs"
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[var(--color-primary-solid)] text-white rounded-full text-xs"
                       >
                         {title}
                         <button
@@ -990,7 +990,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                   />
                   <button
                     onClick={copyEmailToClipboard}
-                    className="px-4 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors flex items-center gap-2"
+                    className="px-4 py-3 bg-[var(--color-primary-solid)] text-white rounded-lg hover:bg-[var(--color-primary-solid)]/90 transition-colors flex items-center gap-2"
                   >
                     {emailCopied ? (
                       <>
@@ -1089,7 +1089,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                   <button
                     onClick={parseEmailContent}
                     disabled={!pastedEmail.trim()}
-                    className="w-full px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="w-full px-6 py-3 bg-[var(--color-primary-solid)] text-white rounded-lg hover:bg-[var(--color-primary-solid)]/90 transition-colors disabled:bg-gray-300 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     <Sparkles className="w-5 h-5" />
                     Parse Email & Extract Campaign Details
@@ -1153,7 +1153,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                   <div className="flex gap-3">
                     <button
                       onClick={handleUseParsedData}
-                      className="flex-1 px-6 py-3 bg-[var(--color-primary)] text-white rounded-lg hover:bg-[var(--color-primary)]/90 transition-colors"
+                      className="flex-1 px-6 py-3 bg-[var(--color-primary-solid)] text-white rounded-lg hover:bg-[var(--color-primary-solid)]/90 transition-colors"
                     >
                       Edit in Form
                     </button>
@@ -1191,7 +1191,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                 title={!isDeliveryConfigured() ? 'Please configure a lead delivery method first' : ''}
                 className={`px-6 py-2 rounded-lg transition-colors font-semibold ${
                   isDeliveryConfigured()
-                    ? 'bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] cursor-pointer'
+                    ? 'bg-[var(--color-primary-solid)] text-white hover:bg-[var(--color-primary-dark)] active:bg-[var(--color-primary-dark)] cursor-pointer'
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >

@@ -422,7 +422,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
                     aria-selected={intelTab === key}
                     onClick={() => setIntelTab(key)}
                     className={`min-h-[36px] rounded-lg text-[13px] font-semibold transition-colors ${
-                      intelTab === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'
+                      intelTab === key ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'
                     }`}
                   >
                     {label}

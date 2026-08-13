@@ -141,10 +141,10 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                             {c.thisWeek} this week · {c.delivered}/{c.target}
                           </span>
                         </div>
-                        <div className="w-full rounded-full overflow-hidden" style={{ height: '6px', background: 'var(--color-surface)' }}>
+                        <div className="w-full rounded-full overflow-hidden" style={{ height: '6px', background: 'var(--color-progress-track)' }}>
                           <div
                             className="h-full rounded-full"
-                            style={{ width: `${c.pct}%`, background: 'linear-gradient(90deg, var(--color-primary-light) 0%, var(--color-primary) 100%)' }}
+                            style={{ width: `${c.pct}%`, background: 'var(--color-progress)' }}
                           />
                         </div>
                       </div>

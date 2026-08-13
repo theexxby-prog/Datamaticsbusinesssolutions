@@ -62,7 +62,11 @@ function PeriodSwitch({ value, onChange }: { value: Period; onChange: (p: Period
             aria-pressed={on}
             className="rounded-lg px-3.5 py-1.5 text-[13px] font-bold transition-colors"
             style={{
-              background: on ? 'var(--color-primary)' : 'transparent',
+              // primary-solid, not primary: this pill is a brand *fill* with
+              // white text on it. --color-primary is lightened in dark mode so
+              // it reads as an accent on a dark ground, which drops white text
+              // on it to 2.8:1.
+              background: on ? 'var(--color-primary-solid)' : 'transparent',
               color: on ? '#FFFFFF' : 'var(--color-text-muted)',
             }}
           >
@@ -175,7 +179,7 @@ export default function Dashboard() {
           {showTypeChip && (
             <span
               className="rounded-full px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide"
-              style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               {campaignTypeFor(r.id)}
             </span>
@@ -214,8 +218,8 @@ export default function Dashboard() {
         const pct = r.target ? Math.min(100, Math.round((r.delivered / r.target) * 100)) : 0;
         return (
           <div className="flex items-center gap-2.5">
-            <div className="h-1.5 w-[74px] overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
-              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: r.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-primary)' }} />
+            <div className="h-1.5 w-[74px] overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
+              <div className="h-full rounded-full" style={{ width: `${pct}%`, background: r.status === 'completed' ? 'var(--color-text-muted)' : 'var(--color-progress)' }} />
             </div>
             <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums', minWidth: 34 }}>{pct}%</span>
           </div>
@@ -227,7 +231,7 @@ export default function Dashboard() {
       sortValue: r => r.manager, text: r => r.manager,
       render: r => (
         <span className="inline-flex items-center gap-2.5">
-          <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[11px] font-extrabold text-white" style={{ background: 'var(--color-primary)' }}>
+          <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full text-[11px] font-extrabold text-white" style={{ background: 'var(--color-primary-solid)' }}>
             {r.manager.split(' ').map(n => n[0]).join('').slice(0, 2)}
           </span>
           <span style={{ color: 'var(--color-text-secondary)' }}>{r.manager}</span>
@@ -276,9 +280,9 @@ export default function Dashboard() {
             <button
               onClick={() => setIsNewCampaignModalOpen(true)}
               className="inline-flex w-full items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-bold text-white transition-colors sm:w-auto"
-              style={{ background: 'var(--color-primary)' }}
+              style={{ background: 'var(--color-primary-solid)' }}
               onMouseEnter={e => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
-              onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary)')}
+              onMouseLeave={e => (e.currentTarget.style.background = 'var(--color-primary-solid)')}
             >
               <Plus className="h-4 w-4" strokeWidth={2.6} /> New campaign
             </button>

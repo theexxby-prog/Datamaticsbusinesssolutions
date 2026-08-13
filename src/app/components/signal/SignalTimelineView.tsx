@@ -34,7 +34,7 @@ export function SignalTimelineView({ limit }: { limit?: number }) {
                   {item.kind && (
                     <span
                       className="rounded-md px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
-                      style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                      style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
                     >
                       {item.kind}
                     </span>

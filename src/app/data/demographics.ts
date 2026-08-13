@@ -173,6 +173,16 @@ function toChartPoints(counts: Counts, order: readonly string[]): ChartPoint[] {
 
 export type Demographics = Record<DimensionKey, ChartPoint[]>;
 
+/** Raw counts → the chart shape the Reports widgets render. */
+export function toDemographics(entry: DemographicEntry): Demographics {
+  return {
+    geo: toChartPoints(entry.geo, GEO_REGIONS),
+    industry: toChartPoints(entry.industry, INDUSTRIES),
+    size: toChartPoints(entry.size, COMPANY_SIZES),
+    title: toChartPoints(entry.title, TITLES),
+  };
+}
+
 /**
  * Chart-ready demographics for a campaign key, or a computed aggregate
  * when key === 'all'. The aggregate respects the active/completed scope.

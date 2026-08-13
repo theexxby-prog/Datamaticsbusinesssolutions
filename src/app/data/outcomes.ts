@@ -1,4 +1,5 @@
 import type { Campaign } from './mockClients';
+import type { DeliveryOverride } from './unionOps';
 import { unionClient, UNION_CLIENT_ID } from './unionClient';
 import { mockInvoiceRecords } from './mockInvoiceRecords';
 import { formatMoney } from '../utils/format';
@@ -53,13 +54,15 @@ export interface CampaignForecast {
   atRisk: boolean;
 }
 
-export function getCampaignForecasts(): CampaignForecast[] {
+export function getCampaignForecasts(overrides: Record<string, DeliveryOverride> = {}): CampaignForecast[] {
   const campaigns = unionClient.campaigns;
   const now = Date.now();
 
   return campaigns.map(c => {
     const target = c.goalLeads ?? c.target ?? 0;
-    const delivered = c.deliveredLeads ?? c.delivered ?? 0;
+    // Ops-entered delivery counts win over the feed — acceptance is manual
+    // for clients without Convertr, so ops's number is the one we stand behind.
+    const delivered = overrides[c.id]?.delivered ?? c.deliveredLeads ?? c.delivered ?? 0;
 
     let projected = delivered;
     if (c.status === 'active') {
@@ -201,8 +204,14 @@ function periodWindow(period: StatPeriod): { from: Date; to: Date } {
   return { from: new Date(y, 0, 1), to: new Date(y, 11, 31) };
 }
 
-export function getPeriodStats(period: StatPeriod): PeriodStats {
+export function getPeriodStats(period: StatPeriod, overrides: Record<string, DeliveryOverride> = {}): PeriodStats {
   const campaigns = unionClient.campaigns;
+  // Ops-entered delivered counts shift the totals by their delta from the
+  // baseline, so the hero number, the funnel and the per-campaign bars agree.
+  const overrideDelta = campaigns.reduce((s, c) => {
+    const ov = overrides[c.id]?.delivered;
+    return ov == null ? s : s + (ov - (c.deliveredLeads ?? c.delivered ?? 0));
+  }, 0);
   // Campaigns whose flight overlaps the selected period, not just the ones
   // active right now — an active-status count is the same number under every
   // period, which made the Month/Quarter/Year toggle look broken on this box.
@@ -214,8 +223,8 @@ export function getPeriodStats(period: StatPeriod): PeriodStats {
     return (start ?? from) <= to && (end ?? to) >= from;
   }).length;
 
-  const monthLeads = campaigns.reduce((s, c) => s + (c.leadsThisMonth ?? 0), 0);
-  const yearLeads = unionClient.totalLeads;
+  const monthLeads = campaigns.reduce((s, c) => s + (c.leadsThisMonth ?? 0), 0) + overrideDelta;
+  const yearLeads = unionClient.totalLeads + overrideDelta;
   const quarterLeads = Math.min(yearLeads, monthLeads + Math.round((yearLeads - monthLeads) * 0.72));
   const leads = period === 'month' ? monthLeads : period === 'quarter' ? quarterLeads : yearLeads;
 

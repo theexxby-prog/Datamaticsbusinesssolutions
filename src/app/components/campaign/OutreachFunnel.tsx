@@ -63,7 +63,10 @@ export function OutreachFunnel({ metrics, deliveredLeads, impressions }: Outreac
       label: 'Delivered Leads',
       count: deliveredLeads,
       width: Math.max(2, leadRate),
-      gradient: 'from-[var(--color-primary)] to-[var(--brand-red-light)]',
+      // Same quantity as the Delivered KPI tile above, so it takes the same
+      // progress colour. The upstream stages are volumes on their own ramp
+      // and are left alone.
+      gradient: 'from-[var(--color-progress)] to-[var(--color-progress)]',
       rate: leadRate,
       rateColor: 'var(--color-primary)',
     },

@@ -64,7 +64,7 @@ export function AccountsSection() {
           <div className="h-1.5 w-[64px] overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
             <div
               className="h-full rounded-full"
-              style={{ width: `${a.intentScore}%`, background: a.intentScore >= 80 ? 'var(--color-primary)' : 'var(--color-chart-2)' }}
+              style={{ width: `${a.intentScore}%`, background: a.intentScore >= 80 ? 'var(--color-progress)' : 'var(--color-chart-2)' }}
             />
           </div>
           <span className="text-[13px] font-bold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
@@ -91,7 +91,7 @@ export function AccountsSection() {
         a.sourcedFromSyndication ? (
           <span
             className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-semibold"
-            style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+            style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
           >
             <Link2 className="h-3 w-3" /> Syndication
           </span>

@@ -47,7 +47,7 @@ export function CampaignAnalyticsTabs({ tabs: given }: CampaignAnalyticsTabsProp
               onClick={() => setActive(tab.key)}
               className={`flex flex-1 items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)] ${
                 selected
-                  ? 'bg-[var(--color-primary)] text-white shadow-sm'
+                  ? 'bg-[var(--color-primary-solid)] text-white shadow-sm'
                   : 'text-[var(--color-text-secondary)] hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)]'
               }`}
             >

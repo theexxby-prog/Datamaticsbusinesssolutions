@@ -75,7 +75,7 @@ export function SignalAccountsView() {
       render: r => (
         <div className="flex items-center justify-end gap-2">
           <div className="h-1.5 w-8 overflow-hidden rounded-full" style={{ background: 'var(--color-border)' }}>
-            <div className="h-full rounded-full" style={{ width: `${r.insight.readiness}%`, background: 'var(--color-primary)' }} />
+            <div className="h-full rounded-full" style={{ width: `${r.insight.readiness}%`, background: 'var(--color-progress)' }} />
           </div>
           <span className="w-6 text-right text-[13px] font-extrabold" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
             {r.insight.readiness}

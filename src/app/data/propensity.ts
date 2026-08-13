@@ -394,3 +394,544 @@ export function getSyndicationInfluence(): SyndicationInfluence {
 
 /** The freshness line shown on the Programmatic page. */
 export const PROPENSITY_SYNC_LABEL = 'Synced Jul 30, 2026 · api.propensity.com';
+
+// ── Cohort breakdown ────────────────────────────────────────────────────────
+// Propensity reports per cohort — waves inside one campaign, keyed by name
+// strings like "…-Cohort 2" — and the campaign total is ours to add up. The
+// rule the ops screen exists to teach: one campaign, cohorts roll up; the
+// client only ever sees the sum. Splits are deterministic and sum exactly to
+// the AbmCampaign totals, so the cohort table and the summary tiles above it
+// can never disagree.
+
+export interface AbmCohort {
+  cohort: number;
+  startDate: string; // ISO
+  impressions: number;
+  clicks: number;
+  spend: number;
+}
+
+export function getCohortBreakdown(abmCampaignId: string): AbmCohort[] {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  // Wave 2 carries 42% of delivery; remainders land on wave 1 so sums are exact.
+  const imp2 = Math.round(abm.impressions * 0.42);
+  const clk2 = Math.round(abm.clicks * 0.42);
+  const spend2 = Math.round(abm.spendToDate * 0.42);
+  const start2 = `${abm.startDate.slice(0, 7)}-28`;
+  return [
+    { cohort: 1, startDate: abm.startDate, impressions: abm.impressions - imp2, clicks: abm.clicks - clk2, spend: abm.spendToDate - spend2 },
+    { cohort: 2, startDate: start2, impressions: imp2, clicks: clk2, spend: spend2 },
+  ];
+}
+
+// ── Engaged colleagues (account-level, not leads) ───────────────────────────
+// The contact-matching rule made visible: only an exact work-email match
+// attaches ad engagement to an individual lead. People the ad campaign
+// reached whose email matches no lead are held at the ACCOUNT level — kept,
+// shown, never merged onto a person and never counted as leads.
+
+export interface EngagedColleague {
+  name: string;
+  title: string;
+  warmth: 'hot' | 'warm';
+  activity: string;
+}
+
+const COLLEAGUE_POOL: EngagedColleague[] = [
+  { name: 'Priya Raman', title: 'Director, IT Procurement', warmth: 'warm', activity: '3 site visits · 14 ad impressions in 90 days' },
+  { name: 'Tom Okafor', title: 'Security Architect', warmth: 'hot', activity: '2 ad clicks · visited the pricing page twice' },
+  { name: 'Elena Vasquez', title: 'VP Infrastructure', warmth: 'warm', activity: '9 ad impressions · followed on LinkedIn' },
+  { name: 'Mark Delaney', title: 'Head of Platform Engineering', warmth: 'warm', activity: '6 ad impressions · 1 site visit' },
+  { name: 'Sofia Lindqvist', title: 'Procurement Analyst', warmth: 'hot', activity: '4 site visits · downloaded a spec sheet' },
+];
+
+/** 2–3 engaged non-lead colleagues for an account, stable per slug. */
+export function getEngagedColleagues(accountSlug: string): EngagedColleague[] {
+  let h = 0;
+  for (let i = 0; i < accountSlug.length; i++) h = (h * 31 + accountSlug.charCodeAt(i)) >>> 0;
+  const count = 2 + (h % 2);
+  const start = h % COLLEAGUE_POOL.length;
+  return Array.from({ length: count }, (_, i) => COLLEAGUE_POOL[(start + i) % COLLEAGUE_POOL.length]);
+}
+
+// ── Account-level analytics ─────────────────────────────────────────────────
+// The ABM question a lead count can't answer: of the named accounts we set out
+// to reach, how many did we actually touch, engage, reach more than once, and
+// turn sales-ready? Every figure below derives from the AbmCampaign record, so
+// the funnel, the tiles above it and the account table can never disagree —
+// same discipline as getCohortBreakdown. Rounding remainders land on the
+// largest bucket so the parts always sum to the whole.
+
+/** Stable per-campaign variation without Math.random (which would re-roll on every render). */
+function seedOf(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+/** Split a total across weights, giving the rounding remainder to the biggest share. */
+function splitTotal(total: number, weights: number[]): number[] {
+  const sum = weights.reduce((s, w) => s + w, 0);
+  const parts = weights.map(w => Math.round((total * w) / sum));
+  const drift = total - parts.reduce((s, p) => s + p, 0);
+  if (drift !== 0) {
+    const biggest = parts.indexOf(Math.max(...parts));
+    parts[biggest] += drift;
+  }
+  return parts;
+}
+
+export interface AccountFunnelStage {
+  key: 'targeted' | 'reached' | 'engaged' | 'multiTouch' | 'salesReady';
+  label: string;
+  hint: string;
+  accounts: number;
+  /** Share of the targeted list, for the bar width. */
+  pctOfTargeted: number;
+}
+
+export function getAccountFunnel(abmCampaignId: string): AccountFunnelStage[] {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  const targeted = abm.goalAccounts;
+  const engaged = abm.engagedAccounts;
+  // Reached derives from engaged rather than from targeted, so it can never
+  // fall below the engaged count no matter how the campaign totals move.
+  const reached = Math.min(targeted, Math.round(engaged / 0.83));
+  const multiTouch = Math.round(engaged * 0.55);
+  const salesReady = Math.round(engaged * 0.22);
+
+  const stages: Array<Omit<AccountFunnelStage, 'pctOfTargeted'>> = [
+    { key: 'targeted', label: 'Targeted', hint: 'Named accounts in the audience', accounts: targeted },
+    { key: 'reached', label: 'Reached', hint: 'Served at least one impression', accounts: reached },
+    { key: 'engaged', label: 'Engaged', hint: 'Clicked or visited the site', accounts: engaged },
+    { key: 'multiTouch', label: 'Multi-touch', hint: 'Engaged on more than one channel', accounts: multiTouch },
+    { key: 'salesReady', label: 'Sales-ready', hint: 'Hot warmth — worth a call now', accounts: salesReady },
+  ];
+  return stages.map(s => ({ ...s, pctOfTargeted: Math.round((s.accounts / targeted) * 100) }));
+}
+
+export interface UnreachedAccount {
+  name: string;
+  industry: string;
+  employees: string;
+}
+
+const UNREACHED_POOL: UnreachedAccount[] = [
+  { name: 'Kestrel Manufacturing Group', industry: 'Manufacturing', employees: '1,000-4,999' },
+  { name: 'Pinnacle Freight Systems', industry: 'Logistics', employees: '500-999' },
+  { name: 'Copperline Energy', industry: 'Energy & utilities', employees: '5,000+' },
+  { name: 'Marlowe Financial Partners', industry: 'Financial services', employees: '1,000-4,999' },
+  { name: 'Ashford Health Network', industry: 'Healthcare', employees: '5,000+' },
+  { name: 'Verity Payments', industry: 'Financial services', employees: '500-999' },
+  { name: 'Stonebridge Industrial', industry: 'Manufacturing', employees: '1,000-4,999' },
+  { name: 'Harrowgate Retail Group', industry: 'Retail & ecommerce', employees: '5,000+' },
+  { name: 'Lyndon Aerospace', industry: 'Manufacturing', employees: '1,000-4,999' },
+  { name: 'Cobalt Telecom', industry: 'Telecom & media', employees: '5,000+' },
+  { name: 'Ravensworth Insurance', industry: 'Insurance', employees: '1,000-4,999' },
+  { name: 'Dunmore Chemicals', industry: 'Manufacturing', employees: '500-999' },
+];
+
+/**
+ * The accounts still to be reached — the gap between targeted and reached, and
+ * the most actionable list on the page: these are the ones to redirect spend at.
+ *
+ * `total` is always the true gap; `named` is the sample we can put names to.
+ * Keeping them separate matters because the headline count must reconcile with
+ * the funnel (targeted − reached) even when the sample is shorter.
+ */
+export function getUnreachedAccounts(abmCampaignId: string): { total: number; named: UnreachedAccount[] } {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return { total: 0, named: [] };
+  const total = funnel[0].accounts - funnel[1].accounts;
+  const start = seedOf(abmCampaignId) % UNREACHED_POOL.length;
+  const named = Array.from({ length: Math.min(total, UNREACHED_POOL.length) }, (_, i) =>
+    UNREACHED_POOL[(start + i) % UNREACHED_POOL.length]);
+  return { total, named };
+}
+
+export interface WeeklyReachPoint {
+  week: string;
+  reached: number;
+  engaged: number;
+}
+
+/** Cumulative build-up, easing out and landing exactly on the current totals. */
+export function getWeeklyReach(abmCampaignId: string): WeeklyReachPoint[] {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return [];
+  const reached = funnel[1].accounts;
+  const engaged = funnel[2].accounts;
+  const weeks = 8;
+  return Array.from({ length: weeks }, (_, i) => {
+    const t = (i + 1) / weeks;
+    const ease = 1 - Math.pow(1 - t, 2); // fast early, flattening as the audience saturates
+    return {
+      week: `W${i + 1}`,
+      reached: Math.round(reached * ease),
+      engaged: Math.round(engaged * ease * (0.82 + 0.18 * t)),
+    };
+  });
+}
+
+export interface BuyingCentre {
+  /** People reached inside engaged accounts. */
+  stakeholders: number;
+  avgPerAccount: number;
+  seniority: Array<{ name: string; percentage: number }>;
+  functions: Array<{ name: string; percentage: number }>;
+  /** Share sitting at Director level or above. */
+  directorPlusPct: number;
+}
+
+export function getBuyingCentre(abmCampaignId: string): BuyingCentre | null {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return null;
+  const seed = seedOf(abmCampaignId);
+  const engaged = abm.engagedAccounts;
+  const avgPerAccount = Math.round((4.4 + (seed % 18) / 10) * 10) / 10;
+  const stakeholders = Math.round(engaged * avgPerAccount);
+
+  // Seniority weights drift slightly per campaign, then normalise to 100.
+  const senWeights = [9 + (seed % 4), 18 + (seed % 5), 31, 27, 15];
+  const senValues = splitTotal(100, senWeights);
+  const seniority = ['C-suite', 'VP / SVP', 'Director', 'Manager', 'Practitioner']
+    .map((name, i) => ({ name, percentage: senValues[i] }));
+
+  const fnWeights = [34, 26 + (seed % 6), 18, 12, 10];
+  const fnValues = splitTotal(100, fnWeights);
+  const functions = ['IT & infrastructure', 'Security', 'Operations', 'Finance', 'Other']
+    .map((name, i) => ({ name, percentage: fnValues[i] }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  return {
+    stakeholders,
+    avgPerAccount,
+    seniority,
+    functions,
+    directorPlusPct: seniority[0].percentage + seniority[1].percentage + seniority[2].percentage,
+  };
+}
+
+/** Engaged accounts by vertical. Counts sum to the engaged total. */
+export function getIndustryMix(abmCampaignId: string): Array<{ name: string; accounts: number; percentage: number }> {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  const seed = seedOf(abmCampaignId);
+  const names = ['Financial services', 'Manufacturing', 'Healthcare', 'Technology', 'Energy & utilities', 'Other'];
+  const counts = splitTotal(abm.engagedAccounts, [30 + (seed % 8), 24, 16, 13, 9, 8]);
+  return names
+    .map((name, i) => ({
+      name,
+      accounts: counts[i],
+      percentage: Math.round((counts[i] / abm.engagedAccounts) * 100),
+    }))
+    .sort((a, b) => b.accounts - a.accounts);
+}
+
+export interface FrequencyBand {
+  band: string;
+  accounts: number;
+  /** 7-12 impressions per account is where engagement peaks without fatigue. */
+  inSweetSpot: boolean;
+}
+
+export function getFrequencyDistribution(abmCampaignId: string): FrequencyBand[] {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return [];
+  const reached = funnel[1].accounts;
+  const seed = seedOf(abmCampaignId);
+  const bands = ['1-3', '4-6', '7-12', '13-18', '19+'];
+  const counts = splitTotal(reached, [14, 22, 34 + (seed % 6), 19, 11]);
+  return bands.map((band, i) => ({ band, accounts: counts[i], inSweetSpot: band === '7-12' }));
+}
+
+export interface ChannelPerformance {
+  channel: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  /** Ops only — omitted entirely from client responses. */
+  cost?: number;
+}
+
+export function getChannelPerformance(abmCampaignId: string, opsView = false): ChannelPerformance[] {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  const channels = ['Programmatic display', 'LinkedIn', 'Meta', 'Email'];
+  const impWeights = [58, 24, 12, 6];
+  const clickWeights = [42, 33, 15, 10]; // social clicks harder, but at lower volume
+  const imps = splitTotal(abm.impressions, impWeights);
+  const clicks = splitTotal(abm.clicks, clickWeights);
+  const costs = splitTotal(abm.spendToDate, impWeights);
+  return channels.map((channel, i) => ({
+    channel,
+    impressions: imps[i],
+    clicks: clicks[i],
+    ctr: Math.round((clicks[i] / imps[i]) * 10000) / 100,
+    ...(opsView ? { cost: costs[i] } : {}),
+  }));
+}
+
+// ── Awareness heatmap ────────────────────────────────────────────────────────
+// The single most useful visual on the consultant's dashboard: accounts down
+// the side, channels across the top, colour = how hard each account has been
+// hit on each channel. It shows coverage AND concentration in one glance —
+// a row that's dark in one column and empty everywhere else is an account
+// being reached by exactly one channel, which is a different problem from an
+// account not being reached at all.
+//
+// Cells are real impression counts, split from the campaign total the same way
+// getChannelPerformance splits it, then distributed across accounts by intent.
+// So the grid sums back to the channel totals rather than being decorative.
+
+export const HEATMAP_CHANNELS = [
+  'Display',
+  'LinkedIn',
+  'Meta',
+  'Email',
+  'Syndication',
+] as const;
+
+export interface HeatmapRow {
+  account: string;
+  industry: string;
+  /** One impression count per HEATMAP_CHANNELS entry. */
+  cells: number[];
+  total: number;
+  /** Channels this account has been touched on at all. */
+  channelsTouched: number;
+}
+
+export interface AwarenessHeatmap {
+  rows: HeatmapRow[];
+  /** Largest single cell, so the UI can scale intensity without re-scanning. */
+  peak: number;
+}
+
+export function getAwarenessHeatmap(abmCampaignId: string): AwarenessHeatmap {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return { rows: [], peak: 0 };
+  const seed = seedOf(abmCampaignId);
+
+  // Top 8 by intent — the accounts a reader would actually scan for.
+  const accounts = [...ACCOUNT_ENGAGEMENT]
+    .sort((a, b) => b.intentScore - a.intentScore)
+    .slice(0, 8);
+
+  // Same channel weights as getChannelPerformance, plus syndication.
+  const channelWeights = [58, 24, 12, 6, 14];
+  const perChannel = splitTotal(Math.round(abm.impressions * 0.42), channelWeights);
+
+  const rows = accounts.map((acct, ai) => {
+    const cells = perChannel.map((channelTotal, ci) => {
+      // Every account is weighted by intent, then a stable per-cell modifier
+      // creates the gaps that make the grid worth looking at: some accounts
+      // genuinely aren't on LinkedIn, and a uniform grid would hide that.
+      const gap = (seed + ai * 7 + ci * 13) % 11;
+      if (gap < 2 && ci > 0) return 0;
+      const share = acct.intentScore / accounts.reduce((s, a) => s + a.intentScore, 0);
+      const skew = 0.7 + ((seed + ai * 3 + ci * 5) % 7) / 10;
+      return Math.round(channelTotal * share * skew);
+    });
+    const total = cells.reduce((s, c) => s + c, 0);
+    return {
+      account: acct.name,
+      industry: acct.industry,
+      cells,
+      total,
+      channelsTouched: cells.filter(c => c > 0).length,
+    };
+  });
+
+  const peak = Math.max(1, ...rows.flatMap(r => r.cells));
+  return { rows, peak };
+}
+
+// ── Week-on-week movement ────────────────────────────────────────────────────
+// His KPI tiles all carry a delta pill. Deriving them from getWeeklyReach
+// rather than inventing them means the pill and the chart tell the same story:
+// the last two points of the series ARE the delta.
+
+export interface ReachDelta {
+  /** Absolute change over the last week. */
+  change: number;
+  /** Percent change, rounded. Zero when the prior week was zero. */
+  pct: number;
+}
+
+function deltaBetween(prev: number, current: number): ReachDelta {
+  const change = current - prev;
+  return { change, pct: prev === 0 ? 0 : Math.round((change / prev) * 100) };
+}
+
+export function getReachDeltas(abmCampaignId: string): {
+  reached: ReachDelta; engaged: ReachDelta; salesReady: ReachDelta;
+} | null {
+  const weekly = getWeeklyReach(abmCampaignId);
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (weekly.length < 2 || funnel.length === 0) return null;
+  const last = weekly[weekly.length - 1];
+  const prev = weekly[weekly.length - 2];
+  const salesReadyNow = funnel[4].accounts;
+  // Sales-ready tracks engaged at a fixed ratio, so its prior week comes from
+  // the prior week's engaged count rather than a second invented series.
+  const salesReadyPrev = Math.round(prev.engaged * 0.22);
+  return {
+    reached: deltaBetween(prev.reached, last.reached),
+    engaged: deltaBetween(prev.engaged, last.engaged),
+    salesReady: deltaBetween(salesReadyPrev, salesReadyNow),
+  };
+}
+
+// ── Flight status ────────────────────────────────────────────────────────────
+// "Day 36 of 85, on pace" — client-safe. His version pairs this with budget
+// deployed, which stays ops-only for us.
+//
+// The dates come from the CAMPAIGN, not the paired ABM record, and the clock is
+// the real one. Both of those are deliberate: this chip renders inches away
+// from the campaign's own date range and from the Pace tile, and those are
+// computed by campaignHealth from campaign.startDate/endDate against
+// `new Date()`. Using the ABM record's dates and the demo's frozen date made it
+// read "Day 59 of 152" beside "Jun 7 – Oct 31" and "46% of time" — three
+// figures on one line that couldn't all be right. Reach still comes from the
+// ABM funnel; only the calendar is shared.
+
+export interface FlightStatus {
+  dayOfFlight: number;
+  totalDays: number;
+  elapsedPct: number;
+  /** Reach progress vs time elapsed. 'ahead' | 'on pace' | 'behind'. */
+  pace: 'ahead' | 'on pace' | 'behind';
+  reachPct: number;
+}
+
+export function getFlightStatus(
+  abmCampaignId: string,
+  dates: { startDate?: string; endDate?: string },
+  today = new Date(),
+): FlightStatus | null {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm || !dates.startDate || !dates.endDate) return null;
+  const start = new Date(dates.startDate).getTime();
+  const end = new Date(dates.endDate).getTime();
+  if (Number.isNaN(start) || Number.isNaN(end) || end <= start) return null;
+  const totalDays = Math.max(1, Math.round((end - start) / 86400000));
+  const dayOfFlight = Math.min(totalDays, Math.max(1, Math.round((today.getTime() - start) / 86400000)));
+  // Ratio of the raw timestamps, not of the rounded day counts — that is what
+  // campaignHealth does for the Pace tile, and rounding first put the two a
+  // point apart on the same line.
+  const elapsedPct = Math.min(100, Math.round(((today.getTime() - start) / (end - start)) * 100));
+
+  const funnel = getAccountFunnel(abmCampaignId);
+  const reachPct = funnel.length > 0 ? funnel[1].pctOfTargeted : 0;
+  // Ten points of slack either way before we call a campaign off-pace; reach
+  // naturally runs ahead of time early in a flight and flattens later.
+  const gap = reachPct - elapsedPct;
+  const pace: FlightStatus['pace'] = gap > 10 ? 'ahead' : gap < -10 ? 'behind' : 'on pace';
+  return { dayOfFlight, totalDays, elapsedPct, pace, reachPct };
+}
+
+// ── Companies reached ────────────────────────────────────────────────────────
+// The chip grid from his Audience panel. Named accounts with their intent
+// score, so a reader can see who is in the audience without opening a table.
+
+export interface ReachedCompany {
+  name: string;
+  industry: string;
+  intentScore: number;
+  warmth: AccountWarmth;
+}
+
+export function getReachedCompanies(abmCampaignId: string, limit = 12): ReachedCompany[] {
+  const seed = seedOf(abmCampaignId);
+  return [...ACCOUNT_ENGAGEMENT]
+    .sort((a, b) => b.intentScore - a.intentScore)
+    .slice(0, limit)
+    .map(a => ({
+      name: a.name,
+      industry: a.industry,
+      // Small per-campaign drift so the same account doesn't read identically
+      // on every campaign, clamped so it stays a plausible score.
+      intentScore: Math.min(99, Math.max(20, a.intentScore + ((seed % 9) - 4))),
+      warmth: a.warmth,
+    }));
+}
+
+// ── Average touches per account ──────────────────────────────────────────────
+
+export function getTouchesPerAccount(abmCampaignId: string): number {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (!abm || funnel.length === 0 || funnel[1].accounts === 0) return 0;
+  return Math.round((abm.impressions / funnel[1].accounts) / 10) / 10;
+}
+
+// ── Creative performance ─────────────────────────────────────────────────────
+// His "top performing creative" cards, one per channel. CTR is the client-safe
+// measure; cost per click is ops-only and omitted from the response entirely
+// rather than hidden in the UI.
+
+export interface CreativePerformance {
+  channel: string;
+  name: string;
+  format: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  /** Ops only. */
+  costPerClick?: number;
+}
+
+const CREATIVE_NAMES: Record<string, { name: string; format: string }> = {
+  'Programmatic display': { name: 'Zero-trust checklist', format: '300x250 / 728x90' },
+  LinkedIn: { name: 'Buyer guide document ad', format: 'Document ad' },
+  Meta: { name: 'Migration story carousel', format: 'Carousel' },
+  Email: { name: 'Analyst brief invitation', format: 'HTML email' },
+};
+
+export function getCreativePerformance(abmCampaignId: string, opsView = false): CreativePerformance[] {
+  return getChannelPerformance(abmCampaignId, opsView).map(ch => {
+    const creative = CREATIVE_NAMES[ch.channel] ?? { name: 'Primary creative', format: 'Mixed' };
+    // The top creative carries roughly a third of its channel's volume at a
+    // better CTR than the channel average — that's what makes it the top one.
+    const impressions = Math.round(ch.impressions * 0.34);
+    const clicks = Math.round(ch.clicks * 0.46);
+    return {
+      channel: ch.channel,
+      name: creative.name,
+      format: creative.format,
+      impressions,
+      clicks,
+      ctr: impressions === 0 ? 0 : Math.round((clicks / impressions) * 10000) / 100,
+      ...(opsView && ch.cost !== undefined && clicks > 0
+        ? { costPerClick: Math.round((ch.cost * 0.34 / clicks) * 100) / 100 }
+        : {}),
+    };
+  }).sort((a, b) => b.ctr - a.ctr);
+}
+
+// ── Cross-channel overlap ────────────────────────────────────────────────────
+// How many reached accounts saw one channel, two, or three-plus. The
+// three-plus group is the one that converts; the single-channel group is the
+// one to widen. Sums to the reached total.
+
+export interface OverlapBand {
+  label: string;
+  accounts: number;
+  percentage: number;
+}
+
+export function getAudienceOverlap(abmCampaignId: string): OverlapBand[] {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return [];
+  const reached = funnel[1].accounts;
+  const seed = seedOf(abmCampaignId);
+  const counts = splitTotal(reached, [44 + (seed % 7), 33, 23]);
+  return ['One channel only', 'Two channels', 'Three or more'].map((label, i) => ({
+    label,
+    accounts: counts[i],
+    percentage: reached === 0 ? 0 : Math.round((counts[i] / reached) * 100),
+  }));
+}

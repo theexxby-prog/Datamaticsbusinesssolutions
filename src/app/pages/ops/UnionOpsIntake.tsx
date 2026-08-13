@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router';
 import {
   ArrowLeft, UploadCloud, FileSpreadsheet, Database, Check, ShieldCheck,
-  Sparkles, Loader2, RefreshCw, ChevronRight,
+  Sparkles, Loader2, RefreshCw, ChevronRight, BookOpen, AlertTriangle,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { CAMPAIGN_RENAMES } from '../../data/unionClient';
@@ -52,6 +52,18 @@ export default function UnionOpsIntake() {
   const qaValid = Math.round(batch.rows * 0.97);
   const qaCaution = Math.round(batch.rows * 0.02);
   const qaInvalid = batch.rows - qaValid - qaCaution;
+
+  // Account ledger check. Relish dedups within a batch, not across batches,
+  // and bills per unique account — so before anything goes out, the rows are
+  // checked against the ledger of accounts already researched for this client
+  // in the last 90 days. Only new accounts are billed; a corrected re-upload
+  // can never pay twice for the same company.
+  const ledgerAccounts = Math.round(qaValid * 0.73);
+  const ledgerReused = Math.round(ledgerAccounts * 0.68);
+  const ledgerNew = ledgerAccounts - ledgerReused;
+  // Accounts researched before but outside the 90-day window: they go to
+  // Relish and bill again, but never silently — the flag makes it a choice.
+  const ledgerStale = Math.max(1, Math.round(ledgerNew * 0.04));
 
   const loadBatch = () => {
     setStep('loading');
@@ -136,7 +148,7 @@ export default function UnionOpsIntake() {
                 aria-selected={source === key}
                 onClick={() => changeSource(key)}
                 className={`flex min-h-[36px] items-center justify-center gap-1.5 rounded-lg px-4 text-sm font-semibold transition-colors ${
-                  source === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
+                  source === key ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
                 }`}
               >
                 <Icon className="h-3.5 w-3.5" />
@@ -259,7 +271,36 @@ export default function UnionOpsIntake() {
             </p>
           </div>
 
-          {/* 4 · Save + send */}
+          {/* 4 · Account ledger — the spend guard */}
+          <div className="glass-card p-4">
+            <h2 className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+              <BookOpen className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
+              4 · Account ledger check
+            </h2>
+            <p className="mt-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+              {qaValid} valid rows span <b style={{ color: 'var(--color-text-primary)' }}>{ledgerAccounts} accounts</b>.{' '}
+              <b style={{ color: 'var(--color-success)' }}>{ledgerReused} already researched</b> for Northwind in the
+              last 90 days — their briefings are reused from the ledger, not billed again.{' '}
+              <b style={{ color: 'var(--color-text-primary)' }}>{ledgerNew} new accounts</b> go to Relish.
+            </p>
+            <p className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+              Relish dedups inside a batch, not across batches — this check is what stops a corrected
+              re-upload from paying twice for the same companies.
+            </p>
+            <div
+              className="mt-2.5 flex items-start gap-2 rounded-xl border px-3.5 py-2.5"
+              style={{ borderColor: 'var(--color-warning)', background: 'var(--color-warning-bg)' }}
+            >
+              <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
+              <p className="text-[12px]" style={{ color: 'var(--color-text-primary)' }}>
+                <b>{ledgerStale} of the new accounts {ledgerStale === 1 ? 'was' : 'were'} researched before</b>, more than
+                90 days ago. Sending {ledgerStale === 1 ? 'it' : 'them'} again bills again — flagged so a re-research is
+                a decision, never an accident.
+              </p>
+            </div>
+          </div>
+
+          {/* 5 · Save + send */}
           <div className="flex flex-wrap items-center justify-end gap-2.5">
             <button
               onClick={saveBatch}
@@ -276,7 +317,7 @@ export default function UnionOpsIntake() {
             >
               {step === 'sending'
                 ? <><Loader2 className="h-4 w-4 animate-spin" /> Sending to Relish…</>
-                : <><Sparkles className="h-4 w-4" /> Send {qaValid} rows to Relish</>}
+                : <><Sparkles className="h-4 w-4" /> Send {qaValid} rows · {ledgerNew} new accounts billed</>}
             </button>
           </div>
         </>

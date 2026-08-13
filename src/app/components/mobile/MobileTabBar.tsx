@@ -80,7 +80,7 @@ export function MobileTabBar() {
                     style={{
                       background: isActive
                         ? 'var(--color-primary-dark)'
-                        : 'linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-light) 100%)',
+                        : 'var(--gradient-primary)',
                       boxShadow: '0 4px 16px rgba(186,32,39,0.35)',
                     }}
                   >
@@ -106,7 +106,7 @@ export function MobileTabBar() {
                   {count > 0 && (
                     <span
                       className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-white"
-                      style={{ background: 'var(--color-primary)', fontSize: '9px', fontWeight: 700 }}
+                      style={{ background: 'var(--color-primary-solid)', fontSize: '9px', fontWeight: 700 }}
                     >
                       {count > 9 ? '9+' : count}
                     </span>
@@ -135,7 +135,7 @@ export function MobileTabBar() {
                 {moreBadgeCount > 0 && (
                   <span
                     className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-white"
-                    style={{ background: 'var(--color-primary)', fontSize: '9px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary-solid)', fontSize: '9px', fontWeight: 700 }}
                   >
                     {moreBadgeCount > 9 ? '9+' : moreBadgeCount}
                   </span>

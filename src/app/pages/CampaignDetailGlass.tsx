@@ -1,27 +1,30 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound } from 'lucide-react';
+import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare, Clock3, Target, UsersRound, CalendarClock
+} from 'lucide-react';
 import { JobCardModal } from '../components/JobCardModalGlass';
-import { DeliveryScheduleSection } from '../components/DeliveryScheduleSection';
+import { CampaignDiscussionPanel } from '../components/CampaignDiscussionPanel';
 import { CloneCampaignModal } from '../components/CloneCampaignModal';
 import { NewCampaignModal, type CampaignFormData } from '../components/NewCampaignModal';
 import { CampaignHealthBadge, ReplacementTracker } from '../components/CampaignHealthBadge';
 import { CampaignThread } from '../components/thread/CampaignThread';
 import { TalBadge } from '../components/thread/TalBadge';
-import { ConvertrQAStats } from '../components/ConvertrQAStatus';
 import { CampaignKpiBand } from '../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/CampaignAnalyticsTabs';
+import { DeliveryAndQuality } from '../components/campaign/DeliveryAndQuality';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgrammaticTab';
-import { CampaignDemographics } from '../components/campaign/CampaignDemographics';
+import { CampaignReachTab } from '../components/campaign/CampaignReachTab';
+import { CampaignAudienceTab } from '../components/campaign/CampaignAudienceTab';
+import { SyndicationPerformance } from '../components/campaign/SyndicationPerformance';
 import { showFutureModules } from '../config/demo';
-import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from '../data/propensity';
+import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics, getFlightStatus } from '../data/propensity';
 import { campaignTypeFor } from '../data/outcomes';
 import { useCampaignThread } from '../context/CampaignThreadContext';
 import { useAuth } from '../context/AuthContext';
 import { useUnionLens } from '../hooks/useUnionLens';
-import { useIsMobile } from '../components/ui/use-mobile';
 import { resolveCampaignForUser } from '../data/unionClient';
+import { useDeliveryOverrides, overrideFor } from '../data/unionOps';
 import { getActivitiesForCampaign, getReplacementStats } from '../data/campaignActivities';
 import { getCampaignHealth } from '../utils/campaignHealth';
 import { toast } from 'sonner';
@@ -37,10 +40,9 @@ export default function CampaignDetail() {
   const [showNewCampaignModal, setShowNewCampaignModal] = useState(false);
   const [clonePrefill, setClonePrefill] = useState<Partial<CampaignFormData> | undefined>(undefined);
   const { openRequestsFor } = useCampaignThread();
-  const isMobile = useIsMobile();
   // Phones can't fit analytics and the conversation side by side; a segmented
   // switch shows one at a time instead of stacking a very long page.
-  const [mobileSection, setMobileSection] = useState<'overview' | 'discussion'>('overview');
+  const [showDiscussion, setShowDiscussion] = useState(false);
   
   // Find the campaign across all clients, under this login's identity
   const resolved = resolveCampaignForUser(currentUser, id);
@@ -62,20 +64,28 @@ export default function CampaignDetail() {
     );
   }
 
-  const acceptanceRate = campaign.acceptanceRate || 0;
-  
+  // Ops-entered delivery & acceptance figures win over the feed: acceptance is
+  // manual for clients without Convertr, suppressed leads are never charged,
+  // and ops's entry is the number the portal stands behind.
+  const override = overrideFor(campaign.id, useDeliveryOverrides());
+  const acceptanceRate = override?.accepted != null && override?.delivered
+    ? Math.round((override.accepted / override.delivered) * 100)
+    : campaign.acceptanceRate || 0;
+
   // Use goalLeads/deliveredLeads if available, otherwise fall back to target/delivered
   const targetLeads = campaign.goalLeads || campaign.target || campaign.totalLeads || 0;
-  const deliveredLeads = campaign.deliveredLeads || campaign.delivered || campaign.totalLeads || 0;
-  
+  const deliveredLeads = override?.delivered ?? (campaign.deliveredLeads || campaign.delivered || campaign.totalLeads || 0);
+
   const progressPercentage = targetLeads > 0
     ? Math.min(100, Math.round((deliveredLeads / targetLeads) * 100))
     : 0;
 
-  // CPL × delivered leads = total billable to the client (client-facing "revenue").
+  // CPL × billable leads = total billable to the client (client-facing "revenue").
+  // Billable is what the client accepted — suppressed leads are never charged.
   // CPL derives from the agreed budget ÷ target when not set explicitly.
   const cpl = (campaign as any).cpl ?? (campaign.budget && targetLeads ? Math.round(campaign.budget / targetLeads) : 50);
-  const totalBillable = cpl * deliveredLeads;
+  const billableLeads = override?.accepted ?? deliveredLeads;
+  const totalBillable = cpl * billableLeads;
   
   // UNION preview: Programmatic merged into Campaigns. Crosswalk-paired
   // campaigns grow a Programmatic tab, an Impressions bar on the funnel, and
@@ -93,6 +103,7 @@ export default function CampaignDetail() {
   // leadership hasn't approved client-initiated campaigns yet.
   const hideSelfServe = showFuture && currentUser?.role === 'client';
 
+  const flight = pairedAbm ? getFlightStatus(pairedAbm.abmCampaignId, campaign) : null;
   const health = getCampaignHealth(campaign);
   const activities = lens(getActivitiesForCampaign(campaign.id));
   const replacementStats = getReplacementStats(campaign.id);
@@ -160,7 +171,7 @@ export default function CampaignDetail() {
               {showFuture && (
                 <span
                   className="inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold"
-                  style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
+                  style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
                 >
                   {campaignTypeFor(campaign.id)}
                 </span>
@@ -169,6 +180,33 @@ export default function CampaignDetail() {
               {campaign.startDate && campaign.endDate && (
                 <span style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
                   {campaign.startDate} – {campaign.endDate}
+                </span>
+              )}
+              {/* Where we are in the flight, and whether reach is keeping up
+                  with the clock. Client-safe: it compares accounts reached to
+                  days elapsed, never spend to budget. */}
+              {flight && (
+                <span
+                  className="inline-flex items-center gap-1.5"
+                  style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}
+                  title={`${flight.reachPct}% of the target list reached, ${flight.elapsedPct}% of the flight elapsed`}
+                >
+                  <CalendarClock className="h-3.5 w-3.5" style={{ color: 'var(--color-text-muted)' }} />
+                  Day {flight.dayOfFlight} of {flight.totalDays}
+                  <span
+                    className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
+                    style={{
+                      color: flight.pace === 'behind' ? 'var(--color-warning)' : 'var(--color-success)',
+                      background: flight.pace === 'behind' ? 'var(--color-warning-bg)' : 'var(--color-success-bg)',
+                    }}
+                  >
+                    {/* "reach" is load-bearing. The Pace tile above measures
+                        LEAD DELIVERY against time; this measures accounts
+                        reached. They can legitimately disagree, and an
+                        unqualified "ahead" beside "On Track" just reads as a
+                        contradiction. */}
+                    reach {flight.pace}
+                  </span>
                 </span>
               )}
               {campaign.budget && (
@@ -190,6 +228,24 @@ export default function CampaignDetail() {
           </div>
 
           <div className="grid flex-shrink-0 grid-cols-3 gap-2 sm:flex sm:flex-row">
+            {/* The conversation is now opened deliberately rather than occupying
+                two of five columns on every visit. The badge is what makes that
+                safe — an open request stays visible without the panel being. */}
+            <button
+              onClick={() => setShowDiscussion(true)}
+              className="btn-outline relative px-3.5 py-2 flex items-center justify-center gap-2"
+            >
+              <MessageSquare className="w-4 h-4" />
+              Discussion
+              {openRequestsFor(campaign.id) > 0 && (
+                <span
+                  className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
+                  style={{ background: 'var(--color-primary-solid)' }}
+                >
+                  {openRequestsFor(campaign.id)}
+                </span>
+              )}
+            </button>
             <button onClick={() => setShowJobCard(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
               <FileText className="w-4 h-4" />
               Job Card
@@ -210,6 +266,24 @@ export default function CampaignDetail() {
           </div>
         </div>
 
+        {/* Delivery under client review — some clients hold blind suppression
+            lists, so final acceptance can take a couple of days. Shown plainly
+            rather than pretending the numbers are final. */}
+        {override?.status === 'awaiting_client' && (
+          <div
+            className="flex items-center gap-2.5 rounded-xl border px-4 py-2.5"
+            style={{ borderColor: 'var(--color-warning)', background: 'var(--color-warning-bg)' }}
+          >
+            <Clock3 className="h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
+            <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+              Latest delivery under your team's review
+            </span>
+            <span className="hidden text-[12px] sm:inline" style={{ color: 'var(--color-text-secondary)' }}>
+              — accepted counts update once the review lands
+            </span>
+          </div>
+        )}
+
         {/* KPI band — absorbs the old donut card and Delivery Pace card. */}
         <CampaignKpiBand
           hideOps={showFuture}
@@ -224,107 +298,68 @@ export default function CampaignDetail() {
           paceLabel={health.label}
           qaValidPercent={isConvertr ? Math.round((convertrStats.valid / convertrStats.totalProcessed) * 100) : undefined}
           openRequests={openRequestsFor(campaign.id)}
-          onOpenRequests={() => {
-            if (isMobile) setMobileSection('discussion');
-            // Defer so the thread exists before scrolling on mobile.
-            requestAnimationFrame(() =>
-              document.getElementById('campaign-discussion')?.scrollIntoView({ behavior: 'smooth', block: 'start' }),
-            );
-          }}
+          onOpenRequests={() => setShowDiscussion(true)}
         />
 
-        {/* Mobile section switch — Overview | Discussion */}
-        {isMobile && (
-          <div
-            className="mb-4 grid grid-cols-2 gap-1 rounded-xl p-1"
-            style={{ background: 'var(--color-surface-raised)', border: '1px solid var(--color-border)' }}
-          >
-            {([['overview', 'Overview'], ['discussion', 'Discussion']] as const).map(([key, label]) => (
-              <button
-                key={key}
-                onClick={() => setMobileSection(key)}
-                className={`min-h-[40px] rounded-lg text-sm font-semibold transition-all ${
-                  mobileSection === key ? 'bg-[var(--color-primary)] text-white shadow-sm' : 'text-[var(--color-text-secondary)]'
-                }`}
-              >
-                {label}
-                {key === 'discussion' && openRequestsFor(campaign.id) > 0 && (
-                  <span
-                    className="ml-1.5 inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold"
-                    style={
-                      mobileSection === key
-                        ? { background: 'rgba(255,255,255,0.25)', color: '#fff' }
-                        : { background: 'var(--color-primary)', color: '#fff' }
-                    }
-                  >
-                    {openRequestsFor(campaign.id)}
-                  </span>
-                )}
-              </button>
-            ))}
-          </div>
-        )}
-
-        {/* Analytics on the left, the conversation pinned alongside it —
-            or, on mobile, one section at a time via the switch above. */}
-        <div className="grid grid-cols-1 gap-5 lg:grid-cols-5">
-          {(!isMobile || mobileSection === 'overview') && (
-            <div className="lg:col-span-3 space-y-5">
-              <CampaignAnalyticsTabs
-                tabs={[
-                  Boolean(campaign.outreachMetrics) && {
-                    key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
-                    content: (
+        {/* Analytics now own the full width. The conversation used to sit here
+            as a permanent two-of-five column; it opens from the header instead. */}
+        <div className="space-y-5">
+          <CampaignAnalyticsTabs
+            // Tabs answer the client's questions in order — am I getting my
+            // leads, who did you reach, who exactly, how are the ads doing —
+            // rather than being organised by which vendor supplied the data.
+            tabs={[
+              {
+                // Delivery, Quality and the outreach funnel were three tabs
+                // that between them printed the same delivery repeatedly.
+                key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
+                content: (
+                  <div className="space-y-4">
+                    <DeliveryAndQuality campaign={campaign} qa={isConvertr ? convertrStats : undefined} />
+                    {campaign.outreachMetrics && (
                       <OutreachFunnel
-                        metrics={campaign.outreachMetrics!}
+                        metrics={campaign.outreachMetrics}
                         deliveredLeads={deliveredLeads}
                         impressions={abmImpressions}
                       />
-                    ),
-                  },
-                  {
-                    key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
-                    content: <DeliveryScheduleSection campaign={campaign} bare />,
-                  },
-                  isConvertr && {
-                    key: 'quality', label: 'Quality', Icon: TAB_ICONS.quality,
-                    content: <ConvertrQAStats {...convertrStats} />,
-                  },
-                  Boolean(pairedAbm) && {
-                    key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
-                    content: <CampaignProgrammaticTab abmCampaignId={pairedAbm!.abmCampaignId} />,
-                  },
-                ]}
-              />
+                    )}
+                    {/* Which asset earned the leads, which publisher supplied
+                        them, and what sales did with them afterwards. */}
+                    <SyndicationPerformance campaignId={campaign.id} totalLeads={deliveredLeads} />
+                  </div>
+                ),
+              },
+              Boolean(pairedAbm) && {
+                key: 'reach', label: 'Reach', Icon: Target,
+                content: <CampaignReachTab abmCampaignId={pairedAbm!.abmCampaignId} />,
+              },
+              Boolean(pairedAbm) && {
+                key: 'audience', label: 'Audience', Icon: UsersRound,
+                content: <CampaignAudienceTab abmCampaignId={pairedAbm!.abmCampaignId} />,
+              },
+              Boolean(pairedAbm) && {
+                key: 'advertising', label: 'Advertising', Icon: TAB_ICONS.programmatic,
+                content: <CampaignProgrammaticTab abmCampaignId={pairedAbm!.abmCampaignId} />,
+              },
+            ]}
+          />
 
-              <ReplacementTracker
-                totalRejected={replacementStats.totalRejected}
-                totalReplaced={replacementStats.totalReplaced}
-                remaining={replacementStats.remaining}
-              />
+          <ReplacementTracker
+            totalRejected={replacementStats.totalRejected}
+            totalReplaced={replacementStats.totalReplaced}
+            remaining={replacementStats.remaining}
+          />
 
-              {showFuture && <CampaignDemographics campaignName={campaign.name} />}
-            </div>
-          )}
-
-          {/* The thread scrolls inside itself so the page height no longer
-              depends on how much the client and the campaign manager talk. It
-              stretches with the row rather than sticking to the viewport, so it
-              bottom-aligns with the analytics column beside it — sticky plus a
-              viewport-height cap left it ending short of that column. */}
-          {(!isMobile || mobileSection === 'discussion') && (
-            <div id="campaign-discussion" className="lg:relative lg:col-span-2">
-              <CampaignThread
-                campaignId={campaign.id}
-                campaignName={campaign.name}
-                activities={activities}
-                variant="rail"
-                fill
-              />
-            </div>
-          )}
         </div>
       </div>
+
+      <CampaignDiscussionPanel
+        open={showDiscussion}
+        onClose={() => setShowDiscussion(false)}
+        campaignId={campaign.id}
+        campaignName={campaign.name}
+        activities={activities}
+      />
 
       {/* Job Card Modal */}
       <JobCardModal
