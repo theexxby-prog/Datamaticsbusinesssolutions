@@ -454,3 +454,222 @@ export function getEngagedColleagues(accountSlug: string): EngagedColleague[] {
   const start = h % COLLEAGUE_POOL.length;
   return Array.from({ length: count }, (_, i) => COLLEAGUE_POOL[(start + i) % COLLEAGUE_POOL.length]);
 }
+
+// ── Account-level analytics ─────────────────────────────────────────────────
+// The ABM question a lead count can't answer: of the named accounts we set out
+// to reach, how many did we actually touch, engage, reach more than once, and
+// turn sales-ready? Every figure below derives from the AbmCampaign record, so
+// the funnel, the tiles above it and the account table can never disagree —
+// same discipline as getCohortBreakdown. Rounding remainders land on the
+// largest bucket so the parts always sum to the whole.
+
+/** Stable per-campaign variation without Math.random (which would re-roll on every render). */
+function seedOf(id: string): number {
+  let h = 0;
+  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
+  return h;
+}
+
+/** Split a total across weights, giving the rounding remainder to the biggest share. */
+function splitTotal(total: number, weights: number[]): number[] {
+  const sum = weights.reduce((s, w) => s + w, 0);
+  const parts = weights.map(w => Math.round((total * w) / sum));
+  const drift = total - parts.reduce((s, p) => s + p, 0);
+  if (drift !== 0) {
+    const biggest = parts.indexOf(Math.max(...parts));
+    parts[biggest] += drift;
+  }
+  return parts;
+}
+
+export interface AccountFunnelStage {
+  key: 'targeted' | 'reached' | 'engaged' | 'multiTouch' | 'salesReady';
+  label: string;
+  hint: string;
+  accounts: number;
+  /** Share of the targeted list, for the bar width. */
+  pctOfTargeted: number;
+}
+
+export function getAccountFunnel(abmCampaignId: string): AccountFunnelStage[] {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  const targeted = abm.goalAccounts;
+  const engaged = abm.engagedAccounts;
+  // Reached derives from engaged rather than from targeted, so it can never
+  // fall below the engaged count no matter how the campaign totals move.
+  const reached = Math.min(targeted, Math.round(engaged / 0.83));
+  const multiTouch = Math.round(engaged * 0.55);
+  const salesReady = Math.round(engaged * 0.22);
+
+  const stages: Array<Omit<AccountFunnelStage, 'pctOfTargeted'>> = [
+    { key: 'targeted', label: 'Targeted', hint: 'Named accounts in the audience', accounts: targeted },
+    { key: 'reached', label: 'Reached', hint: 'Served at least one impression', accounts: reached },
+    { key: 'engaged', label: 'Engaged', hint: 'Clicked or visited the site', accounts: engaged },
+    { key: 'multiTouch', label: 'Multi-touch', hint: 'Engaged on more than one channel', accounts: multiTouch },
+    { key: 'salesReady', label: 'Sales-ready', hint: 'Hot warmth — worth a call now', accounts: salesReady },
+  ];
+  return stages.map(s => ({ ...s, pctOfTargeted: Math.round((s.accounts / targeted) * 100) }));
+}
+
+export interface UnreachedAccount {
+  name: string;
+  industry: string;
+  employees: string;
+}
+
+const UNREACHED_POOL: UnreachedAccount[] = [
+  { name: 'Kestrel Manufacturing Group', industry: 'Manufacturing', employees: '1,000-4,999' },
+  { name: 'Pinnacle Freight Systems', industry: 'Logistics', employees: '500-999' },
+  { name: 'Copperline Energy', industry: 'Energy & utilities', employees: '5,000+' },
+  { name: 'Marlowe Financial Partners', industry: 'Financial services', employees: '1,000-4,999' },
+  { name: 'Ashford Health Network', industry: 'Healthcare', employees: '5,000+' },
+  { name: 'Verity Payments', industry: 'Financial services', employees: '500-999' },
+  { name: 'Stonebridge Industrial', industry: 'Manufacturing', employees: '1,000-4,999' },
+  { name: 'Harrowgate Retail Group', industry: 'Retail & ecommerce', employees: '5,000+' },
+  { name: 'Lyndon Aerospace', industry: 'Manufacturing', employees: '1,000-4,999' },
+  { name: 'Cobalt Telecom', industry: 'Telecom & media', employees: '5,000+' },
+  { name: 'Ravensworth Insurance', industry: 'Insurance', employees: '1,000-4,999' },
+  { name: 'Dunmore Chemicals', industry: 'Manufacturing', employees: '500-999' },
+];
+
+/**
+ * The accounts still to be reached — the gap between targeted and reached, and
+ * the most actionable list on the page: these are the ones to redirect spend at.
+ *
+ * `total` is always the true gap; `named` is the sample we can put names to.
+ * Keeping them separate matters because the headline count must reconcile with
+ * the funnel (targeted − reached) even when the sample is shorter.
+ */
+export function getUnreachedAccounts(abmCampaignId: string): { total: number; named: UnreachedAccount[] } {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return { total: 0, named: [] };
+  const total = funnel[0].accounts - funnel[1].accounts;
+  const start = seedOf(abmCampaignId) % UNREACHED_POOL.length;
+  const named = Array.from({ length: Math.min(total, UNREACHED_POOL.length) }, (_, i) =>
+    UNREACHED_POOL[(start + i) % UNREACHED_POOL.length]);
+  return { total, named };
+}
+
+export interface WeeklyReachPoint {
+  week: string;
+  reached: number;
+  engaged: number;
+}
+
+/** Cumulative build-up, easing out and landing exactly on the current totals. */
+export function getWeeklyReach(abmCampaignId: string): WeeklyReachPoint[] {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return [];
+  const reached = funnel[1].accounts;
+  const engaged = funnel[2].accounts;
+  const weeks = 8;
+  return Array.from({ length: weeks }, (_, i) => {
+    const t = (i + 1) / weeks;
+    const ease = 1 - Math.pow(1 - t, 2); // fast early, flattening as the audience saturates
+    return {
+      week: `W${i + 1}`,
+      reached: Math.round(reached * ease),
+      engaged: Math.round(engaged * ease * (0.82 + 0.18 * t)),
+    };
+  });
+}
+
+export interface BuyingCentre {
+  /** People reached inside engaged accounts. */
+  stakeholders: number;
+  avgPerAccount: number;
+  seniority: Array<{ name: string; percentage: number }>;
+  functions: Array<{ name: string; percentage: number }>;
+  /** Share sitting at Director level or above. */
+  directorPlusPct: number;
+}
+
+export function getBuyingCentre(abmCampaignId: string): BuyingCentre | null {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return null;
+  const seed = seedOf(abmCampaignId);
+  const engaged = abm.engagedAccounts;
+  const avgPerAccount = Math.round((4.4 + (seed % 18) / 10) * 10) / 10;
+  const stakeholders = Math.round(engaged * avgPerAccount);
+
+  // Seniority weights drift slightly per campaign, then normalise to 100.
+  const senWeights = [9 + (seed % 4), 18 + (seed % 5), 31, 27, 15];
+  const senValues = splitTotal(100, senWeights);
+  const seniority = ['C-suite', 'VP / SVP', 'Director', 'Manager', 'Practitioner']
+    .map((name, i) => ({ name, percentage: senValues[i] }));
+
+  const fnWeights = [34, 26 + (seed % 6), 18, 12, 10];
+  const fnValues = splitTotal(100, fnWeights);
+  const functions = ['IT & infrastructure', 'Security', 'Operations', 'Finance', 'Other']
+    .map((name, i) => ({ name, percentage: fnValues[i] }))
+    .sort((a, b) => b.percentage - a.percentage);
+
+  return {
+    stakeholders,
+    avgPerAccount,
+    seniority,
+    functions,
+    directorPlusPct: seniority[0].percentage + seniority[1].percentage + seniority[2].percentage,
+  };
+}
+
+/** Engaged accounts by vertical. Counts sum to the engaged total. */
+export function getIndustryMix(abmCampaignId: string): Array<{ name: string; accounts: number; percentage: number }> {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  const seed = seedOf(abmCampaignId);
+  const names = ['Financial services', 'Manufacturing', 'Healthcare', 'Technology', 'Energy & utilities', 'Other'];
+  const counts = splitTotal(abm.engagedAccounts, [30 + (seed % 8), 24, 16, 13, 9, 8]);
+  return names
+    .map((name, i) => ({
+      name,
+      accounts: counts[i],
+      percentage: Math.round((counts[i] / abm.engagedAccounts) * 100),
+    }))
+    .sort((a, b) => b.accounts - a.accounts);
+}
+
+export interface FrequencyBand {
+  band: string;
+  accounts: number;
+  /** 7-12 impressions per account is where engagement peaks without fatigue. */
+  inSweetSpot: boolean;
+}
+
+export function getFrequencyDistribution(abmCampaignId: string): FrequencyBand[] {
+  const funnel = getAccountFunnel(abmCampaignId);
+  if (funnel.length === 0) return [];
+  const reached = funnel[1].accounts;
+  const seed = seedOf(abmCampaignId);
+  const bands = ['1-3', '4-6', '7-12', '13-18', '19+'];
+  const counts = splitTotal(reached, [14, 22, 34 + (seed % 6), 19, 11]);
+  return bands.map((band, i) => ({ band, accounts: counts[i], inSweetSpot: band === '7-12' }));
+}
+
+export interface ChannelPerformance {
+  channel: string;
+  impressions: number;
+  clicks: number;
+  ctr: number;
+  /** Ops only — omitted entirely from client responses. */
+  cost?: number;
+}
+
+export function getChannelPerformance(abmCampaignId: string, opsView = false): ChannelPerformance[] {
+  const abm = ABM_CAMPAIGNS.find(c => c.id === abmCampaignId);
+  if (!abm) return [];
+  const channels = ['Programmatic display', 'LinkedIn', 'Meta', 'Email'];
+  const impWeights = [58, 24, 12, 6];
+  const clickWeights = [42, 33, 15, 10]; // social clicks harder, but at lower volume
+  const imps = splitTotal(abm.impressions, impWeights);
+  const clicks = splitTotal(abm.clicks, clickWeights);
+  const costs = splitTotal(abm.spendToDate, impWeights);
+  return channels.map((channel, i) => ({
+    channel,
+    impressions: imps[i],
+    clicks: clicks[i],
+    ctr: Math.round((clicks[i] / imps[i]) * 10000) / 100,
+    ...(opsView ? { cost: costs[i] } : {}),
+  }));
+}

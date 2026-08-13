@@ -1,37 +1,60 @@
-import { Wallet, Activity, Building2, TrendingUp, Radar, Layers } from 'lucide-react';
-import { AccountsSection } from '../propensity/AccountsSection';
+import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import {
+  Activity, Building2, Eye, Gauge, Layers, MousePointerClick, Radar, TrendingUp, Wallet,
+} from 'lucide-react';
+import { AssetsSection } from '../propensity/AssetsSection';
 import { SpendChannelsSection } from '../propensity/SpendChannelsSection';
 import { SyndicationInfluenceSection } from '../propensity/SyndicationInfluenceSection';
-import { getAbmSummary, getCohortBreakdown, PROPENSITY_SYNC_LABEL } from '../../data/propensity';
+import { ChartCard, TOOLTIP_STYLE } from '../ChartCard';
+import { useIsMobile } from '../ui/use-mobile';
+import {
+  getAbmSummary, getChannelPerformance, getCohortBreakdown, getFrequencyDistribution,
+  PROPENSITY_SYNC_LABEL,
+} from '../../data/propensity';
 import { formatMoney as fmtMoney } from '../../utils/format';
 import { format, parseISO } from 'date-fns';
 
-// ─── Programmatic tab on the campaign detail page ────────────────────────────
-// The standalone Programmatic page merged into Campaigns: each crosswalk-paired
-// syndication campaign now carries its ABM air cover as an analytics tab. The
-// summary row is scoped to the ONE paired ABM campaign (spend / pacing /
-// accounts / ROI come per-campaign from the Campaign Summary endpoint); the
-// account, spend-channel and influence sections report at module level — the
-// mock endpoints don't break those out per campaign yet, matching production,
-// where PDN spend and account engagement are account-wide feeds.
+// ─── Advertising tab ─────────────────────────────────────────────────────────
+// Just the ads now. Account reach and audience composition used to live here,
+// which made this tab a catch-all and buried the things it was actually about;
+// they're campaign-level truths that happen to be measured through ad data, so
+// they moved to their own tabs. What's left is delivery, saturation, channel
+// mix and creative — plus the ops-only cost view.
+//
+// Spend, pacing and ROI are ops-only. They used to render for clients here,
+// which contradicted the rule that a client sees one combined spend figure
+// with margins already applied.
 
 interface CampaignProgrammaticTabProps {
   /** The paired ABM campaign (from ABM_SYNDICATION_CROSSWALK). */
   abmCampaignId: string;
-  /** Ops workspace only: shows the per-cohort breakdown. Clients see totals. */
+  /** Ops workspace only: cohorts, spend channels and the cost tiles. */
   opsView?: boolean;
 }
 
 export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: CampaignProgrammaticTabProps) {
+  const isMobile = useIsMobile();
   const abm = getAbmSummary().find(c => c.id === abmCampaignId);
   if (!abm) return null;
 
+  const ctr = abm.impressions > 0 ? Math.round((abm.clicks / abm.impressions) * 10000) / 100 : 0;
+  const frequency = getFrequencyDistribution(abmCampaignId);
+  const channels = getChannelPerformance(abmCampaignId, opsView);
+
   const stats = [
-    { icon: Wallet, label: 'Media spend', value: fmtMoney(abm.spendToDate), foot: `of ${fmtMoney(abm.budget)} budget` },
-    { icon: Activity, label: 'Pacing', value: `${abm.pacingPct}%`, foot: 'of plan' },
+    { icon: Eye, label: 'Impressions', value: abm.impressions.toLocaleString('en-US'), foot: 'served to date' },
+    { icon: MousePointerClick, label: 'Clicks', value: abm.clicks.toLocaleString('en-US'), foot: `${ctr}% CTR` },
     { icon: Building2, label: 'Accounts engaged', value: String(abm.engagedAccounts), foot: `of ${abm.goalAccounts} targeted` },
-    { icon: TrendingUp, label: 'ROI', value: `${abm.roi.toFixed(1)}×`, foot: 'pipeline / spend' },
+    ...(opsView
+      ? [
+          { icon: Wallet, label: 'Media spend', value: fmtMoney(abm.spendToDate), foot: `of ${fmtMoney(abm.budget)} budget` },
+          { icon: Activity, label: 'Pacing', value: `${abm.pacingPct}%`, foot: 'of plan' },
+          { icon: TrendingUp, label: 'ROI', value: `${abm.roi.toFixed(1)}×`, foot: 'pipeline / spend' },
+        ]
+      : []),
   ];
+
+  const sweetSpot = frequency.find(f => f.inSweetSpot);
 
   return (
     <div className="space-y-4">
@@ -53,7 +76,7 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className={`grid grid-cols-2 gap-3 ${opsView ? 'sm:grid-cols-3 xl:grid-cols-6' : 'sm:grid-cols-3'}`}>
           {stats.map(stat => {
             const Icon = stat.icon;
             return (
@@ -77,6 +100,68 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
         </div>
       </div>
 
+      {/* Saturation — are accounts seeing the right amount? */}
+      <ChartCard title="Impression frequency per account" icon={Gauge}>
+        <ResponsiveContainer width="100%" height={isMobile ? 180 : 220}>
+          <BarChart data={frequency} margin={{ top: 6, right: 6, left: -18, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
+            <XAxis dataKey="band" stroke="none" tickLine={false} tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
+            <YAxis stroke="none" tickLine={false} tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
+            <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${v} accounts`, 'Accounts']} />
+            <Bar dataKey="accounts" radius={[3, 3, 0, 0]}>
+              {frequency.map(f => (
+                <Cell key={f.band} fill={f.inSweetSpot ? 'var(--color-primary-solid)' : 'var(--color-chart-2)'} />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
+        <p className="mt-1 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+          Engagement peaks between 7 and 12 impressions per account, where {sweetSpot?.accounts ?? 0} accounts currently
+          sit. Below that they don't remember you; above it, returns flatten.
+        </p>
+      </ChartCard>
+
+      {/* Channel mix */}
+      <div className="glass-card p-4">
+        <h3
+          className="mb-3 flex items-center gap-2"
+          style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}
+        >
+          <Layers className="h-4 w-4" />
+          Channel performance
+        </h3>
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[420px] text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <thead>
+              <tr
+                className="text-left text-[10.5px] font-bold uppercase tracking-[0.06em]"
+                style={{ color: 'var(--color-text-muted)' }}
+              >
+                <th className="py-1.5 pr-3 font-bold">Channel</th>
+                <th className="py-1.5 pr-3 text-right font-bold">Impressions</th>
+                <th className="py-1.5 pr-3 text-right font-bold">Clicks</th>
+                <th className="py-1.5 text-right font-bold">CTR</th>
+                {opsView && <th className="py-1.5 pl-3 text-right font-bold">Cost</th>}
+              </tr>
+            </thead>
+            <tbody style={{ fontVariantNumeric: 'tabular-nums' }}>
+              {channels.map(c => (
+                <tr key={c.channel} className="border-t" style={{ borderColor: 'var(--color-border-light)' }}>
+                  <td className="py-1.5 pr-3 font-semibold" style={{ color: 'var(--color-text-primary)' }}>{c.channel}</td>
+                  <td className="py-1.5 pr-3 text-right">{c.impressions.toLocaleString('en-US')}</td>
+                  <td className="py-1.5 pr-3 text-right">{c.clicks.toLocaleString('en-US')}</td>
+                  <td className="py-1.5 text-right">{c.ctr}%</td>
+                  {opsView && <td className="py-1.5 pl-3 text-right">{fmtMoney(c.cost ?? 0)}</td>}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Creative performance, moved here from its own ops tab */}
+      <AssetsSection abmCampaignId={abmCampaignId} />
+
       {/* Cohort breakdown — ops only. Propensity delivers a campaign as waves
           and reports per cohort; one campaign, cohorts roll up. The client
           view shows only the summed totals above, never the waves. */}
@@ -87,11 +172,8 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
           positive response there becomes a lead the client pays for. */}
       {opsView && <AdToLeadFunnel abmCampaignId={abmCampaignId} />}
 
-      {/* Target-account engagement (account-wide feed) */}
-      <AccountsSection />
-
-      {/* Spend by PDN channel + blended view */}
-      <SpendChannelsSection />
+      {/* Spend by channel — ops only, it's cost data */}
+      {opsView && <SpendChannelsSection />}
 
       {/* Syndication → ABM influence via the crosswalk */}
       <SyndicationInfluenceSection />

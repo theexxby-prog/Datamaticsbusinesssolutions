@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router';
-import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare, Clock3
+import { ChevronRight, FileText, Download, ArrowLeft, Copy, Wallet, UserRound, MessageSquare, Clock3, Target, UsersRound
 } from 'lucide-react';
 import { JobCardModal } from '../components/JobCardModalGlass';
 import { CampaignDiscussionPanel } from '../components/CampaignDiscussionPanel';
@@ -14,6 +14,8 @@ import { CampaignAnalyticsTabs, TAB_ICONS } from '../components/campaign/Campaig
 import { DeliveryAndQuality } from '../components/campaign/DeliveryAndQuality';
 import { OutreachFunnel } from '../components/campaign/OutreachFunnel';
 import { CampaignProgrammaticTab } from '../components/campaign/CampaignProgrammaticTab';
+import { CampaignReachTab } from '../components/campaign/CampaignReachTab';
+import { CampaignAudienceTab } from '../components/campaign/CampaignAudienceTab';
 import { showFutureModules } from '../config/demo';
 import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from '../data/propensity';
 import { campaignTypeFor } from '../data/outcomes';
@@ -274,25 +276,37 @@ export default function CampaignDetail() {
             as a permanent two-of-five column; it opens from the header instead. */}
         <div className="space-y-5">
           <CampaignAnalyticsTabs
+            // Tabs answer the client's questions in order — am I getting my
+            // leads, who did you reach, who exactly, how are the ads doing —
+            // rather than being organised by which vendor supplied the data.
             tabs={[
-              Boolean(campaign.outreachMetrics) && {
-                key: 'performance', label: 'Performance', Icon: TAB_ICONS.performance,
+              {
+                // Delivery, Quality and the outreach funnel were three tabs
+                // that between them printed the same delivery repeatedly.
+                key: 'delivery', label: 'Delivery', Icon: TAB_ICONS.delivery,
                 content: (
-                  <OutreachFunnel
-                    metrics={campaign.outreachMetrics!}
-                    deliveredLeads={deliveredLeads}
-                    impressions={abmImpressions}
-                  />
+                  <div className="space-y-4">
+                    <DeliveryAndQuality campaign={campaign} qa={isConvertr ? convertrStats : undefined} />
+                    {campaign.outreachMetrics && (
+                      <OutreachFunnel
+                        metrics={campaign.outreachMetrics}
+                        deliveredLeads={deliveredLeads}
+                        impressions={abmImpressions}
+                      />
+                    )}
+                  </div>
                 ),
               },
-              {
-                // Delivery and Quality were two sparse tabs that between them
-                // printed the same delivery three times. One tab now.
-                key: 'delivery', label: 'Delivery & QA', Icon: TAB_ICONS.delivery,
-                content: <DeliveryAndQuality campaign={campaign} qa={isConvertr ? convertrStats : undefined} />,
+              Boolean(pairedAbm) && {
+                key: 'reach', label: 'Reach', Icon: Target,
+                content: <CampaignReachTab abmCampaignId={pairedAbm!.abmCampaignId} />,
               },
               Boolean(pairedAbm) && {
-                key: 'programmatic', label: 'Programmatic', Icon: TAB_ICONS.programmatic,
+                key: 'audience', label: 'Audience', Icon: UsersRound,
+                content: <CampaignAudienceTab abmCampaignId={pairedAbm!.abmCampaignId} />,
+              },
+              Boolean(pairedAbm) && {
+                key: 'advertising', label: 'Advertising', Icon: TAB_ICONS.programmatic,
                 content: <CampaignProgrammaticTab abmCampaignId={pairedAbm!.abmCampaignId} />,
               },
             ]}
