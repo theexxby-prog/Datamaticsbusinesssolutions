@@ -22,6 +22,7 @@ import { formatDateShort } from '../../utils/formatDate';
 import { formatMoney as fmtMoney } from '../../utils/format';
 import { PipelineStages } from '../../components/ops/PipelineStages';
 import { DeliveryAcceptanceTab } from '../../components/ops/DeliveryAcceptanceTab';
+import { ConnectionsPanel } from '../../components/ops/ConnectionsPanel';
 import { CampaignKpiBand } from '../../components/campaign/CampaignKpiBand';
 import { CampaignAnalyticsTabs, TAB_ICONS } from '../../components/campaign/CampaignAnalyticsTabs';
 import { CampaignProgrammaticTab } from '../../components/campaign/CampaignProgrammaticTab';
@@ -450,6 +451,9 @@ export default function UnionOpsCampaign() {
               },
             ]}
           />
+
+          {/* The linking workflow: convention suggests, ops confirms, the id joins. */}
+          <ConnectionsPanel campaignId={campaign.id} campaignName={pipeline.campaignName} />
 
           <ReplacementTracker
             totalRejected={replacements.totalRejected}

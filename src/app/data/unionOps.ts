@@ -128,6 +128,8 @@ export type EnrichmentStage = 'idle' | 'queued' | 'sent' | 'review' | 'published
 export interface CampaignPipeline {
   campaignId: string;
   campaignName: string;
+  /** Campaign type — the board shows a mix of everything we run. */
+  type: CampaignTypeCode;
   intake: {
     source: 'csv' | 'crm' | 'none';
     label: string;
@@ -149,6 +151,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46888',
     campaignName: CAMPAIGN_RENAMES['46888'],
+    type: 'SA',
     intake: { source: 'csv', label: 'atlas-q3-batch4.csv', rows: 252, receivedAt: '2026-07-30' },
     qa: { validPct: 97, flagged: exceptionsFor('46888').length },
     enrichment: { stage: 'review', sent: 246, returned: 20, label: '20 enriched briefings back Aug 2 — in review' },
@@ -158,6 +161,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46873',
     campaignName: CAMPAIGN_RENAMES['46873'],
+    type: 'CS',
     intake: { source: 'crm', label: 'Salesforce nightly pull', rows: 118, receivedAt: '2026-08-06' },
     qa: { validPct: 99, flagged: exceptionsFor('46873').length },
     enrichment: { stage: 'published', sent: 118, returned: 118, label: 'Batch enriched and published Aug 4' },
@@ -167,6 +171,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46936',
     campaignName: CAMPAIGN_RENAMES['46936'],
+    type: 'SS',
     intake: { source: 'none', label: 'Awaiting August batch', rows: 0 },
     qa: null,
     enrichment: { stage: 'idle', sent: 0, returned: 0, label: 'Next batch due Aug 8' },
@@ -176,6 +181,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46901',
     campaignName: CAMPAIGN_RENAMES['46901'],
+    type: 'CS',
     intake: { source: 'csv', label: 'beacon-edge-nam-batch7.csv', rows: 186, receivedAt: '2026-08-03' },
     qa: { validPct: 96, flagged: exceptionsFor('46901').length },
     enrichment: { stage: 'sent', sent: 178, returned: 0, label: '178 rows with Relish since Aug 4' },
@@ -185,6 +191,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46912',
     campaignName: CAMPAIGN_RENAMES['46912'],
+    type: 'SS',
     intake: { source: 'crm', label: 'Salesforce nightly pull', rows: 74, receivedAt: '2026-08-05' },
     qa: { validPct: 88, flagged: exceptionsFor('46912').length },
     enrichment: { stage: 'queued', sent: 0, returned: 0, label: 'Queued for the Aug 10 enrichment run' },
@@ -194,6 +201,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46927',
     campaignName: CAMPAIGN_RENAMES['46927'],
+    type: 'SA',
     intake: { source: 'csv', label: 'skyline-apac-batch5.csv', rows: 142, receivedAt: '2026-08-04' },
     qa: { validPct: 91, flagged: exceptionsFor('46927').length },
     enrichment: { stage: 'review', sent: 129, returned: 41, label: '41 enriched briefings back Aug 5 — in review' },
@@ -203,6 +211,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46944',
     campaignName: CAMPAIGN_RENAMES['46944'],
+    type: 'CS',
     intake: { source: 'none', label: 'Flight closed Mar 27', rows: 0 },
     qa: { validPct: 98, flagged: exceptionsFor('46944').length },
     enrichment: { stage: 'published', sent: 184, returned: 184, label: 'Final batch enriched and published Mar 23' },
@@ -212,6 +221,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46952',
     campaignName: CAMPAIGN_RENAMES['46952'],
+    type: 'PG',
     intake: { source: 'none', label: 'Flight closed Apr 30', rows: 0 },
     qa: { validPct: 94, flagged: exceptionsFor('46952').length },
     enrichment: { stage: 'published', sent: 121, returned: 121, label: 'Final batch published Apr 20' },
@@ -221,6 +231,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46967',
     campaignName: CAMPAIGN_RENAMES['46967'],
+    type: 'SA',
     intake: { source: 'none', label: 'Flight closed Jun 12', rows: 0 },
     qa: { validPct: 97, flagged: exceptionsFor('46967').length },
     enrichment: { stage: 'published', sent: 99, returned: 99, label: 'Over-delivered — final batch published Jun 8' },
@@ -230,6 +241,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46974',
     campaignName: CAMPAIGN_RENAMES['46974'],
+    type: 'CS',
     intake: { source: 'none', label: 'Flight closed Jun 30', rows: 0 },
     qa: { validPct: 93, flagged: exceptionsFor('46974').length },
     enrichment: { stage: 'published', sent: 140, returned: 140, label: 'Final batch published Jun 22' },
@@ -239,6 +251,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46989',
     campaignName: CAMPAIGN_RENAMES['46989'],
+    type: 'SS',
     intake: { source: 'none', label: 'Awaiting client sign-off', rows: 0 },
     qa: null,
     enrichment: { stage: 'idle', sent: 0, returned: 0, label: 'Kick-off scheduled for Sep 7' },
@@ -248,6 +261,7 @@ export const campaignPipelines: CampaignPipeline[] = [
   {
     campaignId: '46995',
     campaignName: CAMPAIGN_RENAMES['46995'],
+    type: 'PG',
     intake: { source: 'none', label: 'Awaiting client sign-off', rows: 0 },
     qa: null,
     enrichment: { stage: 'idle', sent: 0, returned: 0, label: 'Kick-off scheduled for Oct 5' },
@@ -714,4 +728,117 @@ export function overrideFor(
   map: Record<string, DeliveryOverride>,
 ): DeliveryOverride | undefined {
   return campaignId ? map[campaignId] : undefined;
+}
+
+
+// ── Ad-only campaign (programmatic, no lead pipeline) ───────────────────────
+// The board should show the right mix of everything we run, and a pure
+// programmatic campaign has no intake/QA/enrichment stages — it delivers
+// impressions and bills on them. One showcase row keeps that shape visible.
+
+export interface AdOnlyCampaign {
+  campaignId: string;
+  name: string;
+  type: CampaignTypeCode;
+  impressionsTarget: number;
+  impressionsDelivered: number;
+  clicks: number;
+  cohorts: number;
+  note: string;
+}
+
+export const adOnlyCampaigns: AdOnlyCampaign[] = [
+  {
+    campaignId: 'pg-edge-air',
+    name: 'Northwind Edge Air Cover — Q3',
+    type: 'PG',
+    impressionsTarget: 2_000_000,
+    impressionsDelivered: 1_640_000,
+    clicks: 21_300,
+    cohorts: 2,
+    note: 'Ads running via Propensity · no lead pipeline — cohorts roll up, billing on impressions',
+  },
+];
+
+// ── Propensity campaign links (the Connections panel) ───────────────────────
+// The naming convention is the suggestion engine, never the join. This store
+// is the join: Pulse campaign ↔ Propensity campaign by THEIR id, so either
+// side can rename anything once linked. A name that starts with our ID links
+// automatically; a near-miss is suggested and ops confirms; nothing links
+// silently on a guess. Relish never appears here — we create Relish batches
+// ourselves carrying our ID, so there is no foreign name to reconcile.
+
+export interface PropensityCandidate {
+  id: string;
+  name: string;
+}
+
+/** Unlinked campaigns sitting in the client's Propensity account. */
+export const PROPENSITY_UNLINKED: PropensityCandidate[] = [
+  { id: 'a2KJw00000GwB1kMAF', name: 'GridWorks Industrial ICP — Display FY26' },
+  { id: 'a2KJw00000GvQ8jMAB', name: 'BOFU - Accounts - May 2026' },
+  { id: 'a2KJw00000GxT4pMAd', name: 'Fairhaven Brand Awareness H2' },
+];
+
+export interface CampaignLink {
+  campaignId: string;
+  propensityId: string;
+  propensityName: string;
+  matchedBy: 'auto' | 'suggested' | 'manual';
+  label: string;
+}
+
+let campaignLinks: Record<string, CampaignLink> = {
+  '46888': {
+    campaignId: '46888', propensityId: 'a2KJw00000Gv18cMAB',
+    propensityName: 'Atlas AI Infrastructure — ABM Air Cover',
+    matchedBy: 'manual', label: 'Linked by ops · Aug 1',
+  },
+  '46873': {
+    campaignId: '46873', propensityId: 'a2KJw00000Gv22dMAB',
+    propensityName: 'Resilience Suite — Channel ABM',
+    matchedBy: 'manual', label: 'Linked by ops · Aug 1',
+  },
+  '46901': {
+    campaignId: '46901', propensityId: 'a2KJw00000Gv31eMAB',
+    propensityName: 'Beacon Secure Edge — NAM ABM',
+    matchedBy: 'manual', label: 'Linked by ops · Aug 4',
+  },
+};
+const linkListeners = new Set<() => void>();
+
+export function linkPropensityCampaign(
+  campaignId: string,
+  candidate: PropensityCandidate,
+  matchedBy: CampaignLink['matchedBy'],
+): void {
+  campaignLinks = {
+    ...campaignLinks,
+    [campaignId]: {
+      campaignId,
+      propensityId: candidate.id,
+      propensityName: candidate.name,
+      matchedBy,
+      label: matchedBy === 'auto' ? 'Name carries the campaign ID — linked automatically' : 'Linked by ops · just now',
+    },
+  };
+  linkListeners.forEach(l => l());
+}
+
+export function useCampaignLinks(): Record<string, CampaignLink> {
+  return useSyncExternalStore(
+    cb => {
+      linkListeners.add(cb);
+      return () => linkListeners.delete(cb);
+    },
+    () => campaignLinks,
+    () => campaignLinks,
+  );
+}
+
+/** Distinctive-word overlap: enough to SUGGEST a match, never to auto-link. */
+export function isSuggestedMatch(campaignName: string, candidateName: string): boolean {
+  const words = (t: string) => t.toLowerCase().split(/[^a-z0-9]+/).filter(w => w.length > 4);
+  const a = new Set(words(campaignName));
+  return words(candidateName).some(w => a.has(w));
 }

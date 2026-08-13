@@ -1,14 +1,14 @@
 import { useNavigate } from 'react-router';
 import {
-  Eye, CircleCheck, AlertTriangle, ArrowRight, ClipboardList, RefreshCw, Plus,
+  Eye, AlertTriangle, ArrowRight, ClipboardList, RefreshCw, Plus,
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import {
   integrationStatuses, campaignPipelines, opsTasks, useRelishJobs, jobsFor,
-  exceptionsFor, getMonthRollup, OPS_MONTH_LABEL,
-  useCreatedCampaigns, CAMPAIGN_TYPES_META,
+  adOnlyCampaigns, useCreatedCampaigns, CAMPAIGN_TYPES_META,
   type CampaignPipeline, type IntegrationStatus, type OpsTask,
 } from '../../data/unionOps';
+import { CampaignTypeChip } from '../../components/ops/CampaignTypeChip';
 import { PipelineStages } from '../../components/ops/PipelineStages';
 import { UNION_COMPANY } from '../../data/unionClient';
 import { useDocumentTitle } from '../../hooks/useDocumentTitle';
@@ -65,13 +65,14 @@ function PipelineRow({
   return (
     <div className="glass-card p-4">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <button onClick={() => onOpen(pipeline.campaignId)} className="flex items-center gap-2 text-left">
+        <button onClick={() => onOpen(pipeline.campaignId)} className="flex flex-wrap items-center gap-2 text-left">
           <span
             className="text-[14px] font-bold underline-offset-2 hover:underline"
             style={{ color: 'var(--color-text-primary)' }}
           >
             {pipeline.campaignName}
           </span>
+          <CampaignTypeChip type={pipeline.type} />
           <span
             className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
             style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
@@ -210,14 +211,42 @@ export default function UnionOpsDashboard() {
             onPreview={id => preview(`/campaigns/${id}`)}
           />
         ))}
+        {/* Pure programmatic runs have no intake/QA/enrichment — they deliver
+            impressions and bill on them, so the row shows that shape. */}
+        {adOnlyCampaigns.map(c => (
+          <div key={c.campaignId} className="glass-card p-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-[14px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
+              <CampaignTypeChip type={c.type} />
+            </div>
+            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+              <span>
+                <b style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+                  {c.impressionsDelivered.toLocaleString('en-US')}
+                </b>{' '}
+                of {c.impressionsTarget.toLocaleString('en-US')} impressions
+              </span>
+              <span><b style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>{c.clicks.toLocaleString('en-US')}</b> clicks</span>
+              <span>{c.cohorts} cohorts</span>
+            </div>
+            <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ background: 'var(--color-gray-100)' }}>
+              <div
+                className="h-full rounded-full"
+                style={{
+                  width: `${Math.min(100, Math.round((c.impressionsDelivered / c.impressionsTarget) * 100))}%`,
+                  background: 'var(--color-primary-solid)',
+                }}
+              />
+            </div>
+            <div className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>{c.note}</div>
+          </div>
+        ))}
       </div>
 
-      <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
-        <div className="xl:col-span-2">
-          <TaskQueue />
-        </div>
-        <MonthRollupCard />
-      </div>
+      {/* The month roll-up card is gone on purpose: its one load-bearing
+          number (open QA exceptions) already lives in the CleanRich health
+          tile, and the board itself is the per-campaign truth. */}
+      <TaskQueue />
     </div>
   );
 }
@@ -278,54 +307,6 @@ function RecentlyCreated() {
           </div>
         );
       })}
-    </div>
-  );
-}
-
-// Derived from the pipelines, so this card and the board can never disagree.
-function MonthRollupCard() {
-  const navigate = useNavigate();
-  const rollup = getMonthRollup(useRelishJobs());
-  const rows: Array<{ label: string; value: string; tone?: string }> = [
-    { label: 'Rows ingested', value: rollup.rowsIngested.toLocaleString('en-US') },
-    { label: 'Sent to Relish', value: rollup.sentToRelish.toLocaleString('en-US') },
-    { label: 'Enriched briefings back', value: rollup.enrichedBack.toLocaleString('en-US') },
-    { label: 'Published to portal', value: rollup.publishedToPortal.toLocaleString('en-US') },
-    { label: 'QA pass rate', value: `${rollup.qaPassRatePct}%`, tone: 'var(--color-success)' },
-  ];
-
-  // The campaign carrying the most exceptions is where the work actually is.
-  const worst = [...campaignPipelines].sort(
-    (a, b) => exceptionsFor(b.campaignId).length - exceptionsFor(a.campaignId).length,
-  )[0];
-
-  return (
-    <div className="glass-card flex flex-col p-4">
-      <h2 className="flex items-center gap-2 text-[13px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
-        <CircleCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
-        {OPS_MONTH_LABEL}
-      </h2>
-      {/* Spreads through the slack rather than pooling it under the last row:
-          this card shares a row with the taller task queue, which sets the
-          height. */}
-      <div className="mt-2 flex flex-1 flex-col justify-around gap-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
-        {rows.map(row => (
-          <div key={row.label} className="flex items-center justify-between">
-            <span>{row.label}</span>
-            <b style={{ color: row.tone ?? 'var(--color-text-primary)' }}>{row.value}</b>
-          </div>
-        ))}
-        <button
-          onClick={() => navigate(`/ops-union/campaigns/${worst.campaignId}`)}
-          className="flex w-full items-center justify-between border-t pt-2 text-left transition-colors hover:text-[var(--color-primary)]"
-          style={{ borderColor: 'var(--color-border-light)' }}
-        >
-          <span>QA exceptions open</span>
-          <b style={{ color: rollup.openExceptions > 0 ? 'var(--color-warning)' : 'var(--color-success)' }}>
-            {rollup.openExceptions}
-          </b>
-        </button>
-      </div>
     </div>
   );
 }
