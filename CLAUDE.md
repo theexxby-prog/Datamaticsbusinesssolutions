@@ -5,12 +5,13 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm i          # Install dependencies
+npm i          # Install dependencies (~8s cold)
 npm run dev    # Start dev server on port 3000
-npm run build  # Production build (output: dist/) — ~43s
+npm run build  # Production build into dist/ (~22s)
 ```
 
-No test framework is configured.
+No test framework is configured. The contrast audit and browser checks (both
+below) are the automated gates.
 
 **`npm run build` is `tsc --noEmit && vite build`.** Running `npm run typecheck`
 and then `npm run build` typechecks the project twice for no benefit — that is
@@ -19,7 +20,10 @@ is the whole gate; run the full build once before pushing.
 
 ## Architecture
 
-**Datamatics Business Solutions** is a B2B campaign management and lead generation portal — a Figma-exported React SPA.
+**Datamatics Business Solutions** (product name **Pulse**) is a business-to-business
+campaign management and lead generation portal. It began as a Figma Make export;
+that scaffolding has since been removed, so treat it as an ordinary React single
+page application and don't go looking for Figma conventions.
 
 **Stack:** React 18 + React Router 7 + Vite 6 + Tailwind CSS 4 + TypeScript
 
@@ -30,18 +34,57 @@ is the whole gate; run the full build once before pushing.
 
 **Auth & roles:** `src/app/context/AuthContext.tsx` implements mock role-based access with four roles: `ops_manager`, `campaign_manager`, `campaign_backup`, `client`. There is no real backend auth — everything is mocked.
 
+**The personas that matter, and how to become one.** The signed-in user is a
+plain id in `sessionStorage` under the key `signed-in-user-id` (`SESSION_KEY` in
+`AuthContext.tsx`). Three ids carry most of the behaviour:
+
+| id | who | what is different |
+|---|---|---|
+| `u1` | standard client | the baseline client experience |
+| `u9` | UNION client preview | the dense, intelligence-first build |
+| `u10` | UNION OPS | the operations mirror at `/ops-union` |
+
+`showFutureModules(user)` in `src/app/config/demo.ts` is true for **u9 only**,
+and it gates whole modules, not just decoration. Two consequences that are easy
+to trip over:
+
+- `/leads` renders `UnionLeadsPage` for u9 and `StandardLeadsPage` for everyone
+  else, from inside `LeadsPage.tsx`. They are different pages with different
+  interaction models: the standard one opens `LeadDetailDrawer` (600px), the
+  UNION one navigates to a full briefing page, deliberately, because a signal
+  contact's briefing carries a synthesis block, a committee strip and a tech
+  stack that do not fit a drawer.
+- `/leads/:leadId` (the briefing) is gated to u9 and redirects everyone else
+  back to `/leads`. So a link to a briefing from any non-u9 surface is dead by
+  construction. This was caught by browser verification after it had already
+  been written; check the gate before adding a route link.
+
 **Pages split by persona:**
 - Client-facing: Dashboard, CampaignList, CampaignDetailGlass, Invoices, Payment, Leads, Reports, Documents, Support, Feedback
 - Internal/ops: InternalDashboard, InternalCampaignList, InternalReports, OpsOverviewPage, ManagerDashboardPage, TeamManagementPage, ClientAssignmentPage, CampaignApprovalsPage
 
-**Component library:** `src/app/components/ui/` holds the shared primitives. Only
-two are still shadcn wrappers over Radix (`dropdown-menu`, `drawer`); the rest of
-that scaffold was deleted as the app grew its own components, so reach for
-`DataTable`, `MobileCardList`, `EmptyState` and friends before adding a library.
+**Component library:** `src/app/components/ui/` holds the shared primitives, and
+it is small on purpose: `DataTable`, `MobileCardList`, `InsightStrip`,
+`WowBadge`, plus three shadcn wrappers (`button`, `drawer`, `dropdown-menu`).
+The rest of that scaffold was deleted as the app grew its own components.
+Everything else lives directly in `src/app/components/` (`EmptyState`,
+`ChartCard`, `DistributionBars` and so on). Look there before adding a library.
 
 **Types:** All shared TypeScript interfaces live in `src/app/types.ts`.
 
-**Mock data:** `src/app/mockData.ts`, `src/app/mockInvoices.ts`, `src/app/data/mockClients.ts` — the app has no live API; all data is local.
+**Mock data:** the app has no live API; every figure on screen is local.
+`src/app/mockData.ts` (campaigns, the 35-row `mockLeads` table), `mockInvoices.ts`,
+and `src/app/data/` for the derived layers (`propensity.ts`, `signalRoom.ts`,
+`syndicationPerformance.ts`, `priorityAccounts.ts`, `insights.ts`, `unionOps.ts`,
+`mockClients.ts`).
+
+**Derived data must reconcile with the figure above it.** The discipline
+`getCohortBreakdown` and `getAccountFunnel` set is the house style: derive from
+the campaign record so the parts always sum to the whole, and never call
+`Math.random` (charts must be stable across reloads, so use the `seedOf` and
+`splitTotal` helpers at `propensity.ts:467` and `:474`, which are module-private
+today and need exporting if another module wants them). A client screenshotting
+two panels must not be able to catch them disagreeing.
 
 **Styling:** Tailwind CSS is the primary styling system. Global CSS files live in `src/styles/` (`index.css`, `theme.css`, `design-system.css`, `animations.css`, `components.css`).
 
@@ -158,6 +201,82 @@ The semantic colours (`--color-success` / `-warning` / `-error` / `-info`) are
 tuned so they are legible *as words* on white, on the app ground and on their
 own 10% tint — they are used as type in roughly 300 places, so a value picked
 only for hue fails most of them.
+
+## Verifying in a browser
+
+Assert behaviour by driving the page, not by reading the diff and hoping. This
+has repeatedly caught things review would not: a link that silently redirected,
+a mobile card whose value ran 78px off a 390px screen, an audit that was
+measuring a quarter of the page.
+
+Playwright is **not** a project dependency. It is installed globally, and
+Chromium is pre-installed, so a scratch script starts like this:
+
+```js
+const mod = await import('/opt/node22/lib/node_modules/playwright/index.js');
+const chromium = mod.chromium ?? mod.default?.chromium;
+const b = await chromium.launch({ executablePath: '/opt/pw-browsers/chromium' });
+```
+
+`scripts/contrast-audit.mjs` has a `loadChromium()` that resolves both paths
+with a fallback; copy it rather than re-deriving it. Sign in by stamping
+sessionStorage and reloading:
+
+```js
+await page.evaluate(u => sessionStorage.setItem('signed-in-user-id', u), 'u9');
+await page.reload({ waitUntil: 'domcontentloaded' });
+```
+
+Abort off-origin requests (`page.route`) or the ~14 external images will hang
+the run. And remember `DataTable` renders the desktop table **and** the mobile
+cards into the DOM at once, hiding one with `md:hidden`, so a naive
+`querySelectorAll` counts every row twice; filter on
+`el.getClientRects().length > 0` when you need what is actually visible.
+
+## Working with git here
+
+One branch per unit of work, squash-merged into `main` through a pull request.
+Because merges are squashed, **always cut a new branch from a freshly fetched
+`main`**. Reusing a branch that still holds the individual commits of an
+already-merged pull request makes every touched file conflict with its own
+squashed twin; recovering means rebuilding the branch and cherry-picking the
+genuinely new commits. That has happened once, do not repeat it.
+
+Do not run two sessions against this repo at the same time unless they are on
+clearly separate areas.
+
+## Where things stand
+
+Context a new session would otherwise have to reconstruct. Update this when it
+stops being true.
+
+**There is no backend, and that is deliberate for now.** Gourav is building one
+warehouse that pulls Propensity and Relish and holds the content syndication
+data; Pulse will read from it and never write. A field-level requirements
+document covering 22 tables and 222 fields has been shared with him, framed as
+recommendations, since the final schema is his call. Margin and cost arithmetic
+happens on his side; the client sees one combined spend figure.
+
+**Seven gaps are known**, places where a panel exists in the product but no
+warehouse field can fill it yet. One of them cannot be fixed retrospectively:
+Propensity keeps no history, so any account-level trend before snapshots begin
+is unrecoverable.
+
+**Some selectors are more confident than the warehouse will be.**
+`getAssetPerformance` and `getLeadDisposition` split a single total across
+categories rather than aggregating rows. There is a written plan to reshape the
+mock so it mirrors the real schema (making the swap a change of data source
+rather than a rewrite), deliberately held until Gourav's field list settles so
+the mapping is not done twice.
+
+**Real authentication is unbuilt and is the expensive part of going live.**
+Roles are `mockUsers` plus sessionStorage. Reading from a real API is
+comparatively easy, since the ~76 selectors are the whole surface; writing is
+what needs auth, sessions and secrets.
+
+**Cost, CPL, budget and pacing are ops-only.** Never surface them in a
+client-visible panel. Lead vocabulary is delivered / accepted / suppressed, not
+MQL / MQA / SQO.
 
 ## Writing style for anything a person reads
 
