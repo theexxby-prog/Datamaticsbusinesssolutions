@@ -5,8 +5,6 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [
-    // The React and Tailwind plugins are both required for Make, even if
-    // Tailwind is not being actively used – do not remove them
     react(),
     tailwindcss(),
   ],
@@ -40,13 +38,15 @@ export default defineConfig({
           'icon-vendor': [
             'lucide-react'
           ],
+          // The app-bar dropdown is the only Radix primitive imported directly.
+          // The five other entries that used to sit here named primitives
+          // nothing imports, so they contributed no modules and quietly rotted
+          // as the shadcn wrappers around them were deleted. vaul (the mobile
+          // drawer) is deliberately NOT listed: it is reachable only from the
+          // lazily-loaded MoreSheet, and pulling it into an eager vendor chunk
+          // measured 6 kB worse gzipped and shipped drawer code to desktop.
           'ui-vendor': [
-            '@radix-ui/react-dialog',
-            '@radix-ui/react-dropdown-menu',
-            '@radix-ui/react-select',
-            '@radix-ui/react-tabs',
-            '@radix-ui/react-popover',
-            '@radix-ui/react-tooltip'
+            '@radix-ui/react-dropdown-menu'
           ],
           'animation-vendor': [
             'motion'

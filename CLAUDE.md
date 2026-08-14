@@ -34,7 +34,10 @@ is the whole gate; run the full build once before pushing.
 - Client-facing: Dashboard, CampaignList, CampaignDetailGlass, Invoices, Payment, Leads, Reports, Documents, Support, Feedback
 - Internal/ops: InternalDashboard, InternalCampaignList, InternalReports, OpsOverviewPage, ManagerDashboardPage, TeamManagementPage, ClientAssignmentPage, CampaignApprovalsPage
 
-**Component library:** `src/app/components/ui/` contains Radix UI primitives (shadcn-style). `src/app/components/figma/` contains Figma-generated components.
+**Component library:** `src/app/components/ui/` holds the shared primitives. Only
+two are still shadcn wrappers over Radix (`dropdown-menu`, `drawer`); the rest of
+that scaffold was deleted as the app grew its own components, so reach for
+`DataTable`, `MobileCardList`, `EmptyState` and friends before adding a library.
 
 **Types:** All shared TypeScript interfaces live in `src/app/types.ts`.
 
@@ -44,7 +47,27 @@ is the whole gate; run the full build once before pushing.
 
 **Path alias:** `@` resolves to `src/`.
 
-**Vite chunk splitting:** react-vendor, chart-vendor (Recharts), icon-vendor (Lucide), ui-vendor (Radix UI), animation-vendor (Motion).
+**Vite chunk splitting:** react-vendor, chart-vendor (Recharts), icon-vendor (Lucide), ui-vendor (Radix dropdown-menu), animation-vendor (Motion).
+
+**Keep `package.json` honest.** The Figma export shipped 42 packages nothing ever
+imported, including all of MUI and Emotion, and they survived months because
+Vite tree-shakes them out of the bundle so no build metric ever complained. They
+still cost 237MB of `node_modules` and 16 seconds on every clean install. Before
+adding a dependency, check whether the app already has one; when you remove the
+last import of one, remove the package in the same commit. This check finds
+them:
+
+```bash
+node -e 'const{execSync}=require("child_process");for(const d of Object.keys(require("./package.json").dependencies))if(!execSync(`grep -rl -F ${JSON.stringify(d)} src/ scripts/ index.html vite.config.ts||true`,{encoding:"utf8"}).trim())console.log(d)'
+```
+
+Two false positives to expect: `terser` (named in `vite.config.ts` as the
+minifier) and the two `@fontsource-variable` packages (imported from CSS).
+Editing `package.json` by hand then running `npm install` prunes the lockfile
+while holding every other resolution steady. Do **not** delete
+`package-lock.json` to force a rebuild; that drifted 84 transitive packages,
+TypeScript 5.7 to 5.9 among them, in a commit that was supposed to only remove
+things.
 
 ## Design system
 
