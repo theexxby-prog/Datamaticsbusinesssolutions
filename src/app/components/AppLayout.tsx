@@ -133,7 +133,7 @@ export function AppLayout() {
             </span>
             <button
               onClick={() => { setPreviewingClient(false); navigate('/ops-union'); }}
-              className="rounded-full px-3 py-1.5 text-[12px] font-bold transition-opacity hover:opacity-85"
+              className="tap-target rounded-full px-3 py-1.5 text-[12px] font-bold transition-opacity hover:opacity-85"
               style={{ background: 'var(--color-text-inverse)', color: 'var(--color-surface-inverse)' }}
             >
               Exit preview

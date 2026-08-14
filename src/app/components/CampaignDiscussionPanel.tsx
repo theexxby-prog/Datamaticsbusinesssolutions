@@ -78,7 +78,7 @@ export function CampaignDiscussionPanel({
               <button
                 onClick={onClose}
                 aria-label="Close discussion"
-                className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-[var(--color-primary-tint)]"
+                className="tap-target-sq flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg transition-colors hover:bg-[var(--color-primary-tint)]"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
                 <X className="h-4 w-4" />

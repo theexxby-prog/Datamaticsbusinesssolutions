@@ -47,6 +47,9 @@
   --color-progress: #7FA3D8;
   --color-progress-track: #333842;
 
+  /* See design-system.css. Opaque twin of the dark card ground. */
+  --scroll-shadow-bg: #28242E;
+
   /* Same problem as progress, and it had been missed because nothing measured
      it: the light slate #3E5C8A sits at 2.25:1 on the dark ground, under even
      the 3:1 non-text bar it needs as a chart line or bar. */

@@ -54,7 +54,7 @@ export function AwarenessHeatmap({ abmCampaignId }: { abmCampaignId: string }) {
 
       {/* Scrolls inside its own container so a narrow viewport never forces the
           whole page sideways. */}
-      <div className="-mx-1 overflow-x-auto px-1">
+      <div className="scroll-shadows -mx-1 overflow-x-auto px-1">
         <table className="w-full min-w-[520px] border-separate" style={{ borderSpacing: '2px' }}>
           <thead>
             <tr>

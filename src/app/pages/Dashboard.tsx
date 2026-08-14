@@ -60,7 +60,7 @@ function PeriodSwitch({ value, onChange }: { value: Period; onChange: (p: Period
             key={p.key}
             onClick={() => onChange(p.key)}
             aria-pressed={on}
-            className="rounded-lg px-3.5 py-1.5 text-[13px] font-bold transition-colors"
+            className="tap-target rounded-lg px-3.5 py-1.5 text-[13px] font-bold transition-colors"
             style={{
               // primary-solid, not primary: this pill is a brand *fill* with
               // white text on it. --color-primary is lightened in dark mode so

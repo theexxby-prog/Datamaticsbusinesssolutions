@@ -147,7 +147,7 @@ function InvoiceCard({
         </button>
         <button
           onClick={() => setExpanded((v) => !v)}
-          className="ml-auto flex items-center gap-1 px-2 py-1"
+          className="tap-target ml-auto flex items-center gap-1 px-2 py-1"
           style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}
         >
           {invoice.lineItems.length} line item{invoice.lineItems.length !== 1 ? 's' : ''}
@@ -351,7 +351,7 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
         )}
         <button
           onClick={() => setExpanded((v) => !v)}
-          className="ml-auto flex items-center gap-1 px-2 py-1"
+          className="tap-target ml-auto flex items-center gap-1 px-2 py-1"
           style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}
         >
           View details
@@ -696,7 +696,7 @@ export default function Invoices() {
                   role="tab"
                   aria-selected={active}
                   onClick={() => setArFilter(key)}
-                  className="px-3.5 py-1.5 rounded-lg transition-colors"
+                  className="tap-target px-3.5 py-1.5 rounded-lg transition-colors"
                   style={{
                     fontSize: '13px',
                     fontWeight: active ? 600 : 500,

@@ -248,7 +248,7 @@ export function DataTable<T>({
                 <button
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={clampedPage === 0}
-                  className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors disabled:opacity-40"
+                  className="tap-target inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors disabled:opacity-40"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
                 >
                   <ChevronLeft className="h-4 w-4" /> Prev
@@ -256,7 +256,7 @@ export function DataTable<T>({
                 <button
                   onClick={() => setPage(p => Math.min(totalPages - 1, p + 1))}
                   disabled={clampedPage >= totalPages - 1}
-                  className="inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors disabled:opacity-40"
+                  className="tap-target inline-flex items-center gap-1 rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors disabled:opacity-40"
                   style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
                 >
                   Next <ChevronRight className="h-4 w-4" />

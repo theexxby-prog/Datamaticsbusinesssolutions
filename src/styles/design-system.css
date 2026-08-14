@@ -16,6 +16,9 @@
 --color-main-bg: #EFF0F4;
 --color-surface: rgba(255, 255, 255, 0.72);
 --color-surface-raised: rgba(255, 255, 255, 0.96);
+/* Opaque twin of the card ground, used by .scroll-shadows to mask its own
+   shadow at the scroll extremes. Must not be translucent or the mask leaks. */
+--scroll-shadow-bg: #FFFFFF;
 --color-surface-overlay: rgba(255, 255, 255, 0.60);
 
 /* The app shell's ground, painted by `.app-canvas` on the AppLayout wrapper.
