@@ -222,6 +222,16 @@
  {
   "source": "Ours",
   "table": "campaign",
+  "field": "cpl_client",
+  "key": "",
+  "type": "money, null",
+  "comesFrom": "Entered by ops at campaign creation",
+  "visibleTo": "Client",
+  "what": "The rate the client is billed at. The only commercial figure they see; their billable total is accepted leads times this. Separate from cpl_target and cpm_internal, which are internal."
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
   "field": "cpm_internal",
   "key": "",
   "type": "money, null",
@@ -2168,55 +2178,5 @@
   "comesFrom": "Ours",
   "visibleTo": "System",
   "what": "Which rule wins when a title matches more than one. \"VP of IT Security\" needs a"
- },
- {
-  "source": "Computed",
-  "table": "lead_disposition",
-  "field": "lead_id",
-  "key": "FK",
-  "type": "text",
-  "comesFrom": "Ours",
-  "visibleTo": "System",
-  "what": "Which lead this describes"
- },
- {
-  "source": "Computed",
-  "table": "lead_disposition",
-  "field": "state",
-  "key": "",
-  "type": "enum",
-  "comesFrom": "Client CRM",
-  "visibleTo": "Client",
-  "what": "accepted, working, converted or rejected"
- },
- {
-  "source": "Computed",
-  "table": "lead_disposition",
-  "field": "opportunity_value",
-  "key": "",
-  "type": "money, null",
-  "comesFrom": "Client CRM",
-  "visibleTo": "Client",
-  "what": "Where a lead became a real opportunity"
- },
- {
-  "source": "Computed",
-  "table": "lead_disposition",
-  "field": "source",
-  "key": "",
-  "type": "enum",
-  "comesFrom": "System",
-  "visibleTo": "Ops",
-  "what": "client_crm, convertr or manual"
- },
- {
-  "source": "Computed",
-  "table": "lead_disposition",
-  "field": "updated_at",
-  "key": "",
-  "type": "timestamp",
-  "comesFrom": "System",
-  "visibleTo": "Client",
-  "what": "When the client last told us anything about this lead"
  }
 ]

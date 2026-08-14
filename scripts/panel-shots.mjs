@@ -56,7 +56,6 @@ const PANELS = [
   { slug: 'campaign-kpi-band', user: 'u9', route: '/campaigns/46888', selector: '.glass-card', group: true,
     maxH: 200, title: 'Campaign header tiles' },
   { slug: 'delivery-timeline', user: 'u9', route: '/campaigns/46888', heading: 'Delivery timeline' },
-  { slug: 'lead-disposition', user: 'u9', route: '/campaigns/46888', heading: 'What happened to the leads' },
   { slug: 'asset-performance', user: 'u9', route: '/campaigns/46888', heading: 'Asset performance' },
   { slug: 'publisher-performance', user: 'u9', route: '/campaigns/46888', heading: 'Publisher performance' },
   { slug: 'lead-quality', user: 'u9', route: '/campaigns/46888', heading: 'Lead quality' },
@@ -90,9 +89,6 @@ const PANELS = [
   { slug: 'leads-accounts', user: 'u9', route: '/leads', selector: 'table', title: 'Leads, Accounts lens' },
   { slug: 'leads-people', user: 'u9', route: '/leads', tab: 'People', selector: 'table', title: 'Leads, People lens' },
   { slug: 'priority-accounts', user: 'u9', route: '/priority-accounts', selector: 'table', title: 'Priority accounts' },
-  { slug: 'invoice-row', user: 'u9', route: '/invoices', selector: '.glass-card',
-    contains: 'INV-2026', title: 'Invoice row' },
-  { slug: 'reports-billing', user: 'u9', route: '/reports', heading: 'Billing Trend' },
   { slug: 'reports-geo', user: 'u9', route: '/reports', heading: 'Geographic Distribution' },
   { slug: 'reports-industry', user: 'u9', route: '/reports', heading: 'Industry Distribution' },
   { slug: 'reports-title', user: 'u9', route: '/reports', heading: 'Title Distribution' },
@@ -114,6 +110,7 @@ const PANELS = [
   { slug: 'ops-intake', user: 'u10', route: '/ops-union/intake', heading: '1 · Campaign & source' },
   { slug: 'ops-new-campaign', user: 'u10', route: '/ops-union/campaigns/new', heading: '1 · Campaign & client' },
   { slug: 'ops-commercials', user: 'u10', route: '/ops-union/campaigns/new', heading: '4 · Commercials' },
+  { slug: 'reports-billing', user: 'u9', route: '/reports', heading: 'Billing Trend' },
 ];
 
 const targets = only ? PANELS.filter(p => p.slug === only) : PANELS;

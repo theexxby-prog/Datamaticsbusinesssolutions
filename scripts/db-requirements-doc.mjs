@@ -47,12 +47,12 @@ const PANELS = [
   { slug: 'campaign-kpi-band', area: 'delivery',
     what: 'The four figures at the top of every campaign. A client checks these first and screenshots them, so they must never disagree with the panels below.',
     reads: [
-      ['campaign', ['target_leads', 'start_date', 'end_date', 'spend_combined_client', 'cpl_target']],
+      ['campaign', ['target_leads', 'start_date', 'end_date', 'spend_combined_client', 'cpl_client']],
       ['lead', ['status', 'delivered_at', 'accepted_at']],
     ],
     grain: 'one row per campaign, with counts over lead',
     agg: 'COUNT(lead WHERE status = delivered) against campaign.target_leads for the progress figure; COUNT(accepted) / COUNT(delivered) for acceptance; elapsed days between start_date and end_date against delivered share for pace.',
-    note: 'Pace compares two ratios, time elapsed and leads delivered. Both come from the same two dates, so the tile is wrong the moment end_date is null. It needs to be required for any campaign in flight.' },
+    note: 'The billable figure is accepted leads times cpl_client, the rate ops types at campaign creation. It is the only commercial field a client sees, and it is deliberately separate from cpl_target and cpm_internal so the internal economics cannot leak through a client response. Pace compares two ratios, time elapsed and leads delivered, and both come from the same two dates, so the tile is wrong the moment end_date is null.' },
 
   { slug: 'delivery-timeline', area: 'delivery',
     what: 'The agreed drop schedule against what actually landed on each date.',
@@ -60,13 +60,6 @@ const PANELS = [
     grain: 'one row per campaign per scheduled drop date',
     agg: 'Straight read, ordered by scheduled_date. No aggregation.',
     note: 'This is the one table where a missing row is visible to the client as a gap in the chart, so drops with zero delivered still need a row rather than no row.' },
-
-  { slug: 'lead-disposition', area: 'delivery',
-    what: 'What the client’s sales team did with the leads after we handed them over. This closes the loop nothing else in the product closes.',
-    reads: [['lead_disposition', ['state', 'opportunity_value', 'source', 'updated_at']], ['lead', ['lead_id', 'status']]],
-    grain: 'one row per lead, latest state only',
-    agg: 'COUNT(lead) grouped by state, and the four states must sum to the delivered count on the tile above.',
-    note: 'Two of the four states, working and converted, can only come from the client’s own Customer Relationship Management (CRM) system. Until that feed exists the panel can only honestly show accepted against rejected.' },
 
   { slug: 'asset-performance', area: 'delivery',
     what: 'Which gated asset converted best, so the client knows what to write more of.',
@@ -201,7 +194,7 @@ const PANELS = [
     reads: [['lead', ['delivered_at', 'status']], ['campaign', ['spend_combined_client', 'client_id']]],
     grain: 'counts over lead, filtered by period',
     agg: 'COUNT(lead WHERE delivered_at in period) across every campaign for the client, and SUM of the billed amount for the same period.',
-    note: 'The billed figure has no table behind it in the current spec. See the open questions at the end.' },
+    note: 'The billed figure is derived, not stored: accepted leads for the period times the campaign cpl_client. There is no invoice table, and there does not need to be one while invoicing sits outside this phase.' },
 
   { slug: 'dashboard-campaigns', area: 'client',
     what: 'Every live campaign with its delivery progress.',
@@ -243,16 +236,9 @@ const PANELS = [
     agg: 'Straight read of the most recent scored_at, ordered by priority_score.',
     note: 'Storing the score rather than computing it live is what makes it explainable. If the weights change, yesterday’s ranking still reconstructs, and the reason string stays true to the score beside it.' },
 
-  { slug: 'invoice-row', area: 'client',
-    what: 'A billing period with its amount, due date and ageing.',
-    reads: [['campaign', ['campaign_id', 'spend_combined_client', 'io_number']], ['lead', ['status', 'delivered_at']]],
-    grain: 'currently derived, one row per campaign per billing month',
-    agg: 'COUNT(accepted leads in the month) multiplied by the billing rate.',
-    note: 'There is no invoice table in the 22. This whole page, nineteen invoices with outstanding totals, due dates, ageing and a tax document, is being derived on the fly. See the open questions.' },
-
   { slug: 'reports-billing', area: 'client',
     what: 'Billed amount month by month across the account.',
-    reads: [['campaign', ['spend_combined_client', 'client_id']], ['lead', ['delivered_at', 'status']]],
+    reads: [['campaign', ['cpl_client', 'client_id']], ['lead', ['delivered_at', 'status', 'accepted_at']]],
     grain: 'summed to one row per month',
     agg: 'SUM of the billed amount grouped by month of delivered_at.' },
 
@@ -368,45 +354,45 @@ const PANELS = [
 
   { slug: 'ops-commercials', area: 'ops', opsOnly: true,
     what: 'The commercial terms. Everything on this panel is ops-only and never leaves the internal interface.',
-    reads: [['campaign', ['budget_total', 'cpl_target', 'cpm_internal', 'io_number', 'spend_combined_client']]],
+    reads: [['campaign', ['budget_total', 'cpl_target', 'cpm_internal', 'io_number', 'cpl_client', 'spend_combined_client']]],
     grain: 'one row per campaign',
     agg: 'Straight read, restricted to internal roles.',
-    note: 'spend_combined_client is the only figure on this panel the client ever sees, and it is the one with margin already applied. The arithmetic that produces it happens in the warehouse, not in the portal.' },
+    note: 'cpl_client is the only figure on this panel the client ever sees. Ops types it here at creation and every billable total in the product derives from it, so it must be a stored field rather than something computed from the internal rate and a margin. budget_total, cpl_target and cpm_internal must never appear in a client response at all.' },
 ];
 
 // ─── Open questions, derived from the mapping above ──────────────────────────
-const QUESTIONS = [
-  { title: 'There is no invoice table',
-    body: 'The client-facing Invoices page shows nineteen invoices with outstanding totals, due dates, ageing buckets and a downloadable tax document. None of the 22 tables holds any of it. Today the portal derives an invoice from accepted lead counts multiplied by a rate, which works for a demo and will not survive a real query about what was billed in March. An invoice is a document that gets issued once and then does not change, even when the leads behind it are later adjusted, so it needs storing rather than deriving.',
-    asks: 'Does an invoice table belong in this warehouse, or is billing staying in the finance system with the portal reading it from there?' },
+const DECISIONS = [
+  { title: 'Invoicing and documents are out of this phase',
+    body: 'The portal had a full Invoices page and a document signing module. Both are deferred, so no invoice, payment or signature table is needed. The pages are gated off in the product rather than deleted, so nothing here has to be designed twice when they come back.',
+    outcome: 'No invoice table. Nothing in the warehouse stores an issued document.' },
 
-  { title: 'The rate shown to the client has no home',
-    body: 'The campaign header shows the client a line reading "314 leads by twelve dollars CPL". The spec has cpl_target and cpm_internal, both marked ops-only, and spend_combined_client, which is a total rather than a rate. So the number currently on screen has no field behind it that the client is allowed to see.',
-    asks: 'Should there be a separate client-visible billing rate on the campaign, distinct from the internal target and cost?' },
+  { title: 'Billing stays, and the rate is entered by ops',
+    body: 'Deferring the invoice module does not remove money from the product. Ops types a client rate when the campaign is created, and every billable figure the client sees derives from it: accepted leads times that rate. That is why cpl_client is a stored field and not something computed from the internal rate with a margin applied at read time.',
+    outcome: 'Add cpl_client to campaign, client-visible. cpl_target and cpm_internal stay ops-only and must never reach a client response.' },
 
-  { title: 'Account history cannot be backfilled',
-    body: 'The weekly reach build-up reads propensity_account_daily, one row per account per day. The upstream source reports current state and keeps no history, so the first snapshot is the earliest week that will ever exist. This is the one gap in this document that gets worse with every day of delay rather than staying the same size.',
-    asks: 'Can the daily snapshot job start now, ahead of the rest, even if nothing reads it yet?' },
+  { title: 'Account snapshots are a build-time instruction',
+    body: 'The weekly reach chart needs one row per account per day, and the upstream source keeps no history, so the earliest snapshot taken is the earliest week that can ever be shown. Nothing real is running yet, so there is no history being lost today. The instruction is simply that the snapshot job has to exist before the first live campaign, not after it.',
+    outcome: 'propensity_account_daily stays in the schema. The job starts when the warehouse does, ahead of the first live campaign.' },
 
-  { title: 'Two of the four sales states need a feed we do not have',
-    body: 'The disposition panel shows accepted, working, converted and rejected. We generate the first and last ourselves. Working and converted only exist inside the client’s own sales system.',
-    asks: 'Is a feed from the client CRM in scope, or should the panel ship showing only the two states we can stand behind?' },
+  { title: 'We do not track what the client does with a lead',
+    body: 'The product had a panel showing accepted, working, converted and rejected. Two of those four only exist inside the client’s own sales system. Rather than half-fill the panel or wait on a feed nobody controls, the whole thing is removed. We deliver leads and stand behind their quality; what happens after is the client’s business.',
+    outcome: 'lead_disposition is dropped entirely, five fields. Accepted and rejected remain on the lead row, since those come from our own acceptance process.' },
 
-  { title: 'Asset views are publisher-side',
-    body: 'Asset conversion rate needs content_asset.views, which comes from the publisher and is frequently missing. A conversion column that silently renders zero is worse than no column.',
-    asks: 'Is views going to be reliably populated, or should the field be nullable with the portal degrading to lead volume when it is absent?' },
+  { title: 'Asset views are optional, and the panel degrades',
+    body: 'Conversion rate needs a view count from the publisher. It is checked and confirmed absent from the Propensity payloads, because Propensity’s asset is the ad creative, not the gated syndication asset. That number lives with the media partner and many never report it.',
+    outcome: 'content_asset.views stays nullable. When it is missing the conversion column disappears and the table ranks on lead volume. It must never render as a zero.' },
 
-  { title: 'Industry is stored twice and the two disagree',
-    body: 'campaign_target_account.industry comes from the target list at upload. relish_company_enrichment.industry comes from enrichment. Both describe the same company and they do not always match.',
-    asks: 'Which one wins, and can that precedence be a stored rule rather than something each query decides for itself?' },
+  { title: 'Enrichment wins on industry',
+    body: 'Industry is stored twice, once from the target list at upload and once from the enrichment pass, and the two disagree. Enrichment looks at the actual company rather than what someone typed into a brief.',
+    outcome: 'Enriched industry takes precedence, upload is the fallback, and the precedence is a stored rule rather than a decision each query makes for itself.' },
 
-  { title: 'One whole table has no screen behind it',
-    body: 'campaign_rules holds the delivery terms: touch, lead cap per account, cadence, delivery format, custom questions and consent. All seven fields are in the spec and none of them render anywhere in the portal today. They are real terms that ops agrees with a client and that determine whether a delivered lead is valid, so the likely answer is that the portal is missing a campaign terms panel rather than that the table is wrong.',
-    asks: 'Should these stay in the warehouse while we add a screen for them, or do they live somewhere else entirely?' },
+  { title: 'Domains are normalised once, on the way in',
+    body: 'account_domain and company_domain join four tables across three sources, and every account panel in this document depends on those joins landing. Company name will not substitute; the same company arrives spelled several ways.',
+    outcome: 'Lowercase, strip the leading www and any subdomain, store the clean value on every table. One rule at ingestion, so all four agree by construction.' },
 
-  { title: 'Domain normalisation is load-bearing',
-    body: 'account_domain and company_domain join four different tables across three sources. Every account panel in this document depends on those joins landing. Company name will not substitute; the same company arrives spelled several ways.',
-    asks: 'Can domains be normalised once on the way in, lowercased with the leading www and any subdomain stripped, so every table agrees?' },
+  { title: 'campaign_rules is stored but not shown yet',
+    body: 'Seven fields covering touch, lead cap per account, cadence, delivery format, custom questions and consent. These are terms ops agrees with a client and they decide whether a delivered lead is valid, so the quality checks need them even though nothing renders them.',
+    outcome: 'Keep the table. No screen in this phase; a campaign terms panel comes later.' },
 ];
 
 // ─── Build ───────────────────────────────────────────────────────────────────
@@ -667,7 +653,7 @@ nav.jump a:hover,nav.jump a:focus-visible{color:var(--brand); border-bottom-colo
   margin:0; font-size:15px; color:var(--ink); font-weight:600;
   padding-top:12px; border-top:1px solid var(--rule-soft);
 }
-.q .asks::before{content:'Question '; color:var(--flag); font-weight:800; font-size:10.5px;
+.q .asks::before{content:'Decision '; color:var(--flag); font-weight:800; font-size:10.5px;
   letter-spacing:.13em; text-transform:uppercase; display:block; margin-bottom:5px;}
 
 /* ── field index ── */
@@ -721,14 +707,14 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
       <div class="fact"><b>${fields.length}</b><span>fields in the spec</span></div>
       <div class="fact"><b>${new Set(fields.map(f => f.table)).size}</b><span>tables</span></div>
       <div class="fact"><b>${usedBy.size}</b><span>fields a screen reads</span></div>
-      <div class="fact"><b>${QUESTIONS.length}</b><span>open questions</span></div>
+      <div class="fact"><b>${DECISIONS.length}</b><span>decisions settled</span></div>
     </div>
   </div>
 </header>
 
 <nav class="jump"><div class="wrap"><ul>
   ${AREAS.map(([k, n]) => `<li><a href="#a-${k}">${esc(n)}</a></li>`).join('')}
-  <li><a href="#questions">Open questions</a></li>
+  <li><a href="#questions">Decisions</a></li>
   <li><a href="#index">Field index</a></li>
 </ul></div></nav>
 
@@ -749,12 +735,12 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
   ${AREAS.map(areaSection).join('')}
 
   <section id="questions">
-    <h2 class="section">Open questions</h2>
-    <p class="section-lede">Places where the product already shows something the current field list cannot
-    supply. These are decisions rather than defects, and each one needs an answer before the table it touches
-    is built.</p>
+    <h2 class="section">Decisions</h2>
+    <p class="section-lede">Eight places where the product asked more of the data than the field list could
+    supply. All eight are now settled, and the screens above already reflect them. Each entry says what was
+    decided and what it means for the schema.</p>
     <div style="margin-top:24px">
-      ${QUESTIONS.map(q => `<div class="q"><h3>${esc(q.title)}</h3><p>${esc(q.body)}</p><p class="asks">${esc(q.asks)}</p></div>`).join('')}
+      ${DECISIONS.map(q => `<div class="q"><h3>${esc(q.title)}</h3><p>${esc(q.body)}</p><p class="asks">${esc(q.outcome)}</p></div>`).join('')}
     </div>
   </section>
 
@@ -764,7 +750,7 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
     ${usedBy.size} are read by at least one screen. The remaining ${fields.length - usedBy.size} are not, and
     they fall into three groups: keys that do the joining without ever being displayed, such as the
     <code>campaign_id</code> on almost every table; timestamps and raw payloads kept so a run can be traced or
-    rolled back; and a small number of fields whose screen does not exist yet, which the open questions above
+    rolled back; and a small number of fields whose screen does not exist yet, which the decisions above
     name. Type the name of a table or field to filter.</p>
     <div class="idx-tools">
       <input id="q" type="search" placeholder="Filter by table, field or description" aria-label="Filter fields" />
