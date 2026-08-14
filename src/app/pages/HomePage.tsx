@@ -13,6 +13,7 @@ import { AccountTeam } from '../components/AccountTeam';
 import { useDocumentTitle } from '../hooks/useDocumentTitle';
 import { getAccountTeam, allClients } from '../data/mockClients';
 import { useAuth } from '../context/AuthContext';
+import { BILLING_MODULES_IN_SCOPE } from '../config/phase';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
 import { mockJobCards } from '../data/mockJobCards';
 import { PersonAvatar } from '../components/PersonAvatar';
@@ -129,13 +130,20 @@ function StandardHomePage() {
   const initials = useMemo(() => getInitials(currentUser?.name ?? ''), [currentUser?.name]);
 
   // ── Live state from the Invoices + Documents modules (shared mock data) ─────
-  const myInvoices = mockInvoiceRecords.filter((i) => i.clientCompany === currentUser?.company);
+  // Both modules are deferred past phase one, so these read empty and every
+  // card derived from them falls away on its own. The derivations stay intact
+  // so flipping the flag restores the page rather than needing it rebuilt.
+  const myInvoices = BILLING_MODULES_IN_SCOPE
+    ? mockInvoiceRecords.filter((i) => i.clientCompany === currentUser?.company)
+    : [];
   const overdueInvoices = myInvoices.filter((i) => i.stage === 'overdue');
   const dueInvoices = myInvoices.filter((i) => i.stage === 'sent');
   const dueTotal = dueInvoices.reduce((sum, i) => sum + i.total, 0);
-  const pendingSignatures = mockJobCards.filter(
-    (c) => c.clientCompany === currentUser?.company && c.type === 'client_signature' && c.stage === 'sent_for_signature',
-  );
+  const pendingSignatures = BILLING_MODULES_IN_SCOPE
+    ? mockJobCards.filter(
+        (c) => c.clientCompany === currentUser?.company && c.type === 'client_signature' && c.stage === 'sent_for_signature',
+      )
+    : [];
   const topOverdue = overdueInvoices[0];
   const topSignature = pendingSignatures[0];
   const overdueDays = topOverdue?.dueDate
@@ -490,7 +498,7 @@ function StandardHomePage() {
           )}
 
           {/* 4 — Pending Invoices & Signatures */}
-          {prefs.actionRequired && (
+          {BILLING_MODULES_IN_SCOPE && prefs.actionRequired && (
           <motion.div
             className="relative overflow-hidden rounded-2xl p-4 sm:p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(0,0,0,0.04)] min-w-[78%] flex-shrink-0 snap-start md:min-w-0 md:flex-shrink"
             whileHover={{ y: -3, boxShadow: '0 16px 48px rgba(0,0,0,0.08)' }}

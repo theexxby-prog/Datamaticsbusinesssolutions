@@ -7,3 +7,4 @@ dist/
 *.log
 .vite/
 .claude/
+scripts/.panel-shots/

@@ -65,11 +65,14 @@ export function LeadScoreRing({ score, size = 60, showLabel = true }: LeadScoreR
         />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <div className="text-base font-semibold text-gray-900 dark:text-white">
+        {/* No dark: override. The grey ramp is mirrored in dark.css, so
+            text-gray-900 already resolves light on a dark ground; adding one
+            fights the mirror. */}
+        <div className="text-base font-semibold text-gray-900">
           {score}
         </div>
         {showLabel && (
-          <div className="text-[9px] text-gray-500 uppercase tracking-wide font-medium">
+          <div className="text-[9px] uppercase tracking-wide font-medium" style={{ color: 'var(--color-text-secondary)' }}>
             {getLabel(score)}
           </div>
         )}

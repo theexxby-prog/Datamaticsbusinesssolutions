@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
+import { BILLING_MODULES_IN_SCOPE } from '../config/phase';
 import {
   Layers, Sparkles, ArrowRight, AlertCircle, FilePenLine, ClipboardList,
   TrendingDown, LayoutGrid, Truck,
@@ -118,13 +119,13 @@ export default function UnionDashboard() {
       text: `${atRiskForecast.campaign.name} — projected ${atRiskForecast.projected.toLocaleString('en-US')} of ${atRiskForecast.target.toLocaleString('en-US')}`,
       go: () => navigate(`/campaigns/${atRiskForecast.campaign.id}`),
     },
-    topOverdue && {
+    (BILLING_MODULES_IN_SCOPE ? topOverdue : null) && {
       key: 'invoice', icon: AlertCircle, tone: 'var(--color-error)',
       label: 'Invoice overdue',
       text: `${topOverdue.invoiceNumber} · ${fmtMoney(topOverdue.total)}`,
       go: () => navigate('/invoices'),
     },
-    topSignature && {
+    (BILLING_MODULES_IN_SCOPE ? topSignature : null) && {
       key: 'sign', icon: FilePenLine, tone: 'var(--color-warning)',
       label: 'Signature required',
       text: topSignature.campaignName,

@@ -147,8 +147,10 @@ export default function Login() {
                   selectedUser.role === 'ops_manager' ? '/dashboard/ops' :
                   selectedUser.role === 'campaign_manager' ? '/dashboard/manager' :
                   selectedUser.role === 'campaign_backup' ? '/dashboard/manager' :
-                  selectedUser.role === 'account_manager' ? '/documents' :
-                  selectedUser.role === 'accounts' ? '/invoices' :
+                  // Both roles used to land on a deferred module. Until those
+                  // come back they open on the campaign list they can act on.
+                  selectedUser.role === 'account_manager' ? '/internal/campaigns' :
+                  selectedUser.role === 'accounts' ? '/internal/campaigns' :
                   '/dashboard';
 
     setTimeout(() => navigate(route), 600);
