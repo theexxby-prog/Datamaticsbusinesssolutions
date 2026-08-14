@@ -48,7 +48,7 @@ function AttachmentRow({ attachment }: { attachment: ThreadAttachment }) {
       <button
         type="button"
         title={`Download ${attachment.name}`}
-        className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)] active:bg-[var(--color-primary-glow)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
+        className="tap-target-sq flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg text-[var(--color-text-secondary)] transition-colors hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)] active:bg-[var(--color-primary-glow)] focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]"
       >
         <Download className="h-4 w-4" />
       </button>

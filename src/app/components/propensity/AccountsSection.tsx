@@ -118,7 +118,7 @@ export function AccountsSection() {
         ].map(chip => (
           <span
             key={chip.label}
-            className="inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold"
+            className="tap-target inline-flex items-center rounded-full px-3 py-1.5 text-xs font-semibold"
             style={{ background: chip.bg, color: chip.color }}
           >
             {chip.label}

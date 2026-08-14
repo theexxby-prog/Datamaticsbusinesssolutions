@@ -176,7 +176,7 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
           <Layers className="h-4 w-4" />
           Channel performance
         </h3>
-        <div className="overflow-x-auto">
+        <div className="scroll-shadows overflow-x-auto">
           <table className="w-full min-w-[420px] text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
             <thead>
               <tr

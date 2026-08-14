@@ -241,30 +241,18 @@ async function runGroup({ user, theme, paths }) {
         // Measure the landing view, then every other tab panel. Without this
         // the campaign pages are audited on their default tab only, which on
         // /campaigns/:id is one of four — the other three (Reach, Audience,
-        // Advertising) carry most of the page's text and went unmeasured
-        // entirely. Tabs render one panel at a time, so each needs its own pass.
-        // Poll rather than reading the count once. settle() can go quiet while
-        // the page chrome is up but the tab strip is still mounting, and a
-        // single early read then reports "no tabs" and silently audits one
-        // panel — the exact failure this block exists to prevent. Bounded, so
-        // a genuinely tabless route costs 600ms, not a timeout.
-        let tabCount = 0;
-        for (let t = 0; t < 4 && tabCount === 0; t++) {
-          tabCount = await page.evaluate(() => document.querySelectorAll('[role="tab"]').length);
-          if (tabCount === 0) await page.waitForTimeout(200);
-        }
-        for (let i = 0; i < Math.max(1, tabCount); i++) {
-          let label = '';
-          if (tabCount > 0) {
-            label = await page.evaluate(n => {
-              const tab = document.querySelectorAll('[role="tab"]')[n];
-              if (!tab) return '';
-              tab.click();
-              return (tab.textContent ?? '').trim();
-            }, i);
-            await settle(page);
-          }
-          // Sections animate in on scroll; visit the bottom so they mount.
+        // Advertising) carry most of the page's text and went unmeasured.
+        //
+        // Tab detection happens AFTER the first panel is measured, not before.
+        // That ordering is the whole trick. Polling beforehand raced the React
+        // mount: under parallel load the chrome settles while the tab strip is
+        // still coming up, the poll read zero, and the run silently audited a
+        // quarter of the page. It was reproducible — the same scoped run gave
+        // 744 nodes normally and 4,200 with AUDIT_VERBOSE, because the extra
+        // logging slowed it just enough for the tabs to appear. By the time the
+        // first AUDIT returns, the page has demonstrably finished rendering, so
+        // the count is trustworthy with no polling and no timeout.
+        const measure = async (label) => {
           await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
           await settle(page);
           await page.evaluate(() => window.scrollTo(0, 0));
@@ -272,6 +260,19 @@ async function runGroup({ user, theme, paths }) {
           const where = label ? `${path}#${label}` : path;
           if (process.env.AUDIT_VERBOSE) console.log(`COUNT ${user} ${theme} ${where} ${res.checked}`);
           checked += res.checked;
+          return { res, where };
+        };
+
+        const first = await measure('');
+        first.res.fails.forEach(f => all.push({ ...f, theme, user, path: first.where }));
+
+        const tabs = await page.evaluate(() =>
+          [...document.querySelectorAll('[role="tab"]')].map(t => (t.textContent ?? '').trim()));
+        // Index 0 is the panel we just measured as the landing view.
+        for (let i = 1; i < tabs.length; i++) {
+          await page.evaluate(n => document.querySelectorAll('[role="tab"]')[n]?.click(), i);
+          await settle(page);
+          const { res, where } = await measure(tabs[i]);
           res.fails.forEach(f => all.push({ ...f, theme, user, path: where }));
         }
       } catch (err) {

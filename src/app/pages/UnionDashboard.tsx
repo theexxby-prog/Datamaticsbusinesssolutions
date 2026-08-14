@@ -208,7 +208,7 @@ export default function UnionDashboard() {
                   role="tab"
                   aria-selected={period === p}
                   onClick={() => setPeriod(p)}
-                  className={`t-micro rounded-full px-3 py-1.5 transition-colors ${
+                  className={`tap-target t-micro rounded-full px-3 py-1.5 transition-colors ${
                     period === p ? 'text-white' : 'hover:text-[var(--color-text-primary)]'
                   }`}
                   style={period === p ? { background: 'var(--gradient-primary)', color: '#fff' } : undefined}
@@ -355,7 +355,7 @@ export default function UnionDashboard() {
               <button
                 key={item.key}
                 onClick={item.go}
-                className="flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
+                className="tap-target flex items-center gap-3 px-3.5 py-2.5 text-left transition-colors hover:bg-[var(--color-primary-tint)]"
                 style={{ background: 'var(--color-surface-raised)' }}
               >
                 <Icon className="h-4 w-4 flex-shrink-0" style={{ color: item.tone }} />

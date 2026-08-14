@@ -66,7 +66,7 @@ function TeamMemberCard({ member }: { member: AccountTeamMember }) {
 
       {/* Send Message Button */}
       <motion.button
-        className="w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[var(--color-info)] bg-[var(--color-info)]/10 hover:bg-[var(--color-info)]/20 rounded-lg transition-colors"
+        className="tap-target w-full mt-4 flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-[var(--color-info)] bg-[var(--color-info)]/10 hover:bg-[var(--color-info)]/20 rounded-lg transition-colors"
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
       >

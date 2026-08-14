@@ -559,3 +559,47 @@
 .recharts-legend-item-text {
   color: var(--color-text-secondary) !important;
 }
+
+/* ── Touch targets ───────────────────────────────────────────────────────────
+   Apple asks for 44x44 and a phone audit found controls at 26px. The shared
+   .btn-* classes already carry min-height: 44px, so the offenders were all
+   bespoke pills, chips and icon buttons that never used them.
+
+   Applied only on coarse pointers. A mouse hits a 32px pill perfectly well,
+   and forcing every filter chip to 44px on desktop would inflate toolbars that
+   are currently compact for good reason. */
+@media (pointer: coarse) {
+  .tap-target {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+  /* Square icon buttons need the width too, not just the height. */
+  .tap-target-sq {
+    min-width: 44px;
+    min-height: 44px;
+  }
+}
+
+/* ── Scroll affordance for wide tables ───────────────────────────────────────
+   A table that scrolls sideways gives no hint it does, so on a phone the
+   right-hand columns are simply missed. This is the layered-background
+   technique: two "cover" layers painted in the surface colour scroll WITH the
+   content (background-attachment: local), and two shadow layers stay put
+   (scroll). At the left edge the cover sits over the shadow and hides it; once
+   you scroll, the cover moves away and the shadow appears.
+
+   The point is that it is self-correcting. A plain mask-image would fade the
+   edge even when there is nothing further to see, which is a worse lie than no
+   hint at all. Here the shadow exists only while there is more content. */
+.scroll-shadows {
+  background-image:
+    linear-gradient(to right, var(--scroll-shadow-bg) 30%, transparent),
+    linear-gradient(to left,  var(--scroll-shadow-bg) 30%, transparent),
+    linear-gradient(to right, rgba(15, 10, 12, 0.16), transparent),
+    linear-gradient(to left,  rgba(15, 10, 12, 0.16), transparent);
+  background-position: 0 0, 100% 0, 0 0, 100% 0;
+  background-repeat: no-repeat;
+  background-size: 36px 100%, 36px 100%, 14px 100%, 14px 100%;
+  background-attachment: local, local, scroll, scroll;
+}

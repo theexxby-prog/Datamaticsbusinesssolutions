@@ -113,9 +113,13 @@ external images that hang in a browser with no proxy — that alone was 60% of
 the old 108s runtime). It waits for the DOM to stop changing rather than
 sleeping a fixed 2.1s per route, and the settle needs *three* consecutive
 stable samples; at two, a mid-mount lull reads as "finished" and late sections
-drop out of the audit silently. And it *polls* for the tab strip instead of
-reading the count once — under parallel load the chrome settles before the tabs
-mount, and a single early read reports "no tabs" and quietly audits one panel.
+drop out of the audit silently. And it detects the tab strip *after*
+measuring the first panel, never before — under parallel load the chrome settles
+while the tabs are still mounting, so an early read reports "no tabs" and quietly
+audits a quarter of the page. Polling first was not enough: the same scoped run
+gave 744 nodes normally and 4,200 with `AUDIT_VERBOSE`, because the extra logging
+slowed it just enough for the tabs to appear. Measuring first removes the race,
+since by then the page has demonstrably finished rendering.
 
 Two structural rules the audit exists to protect:
 
