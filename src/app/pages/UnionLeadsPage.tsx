@@ -25,7 +25,10 @@ import { useDocumentTitle } from '../hooks/useDocumentTitle';
 // The dense, intelligence-first Leads experience for the preview login: one
 // compact header, a slim QA line, the Accounts lens (default) and one unified
 // People list (campaign leads + enriched contacts). Every row opens a
-// full-page lead view — no side panel.
+// full-page lead view, not a side panel: a signal contact's briefing carries a
+// synthesis block, a committee strip and a tech stack, and none of that fits
+// the 600px drawer the standard Leads page uses. The lens and filters live in
+// the query string so leaving and coming back returns the same list.
 
 type Lens = 'accounts' | 'people';
 
@@ -52,19 +55,45 @@ export default function UnionLeadsPage() {
   // Deep links (e.g. the dashboard's "leads awaiting review" chip) can preset
   // the filters; read once at mount. A filter deep link lands on the People
   // lens; otherwise Accounts is the default.
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [initialLens] = useState<Lens>(() =>
-    searchParams.get('status') || searchParams.get('data') ? 'people' : 'accounts',
+    searchParams.get('lens') === 'people' || searchParams.get('status') || searchParams.get('data')
+      ? 'people'
+      : 'accounts',
   );
   const [lens, setLens] = useState<Lens>(initialLens);
   // Delivery + QA collapse into one summary line by default; expanding shows
   // both blocks in full.
   const [channelsOpen, setChannelsOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState(() => searchParams.get('status') ?? 'all');
-  const [campaignFilter, setCampaignFilter] = useState('all');
+  const [campaignFilter, setCampaignFilter] = useState(() => searchParams.get('campaign') ?? 'all');
   // Enriched contacts are the product story — open on them; standard leads
   // are one select away.
   const [enrichFilter, setEnrichFilter] = useState(() => searchParams.get('data') ?? 'enriched');
+
+  // Mirror the lens and the three filters into the query string. Rows open a
+  // full briefing page rather than a side panel (see the note above — a signal
+  // contact carries a synthesis, a committee and a tech stack, none of which
+  // fit a 600px drawer), and that navigation unmounts this page. Holding the
+  // filters in useState alone meant coming back dropped you into an unfiltered
+  // Accounts view, so a reviewer working "pending review, enriched only" lost
+  // the list on every single lead they opened.
+  //
+  // replace: true because these are not separate destinations. Without it,
+  // browser Back walks every filter change one at a time before it ever
+  // reaches the page you arrived from.
+  useEffect(() => {
+    const next = new URLSearchParams(searchParams);
+    const set = (key: string, value: string, fallback: string) => {
+      if (value === fallback) next.delete(key);
+      else next.set(key, value);
+    };
+    set('lens', lens, 'accounts');
+    set('status', statusFilter, 'all');
+    set('campaign', campaignFilter, 'all');
+    set('data', enrichFilter, 'enriched');
+    if (next.toString() !== searchParams.toString()) setSearchParams(next, { replace: true });
+  }, [lens, statusFilter, campaignFilter, enrichFilter, searchParams, setSearchParams]);
 
   // Header stats + QA line (same sources the standard page uses)
   const clientData = unionClient;
