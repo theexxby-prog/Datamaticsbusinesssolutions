@@ -1,8 +1,8 @@
-import { BookOpen, Building, ClipboardCheck, ShieldCheck } from 'lucide-react';
+import { BookOpen, Building, ShieldCheck } from 'lucide-react';
 import { InsightStrip } from '../ui/InsightStrip';
 import { getDeliveryInsights } from '../../data/insights';
 import {
-  getAssetPerformance, getLeadDisposition, getLeadQuality, getPublisherPerformance,
+  getAssetPerformance, getLeadQuality, getPublisherPerformance,
 } from '../../data/syndicationPerformance';
 
 // ─── Content syndication performance ─────────────────────────────────────────
@@ -19,13 +19,6 @@ import {
 // bar-in-row idiom from DistributionBars rather than DataTable — the point is
 // comparing rates at a glance, and a sortable table with a search box would
 // bury five rows under its own chrome.
-
-const DISPOSITION_TONE: Record<string, string> = {
-  converted: 'var(--color-success)',
-  working: 'var(--color-progress)',
-  accepted: 'var(--color-info)',
-  rejected: 'var(--color-text-muted)',
-};
 
 interface SyndicationPerformanceProps {
   campaignId: string;
@@ -55,62 +48,17 @@ function SectionHeading({ icon: Icon, title, blurb }: {
 }
 
 export function SyndicationPerformance({ campaignId, totalLeads, opsView = false }: SyndicationPerformanceProps) {
-  const disposition = getLeadDisposition(campaignId, totalLeads);
   const assets = getAssetPerformance(campaignId, totalLeads);
   const publishers = getPublisherPerformance(campaignId, totalLeads, opsView);
   const quality = getLeadQuality(campaignId, totalLeads);
   const insights = getDeliveryInsights(campaignId, totalLeads);
-  if (!disposition || !quality) return null;
+  if (!quality) return null;
 
   const peakConversion = Math.max(...assets.map(a => a.conversionRate), 1);
   const peakLeads = Math.max(...publishers.map(p => p.leads), 1);
 
   return (
     <div className="space-y-4">
-      {/* What sales did with the leads — the loop nothing else in Pulse closes. */}
-      <div className="glass-card p-5">
-        <SectionHeading
-          icon={ClipboardCheck}
-          title="What happened to the leads"
-          blurb={`How your sales team has dispositioned the ${disposition.delivered.toLocaleString('en-US')} leads delivered so far`}
-        />
-
-        <div className="mb-4 flex h-2.5 overflow-hidden rounded-full" style={{ background: 'var(--color-progress-track)' }}>
-          {disposition.stages.map(stage => (
-            <div
-              key={stage.key}
-              style={{ width: `${stage.pct}%`, background: DISPOSITION_TONE[stage.key] }}
-              title={`${stage.label}: ${stage.leads}`}
-            />
-          ))}
-        </div>
-
-        <div className="space-y-2">
-          {disposition.stages.map(stage => (
-            <div
-              key={stage.key}
-              className="flex items-baseline gap-2.5"
-              data-testid="disposition-stage"
-              data-stage={stage.key}
-              data-leads={stage.leads}
-            >
-              <span className="mt-1.5 h-2 w-2 flex-shrink-0 rounded-full" style={{ background: DISPOSITION_TONE[stage.key] }} />
-              <span className="min-w-0 flex-1 text-[12.5px]" style={{ color: 'var(--color-text-primary)' }}>
-                {stage.label}
-                <span className="ml-1.5 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{stage.hint}</span>
-              </span>
-              <span
-                className="flex-shrink-0 text-[12.5px] font-bold"
-                style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
-              >
-                {stage.leads.toLocaleString('en-US')}
-                <span className="ml-1 text-[11px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>{stage.pct}%</span>
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-
       {/* Which asset earned them. Rate, not volume, is the column that matters. */}
       <div className="glass-card p-5">
         <SectionHeading

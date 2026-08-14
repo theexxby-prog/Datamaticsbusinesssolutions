@@ -579,7 +579,13 @@ export interface CreatedCampaign {
   rules?: CampaignRules;
   files?: CampaignFiles;
   /** Ops-only commercials — never client-facing. */
-  commercials?: { cplTarget: number | null; budget: number | null; ioNumber: string | null };
+  /**
+   * cplTarget and budget are internal. cplClient is the rate the client is
+   * billed at and is the only one of the three they ever see; the billable
+   * total on the campaign header is accepted leads times this number, so it
+   * always reconciles with the lead count beside it.
+   */
+  commercials?: { cplTarget: number | null; cplClient: number | null; budget: number | null; ioNumber: string | null };
   createdLabel: string;
 }
 

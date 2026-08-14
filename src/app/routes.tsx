@@ -4,6 +4,7 @@ import { RouteLoader } from './components/RouteLoader';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { RouteErrorBoundary } from './components/RouteErrorBoundary';
 import { AppLayout } from './components/AppLayout';
+import { BILLING_MODULES_IN_SCOPE } from './config/phase';
 
 // Login is eagerly imported — it is the first thing users see,
 // so it must be in the main bundle with zero extra network round-trip.
@@ -117,22 +118,24 @@ const appRoutes: RouteObject[] = [
     path: '/reports',
     Component: withSuspense(ReportsPage),
   },
-  {
-    path: '/invoices',
-    Component: withSuspense(Invoices),
-  },
-  {
-    path: '/payment',
-    Component: withSuspense(Payment),
-  },
-  {
-    path: '/payment/:invoiceId',
-    Component: withSuspense(Payment),
-  },
-  {
-    path: '/documents',
-    Component: withSuspense(Documents),
-  },
+  // Invoicing and documents are deferred past phase one. The pages stay in the
+  // tree so the work is not lost, but every route sends you to the dashboard
+  // while BILLING_MODULES_IN_SCOPE is false. Hiding the nav item alone would
+  // have left a bookmarked /invoices working, which is the version of "removed"
+  // a client notices.
+  ...(BILLING_MODULES_IN_SCOPE
+    ? [
+        { path: '/invoices', Component: withSuspense(Invoices) },
+        { path: '/payment', Component: withSuspense(Payment) },
+        { path: '/payment/:invoiceId', Component: withSuspense(Payment) },
+        { path: '/documents', Component: withSuspense(Documents) },
+      ]
+    : [
+        { path: '/invoices', element: <Navigate to="/dashboard" replace /> },
+        { path: '/payment', element: <Navigate to="/dashboard" replace /> },
+        { path: '/payment/:invoiceId', element: <Navigate to="/dashboard" replace /> },
+        { path: '/documents', element: <Navigate to="/dashboard" replace /> },
+      ]),
   {
     path: '/support',
     Component: withSuspense(Support),

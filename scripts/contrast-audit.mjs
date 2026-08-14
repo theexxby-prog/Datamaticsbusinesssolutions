@@ -76,7 +76,11 @@ const ROUTES = [
   ['u10', '/ops-union'], ['u10', '/ops-union/intake'],
   ['u10', '/priority-accounts'],
   ['u10', '/ops-union/campaigns/new'], ['u10', '/ops-union/campaigns/46888'],
-  ['u1', '/dashboard'], ['u1', '/invoices'], ['u1', '/documents'], ['u1', '/reports'],
+  // /invoices and /documents are deliberately absent: both redirect while
+  // BILLING_MODULES_IN_SCOPE is false, so walking them audited the dashboard
+  // twice more under two route names it no longer reaches. Put them back with
+  // the modules.
+  ['u1', '/dashboard'], ['u1', '/leads'], ['u1', '/reports'],
   ['u2', '/dashboard/manager'], ['u2', '/internal/campaigns'],
 ];
 

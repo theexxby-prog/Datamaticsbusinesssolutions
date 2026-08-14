@@ -15,7 +15,7 @@ import {
   getAccountFunnel, getAudienceOverlap, getBuyingCentre, getChannelPerformance,
   getFrequencyDistribution, getUnreachedAccounts,
 } from './propensity';
-import { getAssetPerformance, getLeadDisposition, getLeadQuality } from './syndicationPerformance';
+import { getAssetPerformance, getLeadQuality } from './syndicationPerformance';
 
 export function getReachInsights(abmCampaignId: string): Insight[] {
   const funnel = getAccountFunnel(abmCampaignId);
@@ -121,27 +121,6 @@ export function getDeliveryInsights(campaignId: string, totalLeads: number): Ins
       tone: 'good',
       text: `"${top.name}" converts at ${top.conversionRate}%, against ${bottom.conversionRate}% for the lowest performer.`,
     });
-  }
-
-  const disposition = getLeadDisposition(campaignId, totalLeads);
-  if (disposition) {
-    const converted = disposition.stages.find(s => s.key === 'converted');
-    const queued = disposition.stages.find(s => s.key === 'accepted');
-    if (converted) {
-      out.push({
-        id: 'converted',
-        tone: 'good',
-        text: `${converted.leads} delivered leads have become opportunities, ${converted.pct}% of everything delivered.`,
-      });
-    }
-    // The most actionable number on the tab, and one only the client can move.
-    if (queued && queued.pct >= 35) {
-      out.push({
-        id: 'queued',
-        tone: 'watch',
-        text: `${queued.leads} accepted leads have not been worked yet.`,
-      });
-    }
   }
 
   const quality = getLeadQuality(campaignId, totalLeads);

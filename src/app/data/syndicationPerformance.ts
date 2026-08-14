@@ -5,7 +5,6 @@
 //
 //   Which asset actually converts?      → getAssetPerformance
 //   Which publisher is worth renewing?  → getPublisherPerformance
-//   What did sales DO with the leads?   → getLeadDisposition
 //   Were the leads any good?            → getLeadQuality
 //
 // Everything derives from the campaign's delivered-lead total, so the parts
@@ -154,7 +153,11 @@ export interface LeadDisposition {
   acceptedPct: number;
 }
 
-export function getLeadDisposition(campaignId: string, totalLeads: number): LeadDisposition | null {
+// No longer a public selector. What a client's sales team does with a lead is
+// their business and outside what we can source, so the disposition panel is
+// gone. getLeadQuality still needs the accepted/rejected split, which is ours
+// and which we do know, so the derivation stays here as a private helper.
+function getLeadDisposition(campaignId: string, totalLeads: number): LeadDisposition | null {
   if (totalLeads <= 0) return null;
   const seed = seedOf(campaignId);
   const counts = splitTotal(totalLeads, [11 + (seed % 5), 27, 47, 9 + (seed % 4)]);

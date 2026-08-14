@@ -1,6 +1,7 @@
 import type { Campaign } from './mockClients';
 import type { DeliveryOverride } from './unionOps';
 import { unionClient, UNION_CLIENT_ID } from './unionClient';
+import { BILLING_MODULES_IN_SCOPE } from '../config/phase';
 import { mockInvoiceRecords } from './mockInvoiceRecords';
 import { formatMoney } from '../utils/format';
 import { ABM_SYNDICATION_CROSSWALK, getAssetAnalytics } from './propensity';
@@ -120,7 +121,9 @@ export function getUpcomingEvents(): UpcomingEvent[] {
         href: `/campaigns/${c.id}`,
       })),
   );
-  const dues: UpcomingEvent[] = mockInvoiceRecords
+  // Invoicing is deferred, so nothing due ever reaches the upcoming list. The
+  // derivation stays so it comes back with the module rather than being rewritten.
+  const dues: UpcomingEvent[] = !BILLING_MODULES_IN_SCOPE ? [] : mockInvoiceRecords
     .filter(i => i.clientId === UNION_CLIENT_ID && i.stage === 'sent' && (i.dueDate ?? '') >= today)
     .map(i => ({
       date: i.dueDate!,

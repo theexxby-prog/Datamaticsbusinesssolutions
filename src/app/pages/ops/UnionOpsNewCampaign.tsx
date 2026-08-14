@@ -84,6 +84,7 @@ export default function UnionOpsNewCampaign() {
   const [targetImpressions, setTargetImpressions] = useState('');
 
   const [cplTarget, setCplTarget] = useState('');
+  const [cplClient, setCplClient] = useState('');
   const [budget, setBudget] = useState('');
   const [sfOpp, setSfOpp] = useState('');
   const [sfOli, setSfOli] = useState('');
@@ -130,6 +131,7 @@ export default function UnionOpsNewCampaign() {
         sfOpportunityLineItemId: sfOli.trim() || null,
         commercials: {
           cplTarget: cplTarget ? Number(cplTarget) : null,
+          cplClient: cplClient ? Number(cplClient) : null,
           budget: budget ? Number(budget) : null,
           ioNumber: null,
         },
@@ -391,9 +393,19 @@ export default function UnionOpsNewCampaign() {
       <div className="grid gap-4 lg:grid-cols-2">
         <div className="glass-card space-y-4 p-5" style={cardStyle(TONES.warning)}>
           <SectionHead icon={Wallet} tone={TONES.warning}>4 · Commercials</SectionHead>
+          <div>
+            <label htmlFor="nc-cpl-client" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>
+              Client rate, CPL ($)
+            </label>
+            <input id="nc-cpl-client" type="number" min={0} value={cplClient} onChange={e => setCplClient(e.target.value)} placeholder="12" className={INPUT} />
+            <p className="mt-1.5 text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
+              The only commercial figure the client sees. Their billable total is accepted leads times
+              this rate, so it moves with delivery.
+            </p>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="nc-cpl" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>CPL ($)</label>
+              <label htmlFor="nc-cpl" className={FIELD_LABEL} style={{ color: 'var(--color-text-primary)' }}>Internal CPL ($)</label>
               <input id="nc-cpl" type="number" min={0} value={cplTarget} onChange={e => setCplTarget(e.target.value)} placeholder="55" className={INPUT} />
             </div>
             <div>
@@ -402,8 +414,8 @@ export default function UnionOpsNewCampaign() {
             </div>
           </div>
           <p className="text-[12px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
-            Ops only — the client sees one combined spend figure with margins applied. Creation aligns
-            contacts and data to the campaign; the ICP, files and delivery rules stay off Pulse for this release.
+            The internal rate and budget stay ops-only. Creation aligns contacts and data to the campaign;
+            the ICP, files and delivery rules stay off Pulse for this release.
           </p>
         </div>
 

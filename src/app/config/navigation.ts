@@ -21,6 +21,7 @@ import type { UserRole } from '../context/AuthContext';
 import { allClients, recentUploadBatches } from '../data/mockClients';
 import { getPendingSubmissions } from '../mockData';
 import { mockInvoiceRecords } from '../data/mockInvoiceRecords';
+import { isDeferredPath } from './phase';
 import { getUnionPrefsSnapshot } from './unionPrefs';
 
 // ─── Shared navigation config ────────────────────────────────────────────────
@@ -93,6 +94,13 @@ export function useNavBadges(): NavBadges {
  * internal ops nav.
  */
 export function getNavForRole(role: UserRole | undefined, showFuture = false, unionOps = false): NavItem[] {
+  // One filter over every role's list, rather than an edit inside each of the
+  // six blocks below. Deferred modules then cannot reappear by someone adding
+  // a nav item to a role and not knowing about the phase flag.
+  return navForRole(role, showFuture, unionOps).filter(item => !isDeferredPath(item.path));
+}
+
+function navForRole(role: UserRole | undefined, showFuture = false, unionOps = false): NavItem[] {
   if (unionOps) {
     return [
       // New Campaign is deliberately not a nav item: creation is occasional
@@ -203,6 +211,7 @@ export function getTabsForRole(role: UserRole | undefined, showFuture = false, u
     ? ['/ops-union', '/ops-union/intake', '/account']
     : TAB_PATHS_BY_ROLE[role ?? 'client'] ?? TAB_PATHS_BY_ROLE.client;
   const tabs = tabPaths
+    .filter(path => !isDeferredPath(path))
     .map(path => nav.find(item => item.path === path))
     .filter((item): item is NavItem => Boolean(item));
   const more = nav.filter(item => !tabPaths.includes(item.path));
