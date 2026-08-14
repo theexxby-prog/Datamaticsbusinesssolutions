@@ -98,6 +98,15 @@ const PANELS = [
   { slug: 'reports-title', user: 'u9', route: '/reports', heading: 'Title Distribution' },
   { slug: 'reports-size', user: 'u9', route: '/reports', heading: 'Company Size' },
 
+  // ── Briefings (u9 only; these routes are gated to the UNION preview login) ──
+  { slug: 'committee-strip', user: 'u9', route: '/leads/SR-1', heading: 'Buying committee' },
+  { slug: 'contact-role', user: 'u9', route: '/leads/SR-1', heading: 'Role analysis' },
+  { slug: 'contact-playbook', user: 'u9', route: '/leads/SR-1', heading: 'Talking points' },
+  { slug: 'account-fit', user: 'u9', route: '/leads/account/lonza-ag', heading: 'Seller fit' },
+  { slug: 'account-signals', user: 'u9', route: '/leads/account/lonza-ag', heading: 'Buying signals' },
+  { slug: 'account-pain', user: 'u9', route: '/leads/account/lonza-ag', heading: 'Account pain points' },
+  { slug: 'account-tech', user: 'u9', route: '/leads/account/lonza-ag', heading: 'Technology stack' },
+
   // ── Operations ──
   { slug: 'ops-connections', user: 'u10', route: '/ops-union', selector: '.kpi-card', group: true,
     title: 'Integration status' },

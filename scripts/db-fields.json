@@ -1,0 +1,2222 @@
+[
+ {
+  "source": "Ours",
+  "table": "client",
+  "field": "client_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Minted by Pulse",
+  "visibleTo": "System",
+  "what": "The stable key"
+ },
+ {
+  "source": "Ours",
+  "table": "client",
+  "field": "client_slug",
+  "key": "",
+  "type": "text(3-6)",
+  "comesFrom": "Assigned once by ops",
+  "visibleTo": "Ops",
+  "what": "The first part of every campaign ID, so UNION gives UNION-CS-202609-001"
+ },
+ {
+  "source": "Ours",
+  "table": "client",
+  "field": "client_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "The display name on every screen and document"
+ },
+ {
+  "source": "Ours",
+  "table": "client",
+  "field": "segment",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "wholesale or retail"
+ },
+ {
+  "source": "Ours",
+  "table": "client",
+  "field": "uses_convertr",
+  "key": "",
+  "type": "boolean",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "Not every wholesale client is on Convertr"
+ },
+ {
+  "source": "Ours",
+  "table": "client",
+  "field": "created_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Audit"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "campaign_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Minted by Pulse",
+  "visibleTo": "Client",
+  "what": "Format CLIENT-TYPE-YYYYMM-SEQ, so UNION-CS-202609-001"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "client_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Selected at creation",
+  "visibleTo": "System",
+  "what": "Every campaign carries both keys, its own and the client's, so ops can pivot either way"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "campaign_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "The human name on the portal and the job card"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "campaign_type",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "CS content syndication, SA social activation, SS short stack, PG programmatic"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "status",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "draft, active, paused, completed"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "start_date",
+  "key": "",
+  "type": "date",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Drives the flight status on the campaign header and the pace calculation"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "end_date",
+  "key": "",
+  "type": "date",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Same"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "target_leads",
+  "key": "",
+  "type": "int, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Null for programmatic, which has no lead target"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "target_impressions",
+  "key": "",
+  "type": "int, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Null for pure content syndication"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "sf_opportunity_id",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Ops, optional",
+  "visibleTo": "Ops",
+  "what": "Nullable on purpose"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "sf_opportunity_line_item_id",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Ops, optional",
+  "visibleTo": "Ops",
+  "what": "Reaching the line item through this table means it never has to be part of the campaign name"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "propensity_campaign_id",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Filled after linking",
+  "visibleTo": "System",
+  "what": "Populated once ops confirms the pairing"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "propensity_campaign_name",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "From Propensity",
+  "visibleTo": "System",
+  "what": "Two Propensity endpoints key their results by name string rather than ID"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "convertr_campaign_id",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "Only for clients on Convertr"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "budget_total",
+  "key": "",
+  "type": "money",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "Never leaves the ops boundary"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "cpl_target",
+  "key": "",
+  "type": "money, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "What we plan to pay per lead"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "cpm_internal",
+  "key": "",
+  "type": "money, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "The rate before margin"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "io_number",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "Insertion order reference for finance"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "spend_combined_client",
+  "key": "",
+  "type": "money",
+  "comesFrom": "Calculated here",
+  "visibleTo": "Client",
+  "what": "The single spend figure the client sees, margins already applied"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "created_by",
+  "key": "",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "Who set the campaign up"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign",
+  "field": "created_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Also feeds the sequence number in the campaign ID"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Parent",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "geos",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Agreed countries or regions"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "industries",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Same"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "employee_bands",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Company size bands we agreed to"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "revenue_bands",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Same for revenue where the client specifies it"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "job_functions",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Which departments count"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "seniority",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "The seniority floor"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_targeting",
+  "field": "tech_keywords",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "Technologies the account should be running, where the brief calls for it"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Parent",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "touch",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "single or double"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "lead_cap_per_account",
+  "key": "",
+  "type": "int, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Stops us delivering forty leads from one company"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "cadence",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Weekly, biweekly or at completion"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "delivery_format",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Portal, CSV export or CRM push"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "custom_questions",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Extra questions the client wants asked"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_rules",
+  "field": "consent",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "Which consent statements apply"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_file",
+  "field": "file_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "The stable key for the stored file"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_file",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Parent",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_file",
+  "field": "kind",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "suppression, tal or asset"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_file",
+  "field": "file_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Upload",
+  "visibleTo": "Ops",
+  "what": "What ops recognises it by"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_file",
+  "field": "storage_url",
+  "key": "",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Where the file actually sits"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_file",
+  "field": "uploaded_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "Version history matters here"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_target_account",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Parent",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_target_account",
+  "field": "account_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "TAL file",
+  "visibleTo": "Client",
+  "what": "Shown by name in the \"still to reach\" list, which is the most actionable panel on the Reach tab"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_target_account",
+  "field": "account_domain",
+  "key": "",
+  "type": "text",
+  "comesFrom": "TAL file",
+  "visibleTo": "System",
+  "what": "The join key to Propensity"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_target_account",
+  "field": "industry",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "TAL file",
+  "visibleTo": "Client",
+  "what": "Lets the unreached list say what kind of company is being missed"
+ },
+ {
+  "source": "Ours",
+  "table": "campaign_target_account",
+  "field": "employee_band",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "TAL file",
+  "visibleTo": "Client",
+  "what": "Same"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "batch_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "The stable key for this intake"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Chosen at upload",
+  "visibleTo": "System",
+  "what": "A batch always belongs to exactly one campaign"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "source",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "csv, convertr_report or crm"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "file_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Upload",
+  "visibleTo": "Ops",
+  "what": "What ops recognises the batch by on the intake screen"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "row_count",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Counted at parse",
+  "visibleTo": "Ops",
+  "what": "What arrived, before any cleaning"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "status",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "processing, completed, failed"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "uploaded_by",
+  "key": "",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "Accountability when a bad file gets in"
+ },
+ {
+  "source": "Ours",
+  "table": "lead_batch",
+  "field": "uploaded_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "When the file landed"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "lead_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "Shown on the lead briefing and quoted in any dispute"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "From the batch",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "batch_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "From the batch",
+  "visibleTo": "Ops",
+  "what": "Lets ops trace any lead back to the file it arrived in"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "first_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Delivered field"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "last_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Delivered field"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "email",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "The join key to Propensity contacts"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "phone",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Delivered field, and a QC target"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "job_title",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Free text"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "company_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Delivered field"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "company_domain",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file or resolved",
+  "visibleTo": "System",
+  "what": "The join key to accounts"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "employees",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Checked against campaign_targeting.employee_bands"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "country",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Checked against agreed geos"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "state",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Where the brief is region-specific"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "asset_id",
+  "key": "FK",
+  "type": "text, null",
+  "comesFrom": "Source file",
+  "visibleTo": "Client",
+  "what": "Which gated asset earned this lead"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "publisher",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Source file",
+  "visibleTo": "Ops",
+  "what": "Who generated the lead, for example TechTarget or Foundry"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "publisher_cost",
+  "key": "",
+  "type": "money, null",
+  "comesFrom": "Ops",
+  "visibleTo": "Ops",
+  "what": "What we paid for this lead"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "status",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "The lifecycle in order: uploaded \u2192 qc_passed or qc_failed \u2192 corrected \u2192 delivered \u2192"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "delivered_at",
+  "key": "",
+  "type": "timestamp, null",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "Compared with the scheduled date to produce the on-time percentage"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "accepted_at",
+  "key": "",
+  "type": "timestamp, null",
+  "comesFrom": "Client or ops",
+  "visibleTo": "Client",
+  "what": "When the client confirmed"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "rejected_at",
+  "key": "",
+  "type": "timestamp, null",
+  "comesFrom": "Client or ops",
+  "visibleTo": "Client",
+  "what": "When the client sent it back"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "rejection_reason",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Client or ops",
+  "visibleTo": "Client",
+  "what": "Shown to the client, and the input to fixing the brief rather than arguing about it"
+ },
+ {
+  "source": "Ours",
+  "table": "lead",
+  "field": "replaced_by_lead_id",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "Points at the free replacement"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "exception_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "The stable key for this flag"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "lead_id",
+  "key": "FK",
+  "type": "text, null",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "Null when the row was too broken to become a lead at all"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "row_ref",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Parser",
+  "visibleTo": "Ops",
+  "what": "Where it sits in the source file, for example Row 45"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "field",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "QC",
+  "visibleTo": "Ops",
+  "what": "Which field failed: email, phone, job title or company size"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "reason",
+  "key": "",
+  "type": "text",
+  "comesFrom": "QC",
+  "visibleTo": "Ops",
+  "what": "Plain English, for example \"free-mail domain, not a corporate address\""
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "severity",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "QC",
+  "visibleTo": "Client",
+  "what": "invalid or caution"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "suggested_action",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "QC",
+  "visibleTo": "Ops",
+  "what": "Drop the row, enrich via Relish, or send back to source"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "status",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops decision",
+  "visibleTo": "Ops",
+  "what": "open, fixed or dropped"
+ },
+ {
+  "source": "Ours",
+  "table": "qa_exception",
+  "field": "flagged_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "When quality control raised it"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "schedule_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "The stable key for this scheduled delivery"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Parent",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "scheduled_date",
+  "key": "",
+  "type": "date",
+  "comesFrom": "Generated from cadence",
+  "visibleTo": "Client",
+  "what": "What the client was promised"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "leads_promised",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Generated",
+  "visibleTo": "Client",
+  "what": "How many leads that delivery was meant to carry"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "leads_delivered",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Counted from lead",
+  "visibleTo": "Client",
+  "what": "Derived, not typed"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "status",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "scheduled or completed"
+ },
+ {
+  "source": "Ours",
+  "table": "delivery_schedule",
+  "field": "delivered_at",
+  "key": "",
+  "type": "timestamp, null",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "Against scheduled_date, this is the entire on-time calculation"
+ },
+ {
+  "source": "Ours",
+  "table": "content_asset",
+  "field": "asset_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Referenced by lead.asset_id"
+ },
+ {
+  "source": "Ours",
+  "table": "content_asset",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Parent",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Ours",
+  "table": "content_asset",
+  "field": "name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "The asset title as the client knows it"
+ },
+ {
+  "source": "Ours",
+  "table": "content_asset",
+  "field": "asset_type",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ops",
+  "visibleTo": "Client",
+  "what": "Whitepaper, case study, webinar, analyst report or buyer guide"
+ },
+ {
+  "source": "Ours",
+  "table": "content_asset",
+  "field": "views",
+  "key": "",
+  "type": "int, null",
+  "comesFrom": "Publisher, if supplied",
+  "visibleTo": "Client",
+  "what": "Nullable, and often null"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Resolved on ingest",
+  "visibleTo": "System",
+  "what": "Our ID, resolved from the Propensity campaign name"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "propensity_campaign_id",
+  "key": "",
+  "type": "text, null",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "Kept even though it is sometimes null on their side"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "cohort_number",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "The wave"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "channel",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Display, LinkedIn, Meta, email"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "activity_date",
+  "key": "",
+  "type": "date",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Every time-series chart on the Advertising tab"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "impressions",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "How many times it was served"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "clicks",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "How many times it was clicked"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "ctr",
+  "key": "",
+  "type": "decimal",
+  "comesFrom": "Calculated",
+  "visibleTo": "Client",
+  "what": "Store it rather than recomputing in five places, so every panel shows the same rounding"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "cost",
+  "key": "",
+  "type": "money",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "Ops only"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "budget",
+  "key": "",
+  "type": "money",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "Ops only"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "pacing_pct",
+  "key": "",
+  "type": "decimal",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "Ops only"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_campaign_daily",
+  "field": "raw_json",
+  "key": "",
+  "type": "json",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "The untouched response"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Resolved on ingest",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "account_domain",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "Joins to campaign_target_account and to lead.company_domain"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "account_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Shown in the heatmap and the companies grid"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "channel",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Keep the channel split"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "impressions",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Above zero means the account has been reached"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "clicks",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Above zero means engaged"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "website_visits",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Also counts as engaged"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "sales_touches",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "Outreach recorded on their side"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "sales_responses",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "Replies to those touches"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "opportunities_created",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "The closest thing we get to outcome data without a CRM feed"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "warmth",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Hot, warm or cool"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "intent_score",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "0 to 100"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "last_activity_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "How recently anything happened on the account"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_engagement",
+  "field": "pulled_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Drives the \"synced at\" line in the portal, so the client knows how fresh the number is"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Copy",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "account_domain",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Copy",
+  "visibleTo": "System",
+  "what": "Which account the row describes"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "snapshot_date",
+  "key": "",
+  "type": "date",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "The day the copy was taken"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "impressions_to_date",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Copy",
+  "visibleTo": "Client",
+  "what": "Running total on that day"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "clicks_to_date",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Copy",
+  "visibleTo": "Client",
+  "what": "Running click total on that day"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "is_reached",
+  "key": "",
+  "type": "boolean",
+  "comesFrom": "Derived",
+  "visibleTo": "Client",
+  "what": "Impressions above zero on that date"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_account_daily",
+  "field": "is_engaged",
+  "key": "",
+  "type": "boolean",
+  "comesFrom": "Derived",
+  "visibleTo": "Client",
+  "what": "Same for clicks or visits"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "propensity_contact_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "Their key for the person, kept so we can re-fetch without matching on name"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Resolved on ingest",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "work_email",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "The join key to our leads"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "first_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Delivered field"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "last_name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Delivered field"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "title",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Free text only"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "account_domain",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "Counting contacts per domain is how we measure buying-committee depth"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "warmth",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Hot, warm or cool, measured at the person rather than the account"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "contact_centric_warmth",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Propensity",
+  "visibleTo": "Ops",
+  "what": "Their second warmth measure, person-level rather than account-level"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "ad_clicks_90d",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Rolling 90-day counters, not lifetime"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "web_sessions_90d",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Site visits in the last 90 days"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "content_downloads_90d",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Assets downloaded in the last 90 days"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "engagement_score",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Ranks who to call first inside an account"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "last_seen_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "The last time Propensity saw any activity from this person"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "matched_lead_id",
+  "key": "FK",
+  "type": "text, null",
+  "comesFrom": "Resolved on ingest",
+  "visibleTo": "System",
+  "what": "Null is normal and expected"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_contact",
+  "field": "raw_json",
+  "key": "",
+  "type": "json",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "The untouched response, so a disputed number can be checked against source"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "propensity_asset_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "System",
+  "what": "Their key for the creative"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Resolved on ingest",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "name",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "The creative name as it appears in Propensity"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "format",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Display, native or video"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "channel",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Lets us show the best creative on each channel"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "impressions",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "How many times it was served"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "clicks",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "How many times it was clicked"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "ctr",
+  "key": "",
+  "type": "decimal",
+  "comesFrom": "Calculated",
+  "visibleTo": "Client",
+  "what": "How creative is ranked"
+ },
+ {
+  "source": "Propensity",
+  "table": "propensity_asset",
+  "field": "engagements",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Propensity",
+  "visibleTo": "Client",
+  "what": "Their combined interaction count, used for share-of-engagement"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "batch_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "System",
+  "what": "Their key for the run"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "status",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "pending, grouping, processing, completed, failed"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "total_leads",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Ours",
+  "visibleTo": "Ops",
+  "what": "What we sent"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "valid_leads",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "What they could work with"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "invalid_leads",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "Sent but unusable"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "unique_pairings",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "Distinct person-and-company combinations, which is what they bill on"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "submitted_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "When we sent the batch, which with completed_at gives the turnaround"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "completed_at",
+  "key": "",
+  "type": "timestamp, null",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "Turnaround time, for planning the next batch"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_batch",
+  "field": "raw_payload",
+  "key": "",
+  "type": "json",
+  "comesFrom": "Relish",
+  "visibleTo": "System",
+  "what": "Keep it"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "company_domain",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "System",
+  "what": "Joins to leads and to Propensity accounts"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "batch_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "System",
+  "what": "Which run produced it, so stale research is identifiable"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "summary",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "The opening paragraph of the account briefing"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "industry",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Feeds the industry mix chart"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "employee_count",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Company size, as Relish reports it"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "revenue",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Revenue band, used to check the lead against what we agreed"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "headquarters",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Where the company is based"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "pain_points",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "What the research says is hurting them"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "buying_signals",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "The evidence line under a priority score"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "security_posture",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Their current security stance, in a sentence"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "recent_news",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Dated headlines"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "trigger_events",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Dated events"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "seller_fit_score",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "Strong, good or moderate"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "seller_fit_rationale",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "Why Relish scored the fit the way it did"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "competitor_opportunities",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Where a competitor looks weak or is being displaced"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "likely_vendors",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Who they probably buy from today"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "decision_maker_roles",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Which roles to aim at, and what the committee is missing"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "tech_stack",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "What they run, which shapes the pitch"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_company_enrichment",
+  "field": "signal_freshness",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Ops",
+  "what": "How current their research is"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "lead_id",
+  "key": "PK",
+  "type": "text",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "Which lead this describes"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "batch_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "System",
+  "what": "Which submission it came from, so any row can be traced back to its file"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "role_analysis",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "What this person actually does, as opposed to their job title"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "communication_style",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "How to approach them"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "decision_influence",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "High, medium or low"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "pain_points",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "What the research says is hurting them"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "talking_points",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Openers the briefing suggests"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "motivations",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "What drives this person, separate from what the company needs"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "recommended_approach",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "How Relish suggests opening the conversation"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "objection_handling",
+  "key": "",
+  "type": "json array",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "Question and answer pairs"
+ },
+ {
+  "source": "Relish",
+  "table": "relish_contact_enrichment",
+  "field": "engagement_priority",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Relish",
+  "visibleTo": "Client",
+  "what": "P1, P2 or P3"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "campaign_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "Which campaign the row belongs to"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "account_domain",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "Which account the row describes"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "scored_at",
+  "key": "",
+  "type": "date",
+  "comesFrom": "System",
+  "visibleTo": "System",
+  "what": "Keeping every night's score means we can show movement, not just today's rank"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "readiness",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Calculated",
+  "visibleTo": "Client",
+  "what": "0 to 100, blending the account's signals"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "peak_intent",
+  "key": "",
+  "type": "int",
+  "comesFrom": "From Propensity",
+  "visibleTo": "Client",
+  "what": "The highest intent score across the account's contacts. 25%"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "committee_size",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Counted",
+  "visibleTo": "Client",
+  "what": "Contacts engaged at that domain. 20%"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "days_since_signal",
+  "key": "",
+  "type": "int, null",
+  "comesFrom": "From Relish triggers",
+  "visibleTo": "Client",
+  "what": "Days since the newest dated trigger. 20%"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "priority_score",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Calculated",
+  "visibleTo": "Client",
+  "what": "The weighted total, 0 to 100"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "band",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Calculated",
+  "visibleTo": "Client",
+  "what": "call_now at 70 and above, nurture from 45, dormant below"
+ },
+ {
+  "source": "Computed",
+  "table": "account_score",
+  "field": "reason",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Calculated",
+  "visibleTo": "Client",
+  "what": "One clause saying what puts this account where it is"
+ },
+ {
+  "source": "Computed",
+  "table": "title_classification",
+  "field": "pattern",
+  "key": "",
+  "type": "text",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "A match rule against job_title, for example anything containing \"VP\" or \"Vice President\""
+ },
+ {
+  "source": "Computed",
+  "table": "title_classification",
+  "field": "seniority_band",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ours",
+  "visibleTo": "Client",
+  "what": "C-suite, VP, Director, Manager or Practitioner"
+ },
+ {
+  "source": "Computed",
+  "table": "title_classification",
+  "field": "job_function",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Ours",
+  "visibleTo": "Client",
+  "what": "IT and infrastructure, security, operations, finance, other"
+ },
+ {
+  "source": "Computed",
+  "table": "title_classification",
+  "field": "priority",
+  "key": "",
+  "type": "int",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "Which rule wins when a title matches more than one. \"VP of IT Security\" needs a"
+ },
+ {
+  "source": "Computed",
+  "table": "lead_disposition",
+  "field": "lead_id",
+  "key": "FK",
+  "type": "text",
+  "comesFrom": "Ours",
+  "visibleTo": "System",
+  "what": "Which lead this describes"
+ },
+ {
+  "source": "Computed",
+  "table": "lead_disposition",
+  "field": "state",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "Client CRM",
+  "visibleTo": "Client",
+  "what": "accepted, working, converted or rejected"
+ },
+ {
+  "source": "Computed",
+  "table": "lead_disposition",
+  "field": "opportunity_value",
+  "key": "",
+  "type": "money, null",
+  "comesFrom": "Client CRM",
+  "visibleTo": "Client",
+  "what": "Where a lead became a real opportunity"
+ },
+ {
+  "source": "Computed",
+  "table": "lead_disposition",
+  "field": "source",
+  "key": "",
+  "type": "enum",
+  "comesFrom": "System",
+  "visibleTo": "Ops",
+  "what": "client_crm, convertr or manual"
+ },
+ {
+  "source": "Computed",
+  "table": "lead_disposition",
+  "field": "updated_at",
+  "key": "",
+  "type": "timestamp",
+  "comesFrom": "System",
+  "visibleTo": "Client",
+  "what": "When the client last told us anything about this lead"
+ }
+]

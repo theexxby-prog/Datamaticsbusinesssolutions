@@ -23,7 +23,7 @@ import { execSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const SHOTS = join(HERE, '.panel-shots');
-const FIELDS_JSON = process.env.FIELDS_JSON ?? join(HERE, '.panel-shots', 'fields.json');
+const FIELDS_JSON = process.env.FIELDS_JSON ?? join(HERE, 'db-fields.json');
 const OUT = process.env.DOC_OUT ?? join(HERE, '.panel-shots', 'database-requirements.html');
 
 // ─── The mapping ─────────────────────────────────────────────────────────────
@@ -38,6 +38,7 @@ const AREAS = [
   ['audience',    'Audience',           'Who inside those accounts was reached.'],
   ['advertising', 'Advertising',        'How the paid media performed.'],
   ['client',      'Client pages',       'The screens outside a single campaign.'],
+  ['briefing',    'Briefings',          'The deep view of one account or one person. Every enrichment field the warehouse stores surfaces here.'],
   ['ops',         'Operations',         'Internal only. The client never sees these.'],
 ];
 
@@ -281,6 +282,54 @@ const PANELS = [
     agg: 'COUNT grouped by employees band, compared against campaign_targeting.employee_bands.',
     note: 'The stored band strings on the lead and in the campaign targeting must come from the same vocabulary, or this comparison cannot be made at all.' },
 
+  // ── Briefings ──
+  { slug: 'committee-strip', area: 'briefing',
+    what: 'Everyone engaged at the account, in the order they started engaging, so a seller can see the buying committee rather than one name.',
+    reads: [['propensity_contact', ['propensity_contact_id', 'first_name', 'last_name', 'title', 'account_domain', 'warmth', 'engagement_score', 'last_seen_at', 'ad_clicks_90d', 'web_sessions_90d', 'content_downloads_90d']]],
+    grain: 'one row per contact per campaign',
+    agg: 'Filter to one account_domain, order by last_seen_at ascending.',
+    note: 'The three 90-day counters are what let the strip say how someone engaged rather than only that they did. They are point-in-time counters from the upstream feed, so they overwrite on each pull rather than accumulating.' },
+
+  { slug: 'contact-role', area: 'briefing',
+    what: 'The generated read on one person: what their role means for the sale and how to approach them.',
+    reads: [['relish_contact_enrichment', ['lead_id', 'role_analysis', 'communication_style', 'decision_influence', 'engagement_priority']]],
+    grain: 'one row per lead',
+    agg: 'Straight read, keyed on lead_id.',
+    note: 'Keyed on our lead_id rather than an email, which is what makes it survive the same person appearing in two campaigns.' },
+
+  { slug: 'contact-playbook', area: 'briefing',
+    what: 'The sales playbook for that person: what to say, what they care about, and what they will push back on.',
+    reads: [['relish_contact_enrichment', ['talking_points', 'motivations', 'pain_points', 'recommended_approach', 'objection_handling']]],
+    grain: 'one row per lead, five list-valued columns',
+    agg: 'Straight read. Each column renders as its own card.',
+    note: 'All five arrive as arrays of strings. Storing them as JSON arrays rather than delimited text matters because entries routinely contain commas.' },
+
+  { slug: 'account-fit', area: 'briefing',
+    what: 'Whether the account is worth working, with the reasoning and how fresh the signal is.',
+    reads: [['relish_company_enrichment', ['company_domain', 'batch_id', 'summary', 'revenue', 'seller_fit_score', 'seller_fit_rationale', 'signal_freshness', 'decision_maker_roles']]],
+    grain: 'one row per company domain per enrichment batch',
+    agg: 'Most recent batch for the domain.',
+    note: 'seller_fit_score and its rationale are ops-only judgements and stay internal; the rest of this panel is client-safe. Keeping batch_id on the row is what allows an enrichment run to be traced or rolled back.' },
+
+  { slug: 'account-signals', area: 'briefing',
+    what: 'Why now. Recent news, buying signals and trigger events at the account.',
+    reads: [['relish_company_enrichment', ['buying_signals', 'recent_news', 'trigger_events']]],
+    grain: 'one row per company domain, three list-valued columns',
+    agg: 'Straight read.',
+    note: 'These are the fields that decay. An enrichment from six months ago will read as current unless the batch date is shown beside it, which is why the batch timestamp has to travel with the row.' },
+
+  { slug: 'account-pain', area: 'briefing',
+    what: 'What the account is struggling with, and where a competitor has left an opening.',
+    reads: [['relish_company_enrichment', ['pain_points', 'competitor_opportunities']]],
+    grain: 'one row per company domain',
+    agg: 'Straight read.' },
+
+  { slug: 'account-tech', area: 'briefing',
+    what: 'What the account already runs and who they likely buy from, plus their security posture.',
+    reads: [['relish_company_enrichment', ['tech_stack', 'likely_vendors', 'security_posture']]],
+    grain: 'one row per company domain',
+    agg: 'Straight read.' },
+
   // ── Operations ──
   { slug: 'ops-connections', area: 'ops', opsOnly: true,
     what: 'Whether each upstream integration is healthy, and how much quota is left.',
@@ -350,6 +399,10 @@ const QUESTIONS = [
   { title: 'Industry is stored twice and the two disagree',
     body: 'campaign_target_account.industry comes from the target list at upload. relish_company_enrichment.industry comes from enrichment. Both describe the same company and they do not always match.',
     asks: 'Which one wins, and can that precedence be a stored rule rather than something each query decides for itself?' },
+
+  { title: 'One whole table has no screen behind it',
+    body: 'campaign_rules holds the delivery terms: touch, lead cap per account, cadence, delivery format, custom questions and consent. All seven fields are in the spec and none of them render anywhere in the portal today. They are real terms that ops agrees with a client and that determine whether a delivered lead is valid, so the likely answer is that the portal is missing a campaign terms panel rather than that the table is wrong.',
+    asks: 'Should these stay in the warehouse while we add a screen for them, or do they live somewhere else entirely?' },
 
   { title: 'Domain normalisation is load-bearing',
     body: 'account_domain and company_domain join four different tables across three sources. Every account panel in this document depends on those joins landing. Company name will not substitute; the same company arrives spelled several ways.',
@@ -707,9 +760,12 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
 
   <section id="index">
     <h2 class="section">Field index</h2>
-    <p class="section-lede">All ${fields.length} fields, with the screens that read each one. Fields marked as
-    not shown are structural, such as keys, timestamps and raw payloads kept for audit. Type the name of a
-    table or field to filter.</p>
+    <p class="section-lede">All ${fields.length} fields, with the screens that read each one.
+    ${usedBy.size} are read by at least one screen. The remaining ${fields.length - usedBy.size} are not, and
+    they fall into three groups: keys that do the joining without ever being displayed, such as the
+    <code>campaign_id</code> on almost every table; timestamps and raw payloads kept so a run can be traced or
+    rolled back; and a small number of fields whose screen does not exist yet, which the open questions above
+    name. Type the name of a table or field to filter.</p>
     <div class="idx-tools">
       <input id="q" type="search" placeholder="Filter by table, field or description" aria-label="Filter fields" />
       <span class="count" id="count">${fields.length} of ${fields.length}</span>
