@@ -95,7 +95,7 @@ export function DeliveryScheduleSection({ campaign, bare = false }: DeliverySche
       <div className={bare ? 'hidden' : 'mb-6'}>
         <div className="flex items-center justify-between mb-2">
           <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}>
-            Overall Progress
+            Overall progress
           </span>
           <span style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-primary)' }}>
             {progressPercentage}%
@@ -185,7 +185,7 @@ export function DeliveryScheduleSection({ campaign, bare = false }: DeliverySche
         <div>
           <h3 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-3 flex items-center gap-2">
             <TrendingUp className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
-            Upcoming Deliveries
+            Upcoming deliveries
           </h3>
           <div className={bare ? 'grid grid-cols-1 sm:grid-cols-2 gap-2.5' : 'space-y-3'}>
             {upcomingDeliveries.map((delivery, index) => {

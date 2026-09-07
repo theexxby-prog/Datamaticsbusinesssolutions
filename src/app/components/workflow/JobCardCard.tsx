@@ -132,7 +132,7 @@ export function JobCardCard({
           { label: 'CPL', value: `$${card.scope.cpl.toLocaleString('en-US')}` },
         ].map(({ label, value }) => (
           <div key={label}>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--color-text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
               {label}
             </div>
             <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)' }}>{value}</div>
@@ -171,13 +171,13 @@ export function JobCardCard({
         {canVerify && (
           <button onClick={() => onVerifyOpportunity?.(card)} disabled={busy} className="btn-primary px-4 py-2 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4" />
-            Verify Opportunity
+            Verify opportunity
           </button>
         )}
         {(canConfirmAM || canConfirmCM) && (
           <button onClick={() => onConfirm?.(card)} disabled={busy} className="btn-primary px-4 py-2 flex items-center gap-2">
             <FileSignature className="w-4 h-4" />
-            Confirm Accuracy
+            Confirm accuracy
           </button>
         )}
         {canRetry && (

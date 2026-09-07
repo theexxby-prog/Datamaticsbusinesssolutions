@@ -540,7 +540,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
       <div className="bg-[var(--color-surface-raised)] rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden flex flex-col">
         {/* Header */}
         <div className="bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary)]/80 px-6 py-4 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-white">Submit New Campaign</h2>
+          <h2 className="text-2xl font-bold text-white">Submit new campaign</h2>
           <button
             onClick={onClose}
             className="text-white hover:bg-[var(--color-surface-raised)] rounded-lg p-2 transition-colors"
@@ -561,7 +561,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               }`}
             >
               <FileText className="w-4 h-4 inline-block mr-2" />
-              Manual Entry
+              Manual entry
             </button>
             <button
               onClick={() => setActiveTab('email')}
@@ -572,7 +572,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               }`}
             >
               <Mail className="w-4 h-4 inline-block mr-2" />
-              Email Instructions
+              Email instructions
             </button>
             <button
               onClick={() => setActiveTab('parse')}
@@ -859,7 +859,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
                     htmlFor="suppression-upload"
                     className="inline-block px-3 py-1.5 bg-[var(--color-surface-raised)] border border-gray-300 rounded-lg text-xs text-gray-700 hover:bg-gray-50 cursor-pointer"
                   >
-                    Choose File
+                    Choose file
                   </label>
                   <p className="text-xs text-gray-400 mt-1.5">Accepts CSV or Excel files</p>
                   {formData.suppressionList && (
@@ -951,7 +951,7 @@ export function NewCampaignModal({ isOpen, onClose, onSubmit, prefill }: NewCamp
               {/* Additional Requirements — now at the bottom */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Additional Requirements
+                  Additional requirements
                 </label>
                 <textarea
                   value={formData.additionalInfo}
@@ -1100,7 +1100,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                   <div className="bg-[var(--color-success-bg)] border border-[var(--color-success)]/20 rounded-lg p-4">
                     <div className="flex items-center gap-2 text-[var(--color-success)] mb-2">
                       <Check className="w-5 h-5" />
-                      <h3 className="font-semibold">Email Parsed Successfully!</h3>
+                      <h3 className="font-semibold">Email parsed</h3>
                     </div>
                     <p className="text-sm text-[var(--color-success)]">
                       We've extracted the following details from your email. Review and edit if needed.
@@ -1161,7 +1161,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                       onClick={() => setParsedData(null)}
                       className="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                      Parse Again
+                      Parse again
                     </button>
                   </div>
                 </div>
@@ -1195,7 +1195,7 @@ Additional Info: Need leads qualified through phone verification. Weekly deliver
                     : 'bg-gray-200 text-gray-400 cursor-not-allowed'
                 }`}
               >
-                Submit Campaign
+                Submit campaign
               </button>
             </div>
           </div>

@@ -339,8 +339,6 @@ export default function ClientAssignmentPage() {
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
                       color: 'var(--color-text-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: 'var(--letter-spacing-wide)',
                     }}
                   >
                     Client
@@ -351,11 +349,9 @@ export default function ClientAssignmentPage() {
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
                       color: 'var(--color-text-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: 'var(--letter-spacing-wide)',
                     }}
                   >
-                    Campaign Manager
+                    Campaign manager
                   </th>
                   <th
                     className="text-left px-6 py-3"
@@ -363,11 +359,9 @@ export default function ClientAssignmentPage() {
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
                       color: 'var(--color-text-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: 'var(--letter-spacing-wide)',
                     }}
                   >
-                    Backup Manager
+                    Backup manager
                   </th>
                   <th
                     className="text-left px-6 py-3"
@@ -375,8 +369,6 @@ export default function ClientAssignmentPage() {
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
                       color: 'var(--color-text-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: 'var(--letter-spacing-wide)',
                     }}
                   >
                     Status
@@ -387,8 +379,6 @@ export default function ClientAssignmentPage() {
                       fontSize: 'var(--font-size-xs)',
                       fontWeight: 'var(--font-weight-semibold)',
                       color: 'var(--color-text-secondary)',
-                      textTransform: 'uppercase',
-                      letterSpacing: 'var(--letter-spacing-wide)',
                     }}
                   >
                     Actions

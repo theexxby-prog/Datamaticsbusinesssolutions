@@ -40,7 +40,7 @@ function SignModal({ card, onClose, onSigned }: { card: JobCard; onClose: () => 
       <div className="glass-card w-full max-w-[560px] p-6 bg-[var(--color-surface-raised)]">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>Sign Job Card</h2>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>Sign job card</h2>
             <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>{card.id} · via {card.signature?.provider ?? 'DocuSign'}</p>
           </div>
           <button onClick={onClose} aria-label="Close"><X className="w-5 h-5" style={{ color: 'var(--color-text-muted)' }} /></button>
@@ -109,7 +109,7 @@ function IntakeModal({ onClose, onCreated }: { onClose: () => void; onCreated: (
       <div className="glass-card w-full max-w-[560px] p-6 bg-[var(--color-surface-raised)]">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>New Job Card Intake</h2>
+            <h2 style={{ fontSize: '18px', fontWeight: 700, color: 'var(--color-text-primary)' }}>New job card intake</h2>
             <p style={{ fontSize: '12px', color: 'var(--color-text-secondary)' }}>
               Upload the client conversation dump — the scope is extracted and a Salesforce opportunity is created automatically.
             </p>
@@ -214,7 +214,7 @@ function ClientSignatureCard({ card, onSign, busy }: { card: JobCard; onSign: (c
       <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-4">
         {scopeFacts(card).map(([label, value]) => (
           <div key={label}>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--color-text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-muted)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>{label}</div>
             <div style={{ fontSize: '13px', fontWeight: 600, color: 'var(--color-text-primary)' }}>{value}</div>
           </div>
         ))}
@@ -455,7 +455,7 @@ export default function Documents() {
           {perspective === 'account_manager' && activeTab === 'jobcards' && (
             <button onClick={() => setShowIntake(true)} className="btn-primary px-4 py-2 flex items-center gap-2 w-full lg:w-auto justify-center">
               <Upload className="w-4 h-4" />
-              New Job Card Intake
+              New job card intake
             </button>
           )}
         </div>

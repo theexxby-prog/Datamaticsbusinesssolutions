@@ -19,7 +19,7 @@ interface DeliveryAcceptanceTabProps {
 }
 
 const FIELD = 'input-base h-[38px] w-full px-3 text-sm';
-const LABEL = 'block text-[12px] font-semibold mb-1';
+const LABEL = 'block text-xs font-semibold mb-1';
 
 export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) {
   const existing = overrideFor(campaign.id, useDeliveryOverrides());
@@ -74,14 +74,14 @@ export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) 
 
   return (
     <div className="space-y-4">
-      <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+      <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
         This client isn't on Convertr, so acceptance is entered here once their review lands.
         Suppression-list rejections are part of the business — suppressed leads are never billed.
         Whatever is saved here is what the client portal shows.
       </p>
 
       <div>
-        <h3 className="mb-2 text-[11.5px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        <h3 className="mb-2 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
           Outreach
         </h3>
         <div className="grid grid-cols-3 gap-3">
@@ -101,7 +101,7 @@ export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) 
       </div>
 
       <div>
-        <h3 className="mb-2 text-[11.5px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        <h3 className="mb-2 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
           Leads
         </h3>
         <div className="grid grid-cols-3 gap-3">
@@ -116,13 +116,13 @@ export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) 
           <div>
             <label htmlFor="da-suppressed" className={LABEL} style={{ color: 'var(--color-text-primary)' }}>Suppressed</label>
             <input id="da-suppressed" type="number" min={0} value={suppressed} onChange={e => setSuppressed(e.target.value)} className={FIELD} />
-            <p className="mt-1 text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>Never billed</p>
+            <p className="mt-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>Never billed</p>
           </div>
         </div>
       </div>
 
       {errors.length > 0 && (
-        <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>{errors[0]}</p>
+        <p className="text-xs font-medium" style={{ color: 'var(--color-error)' }}>{errors[0]}</p>
       )}
 
       {/* Derived — what billing will actually see */}
@@ -135,12 +135,12 @@ export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) 
           {billable ?? 0} billable leads
         </span>
         {acceptancePct != null && (
-          <span className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             {acceptancePct}% acceptance
           </span>
         )}
         {vSuppressed ? (
-          <span className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             {vSuppressed} suppressed, not charged
           </span>
         ) : null}
@@ -159,7 +159,7 @@ export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) 
               role="radio"
               aria-checked={status === key}
               onClick={() => setStatus(key)}
-              className={`flex min-h-[34px] items-center justify-center gap-1.5 rounded-lg px-3 text-[12.5px] font-semibold transition-colors ${
+              className={`flex min-h-[34px] items-center justify-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold transition-colors ${
                 status === key ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'
               }`}
             >
@@ -187,7 +187,7 @@ export function DeliveryAcceptanceTab({ campaign }: DeliveryAcceptanceTabProps) 
       </div>
 
       {existing && (
-        <p className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
           Last saved {existing.updatedLabel}{existing.note ? ` · ${existing.note}` : ''}
         </p>
       )}

@@ -41,14 +41,14 @@ export function SpendChannelsSection() {
             <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
             <XAxis
               dataKey="date"
-              style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
+              style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }}
               stroke="none"
               tickLine={false}
               interval="preserveStartEnd"
               tickFormatter={formatDateShort}
             />
             <YAxis
-              style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
+              style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }}
               stroke="none"
               tickLine={false}
               width={40}
@@ -83,7 +83,7 @@ export function SpendChannelsSection() {
             <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
             <XAxis dataKey="month" style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} />
             <YAxis
-              style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
+              style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }}
               stroke="none"
               tickLine={false}
               width={44}

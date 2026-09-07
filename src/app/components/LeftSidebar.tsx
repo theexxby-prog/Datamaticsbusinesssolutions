@@ -379,7 +379,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                             >
                               {item.name}
                               {item.badge && (
-                                <span className="ml-2 bg-[var(--color-primary)] px-1.5 py-0.5 rounded-full" style={{ fontSize: '10px' }}>
+                                <span className="ml-2 bg-[var(--color-primary)] px-1.5 py-0.5 rounded-full" style={{ fontSize: '11px' }}>
                                   {item.badge}
                                 </span>
                               )}
@@ -426,7 +426,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                     }}
                     onMouseEnter={() => handleItemMouseEnter(client.name)}
                     onMouseLeave={handleItemMouseLeave}
-                    className={`w-full flex items-center gap-3 rounded-xl text-[14px] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-all duration-100 ${
+                    className={`w-full flex items-center gap-3 rounded-xl text-sm text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-surface)] transition-all duration-100 ${
                       isExpanded ? 'px-3 py-3' : 'px-0 py-3 justify-center'
                     }`}
                     style={{ fontWeight: 400 }}
@@ -489,7 +489,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                 {unreadCount > 0 && (
                   <span
                     className="absolute -top-1.5 -right-1.5 min-w-[16px] h-4 px-1 rounded-full flex items-center justify-center text-white"
-                    style={{ background: 'var(--color-primary-solid)', fontSize: '10px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary-solid)', fontSize: '11px', fontWeight: 700 }}
                   >
                     {unreadCount > 9 ? '9+' : unreadCount}
                   </span>
@@ -587,7 +587,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
                   exit={{ opacity: 0 }}
                   transition={{ duration: 0.22 }}
                 >
-                  Log Out
+                  Log out
                 </motion.span>
               )}
             </AnimatePresence>
@@ -601,7 +601,7 @@ export function LeftSidebar({ collapsed: controlledCollapsed, onToggle }: Sideba
               className="absolute left-full top-1/2 -translate-y-1/2 ml-3 px-3 py-1.5 bg-[var(--color-surface-inverse)] text-[var(--color-text-inverse)] rounded-lg whitespace-nowrap z-50 pointer-events-none"
               style={{ fontSize: '12px', fontWeight: 500 }}
             >
-              Log Out
+              Log out
             </motion.div>
           )}
         </div>

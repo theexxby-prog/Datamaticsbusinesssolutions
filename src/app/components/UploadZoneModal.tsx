@@ -64,7 +64,7 @@ export function UploadZoneModal({ isOpen, onClose }: UploadZoneModalProps) {
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">Upload Document</h3>
+            <h3 className="text-lg font-semibold text-gray-900">Upload document</h3>
             <p className="text-sm mt-1 text-gray-600">
               Upload contracts, SOWs, NDAs, and other documents
             </p>
@@ -122,7 +122,7 @@ export function UploadZoneModal({ isOpen, onClose }: UploadZoneModalProps) {
                   onClick={handleFileSelect}
                   className="px-6 py-2.5 rounded-lg text-white transition-all bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)]"
                 >
-                  Select Files
+                  Select files
                 </button>
                 <p className="text-xs mt-4 text-gray-500">
                   Supported formats: PDF, DOC, DOCX (Max 10MB)

@@ -35,7 +35,7 @@ export function WowBadge({ change, display, unit, riseIsGood = true }: WowBadgeP
 
   return (
     <span
-      className="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[10.5px] font-semibold"
+      className="inline-flex items-center gap-0.5 rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
       style={{ color: tone.fg, background: tone.bg, fontVariantNumeric: 'tabular-nums' }}
       title={`${label} vs last week`}
     >

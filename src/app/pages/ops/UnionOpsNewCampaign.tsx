@@ -37,7 +37,7 @@ const TYPE_ICONS: Record<CampaignTypeCode, typeof FileText> = {
   PG: Radio,
 };
 
-const FIELD_LABEL = 'block text-[12.5px] font-semibold mb-1.5';
+const FIELD_LABEL = 'block text-[13px] font-semibold mb-1.5';
 const INPUT = 'input-base h-[42px] w-full px-3.5 text-sm';
 
 // Each section gets its own colour so the eye can land without reading:
@@ -57,7 +57,7 @@ function SectionHead({ icon: Icon, tone, children }: {
   children: React.ReactNode;
 }) {
   return (
-    <h2 className="flex flex-wrap items-center gap-2 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-secondary)' }}>
+    <h2 className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-secondary)' }}>
       <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg" style={{ background: tone.bg }}>
         <Icon className="h-4 w-4" style={{ color: tone.color }} />
       </span>
@@ -69,7 +69,7 @@ function SectionHead({ icon: Icon, tone, children }: {
 const cardStyle = (tone: SectionTone) => ({ borderLeft: `3px solid ${tone.color}` });
 
 export default function UnionOpsNewCampaign() {
-  useDocumentTitle('New Campaign');
+  useDocumentTitle('New campaign');
   const navigate = useNavigate();
 
   const [name, setName] = useState('');
@@ -153,7 +153,7 @@ export default function UnionOpsNewCampaign() {
         >
           <ArrowLeft className="h-4 w-4" /> Pipeline
         </button>
-        <h1 className="text-[20px] font-extrabold leading-tight tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+        <h1 className="text-xl font-extrabold leading-tight tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
           New campaign
         </h1>
         <span
@@ -206,7 +206,7 @@ export default function UnionOpsNewCampaign() {
               aria-invalid={err(!name.trim())}
             />
             {err(!name.trim()) && (
-              <p className="mt-1 text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>Enter a campaign name</p>
+              <p className="mt-1 text-xs font-medium" style={{ color: 'var(--color-error)' }}>Enter a campaign name</p>
             )}
           </div>
           <div className="relative">
@@ -271,7 +271,7 @@ export default function UnionOpsNewCampaign() {
                   </button>
                 ))}
                 {!isNewClient && clientMatches.length === 0 && (
-                  <div className="px-3 py-2 text-[12.5px]" style={{ color: 'var(--color-text-muted)' }}>No clients match</div>
+                  <div className="px-3 py-2 text-[13px]" style={{ color: 'var(--color-text-muted)' }}>No clients match</div>
                 )}
               </div>
             )}
@@ -307,16 +307,16 @@ export default function UnionOpsNewCampaign() {
                     <Icon className="h-3.5 w-3.5" style={{ color: on ? '#FFFFFF' : 'var(--color-primary)' }} />
                   </span>
                   <span className="min-w-0">
-                    <span className="flex flex-wrap items-center gap-1 text-[13.5px] font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+                    <span className="flex flex-wrap items-center gap-1 text-sm font-bold leading-tight" style={{ color: 'var(--color-text-primary)' }}>
                       {t.label}
                       <span
-                        className="rounded px-1 py-px font-mono text-[9.5px] font-bold"
+                        className="rounded px-1 py-px font-mono text-[11px] font-bold"
                         style={{ background: 'var(--color-primary-tint)', color: 'var(--color-primary)' }}
                       >
                         {t.code}
                       </span>
                     </span>
-                    <span className="mt-1 block text-[11.5px] leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
+                    <span className="mt-1 block text-xs leading-snug" style={{ color: 'var(--color-text-secondary)' }}>
                       {t.blurb}
                     </span>
                   </span>
@@ -325,7 +325,7 @@ export default function UnionOpsNewCampaign() {
             })}
           </div>
           {err(!type) && (
-            <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>Choose a campaign type</p>
+            <p className="text-xs font-medium" style={{ color: 'var(--color-error)' }}>Choose a campaign type</p>
           )}
         </div>
 
@@ -378,7 +378,7 @@ export default function UnionOpsNewCampaign() {
             </div>
           </div>
           {err(!dateOrderOk) && (
-            <p className="text-[12px] font-medium" style={{ color: 'var(--color-error)' }}>End date is before the start date</p>
+            <p className="text-xs font-medium" style={{ color: 'var(--color-error)' }}>End date is before the start date</p>
           )}
           {typeMeta && !typeMeta.takesLeads && (
             <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
@@ -398,7 +398,7 @@ export default function UnionOpsNewCampaign() {
               Client rate, CPL ($)
             </label>
             <input id="nc-cpl-client" type="number" min={0} value={cplClient} onChange={e => setCplClient(e.target.value)} placeholder="12" className={INPUT} />
-            <p className="mt-1.5 text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
+            <p className="mt-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>
               The only commercial figure the client sees. Their billable total is accepted leads times
               this rate, so it moves with delivery.
             </p>
@@ -413,7 +413,7 @@ export default function UnionOpsNewCampaign() {
               <input id="nc-budget" type="number" min={0} value={budget} onChange={e => setBudget(e.target.value)} placeholder="22,000" className={INPUT} />
             </div>
           </div>
-          <p className="text-[12px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             The internal rate and budget stay ops-only. Creation aligns contacts and data to the campaign;
             the ICP, files and delivery rules stay off Pulse for this release.
           </p>
@@ -425,7 +425,7 @@ export default function UnionOpsNewCampaign() {
           <SectionHead icon={CloudCog} tone={TONES.muted}>
             5 · Salesforce
             <span
-              className="rounded-full px-2 py-0.5 text-[10px] font-bold normal-case tracking-normal"
+              className="rounded-full px-2 py-0.5 text-[11px] font-bold normal-case tracking-normal"
               style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               Optional · future connection
@@ -441,7 +441,7 @@ export default function UnionOpsNewCampaign() {
               <input id="nc-oli" type="text" value={sfOli} onChange={e => setSfOli(e.target.value)} placeholder="00k4x000GHi2JkL" className={INPUT} />
             </div>
           </div>
-          <p className="text-[12px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
             Not connected yet — IDs entered now link automatically when Salesforce connects later.
             MSA clients have no per-campaign opportunity; leave blank and the campaign ID stands alone.
           </p>

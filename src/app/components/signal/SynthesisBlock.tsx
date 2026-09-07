@@ -25,7 +25,7 @@ export function SynthesisBlock({ synthesis }: { synthesis: IntentSynthesis }) {
             <div className="text-3xl font-extrabold leading-none" style={{ color: meta.color, fontVariantNumeric: 'tabular-nums' }}>
               {synthesis.intentScore}
             </div>
-            <div className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+            <div className="text-[11px] font-semibold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
               Signal score
             </div>
           </div>
@@ -53,7 +53,7 @@ export function SynthesisBlock({ synthesis }: { synthesis: IntentSynthesis }) {
                     <span key={node} className="inline-flex items-center gap-1.5">
                       {i > 0 && <ArrowRight className="h-3 w-3 flex-shrink-0" style={{ color: meta.color }} />}
                       <span
-                        className="rounded-md px-2 py-0.5 text-[11.5px] font-semibold"
+                        className="rounded-md px-2 py-0.5 text-xs font-semibold"
                         style={{ background: meta.bg, color: 'var(--color-text-primary)' }}
                       >
                         {node}
@@ -71,13 +71,13 @@ export function SynthesisBlock({ synthesis }: { synthesis: IntentSynthesis }) {
 
         <div className="mt-5 grid gap-3 md:grid-cols-2">
           <div className="rounded-xl p-3.5" style={{ background: 'var(--color-primary-tint)' }}>
-            <h4 className="mb-1 flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-primary)' }}>
+            <h4 className="mb-1 flex items-center gap-1.5 text-xs font-bold" style={{ color: 'var(--color-primary)' }}>
               <Compass className="h-3.5 w-3.5" /> Recommended approach
             </h4>
             <p className="text-[13px] leading-relaxed" style={{ color: 'var(--color-text-primary)' }}>{synthesis.play}</p>
           </div>
           <div className="rounded-xl border p-3.5" style={{ borderColor: 'var(--color-border-light)' }}>
-            <h4 className="mb-1 flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-secondary)' }}>
+            <h4 className="mb-1 flex items-center gap-1.5 text-xs font-bold" style={{ color: 'var(--color-text-secondary)' }}>
               <ShieldAlert className="h-3.5 w-3.5" /> Most likely blocker
             </h4>
             <p className="text-[13px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{synthesis.risk}</p>

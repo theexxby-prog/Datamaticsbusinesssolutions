@@ -875,7 +875,7 @@ export default function Feedback() {
               <MessageSquare className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h1 style={{ color: 'var(--color-text-primary)' }}>Share Feedback</h1>
+              <h1 style={{ color: 'var(--color-text-primary)' }}>Share feedback</h1>
               <p className="t2 mt-0.5">Help us improve the Datamatics Business Solutions Client Portal</p>
             </div>
           </div>
@@ -926,7 +926,7 @@ export default function Feedback() {
                   <Lightbulb className="w-4 h-4 text-white" />
                 </div>
                 <div>
-                  <h3 className="t1">Why This Platform Matters</h3>
+                  <h3 className="t1">Why this platform matters</h3>
                   <p className="t3 mt-0.5">Vision, problems we're solving & the strategic play</p>
                 </div>
               </div>
@@ -1038,7 +1038,7 @@ export default function Feedback() {
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="t1">Coming Features</h3>
+                    <h3 className="t1">Coming features</h3>
                     <span
                       className="px-2 py-0.5 rounded-full"
                       style={{
@@ -1393,7 +1393,7 @@ export default function Feedback() {
               <MessageSquare className="w-4 h-4 text-white" />
             </div>
             <div>
-              <h2 className="t1">We Value Your Input</h2>
+              <h2 className="t1">We value your input</h2>
               <p className="t3 mt-0.5">Share bugs, feature ideas, or general thoughts</p>
             </div>
           </div>

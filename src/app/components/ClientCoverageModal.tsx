@@ -95,7 +95,7 @@ const URGENCY: Record<UrgencyLevel, {
   },
   medium: {
     dot: 'var(--color-warning)', border: 'var(--color-warning-bg)', rowBg: 'rgba(217,119,6,0.02)',
-    badge: 'rgba(217,119,6,0.10)', badgeText: 'var(--color-warning)', label: 'At Risk',
+    badge: 'rgba(217,119,6,0.10)', badgeText: 'var(--color-warning)', label: 'At risk',
   },
   ok: {
     dot: 'var(--color-success)', border: 'transparent', rowBg: 'transparent',
@@ -104,7 +104,7 @@ const URGENCY: Record<UrgencyLevel, {
 };
 
 const FILTER_LABELS: Record<FilterLevel, string> = {
-  all: 'All', high: 'Unprotected', medium: 'At Risk', ok: 'Covered',
+  all: 'All', high: 'Unprotected', medium: 'At risk', ok: 'Covered',
 };
 
 // ─── Inline select ──────────────────────────────────────────────────────────────
@@ -369,7 +369,7 @@ function ClientMobileCard({
         <div className="flex items-center gap-2 flex-shrink-0">
           <span
             className="inline-flex items-center px-2 py-0.5 rounded-lg"
-            style={{ fontSize: 10, fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', background: cfg.badge, color: cfg.badgeText }}
+            style={{ fontSize: 11, fontWeight: 700, background: cfg.badge, color: cfg.badgeText }}
           >
             {cfg.label}
           </span>
@@ -705,7 +705,7 @@ export function ClientCoverageModal({
                 {f !== 'all' && (
                   <span
                     className="ml-1.5 inline-flex items-center justify-center w-4 h-4 rounded-full"
-                    style={{ fontSize: 10, background: filter === f ? 'var(--color-surface)' : 'var(--color-surface)' }}
+                    style={{ fontSize: 11, background: filter === f ? 'var(--color-surface)' : 'var(--color-surface)' }}
                   >
                     {counts[f as 'high'|'medium'|'ok']}
                   </span>
@@ -763,11 +763,11 @@ export function ClientCoverageModal({
                 <table className="w-full">
                   <thead style={{ background: 'var(--color-surface)', borderBottom: '1px solid var(--color-border)', position: 'sticky', top: 0, zIndex: 1 }}>
                     <tr>
-                      {['Client', 'Campaign Manager', 'Backup Manager', 'Coverage'].map(col => (
+                      {['Client', 'Campaign manager', 'Backup manager', 'Coverage'].map(col => (
                         <th
                           key={col}
                           className="text-left px-4 py-3"
-                          style={{ fontSize: 11, fontWeight: 700, letterSpacing: '0.06em', textTransform: 'uppercase', color: 'var(--color-text-secondary)' }}
+                          style={{ fontSize: 12, fontWeight: 700, color: 'var(--color-text-secondary)' }}
                         >
                           {col}
                         </th>

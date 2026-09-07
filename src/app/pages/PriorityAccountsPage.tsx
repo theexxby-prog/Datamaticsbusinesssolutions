@@ -45,7 +45,7 @@ export default function PriorityAccountsPage() {
       sortValue: r => r.name, text: r => `${r.name} ${r.industry} ${r.country}`,
       render: r => (
         <div className="min-w-0">
-          <div className="truncate text-[13.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.name}</div>
+          <div className="truncate text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.name}</div>
           <div className="truncate text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
             {r.industry} · {r.country}
           </div>
@@ -66,7 +66,7 @@ export default function PriorityAccountsPage() {
               {r.score}
             </span>
             <span
-              className="rounded-full px-1.5 py-0.5 text-[10px] font-semibold"
+              className="rounded-full px-1.5 py-0.5 text-[11px] font-semibold"
               style={{ color: tone.fg, background: tone.bg }}
             >
               {tone.label}
@@ -79,19 +79,19 @@ export default function PriorityAccountsPage() {
       key: 'reason', header: 'Why it ranks here', widthClass: 'w-[26%]',
       sortable: false, text: r => r.reason,
       render: r => (
-        <span className="block text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>{r.reason}</span>
+        <span className="block text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>{r.reason}</span>
       ),
     },
     {
       key: 'committee', header: 'Committee', align: 'right', widthClass: 'hidden lg:table-cell lg:w-[10%]',
       sortValue: r => r.committee, text: r => `${r.committee} engaged`,
       render: r => (
-        <span className="text-[12.5px] font-semibold" style={{ color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
+        <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}>
           {r.committee}
         </span>
       ),
       mobileRender: r => (
-        <span className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
           {r.committee === 1 ? '1 person engaged' : `${r.committee} people engaged`}
         </span>
       ),
@@ -101,7 +101,7 @@ export default function PriorityAccountsPage() {
       // Sorts by age, so "no dated signal" sinks rather than sorting as brand new.
       sortValue: r => r.daysSinceSignal ?? 9999, text: r => signalAge(r.daysSinceSignal),
       render: r => (
-        <span className="block truncate text-[12px]" style={{ color: 'var(--color-text-secondary)' }} title={r.latestSignal ?? undefined}>
+        <span className="block truncate text-xs" style={{ color: 'var(--color-text-secondary)' }} title={r.latestSignal ?? undefined}>
           {signalAge(r.daysSinceSignal)}
         </span>
       ),
@@ -110,7 +110,7 @@ export default function PriorityAccountsPage() {
       key: 'contact', header: 'Strongest contact', widthClass: 'hidden xl:table-cell xl:w-[11%]',
       sortValue: r => r.topContact ?? '', text: r => r.topContact ?? '',
       render: r => (
-        <span className="block truncate text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <span className="block truncate text-xs" style={{ color: 'var(--color-text-secondary)' }}>
           {r.topContact ?? '—'}
         </span>
       ),
@@ -120,10 +120,10 @@ export default function PriorityAccountsPage() {
   return (
     <div className="max-w-[1440px] mx-auto page-content space-y-4">
       <div>
-        <h1 className="text-[24px] font-extrabold leading-tight tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
+        <h1 className="text-2xl font-extrabold leading-tight tracking-tight" style={{ color: 'var(--color-text-primary)' }}>
           Priority accounts
         </h1>
-        <p className="mt-1 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="mt-1 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
           Every engaged account across your campaigns, ranked on readiness, peak intent, how many people
           are engaged, and how recently something happened. Open a row for the full briefing.
         </p>
@@ -134,13 +134,13 @@ export default function PriorityAccountsPage() {
           <div key={t.label} className="glass-card flex flex-col p-3.5">
             <t.Icon className="mb-1 h-4 w-4" style={{ color: 'var(--color-text-muted)' }} />
             <div
-              className="text-[20px] font-extrabold leading-tight"
+              className="text-xl font-extrabold leading-tight"
               style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
             >
               {t.value.toLocaleString('en-US')}
             </div>
-            <div className="text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
-            <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
+            <div className="text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
+            <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
           </div>
         ))}
       </div>

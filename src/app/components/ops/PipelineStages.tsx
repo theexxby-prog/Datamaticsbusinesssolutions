@@ -17,11 +17,11 @@ function Stage({
   const color = tone === 'ok' ? 'var(--color-success)' : tone === 'warn' ? 'var(--color-warning)' : 'var(--color-text-muted)';
   return (
     <div className="min-w-0">
-      <div className="flex items-center gap-1.5 text-[10.5px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+      <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
         <Icon className="h-3.5 w-3.5" style={{ color }} />
         {title}
       </div>
-      <div className="mt-1 truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }} title={line}>
+      <div className="mt-1 truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }} title={line}>
         {line}
       </div>
       {sub && (

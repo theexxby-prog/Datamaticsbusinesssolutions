@@ -1,6 +1,3 @@
-import { DollarSign, TrendingUp, CheckCircle, Gauge, ShieldCheck, MessageSquareWarning } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
-
 // ─── One KPI band ────────────────────────────────────────────────────────────
 // This replaces the old four-tile row *and* the 379px "Campaign Progress" card
 // beneath it. The donut said one thing — 90% — that the Delivered tile now says
@@ -16,10 +13,8 @@ interface Tile {
   label: string;
   value: string;
   sub?: string;
-  Icon: LucideIcon;
-  /** CSS colour token for the icon and any bar. */
+  /** CSS colour token for the bar, and for the value on verdict tiles. */
   tone: string;
-  toneBg: string;
   /** Renders a progress bar inside the tile when set. */
   bar?: { pct: number; trackPct?: number };
   onClick?: () => void;
@@ -55,20 +50,16 @@ export function CampaignKpiBand({
       label: 'Total Billable',
       value: billable,
       sub: `${delivered.toLocaleString()} leads × ${cpl} CPL`,
-      Icon: DollarSign,
       tone: 'var(--color-primary)',
-      toneBg: 'var(--color-primary-tint)',
     },
     {
       key: 'delivered',
       label: 'Delivered',
       value: `${delivered.toLocaleString()} / ${target.toLocaleString()}`,
       sub: remaining > 0 ? `${remaining.toLocaleString()} to go · ${progressPercent}%` : `Target met · ${progressPercent}%`,
-      Icon: TrendingUp,
       // The only tile here whose bar is progress toward a target. Pace and
       // acceptance below carry verdicts, so they keep their semantic colours.
       tone: 'var(--color-progress)',
-      toneBg: 'var(--color-primary-tint)',
       bar: { pct: progressPercent },
     },
     {
@@ -76,18 +67,14 @@ export function CampaignKpiBand({
       label: 'Pace',
       value: paceLabel,
       sub: `${timeElapsedPercent}% of time · ${progressPercent}% delivered`,
-      Icon: Gauge,
       tone: paceColor,
-      toneBg: 'var(--color-surface)',
       bar: { pct: progressPercent, trackPct: timeElapsedPercent },
     },
     {
       key: 'acceptance',
       label: 'Acceptance',
       value: `${acceptanceRate}%`,
-      Icon: CheckCircle,
       tone: 'var(--color-success)',
-      toneBg: 'var(--color-success-bg)',
     },
   ];
 
@@ -97,9 +84,7 @@ export function CampaignKpiBand({
       label: 'QA Valid',
       value: `${qaValidPercent}%`,
       sub: 'Automated validation',
-      Icon: ShieldCheck,
       tone: 'var(--color-accent-purple)',
-      toneBg: 'var(--color-accent-purple-bg)',
     });
   }
 
@@ -108,80 +93,78 @@ export function CampaignKpiBand({
     label: 'Open Requests',
     value: String(openRequests),
     sub: openRequests > 0 ? 'Awaiting Datamatics' : 'Nothing outstanding',
-    Icon: MessageSquareWarning,
     tone: openRequests > 0 ? 'var(--color-warning)' : 'var(--color-text-muted)',
-    toneBg: openRequests > 0 ? 'var(--color-warning-bg)' : 'var(--color-surface)',
     onClick: onOpenRequests,
   });
 
   return (
-    <div className={`mb-5 grid grid-cols-2 gap-3 md:grid-cols-3 ${
-      { 4: 'xl:grid-cols-4', 5: 'xl:grid-cols-5', 6: 'xl:grid-cols-6' }[tiles.length] ?? 'xl:grid-cols-6'
-    }`}>
-      {tiles.map(tile => {
-        const interactive = Boolean(tile.onClick);
-        const Tag = interactive ? 'button' : 'div';
+    <div className="glass-card mb-5 overflow-hidden">
+      {/* Hairline dividers come from the 1px gap over a border-coloured ground,
+          so they work whatever column count the viewport gives the grid. */}
+      <div
+        className={`grid grid-cols-2 gap-px md:grid-cols-3 ${
+          { 4: 'xl:grid-cols-4', 5: 'xl:grid-cols-5', 6: 'xl:grid-cols-6' }[tiles.length] ?? 'xl:grid-cols-6'
+        }`}
+        style={{ background: 'var(--color-border-light)' }}
+      >
+        {tiles.map(tile => {
+          const interactive = Boolean(tile.onClick);
+          const Tag = interactive ? 'button' : 'div';
 
-        return (
-          <Tag
-            key={tile.key}
-            {...(interactive ? { type: 'button' as const, onClick: tile.onClick } : {})}
-            className={`glass-card flex flex-col p-3.5 text-left ${
-              interactive
-                ? 'transition-colors hover:bg-[var(--color-primary-tint)] active:opacity-90 focus:outline-none focus:ring-2 focus:ring-[var(--color-primary)]'
-                : ''
-            }`}
-          >
-            <div className="mb-2 flex items-center gap-2">
-              <div
-                className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-lg"
-                style={{ background: tile.toneBg }}
-              >
-                <tile.Icon className="h-3.5 w-3.5" style={{ color: tile.tone }} />
-              </div>
+          return (
+            <Tag
+              key={tile.key}
+              {...(interactive ? { type: 'button' as const, onClick: tile.onClick } : {})}
+              className={`flex flex-col justify-center px-4 py-3 text-left ${
+                interactive
+                  ? 'transition-colors hover:bg-[var(--color-primary-tint)] active:opacity-90 focus:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[var(--color-primary)]'
+                  : ''
+              }`}
+              style={{ background: 'var(--color-surface-raised)' }}
+            >
               <span
                 className="truncate text-[11px] font-semibold uppercase tracking-wide"
                 style={{ color: 'var(--color-text-muted)' }}
               >
                 {tile.label}
               </span>
-            </div>
 
-            <div
-              className="text-[22px] font-bold leading-tight"
-              style={{ color: 'var(--color-text-primary)' }}
-            >
-              {tile.value}
-            </div>
-
-            {tile.bar && (
-              <div
-                className="mt-2 h-1.5 w-full overflow-hidden rounded-full"
-                style={{ background: 'var(--color-progress-track)' }}
+              <span
+                className="mt-1 text-xl font-bold leading-tight tabular-nums"
+                style={{ color: tile.key === 'pace' || tile.key === 'requests' ? tile.tone : 'var(--color-text-primary)' }}
               >
-                {/* On the Pace tile the muted marker is elapsed time, so a
-                    coloured bar short of it reads as "behind" at a glance. */}
-                {tile.bar.trackPct !== undefined && (
-                  <div
-                    className="h-full rounded-full"
-                    style={{ width: `${tile.bar.trackPct}%`, background: 'var(--color-text-muted)', opacity: 0.35 }}
-                  />
-                )}
-                <div
-                  className="-mt-1.5 h-full rounded-full transition-[width] duration-500"
-                  style={{ width: `${tile.bar.pct}%`, background: tile.tone }}
-                />
-              </div>
-            )}
+                {tile.value}
+              </span>
 
-            {tile.sub && (
-              <div className="mt-1.5 truncate text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
-                {tile.sub}
-              </div>
-            )}
-          </Tag>
-        );
-      })}
+              {tile.bar && (
+                <div
+                  className="mt-2 h-1.5 w-full overflow-hidden rounded-full"
+                  style={{ background: 'var(--color-progress-track)' }}
+                >
+                  {/* On the Pace tile the muted marker is elapsed time, so a
+                      coloured bar short of it reads as "behind" at a glance. */}
+                  {tile.bar.trackPct !== undefined && (
+                    <div
+                      className="h-full rounded-full"
+                      style={{ width: `${tile.bar.trackPct}%`, background: 'var(--color-text-muted)', opacity: 0.35 }}
+                    />
+                  )}
+                  <div
+                    className="-mt-1.5 h-full rounded-full transition-[width] duration-500"
+                    style={{ width: `${tile.bar.pct}%`, background: tile.tone }}
+                  />
+                </div>
+              )}
+
+              {tile.sub && (
+                <span className="mt-1 truncate text-[11px]" style={{ color: 'var(--color-text-secondary)' }}>
+                  {tile.sub}
+                </span>
+              )}
+            </Tag>
+          );
+        })}
+      </div>
     </div>
   );
 }

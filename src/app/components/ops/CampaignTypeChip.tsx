@@ -17,7 +17,7 @@ export function CampaignTypeChip({ type }: { type: CampaignTypeCode }) {
   const label = CAMPAIGN_TYPES_META.find(t => t.code === type)?.label ?? type;
   return (
     <span
-      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10.5px] font-bold"
+      className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-bold"
       style={{ background: tone.bg, color: tone.color }}
       title={label}
     >

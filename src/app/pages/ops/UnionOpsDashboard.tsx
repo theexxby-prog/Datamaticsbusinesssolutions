@@ -43,7 +43,7 @@ function HealthStrip() {
                 {meta.label}
               </span>
             </div>
-            <div className="mt-1 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>{integration.detail}</div>
+            <div className="mt-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>{integration.detail}</div>
             <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{integration.lastActivity}</div>
           </div>
         );
@@ -67,14 +67,14 @@ function PipelineRow({
       <div className="flex flex-wrap items-center justify-between gap-2">
         <button onClick={() => onOpen(pipeline.campaignId)} className="flex flex-wrap items-center gap-2 text-left">
           <span
-            className="text-[14px] font-bold underline-offset-2 hover:underline"
+            className="text-sm font-bold underline-offset-2 hover:underline"
             style={{ color: 'var(--color-text-primary)' }}
           >
             {pipeline.campaignName}
           </span>
           <CampaignTypeChip type={pipeline.type} />
           <span
-            className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
+            className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
             style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
           >
             #{pipeline.campaignId}
@@ -83,13 +83,13 @@ function PipelineRow({
         <div className="flex items-center gap-2">
           <button
             onClick={() => onOpen(pipeline.campaignId)}
-            className="btn-primary inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold"
+            className="btn-primary inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold"
           >
             Open <ArrowRight className="h-3.5 w-3.5" />
           </button>
           <button
             onClick={() => onPreview(pipeline.campaignId)}
-            className="btn-outline inline-flex items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold"
+            className="btn-outline inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold"
           >
             <Eye className="h-3.5 w-3.5" /> Preview
           </button>
@@ -128,11 +128,11 @@ function TaskQueue() {
               <div className="truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {task.label}
               </div>
-              <div className="truncate text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>{task.sub}</div>
+              <div className="truncate text-xs" style={{ color: 'var(--color-text-muted)' }}>{task.sub}</div>
             </div>
             <button
               onClick={() => act(task)}
-              className="btn-ghost inline-flex flex-shrink-0 items-center gap-1 px-2.5 py-1.5 text-[12px] font-semibold"
+              className="btn-ghost inline-flex flex-shrink-0 items-center gap-1 px-2.5 py-1.5 text-xs font-semibold"
               style={{ color: 'var(--color-primary)' }}
             >
               {task.kind === 'intake' ? 'Start' : 'Open'}
@@ -161,10 +161,10 @@ export default function UnionOpsDashboard() {
     <div className="max-w-[1600px] mx-auto page-content space-y-4">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+          <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
             Operations pipeline
           </h1>
-          <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             {UNION_COMPANY} · everything that feeds the client portal
             {attention > 0 && (
               <span className="ml-2 inline-flex items-center gap-1 font-semibold" style={{ color: 'var(--color-warning)' }}>
@@ -195,7 +195,7 @@ export default function UnionOpsDashboard() {
       <RecentlyCreated />
 
       <div className="flex items-center gap-2 pt-1">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        <h2 className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
           Campaign pipelines
         </h2>
         <span className="inline-flex items-center gap-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
@@ -216,10 +216,10 @@ export default function UnionOpsDashboard() {
         {adOnlyCampaigns.map(c => (
           <div key={c.campaignId} className="glass-card p-4">
             <div className="flex flex-wrap items-center gap-2">
-              <span className="text-[14px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
+              <span className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>{c.name}</span>
               <CampaignTypeChip type={c.type} />
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
               <span>
                 <b style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                   {c.impressionsDelivered.toLocaleString('en-US')}
@@ -238,7 +238,7 @@ export default function UnionOpsDashboard() {
                 }}
               />
             </div>
-            <div className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>{c.note}</div>
+            <div className="mt-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>{c.note}</div>
           </div>
         ))}
       </div>
@@ -261,7 +261,7 @@ function RecentlyCreated() {
 
   return (
     <div className="space-y-2">
-      <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+      <h2 className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
         Recently created
       </h2>
       {created.map(c => {
@@ -274,7 +274,7 @@ function RecentlyCreated() {
                   {c.id}
                 </span>
                 <span
-                  className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
+                  className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
                   style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
                 >
                   {meta?.label ?? c.type}
@@ -283,7 +283,7 @@ function RecentlyCreated() {
               <div className="mt-0.5 truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {c.name}
               </div>
-              <div className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+              <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                 {c.clientName} (<span className="font-mono">{c.clientId}</span>) · {c.startDate} → {c.endDate}
                 {c.targetLeads ? ` · ${c.targetLeads.toLocaleString('en-US')} leads` : ''}
                 {c.targetImpressions ? ` · ${c.targetImpressions.toLocaleString('en-US')} impressions` : ''}
@@ -292,7 +292,7 @@ function RecentlyCreated() {
               {/* Why creation exists (per Ben): aligning data to the campaign.
                   Ad-bearing types surface their one pending alignment step. */}
               {c.type !== 'CS' && (
-                <div className="text-[11.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+                <div className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                   Awaiting Propensity link — the ad campaign's name must start with{' '}
                   <span className="font-mono font-semibold">{c.id}</span>
                 </div>
@@ -300,7 +300,7 @@ function RecentlyCreated() {
             </div>
             <button
               onClick={() => navigate(`/ops-union/intake?campaign=${c.id}`)}
-              className="btn-outline inline-flex flex-shrink-0 items-center gap-1.5 px-3 py-1.5 text-[12px] font-semibold"
+              className="btn-outline inline-flex flex-shrink-0 items-center gap-1.5 px-3 py-1.5 text-xs font-semibold"
             >
               Start intake <ArrowRight className="h-3.5 w-3.5" />
             </button>

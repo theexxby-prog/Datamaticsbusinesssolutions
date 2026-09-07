@@ -239,7 +239,7 @@ export default function CampaignDetail() {
               Discussion
               {openRequestsFor(campaign.id) > 0 && (
                 <span
-                  className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[10px] font-bold text-white"
+                  className="inline-flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-[11px] font-bold text-white"
                   style={{ background: 'var(--color-primary-solid)' }}
                 >
                   {openRequestsFor(campaign.id)}
@@ -248,7 +248,7 @@ export default function CampaignDetail() {
             </button>
             <button onClick={() => setShowJobCard(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
               <FileText className="w-4 h-4" />
-              Job Card
+              Job card
             </button>
             {!hideSelfServe && (
               <button onClick={() => setShowCloneModal(true)} className="btn-outline px-3.5 py-2 flex items-center justify-center gap-2">
@@ -278,7 +278,7 @@ export default function CampaignDetail() {
             <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
               Latest delivery under your team's review
             </span>
-            <span className="hidden text-[12px] sm:inline" style={{ color: 'var(--color-text-secondary)' }}>
+            <span className="hidden text-xs sm:inline" style={{ color: 'var(--color-text-secondary)' }}>
               — accepted counts update once the review lands
             </span>
           </div>

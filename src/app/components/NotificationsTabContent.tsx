@@ -41,7 +41,7 @@ export function NotificationsTabContent() {
       {/* Header */}
       <div>
         <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-          Notification Preferences
+          Notification preferences
         </h2>
         <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-1">
           Choose which delivery milestones trigger an in-app notification and email alert.
@@ -146,7 +146,7 @@ export function NotificationsTabContent() {
         </button>
         <button onClick={handleSave} className="btn-primary px-4 py-2 flex items-center gap-2">
           <Save className="w-4 h-4" />
-          Save Preferences
+          Save preferences
         </button>
       </div>
     </div>

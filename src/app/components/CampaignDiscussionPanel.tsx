@@ -71,7 +71,7 @@ export function CampaignDiscussionPanel({
               <span className="inline-flex items-center gap-2 text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
                 <MessageSquare className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
                 Discussion
-                <span className="text-[11.5px] font-medium" style={{ color: 'var(--color-text-muted)' }}>
+                <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>
                   Notes, documents and requests
                 </span>
               </span>

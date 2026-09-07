@@ -65,25 +65,25 @@ function ExceptionsTab({ campaignId }: { campaignId: string }) {
       render: r => (
         <div className="min-w-0">
           <div className="truncate font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.rowRef}</div>
-          <div className="truncate text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>{r.contact}</div>
+          <div className="truncate text-xs" style={{ color: 'var(--color-text-muted)' }}>{r.contact}</div>
         </div>
       ),
     },
     {
       key: 'company', header: 'Company', widthClass: 'hidden lg:table-cell lg:w-[18%]',
       sortValue: r => r.company, text: r => r.company,
-      render: r => <span className="block truncate text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>{r.company}</span>,
+      render: r => <span className="block truncate text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>{r.company}</span>,
     },
     {
       key: 'field', header: 'Field', widthClass: 'hidden lg:table-cell lg:w-[11%]',
       sortValue: r => r.field, text: r => r.field,
-      render: r => <span className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>{r.field}</span>,
+      render: r => <span className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>{r.field}</span>,
     },
     {
       key: 'reason', header: 'Reason', widthClass: 'w-[36%] lg:w-[27%]',
       sortValue: r => r.reason, text: r => r.reason,
       render: r => (
-        <span className="block truncate text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }} title={r.reason}>
+        <span className="block truncate text-[13px]" style={{ color: 'var(--color-text-secondary)' }} title={r.reason}>
           {r.reason}
         </span>
       ),
@@ -106,7 +106,7 @@ function ExceptionsTab({ campaignId }: { campaignId: string }) {
       render: r => {
         if (r.status !== 'open') {
           return (
-            <span className="inline-flex items-center gap-1 text-[11.5px] font-semibold" style={{ color: 'var(--color-success)' }}>
+            <span className="inline-flex items-center gap-1 text-xs font-semibold" style={{ color: 'var(--color-success)' }}>
               <CircleCheck className="h-3.5 w-3.5" /> {r.status === 'fixed' ? 'Sent to Relish' : 'Dropped'}
             </span>
           );
@@ -115,14 +115,14 @@ function ExceptionsTab({ campaignId }: { campaignId: string }) {
           <span className="inline-flex flex-wrap justify-end gap-1" onClick={e => e.stopPropagation()}>
             <button
               onClick={() => resolve(r.id, 'fixed', `${r.rowRef} queued for enrichment`)}
-              className="btn-ghost rounded-md px-2 py-1 text-[11.5px] font-semibold"
+              className="btn-ghost rounded-md px-2 py-1 text-xs font-semibold"
               style={{ color: 'var(--color-primary)' }}
             >
               Enrich
             </button>
             <button
               onClick={() => resolve(r.id, 'dropped', `${r.rowRef} dropped from the batch`)}
-              className="btn-ghost rounded-md px-2 py-1 text-[11.5px] font-semibold"
+              className="btn-ghost rounded-md px-2 py-1 text-xs font-semibold"
               style={{ color: 'var(--color-error)' }}
             >
               Drop
@@ -167,7 +167,7 @@ function BatchesTab({ campaignId }: { campaignId: string }) {
           style={{ borderColor: 'var(--color-success)', background: 'var(--color-success-bg)' }}
         >
           {live.map(job => (
-            <div key={job.id} className="flex flex-wrap items-center justify-between gap-2 text-[12.5px]">
+            <div key={job.id} className="flex flex-wrap items-center justify-between gap-2 text-[13px]">
               <span className="font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {job.rows} rows · {job.source === 'csv' ? 'CSV' : 'CRM'}
               </span>
@@ -183,11 +183,11 @@ function BatchesTab({ campaignId }: { campaignId: string }) {
               <div className="truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                 {batch.fileName}
               </div>
-              <div className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+              <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                 {formatDateShort(batch.uploadedAt.slice(0, 10))} · {batch.uploadedBy}
               </div>
             </div>
-            <div className="flex items-center gap-4 text-[12px]">
+            <div className="flex items-center gap-4 text-xs">
               <span style={{ color: 'var(--color-text-secondary)' }}>
                 <b style={{ color: 'var(--color-text-primary)' }}>{batch.totalRows}</b> rows
               </span>
@@ -228,7 +228,7 @@ export default function UnionOpsCampaign() {
         <div className="glass-card flex flex-col items-center gap-2 p-10 text-center">
           <ShieldAlert className="h-8 w-8" style={{ color: 'var(--color-text-muted)' }} />
           <div className="text-[15px] font-bold" style={{ color: 'var(--color-text-primary)' }}>Campaign not found</div>
-          <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             No pipeline exists for campaign “{id}”.
           </p>
           <button onClick={() => navigate('/ops-union')} className="btn-primary mt-1 px-4 py-2 text-sm">
@@ -297,7 +297,7 @@ export default function UnionOpsCampaign() {
           <button
             disabled={!prev}
             onClick={() => prev && navigate(`/ops-union/campaigns/${prev.campaignId}`)}
-            className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+            className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-xs font-semibold disabled:opacity-35"
             title={prev ? prev.campaignName : undefined}
           >
             <ChevronLeft className="h-3.5 w-3.5" />
@@ -309,7 +309,7 @@ export default function UnionOpsCampaign() {
           <button
             disabled={!next}
             onClick={() => next && navigate(`/ops-union/campaigns/${next.campaignId}`)}
-            className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+            className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-xs font-semibold disabled:opacity-35"
             title={next ? next.campaignName : undefined}
           >
             <span className="hidden md:inline">Next</span>
@@ -321,17 +321,17 @@ export default function UnionOpsCampaign() {
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
-            <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+            <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
               {pipeline.campaignName}
             </h1>
             <span
-              className="rounded-full px-2 py-0.5 text-[10.5px] font-semibold"
+              className="rounded-full px-2 py-0.5 text-[11px] font-semibold"
               style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               #{campaign.id}
             </span>
           </div>
-          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             <CampaignHealthBadge health={health} showDetails />
             {campaign.startDate && campaign.endDate && <span>{campaign.startDate} – {campaign.endDate}</span>}
             {campaign.budget && <span>{fmtMoney(campaign.budget)} budget</span>}
@@ -385,7 +385,7 @@ export default function UnionOpsCampaign() {
 
       {/* Needs a decision */}
       <div className="glass-card p-4">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        <h2 className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
           Needs a decision
         </h2>
         {decisions.length === 0 ? (
@@ -402,7 +402,7 @@ export default function UnionOpsCampaign() {
               >
                 <span className="min-w-0">
                   <span className="block truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>{d.label}</span>
-                  <span className="block truncate text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>{d.sub}</span>
+                  <span className="block truncate text-xs" style={{ color: 'var(--color-text-muted)' }}>{d.sub}</span>
                 </span>
                 <ArrowRight className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-primary)' }} />
               </button>
@@ -487,7 +487,7 @@ export default function UnionOpsCampaign() {
                 <Link2 className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
                 Job card &amp; Salesforce
               </h3>
-              <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+              <div className="mt-2 flex flex-wrap items-center gap-x-5 gap-y-1.5 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
                 <span><b style={{ color: 'var(--color-text-primary)' }}>{jobCard.id}</b> · {jobCard.stage.replace(/_/g, ' ')}</span>
                 <span>
                   Salesforce:{' '}
@@ -498,7 +498,7 @@ export default function UnionOpsCampaign() {
                 </span>
                 <button
                   onClick={() => toast.success(`Re-sync queued for ${jobCard.id}`)}
-                  className="btn-ghost inline-flex items-center gap-1 px-2 py-1 text-[12px] font-semibold"
+                  className="btn-ghost inline-flex items-center gap-1 px-2 py-1 text-xs font-semibold"
                   style={{ color: 'var(--color-primary)' }}
                 >
                   <RefreshCw className="h-3.5 w-3.5" /> Re-sync

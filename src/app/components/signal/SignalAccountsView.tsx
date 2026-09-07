@@ -22,7 +22,7 @@ export function SignalAccountsView() {
       sortValue: r => r.account.name, text: r => `${r.account.name} ${r.account.industry}`,
       render: r => (
         <div className="min-w-0">
-          <div className="truncate text-[13.5px] font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.account.name}</div>
+          <div className="truncate text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.account.name}</div>
           <div className="truncate text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{r.account.industry}</div>
         </div>
       ),
@@ -32,7 +32,7 @@ export function SignalAccountsView() {
       widthClass: derivedIntel ? 'w-[13%]' : 'w-[15%]',
       sortValue: r => r.account.contactIds.length, text: r => `${r.account.contactIds.length} contacts`,
       render: r => (
-        <span className="text-[12.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
+        <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>
           {r.account.contactIds.length === 1 ? '1 contact' : `${r.account.contactIds.length} contacts`}
         </span>
       ),
@@ -53,7 +53,7 @@ export function SignalAccountsView() {
       widthClass: derivedIntel ? 'w-[18%]' : 'w-[21%]',
       sortValue: r => r.account.hq, text: r => r.account.hq,
       render: r => (
-        <span className="block truncate text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }} title={r.account.hq}>
+        <span className="block truncate text-[13px]" style={{ color: 'var(--color-text-secondary)' }} title={r.account.hq}>
           {r.account.hq}
         </span>
       ),
@@ -63,7 +63,7 @@ export function SignalAccountsView() {
       widthClass: derivedIntel ? 'hidden lg:table-cell lg:w-[13%]' : 'hidden lg:table-cell lg:w-[17%]',
       sortValue: r => r.account.employees, text: r => r.account.employees,
       render: r => (
-        <span className="block truncate text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }} title={r.account.employees}>
+        <span className="block truncate text-[13px]" style={{ color: 'var(--color-text-secondary)' }} title={r.account.employees}>
           {r.account.employees}
         </span>
       ),

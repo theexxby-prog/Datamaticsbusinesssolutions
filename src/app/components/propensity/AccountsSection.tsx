@@ -151,13 +151,13 @@ export function AccountsSection() {
             <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
             <XAxis
               dataKey="date"
-              style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
+              style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }}
               stroke="none"
               tickLine={false}
               interval="preserveStartEnd"
               tickFormatter={formatDateShort}
             />
-            <YAxis style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} width={34} />
+            <YAxis style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} width={34} />
             <Tooltip contentStyle={TOOLTIP_STYLE} labelFormatter={(v: string) => formatDateShort(v)} />
             <Legend wrapperStyle={{ fontSize: 11 }} />
             <Area type="monotone" dataKey="totalVisitors" name="All visitors" stroke="var(--color-chart-2)" strokeWidth={1.5} fill="transparent" />

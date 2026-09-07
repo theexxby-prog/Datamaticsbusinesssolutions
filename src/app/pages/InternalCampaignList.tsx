@@ -17,7 +17,7 @@ const statusLabel: Record<string, string> = {
 };
 
 export default function InternalCampaignList() {
-  useDocumentTitle('All Campaigns');
+  useDocumentTitle('All campaigns');
   const navigate = useNavigate();
 
   const [clientFilter, setClientFilter] = useState(allClients[0]?.id ?? 'All');
@@ -46,7 +46,7 @@ export default function InternalCampaignList() {
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-4">
-          <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '4px' }}>All Campaigns</h1>
+          <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '4px' }}>All campaigns</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
             {allCampaigns.length.toLocaleString('en-US')} campaigns found
           </p>
@@ -55,7 +55,7 @@ export default function InternalCampaignList() {
         {/* Select Client */}
         <div className="mb-4 max-w-md">
           <label htmlFor="client-select" className="block" style={{ fontSize: '14px', fontWeight: 600, color: 'var(--color-text-primary)', marginBottom: '6px' }}>
-            Select Client
+            Select client
           </label>
           <div className="relative">
             <select
@@ -72,7 +72,7 @@ export default function InternalCampaignList() {
                 borderRadius: 'var(--radius-lg)',
               }}
             >
-              <option value="All">All Clients</option>
+              <option value="All">All clients</option>
               {allClients.map((c) => (
                 <option key={c.id} value={c.id}>{c.companyName}</option>
               ))}
@@ -119,13 +119,13 @@ export default function InternalCampaignList() {
                     <button
                       onClick={() => setSortAsc((v) => !v)}
                       className="flex items-center gap-1"
-                      style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: 'var(--color-primary)', textTransform: 'uppercase' }}
+                      style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-primary)' }}
                     >
                       Campaign <ChevronsUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  {['Status', 'Progress', 'Total Leads', 'Actions'].map((h) => (
-                    <th key={h} className="text-left px-5 py-3.5" style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
+                  {['Status', 'Progress', 'Total leads', 'Actions'].map((h) => (
+                    <th key={h} className="text-left px-5 py-3.5" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-muted)' }}>
                       {h}
                     </th>
                   ))}
@@ -156,7 +156,7 @@ export default function InternalCampaignList() {
                           <span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{pct}%</span>
                         </div>
                         <div style={{ fontSize: '12px', color: 'var(--color-text-muted)', marginTop: '4px' }}>
-                          {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')} Billable Leads
+                          {delivered.toLocaleString('en-US')} / {target.toLocaleString('en-US')} billable leads
                         </div>
                       </td>
                       <td className="px-5 py-3" style={{ color: 'var(--color-text-primary)' }}>{c.totalLeads.toLocaleString('en-US')}</td>

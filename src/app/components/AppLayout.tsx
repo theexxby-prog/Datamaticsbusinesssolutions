@@ -99,13 +99,13 @@ export function AppLayout() {
             <span style={{ fontSize: '11px', color: 'var(--color-text-muted)', letterSpacing: '0.02em' }}>Business Solutions</span>
           </div>
           <div className="flex items-center gap-2 flex-wrap justify-center">
-            <span style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>
+            <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
               © {new Date().getFullYear()} Datamatics Business Solutions. All rights reserved. Authorised users only.
             </span>
-            <span style={{ fontSize: '10px', color: 'var(--color-text-muted)' }} aria-hidden="true">·</span>
+            <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }} aria-hidden="true">·</span>
             <a
               href="mailto:support@datamaticsbpm.com?subject=Datamatics Business Solutions Client Portal"
-              style={{ fontSize: '10px', color: 'var(--color-primary)', opacity: 0.6, textDecoration: 'none' }}
+              style={{ fontSize: '11px', color: 'var(--color-primary)', opacity: 0.6, textDecoration: 'none' }}
               onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
               onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}
             >
@@ -128,12 +128,12 @@ export function AppLayout() {
             data-testid="client-preview-bar"
           >
             <Eye className="h-4 w-4 flex-shrink-0" style={{ opacity: 0.75 }} />
-            <span className="text-[12.5px] font-semibold">
+            <span className="text-[13px] font-semibold">
               Viewing as Northwind Technologies
             </span>
             <button
               onClick={() => { setPreviewingClient(false); navigate('/ops-union'); }}
-              className="tap-target rounded-full px-3 py-1.5 text-[12px] font-bold transition-opacity hover:opacity-85"
+              className="tap-target rounded-full px-3 py-1.5 text-xs font-bold transition-opacity hover:opacity-85"
               style={{ background: 'var(--color-text-inverse)', color: 'var(--color-surface-inverse)' }}
             >
               Exit preview

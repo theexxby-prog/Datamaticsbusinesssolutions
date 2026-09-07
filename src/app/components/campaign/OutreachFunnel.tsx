@@ -117,7 +117,7 @@ export function OutreachFunnel({ metrics, deliveredLeads, impressions }: Outreac
             style={{ background: 'var(--background-muted)' }}
           >
             <div
-              className="mb-0.5 text-[9px] font-semibold uppercase tracking-wide"
+              className="mb-0.5 text-[11px] font-semibold uppercase tracking-wide"
               style={{ color: 'var(--color-text-secondary)' }}
             >
               {ratio.label}
@@ -125,7 +125,7 @@ export function OutreachFunnel({ metrics, deliveredLeads, impressions }: Outreac
             <div className="text-base font-bold" style={{ color: 'var(--color-text-primary)' }}>
               {ratio.value}
             </div>
-            <div className="mt-0.5 text-[9px] font-semibold" style={{ color: ratio.noteColor }}>
+            <div className="mt-0.5 text-[11px] font-semibold" style={{ color: ratio.noteColor }}>
               {ratio.note}
             </div>
           </div>

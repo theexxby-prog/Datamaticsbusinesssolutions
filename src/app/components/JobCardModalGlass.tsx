@@ -66,7 +66,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
         <div className="p-8 space-y-6 text-gray-900">
           {/* Client Details */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-900">Client Details</h3>
+            <h3 className="text-lg font-semibold mb-3 text-gray-900">Client details</h3>
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <div className="text-sm text-gray-600">Company</div>
@@ -118,7 +118,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
 
           {/* Campaign Criteria */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-900">Campaign Criteria</h3>
+            <h3 className="text-lg font-semibold mb-3 text-gray-900">Campaign criteria</h3>
             <div className="grid grid-cols-2 gap-4">
               <div className="bg-gray-50 p-3 rounded-lg">
                 <div className="text-sm text-gray-600">Geography</div>
@@ -149,7 +149,7 @@ export function JobCardModal({ campaign, onClose, isOpen = true }: JobCardModalP
 
           {/* Commercial Terms */}
           <div>
-            <h3 className="text-lg font-semibold mb-3 text-gray-900">Commercial Terms</h3>
+            <h3 className="text-lg font-semibold mb-3 text-gray-900">Commercial terms</h3>
             <div className="bg-purple-50 p-4 rounded-lg space-y-2">
               <div className="flex justify-between items-center">
                 <span className="text-gray-700">Cost Per Lead</span>

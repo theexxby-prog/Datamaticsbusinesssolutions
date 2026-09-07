@@ -64,7 +64,7 @@ function combinedEntry(): DemographicEntry {
 }
 
 export default function DemographicsEntryPage() {
-  useDocumentTitle('Lead Demographics');
+  useDocumentTitle('Lead demographics');
 
   const [clientId, setClientId] = useState(allClients[0]?.id ?? '');
   const [selected, setSelected] = useState<string>(ALL);

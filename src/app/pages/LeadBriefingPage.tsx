@@ -85,7 +85,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             <button
               key={id}
               onClick={() => jump(id)}
-              className="rounded-lg px-2.5 py-1.5 text-[12.5px] font-semibold transition-colors hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)]"
+              className="rounded-lg px-2.5 py-1.5 text-[13px] font-semibold transition-colors hover:bg-[var(--color-primary-tint)] hover:text-[var(--color-primary)]"
               style={{ color: 'var(--color-text-secondary)' }}
             >
               {label}
@@ -102,7 +102,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
               <button
                 disabled={!prevMember}
                 onClick={() => prevMember && navigate(`/leads/${signalLeadId(prevMember.id)}`)}
-                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-xs font-semibold disabled:opacity-35"
                 title={prevMember ? `Previous on the committee: ${prevMember.name}` : undefined}
               >
                 <ChevronLeft className="h-3.5 w-3.5" />
@@ -114,7 +114,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
               <button
                 disabled={!nextMember}
                 onClick={() => nextMember && navigate(`/leads/${signalLeadId(nextMember.id)}`)}
-                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-[12px] font-semibold disabled:opacity-35"
+                className="btn-ghost inline-flex min-h-[32px] items-center gap-1 rounded-lg px-2 text-xs font-semibold disabled:opacity-35"
                 title={nextMember ? `Next on the committee: ${nextMember.name}` : undefined}
               >
                 <span className="hidden max-w-[110px] truncate md:inline">{nextMember?.name.split(' ')[0] ?? 'Next'}</span>
@@ -128,12 +128,12 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
       {/* Header — identity in one tight block */}
       <div>
         <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-          <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+          <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
             {contact.name}
           </h1>
-          <span className="text-[14px]" style={{ color: 'var(--color-text-secondary)' }}>{contact.title}</span>
+          <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{contact.title}</span>
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
           {derivedIntel && synthesis && <IntentChip type={synthesis.intentType} />}
           <span className="inline-flex items-center gap-1.5 rounded-full border px-2 py-0.5 text-[11px] font-semibold" style={{ borderColor: 'var(--color-border)' }}>
             <RoleDot roleClass={contact.roleClass} /> {contact.influence}
@@ -163,7 +163,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
           </a>
         </div>
         {account && (
-          <p className="mt-1.5 text-[12px]" style={{ color: 'var(--color-text-muted)' }}>
+          <p className="mt-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>
             {accountFactLine(account, false)}
           </p>
         )}
@@ -171,7 +171,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             a full section — the rest of the account read stays on the account page. */}
         {account && account.techStack.length > 0 && (
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
-            <span className="text-[10.5px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
+            <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
               Stack
             </span>
             {account.techStack.map(tech => (
@@ -192,7 +192,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
       {account && <CommitteeStrip account={account} anchor={contact} currentContactId={contact.id} />}
 
       {/* Person intelligence — short sections paired two-up */}
-      <h2 id="sec-person" className="pt-1 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+      <h2 id="sec-person" className="pt-1 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
         Person
       </h2>
       <Section icon={BrainCircuit} title="Role analysis">
@@ -207,7 +207,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
             {contact.motivations.map(motivation => (
               <div key={motivation.text} className="flex items-start gap-2.5">
                 <span
-                  className="mt-0.5 flex-shrink-0 rounded-md px-2 py-0.5 text-[10.5px] font-bold uppercase tracking-wide"
+                  className="mt-0.5 flex-shrink-0 rounded-md px-2 py-0.5 text-[11px] font-bold"
                   style={{ background: 'var(--background-muted)', color: 'var(--color-text-secondary)' }}
                 >
                   {motivation.kind}
@@ -289,12 +289,12 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-              <h1 className="text-[22px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+              <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
                 {lead.firstName} {lead.lastName}
               </h1>
-              <span className="text-[13.5px]" style={{ color: 'var(--color-text-secondary)' }}>{lead.title}</span>
+              <span className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>{lead.title}</span>
             </div>
-            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
               <span className="inline-flex items-center gap-1.5">
                 <Globe2 className="h-3.5 w-3.5" style={{ color: 'var(--color-text-muted)' }} />
                 {lead.company}
@@ -327,7 +327,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
               <div className="text-3xl font-extrabold leading-none" style={{ color: score.color, fontVariantNumeric: 'tabular-nums' }}>
                 {lead.leadScore}
               </div>
-              <div className="text-[10px] font-semibold uppercase" style={{ color: 'var(--color-text-muted)' }}>{score.label}</div>
+              <div className="text-[11px] font-semibold uppercase" style={{ color: 'var(--color-text-muted)' }}>{score.label}</div>
             </div>
             <div className="flex flex-col gap-1.5">
               {isTerminal ? (
@@ -381,7 +381,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
                       <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>{activity.type}</span>
                       <span className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{formatDateShort(activity.date)}</span>
                     </div>
-                    <p className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+                    <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                       {activity.description} · {activity.user}
                     </p>
                   </div>
@@ -396,7 +396,7 @@ function StandardLeadRecord({ initialLead }: { initialLead: Lead }) {
                 { author: 'Brijesh Singh', date: '2026-02-26', text: 'Company matches ICP perfectly. High potential for conversion.' },
               ].map(note => (
                 <div key={note.text} className="rounded-xl border p-3" style={{ borderColor: 'var(--color-border-light)' }}>
-                  <div className="mb-1 text-[11.5px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+                  <div className="mb-1 text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
                     {note.author} · {formatDateShort(note.date)}
                   </div>
                   <p className="text-[13px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{note.text}</p>

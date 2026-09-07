@@ -30,7 +30,7 @@ export function getCampaignHealth(campaign: Campaign): CampaignHealth {
   if (!startDate || !endDate || campaign.status === 'completed') {
     return {
       status: campaign.status === 'completed' ? 'on-track' : 'on-track',
-      label: campaign.status === 'completed' ? 'Completed' : 'On Track',
+      label: campaign.status === 'completed' ? 'Completed' : 'On track',
       color: 'var(--color-success)',
       bgColor: 'var(--color-success-bg)',
       progressPercent,
@@ -68,12 +68,12 @@ export function getCampaignHealth(campaign: Campaign): CampaignHealth {
 
   if (paceRatio >= 0.85) {
     status = 'on-track';
-    label = 'On Track';
+    label = 'On track';
     color = 'var(--color-success)';
     bgColor = 'var(--color-success-bg)';
   } else if (paceRatio >= 0.6) {
     status = 'at-risk';
-    label = 'At Risk';
+    label = 'At risk';
     color = 'var(--color-warning)';
     bgColor = 'var(--color-warning-bg)';
   } else {

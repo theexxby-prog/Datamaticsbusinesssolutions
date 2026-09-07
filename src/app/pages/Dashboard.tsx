@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router';
 import {
   TrendingUp, DollarSign, CheckCircle2, Layers, Plus, ChevronDown,
   BarChart2, Building2, Briefcase, Activity, UserRound, Calendar, FolderOpen,
-  Check, Pause, Clock, X,
+  Check, CheckCheck, Pause, Clock,
 } from 'lucide-react';
 import { getAccountTeam, allClients } from '../data/mockClients';
 import { getPortalClient } from '../data/unionClient';
@@ -91,7 +91,7 @@ function Kpi({ icon: Icon, tone, toneBg, value, label, delta, deltaTone }: {
         </div>
         {delta && <span className="text-xs font-bold" style={{ color: deltaTone }}>{delta}</span>}
       </div>
-      <div className="text-[27px] font-extrabold leading-none tracking-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+      <div className="text-2xl font-extrabold leading-none tracking-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
         {value}
       </div>
       <div className="mt-1.5 text-[13px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>{label}</div>
@@ -103,7 +103,7 @@ function StatusPill({ status }: { status: string }) {
   const map: Record<string, { label: string; cls: string; Icon: typeof Check }> = {
     active: { label: 'Active', cls: 'ok', Icon: Check },
     paused: { label: 'Paused', cls: 'warn', Icon: Pause },
-    completed: { label: 'Completed', cls: 'off', Icon: X },
+    completed: { label: 'Completed', cls: 'off', Icon: CheckCheck },
     pending_approval: { label: 'Pending', cls: 'brand', Icon: Clock },
   };
   const s = map[status] ?? map.paused;
@@ -115,14 +115,14 @@ function StatusPill({ status }: { status: string }) {
   };
   const st = styles[s.cls];
   return (
-    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[12.5px] font-bold" style={{ background: st.bg, color: st.fg }}>
+    <span className="inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[13px] font-bold" style={{ background: st.bg, color: st.fg }}>
       <s.Icon className="h-3 w-3" strokeWidth={3} /> {s.label}
     </span>
   );
 }
 
 export default function Dashboard() {
-  useDocumentTitle('My Campaigns');
+  useDocumentTitle('Campaigns');
   const navigate = useNavigate();
   const { currentUser } = useAuth();
   const [isNewCampaignModalOpen, setIsNewCampaignModalOpen] = useState(false);
@@ -178,7 +178,7 @@ export default function Dashboard() {
           <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>{r.name}</span>
           {showTypeChip && (
             <span
-              className="rounded-full px-1.5 py-0.5 text-[9.5px] font-bold uppercase tracking-wide"
+              className="rounded-full px-1.5 py-0.5 text-[11px] font-bold"
               style={{ background: 'var(--color-gray-100)', color: 'var(--color-text-secondary)' }}
             >
               {campaignTypeFor(r.id)}
@@ -269,11 +269,11 @@ export default function Dashboard() {
         {/* Header */}
         <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <div className="mb-1.5 inline-flex items-center gap-2 text-[12.5px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+            <div className="mb-1.5 inline-flex items-center gap-2 text-[13px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
               <span className="h-2 w-2 rounded-full" style={{ background: 'var(--color-primary)' }} />
               Client Portal &middot; {tccClient?.companyName ?? 'The Channel Company'}
             </div>
-            <h1 className="text-[26px] font-extrabold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Campaign Dashboard</h1>
+            <h1 className="text-2xl font-extrabold tracking-tight" style={{ color: 'var(--color-text-primary)' }}>Campaigns</h1>
             <p className="mt-1 text-[15px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Every active campaign, pacing, delivery and billing in one place.</p>
           </div>
           {!hideSelfServe && (

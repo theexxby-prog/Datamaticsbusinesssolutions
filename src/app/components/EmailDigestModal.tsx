@@ -93,7 +93,7 @@ export function EmailDigestModal({ isOpen, onClose }: EmailDigestModalProps) {
                 <div className="bg-[var(--color-surface-raised)] rounded-xl border border-gray-200 p-6 mb-5">
                   <h2
                     className="font-semibold text-gray-800 mb-1"
-                    style={{ fontSize: '17px' }}
+                    style={{ fontSize: '16px' }}
                   >
                     Weekly Performance Digest
                   </h2>

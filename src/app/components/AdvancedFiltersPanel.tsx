@@ -32,7 +32,7 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
         <div className="flex items-center justify-between p-6 border-b border-gray-200">
           <div className="flex items-center gap-3">
             <Filter className="w-5 h-5 text-[var(--color-primary)]" />
-            <h2 className="text-lg font-semibold text-gray-900">Advanced Filters</h2>
+            <h2 className="text-lg font-semibold text-gray-900">Advanced filters</h2>
           </div>
           <button 
             onClick={onClose}
@@ -73,14 +73,14 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
           <div>
             <label className="flex items-center gap-2 text-sm font-medium mb-3 text-gray-700">
               <Calendar className="w-4 h-4" />
-              Date Range
+              Date range
             </label>
             <select
               value={filters.dateRange}
               onChange={(e) => onFilterChange({ ...filters, dateRange: e.target.value })}
               className="w-full px-4 py-2.5 rounded-lg border transition-all bg-[var(--color-surface-raised)] border-gray-300 text-gray-900"
             >
-              <option value="all">All Time</option>
+              <option value="all">All time</option>
               <option value="today">Today</option>
               <option value="week">This Week</option>
               <option value="month">This Month</option>
@@ -159,13 +159,13 @@ export function AdvancedFiltersPanel({ isOpen, onClose, filters, onFilterChange 
               }}
               className="flex-1 px-4 py-2.5 rounded-lg border transition-all border-gray-300 text-gray-700 hover:bg-gray-50"
             >
-              Clear All
+              Clear all
             </button>
             <button
               onClick={onClose}
               className="flex-1 px-4 py-2.5 rounded-lg text-white transition-all bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-primary-light)]"
             >
-              Apply Filters
+              Apply filters
             </button>
           </div>
         </div>

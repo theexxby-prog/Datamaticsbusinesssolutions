@@ -109,7 +109,7 @@ export default function InternalCampaignDetail() {
               className="btn-primary px-4 py-2 flex items-center gap-2"
             >
               <Upload className="w-4 h-4" />
-              Upload Leads
+              Upload leads
             </button>
           </div>
         </div>

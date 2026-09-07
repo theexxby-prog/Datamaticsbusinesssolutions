@@ -117,7 +117,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-success)] hover:bg-[var(--color-success)]/90 active:bg-[var(--color-success)]/80 text-white font-medium text-sm transition-colors"
               >
                 <CheckCircle className="w-4 h-4" />
-                Accept Lead
+                Accept lead
               </button>
               <button
                 onClick={() => {
@@ -127,7 +127,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-error)] hover:bg-[var(--color-error)]/90 active:bg-[var(--color-error)]/80 text-white font-medium text-sm transition-colors"
               >
                 <XCircle className="w-4 h-4" />
-                Reject Lead
+                Reject lead
               </button>
               <button
                 onClick={() => {
@@ -137,7 +137,7 @@ export function LeadDetailDrawer({ lead, isOpen, onClose, onStatusChange }: Lead
                 className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[var(--color-info)] hover:bg-[var(--color-info)]/90 active:bg-[var(--color-info)]/80 text-white font-medium text-sm transition-colors"
               >
                 <Mail className="w-4 h-4" />
-                Mark Contacted
+                Mark contacted
               </button>
             </>
           )}
@@ -189,7 +189,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
           <div className="rounded-xl p-5 bg-gray-50 border border-gray-200">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-base font-medium text-gray-900">
-                Lead Score
+                Lead score
               </h3>
               <div className={`px-3 py-1 rounded-full border text-sm font-medium ${getScoreColor(lead.leadScore)}`}>
                 {getScoreLabel(lead.leadScore)}
@@ -218,7 +218,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
           {/* Contact Information */}
           <div className="rounded-xl p-5 bg-gray-50 border border-gray-200">
             <h3 className="text-base font-medium mb-4 text-gray-900">
-              Contact Information
+              Contact information
             </h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -246,7 +246,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
           {/* Company Details */}
           <div className="rounded-xl p-5 bg-gray-50 border border-gray-200">
             <h3 className="text-base font-medium mb-4 text-gray-900">
-              Company Details
+              Company details
             </h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -282,7 +282,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
           {/* Campaign Info */}
           <div className="rounded-xl p-5 bg-gray-50 border border-gray-200">
             <h3 className="text-base font-medium mb-4 text-gray-900">
-              Campaign Information
+              Campaign information
             </h3>
             <div className="space-y-3">
               <div className="flex items-center gap-3">
@@ -309,7 +309,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
           {/* Activity History */}
           <div className="rounded-xl p-5 bg-gray-50 border border-gray-200">
             <h3 className="text-base font-medium mb-4 text-gray-900">
-              Activity History
+              Activity history
             </h3>
             <div className="space-y-4">
               {activityHistory.map((activity, index) => (
@@ -370,7 +370,7 @@ function DrawerBody({ lead }: { lead: Lead }) {
                 rows={3}
               />
               <button className="mt-3 px-4 py-2 bg-[var(--color-primary-solid)] hover:bg-[var(--color-primary-dark)] text-white rounded-lg transition-colors text-sm font-medium">
-                Add Note
+                Add note
               </button>
             </div>
           </div>
