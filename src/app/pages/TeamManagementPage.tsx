@@ -47,7 +47,7 @@ function RoleBadge({ role }: { role: string }) {
   return (
     <span
       className="inline-flex items-center px-2.5 py-1 rounded-lg"
-      style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.04em', textTransform: 'uppercase', ...styles[role] ?? {} }}
+      style={{ fontSize: '11px', fontWeight: 700, ...styles[role] ?? {} }}
     >
       {role}
     </span>
@@ -313,7 +313,7 @@ export default function TeamManagementPage() {
       <th
         className="text-left px-6 py-3 cursor-pointer select-none"
         onClick={() => handleSort(field)}
-        style={{ fontSize: '11px', fontWeight: 700, color: active ? 'var(--color-primary)' : 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}
+        style={{ fontSize: '11px', fontWeight: 700, color: active ? 'var(--color-primary)' : 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}
       >
         <span className="flex items-center gap-1">
           {label}
@@ -325,7 +325,7 @@ export default function TeamManagementPage() {
 
   function PlainTh({ label }: { label: string }) {
     return (
-      <th className="text-left px-6 py-3" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>
+      <th className="text-left px-6 py-3" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>
         {label}
       </th>
     );
@@ -340,7 +340,7 @@ export default function TeamManagementPage() {
         {/* Page header */}
         <div className="flex items-start justify-between mb-4 gap-4 flex-wrap">
           <div>
-            <h1 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Team Management</h1>
+            <h1 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Team management</h1>
             <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginTop: 4 }}>
               {isOpsManager
                 ? 'Manage team members, roles, client assignments and backup coverage.'
@@ -410,7 +410,7 @@ export default function TeamManagementPage() {
                   {s.icon}
                 </div>
               </div>
-              <div style={{ fontSize: '28px', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
+              <div style={{ fontSize: '30px', fontWeight: 700, color: 'var(--color-text-primary)', lineHeight: 1 }}>
                 <AnimatedCounter value={s.value} />
               </div>
               <div style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginTop: 6 }}>
@@ -494,7 +494,7 @@ export default function TeamManagementPage() {
                                 {member.name}
                               </span>
                               {isSelf && (
-                                <span className="px-1.5 py-0.5 rounded" style={{ fontSize: '10px', fontWeight: 700, background: 'rgba(186,32,39,0.1)', color: 'var(--color-primary)' }}>YOU</span>
+                                <span className="px-1.5 py-0.5 rounded" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(186,32,39,0.1)', color: 'var(--color-primary)' }}>YOU</span>
                               )}
                             </div>
                             <div style={{ fontSize: '11px', color: 'var(--color-text-secondary)', marginTop: 1 }}>
@@ -572,7 +572,7 @@ export default function TeamManagementPage() {
                       {member.name}
                     </span>
                     {isSelf && (
-                      <span className="px-1.5 py-0.5 rounded flex-shrink-0" style={{ fontSize: '10px', fontWeight: 700, background: 'rgba(186,32,39,0.1)', color: 'var(--color-primary)' }}>YOU</span>
+                      <span className="px-1.5 py-0.5 rounded flex-shrink-0" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(186,32,39,0.1)', color: 'var(--color-primary)' }}>YOU</span>
                     )}
                   </span>
                 </div>
@@ -618,7 +618,7 @@ export default function TeamManagementPage() {
         >
           <div className="px-6 py-4 flex items-center justify-between" style={{ borderBottom: '1px solid var(--color-border)' }}>
             <div>
-              <h2 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Client Coverage Overview</h2>
+              <h2 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Client coverage overview</h2>
               <p style={{ fontSize: '13px', color: 'var(--color-text-secondary)', marginTop: 2 }}>
                 Live assignment view — updates immediately when you save changes
               </p>
@@ -639,8 +639,8 @@ export default function TeamManagementPage() {
             <table className="w-full min-w-[600px]">
               <thead style={{ borderBottom: '1px solid var(--color-border)', background: 'var(--color-surface)' }}>
                 <tr>
-                  {['Client', 'Industry', 'Campaign Manager', 'Backup', 'Coverage', 'Active Campaigns'].map(h => (
-                    <th key={h} className="text-left px-6 py-3" style={{ fontSize: '11px', fontWeight: 700, color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: '0.06em', whiteSpace: 'nowrap' }}>{h}</th>
+                  {['Client', 'Industry', 'Campaign manager', 'Backup', 'Coverage', 'Active campaigns'].map(h => (
+                    <th key={h} className="text-left px-6 py-3" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-secondary)', whiteSpace: 'nowrap' }}>{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -677,11 +677,11 @@ export default function TeamManagementPage() {
                       </td>
                       <td className="px-6 py-3.5">
                         {noBackup ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.2)' }}>
                             Unprotected
                           </span>
                         ) : (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: 'var(--color-success)', border: '1px solid rgba(16,185,129,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: 'var(--color-success)', border: '1px solid rgba(16,185,129,0.2)' }}>
                             Covered
                           </span>
                         )}
@@ -708,11 +708,11 @@ export default function TeamManagementPage() {
             badge={(client) => {
               const noBackup = !client.backupManager || client.backupManager === '—' || client.backupManager === client.campaignManager;
               return noBackup ? (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(220,38,38,0.1)', color: 'var(--color-error)', border: '1px solid rgba(220,38,38,0.2)' }}>
                   Unprotected
                 </span>
               ) : (
-                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: 'var(--color-success)', border: '1px solid rgba(16,185,129,0.2)', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full" style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(16,185,129,0.1)', color: 'var(--color-success)', border: '1px solid rgba(16,185,129,0.2)' }}>
                   Covered
                 </span>
               );

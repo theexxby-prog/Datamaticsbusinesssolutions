@@ -37,7 +37,7 @@ export function MobileTabBar() {
   const renderLabel = (text: string, active: boolean) => (
     <span
       style={{
-        fontSize: 10,
+        fontSize: 11,
         fontWeight: active ? 700 : 500,
         marginTop: 3,
         color: active ? 'var(--color-primary)' : 'var(--color-text-secondary)',
@@ -106,7 +106,7 @@ export function MobileTabBar() {
                   {count > 0 && (
                     <span
                       className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-white"
-                      style={{ background: 'var(--color-primary-solid)', fontSize: '9px', fontWeight: 700 }}
+                      style={{ background: 'var(--color-primary-solid)', fontSize: '11px', fontWeight: 700 }}
                     >
                       {count > 9 ? '9+' : count}
                     </span>
@@ -135,7 +135,7 @@ export function MobileTabBar() {
                 {moreBadgeCount > 0 && (
                   <span
                     className="absolute -right-2 -top-1.5 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-white"
-                    style={{ background: 'var(--color-primary-solid)', fontSize: '9px', fontWeight: 700 }}
+                    style={{ background: 'var(--color-primary-solid)', fontSize: '11px', fontWeight: 700 }}
                   >
                     {moreBadgeCount > 9 ? '9+' : moreBadgeCount}
                   </span>

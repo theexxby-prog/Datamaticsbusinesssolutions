@@ -56,7 +56,7 @@ export default function InternalDashboard() {
         {/* Header */}
         <div className="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-1">Internal Dashboard</h1>
+            <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-1">Internal dashboard</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
               Operations and management overview
             </p>
@@ -66,7 +66,7 @@ export default function InternalDashboard() {
             className="btn-primary px-5 py-2.5 flex items-center gap-2 w-full sm:w-auto justify-center"
           >
             <Upload className="w-4 h-4" />
-            Upload Leads
+            Upload leads
           </button>
         </div>
 
@@ -172,7 +172,7 @@ export default function InternalDashboard() {
           <div className="lg:col-span-2 glass-card overflow-hidden">
             <div className="px-6 py-4 border-b flex items-center justify-between" style={{ borderColor: 'var(--color-border)' }}>
               <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-                Recent Campaigns
+                Recent campaigns
               </h2>
               <button
                 onClick={() => navigate('/internal/campaigns')}
@@ -273,7 +273,7 @@ export default function InternalDashboard() {
             {/* Quick Actions */}
             <div className="glass-card p-5">
               <h2 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }} className="mb-4">
-                Quick Actions
+                Quick actions
               </h2>
               <div className="space-y-2">
                 {[
@@ -312,7 +312,7 @@ export default function InternalDashboard() {
             {/* Quick Stats */}
             <div className="glass-card p-5">
               <h2 style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }} className="mb-4">
-                Performance Benchmarks
+                Performance benchmarks
               </h2>
               <div className="space-y-3">
                 {[
@@ -385,7 +385,7 @@ export default function InternalDashboard() {
           <div className="glass-card p-5">
             <div className="flex items-center justify-between mb-4">
               <h2 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-                Recent Uploads
+                Recent uploads
               </h2>
               <button
                 onClick={() => navigate('/internal/leads')}
@@ -420,7 +420,7 @@ export default function InternalDashboard() {
                       >
                         {s.label}
                       </span>
-                      <span style={{ fontSize: '10px', color: 'var(--color-text-muted)' }}>
+                      <span style={{ fontSize: '11px', color: 'var(--color-text-muted)' }}>
                         {upload.successCount} leads
                       </span>
                     </div>

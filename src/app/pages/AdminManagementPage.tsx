@@ -45,7 +45,7 @@ function StatusPill({ status }: { status: string }) {
 }
 
 export default function AdminManagementPage() {
-  useDocumentTitle('Admin Management');
+  useDocumentTitle('Admin management');
 
   const [activeTab, setActiveTab] = useState<'clients' | 'team'>('clients');
   const [search, setSearch] = useState('');
@@ -103,7 +103,7 @@ export default function AdminManagementPage() {
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
         {/* Header */}
         <div className="mb-4">
-          <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '4px' }}>Admin Management</h1>
+          <h1 style={{ color: 'var(--color-text-primary)', marginBottom: '4px' }}>Admin management</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
             Client onboarding, Convertr configuration, and manager mapping.
           </p>
@@ -124,7 +124,7 @@ export default function AdminManagementPage() {
           <div className="kpi-card animate-slideInUp" style={{ animationDelay: '210ms' }}>
             <div className="flex items-center justify-between mb-3">
               <UsersRound className="w-5 h-5" style={{ color: 'var(--color-warning)' }} />
-              <span className="kpi-card__label" style={{ marginTop: 0 }}>Team Members</span>
+              <span className="kpi-card__label" style={{ marginTop: 0 }}>Team members</span>
             </div>
             <select
               value={teamCompanyFilter}
@@ -132,7 +132,7 @@ export default function AdminManagementPage() {
               className="input-base w-full mb-3"
               style={{ padding: '7px 10px', fontSize: '13px' }}
             >
-              <option value="All">All Companies</option>
+              <option value="All">All companies</option>
               {rows.map((c) => (
                 <option key={c.id} value={c.name}>{c.name}</option>
               ))}
@@ -166,7 +166,7 @@ export default function AdminManagementPage() {
           {activeTab === 'clients' && (
             <button onClick={() => toast.info('Client onboarding flow — coming with backend wiring')} className="btn-primary px-4 py-2 flex items-center gap-2">
               <Plus className="w-4 h-4" />
-              Add Client
+              Add client
             </button>
           )}
         </div>
@@ -193,7 +193,7 @@ export default function AdminManagementPage() {
                   className="input-base w-full appearance-none"
                   style={{ padding: '10px 14px', fontSize: '14px' }}
                 >
-                  <option value="All">All Types</option>
+                  <option value="All">All types</option>
                   <option value="Convertr">Convertr</option>
                   <option value="Manual">Manual</option>
                 </select>
@@ -205,8 +205,8 @@ export default function AdminManagementPage() {
               <table className="w-full" style={{ fontSize: '13px' }}>
                 <thead>
                   <tr style={{ borderTop: '1px solid var(--color-border-light)', borderBottom: '1px solid var(--color-border-light)' }}>
-                    {['Client', 'Type', 'Campaign Manager', 'Ops Manager', 'Backup Manager', 'Client Password', 'Status', 'Updated', 'Analytics', 'Actions'].map((h) => (
-                      <th key={h} className="text-left px-4 py-3" style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', color: 'var(--color-text-muted)', textTransform: 'uppercase', whiteSpace: 'nowrap' }}>
+                    {['Client', 'Type', 'Campaign manager', 'Ops manager', 'Backup manager', 'Client password', 'Status', 'Updated', 'Analytics', 'Actions'].map((h) => (
+                      <th key={h} className="text-left px-4 py-3" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-muted)', whiteSpace: 'nowrap' }}>
                         {h}
                       </th>
                     ))}
@@ -354,8 +354,8 @@ export default function AdminManagementPage() {
               <table className="w-full" style={{ fontSize: '13px' }}>
                 <thead>
                   <tr style={{ borderBottom: '1px solid var(--color-border-light)' }}>
-                    {['Member', 'Role', 'Assigned Clients', 'Active Campaigns', 'Status'].map((h) => (
-                      <th key={h} className="text-left px-5 py-3.5" style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.05em', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
+                    {['Member', 'Role', 'Assigned clients', 'Active campaigns', 'Status'].map((h) => (
+                      <th key={h} className="text-left px-5 py-3.5" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-muted)' }}>
                         {h}
                       </th>
                     ))}

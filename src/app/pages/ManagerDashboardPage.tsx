@@ -101,15 +101,13 @@ export default function ManagerDashboardPage() {
         fontSize: 'var(--font-size-xs)',
         fontWeight: 'var(--font-weight-semibold)',
         color: sortField === field ? 'var(--color-primary)' : 'var(--color-text-secondary)',
-        textTransform: 'uppercase',
-        letterSpacing: 'var(--letter-spacing-wide)',
       }}
       onClick={() => handleSort(field)}
     >
       <div className="flex items-center gap-1">
         {label}
         {sortField === field && (
-          <span style={{ fontSize: '10px' }}>{sortOrder === 'asc' ? '↑' : '↓'}</span>
+          <span style={{ fontSize: '11px' }}>{sortOrder === 'asc' ? '↑' : '↓'}</span>
         )}
       </div>
     </th>
@@ -122,7 +120,7 @@ export default function ManagerDashboardPage() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-1">
-              Campaign Manager Dashboard
+              Campaign manager dashboard
             </h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
               Managing {myClients.length} client{myClients.length !== 1 ? 's' : ''}
@@ -134,7 +132,7 @@ export default function ManagerDashboardPage() {
               className="btn-primary px-5 py-2.5 flex items-center justify-center gap-2 w-full lg:w-auto"
             >
               <Upload className="w-4 h-4" />
-              Upload Leads
+              Upload leads
             </button>
           )}
         </div>
@@ -145,7 +143,7 @@ export default function ManagerDashboardPage() {
             style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }}
             className="block mb-2"
           >
-            Select Client
+            Select client
           </label>
           <select
             value={selectedClientId || ''}
@@ -298,15 +296,15 @@ export default function ManagerDashboardPage() {
                   <SortHeader field="status" label="Status" />
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Progress
                   </th>
-                  <SortHeader field="totalLeads" label="Total Leads" />
+                  <SortHeader field="totalLeads" label="Total leads" />
                   <SortHeader field="acceptanceRate" label="Acceptance" />
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Actions
                   </th>

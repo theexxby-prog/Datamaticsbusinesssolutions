@@ -12,7 +12,7 @@ type Period = 'DAY' | 'WEEK' | 'MONTH' | 'YEAR';
 const PERIOD_FACTOR: Record<Period, number> = { DAY: 0.045, WEEK: 0.24, MONTH: 1, YEAR: 9.2 };
 
 export default function OpsOverviewPage() {
-  useDocumentTitle('Operations Dashboard');
+  useDocumentTitle('Operations dashboard');
   const navigate = useNavigate();
 
   const [period, setPeriod] = useState<Period>('MONTH');
@@ -62,7 +62,7 @@ export default function OpsOverviewPage() {
         <div className="mb-4">
           <div className="flex items-center gap-3">
             <div style={{ width: '4px', height: '28px', background: 'var(--color-primary)', borderRadius: '2px' }} />
-            <h1 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Operations Dashboard</h1>
+            <h1 style={{ color: 'var(--color-text-primary)', margin: 0 }}>Operations dashboard</h1>
           </div>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)', marginLeft: '16px' }}>
             Lead upload management and client oversight
@@ -102,7 +102,7 @@ export default function OpsOverviewPage() {
                   onClick={() => setPeriod(p)}
                   className="px-2 py-1 rounded-full transition-colors"
                   style={{
-                    fontSize: '10px',
+                    fontSize: '11px',
                     fontWeight: 700,
                     letterSpacing: '0.04em',
                     background: period === p ? 'var(--color-primary)' : 'transparent',
@@ -120,7 +120,7 @@ export default function OpsOverviewPage() {
               className="input-base w-full mb-3"
               style={{ padding: '7px 10px', fontSize: '13px' }}
             >
-              <option value="All">All Companies</option>
+              <option value="All">All companies</option>
               {allClients.map((c) => (
                 <option key={c.id} value={c.id}>{c.companyName}</option>
               ))}
@@ -145,13 +145,13 @@ export default function OpsOverviewPage() {
                     <button
                       onClick={() => setSortAsc((v) => !v)}
                       className="flex items-center gap-1"
-                      style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}
+                      style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-muted)' }}
                     >
                       Client <ChevronsUpDown className="w-3 h-3" />
                     </button>
                   </th>
-                  {['Campaigns', 'Leads Delivered', 'This Month', 'Manager', 'Actions'].map((h) => (
-                    <th key={h} className="text-left px-5 py-3" style={{ fontSize: '11px', fontWeight: 700, letterSpacing: '0.06em', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>
+                  {['Campaigns', 'Leads delivered', 'This month', 'Manager', 'Actions'].map((h) => (
+                    <th key={h} className="text-left px-5 py-3" style={{ fontSize: '12px', fontWeight: 700, color: 'var(--color-text-muted)' }}>
                       {h}
                     </th>
                   ))}

@@ -225,7 +225,7 @@ export function DocumentLibraryTab() {
             className="btn-primary px-4 py-2 flex items-center gap-2 w-full lg:w-auto justify-center"
           >
             <Upload className="w-4 h-4" />
-            Upload Document
+            Upload document
           </button>
         </div>
 
@@ -281,7 +281,7 @@ export function DocumentLibraryTab() {
                 className="input-base px-3 py-2 pr-8 appearance-none"
                 style={{ fontSize: 'var(--font-size-sm)' }}
               >
-                <option value="All">All Types</option>
+                <option value="All">All types</option>
                 {(['Contract', 'SOW', 'NDA', 'Invoice', 'Report', 'Campaign', 'Other'] as const).map((t) => (
                   <option key={t} value={t}>{t}</option>
                 ))}
@@ -297,7 +297,7 @@ export function DocumentLibraryTab() {
                 className="input-base px-3 py-2 pr-8 appearance-none"
                 style={{ fontSize: 'var(--font-size-sm)' }}
               >
-                <option value="All">All Statuses</option>
+                <option value="All">All statuses</option>
                 {(['Active', 'Expired', 'Pending', 'Archived'] as const).map((s) => (
                   <option key={s} value={s}>{s}</option>
                 ))}
@@ -328,7 +328,7 @@ export function DocumentLibraryTab() {
               {starred.length > 0 && (
                 <span
                   className="inline-flex items-center justify-center w-4 h-4 rounded-full"
-                  style={{ fontSize: '10px', fontWeight: 700, background: 'var(--color-warning)', color: 'white' }}
+                  style={{ fontSize: '11px', fontWeight: 700, background: 'var(--color-warning)', color: 'white' }}
                 >
                   {starred.length}
                 </span>
@@ -377,7 +377,7 @@ export function DocumentLibraryTab() {
               <table className="w-full min-w-[700px]">
                 <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                   <tr>
-                    {['', 'Document', 'Type', 'Status', 'Uploaded By', 'Date', 'Size', ''].map((h, i) => (
+                    {['', 'Document', 'Type', 'Status', 'Uploaded by', 'Date', 'Size', ''].map((h, i) => (
                       <th
                         key={i}
                         className="text-left px-4 py-3"
@@ -385,8 +385,6 @@ export function DocumentLibraryTab() {
                           fontSize: 'var(--font-size-xs)',
                           fontWeight: 'var(--font-weight-semibold)',
                           color: 'var(--color-text-secondary)',
-                          textTransform: 'uppercase',
-                          letterSpacing: 'var(--letter-spacing-wide)',
                           whiteSpace: 'nowrap',
                         }}
                       >

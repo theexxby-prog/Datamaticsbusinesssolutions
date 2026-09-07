@@ -147,7 +147,7 @@ export default function UnionLeadsPage() {
               </span>
               {committee > 1 && (
                 <span
-                  className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[10px] font-bold"
+                  className="flex-shrink-0 rounded-full px-1.5 py-0.5 text-[11px] font-bold"
                   style={{ background: 'var(--background-muted)', color: 'var(--color-text-secondary)' }}
                   title={`${committee} contacts on this buying committee`}
                 >
@@ -175,7 +175,7 @@ export default function UnionLeadsPage() {
       widthClass: 'hidden xl:table-cell xl:w-[12%]',
       sortValue: l => l.campaignName, text: l => l.campaignName,
       render: l => (
-        <span className="block truncate text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }} title={l.campaignName}>
+        <span className="block truncate text-[13px]" style={{ color: 'var(--color-text-secondary)' }} title={l.campaignName}>
           {l.campaignName}
         </span>
       ),
@@ -195,7 +195,7 @@ export default function UnionLeadsPage() {
       render: l => {
         const synthesis = isSignalLeadId(l.id) ? getSynthesis(signalContactFromLeadId(l.id)!.id) : undefined;
         if (!synthesis) {
-          return <span className="text-[11.5px] font-medium" style={{ color: 'var(--color-text-muted)' }}>Standard</span>;
+          return <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>Standard</span>;
         }
         if (!derivedIntel) {
           return (
@@ -277,7 +277,7 @@ export default function UnionLeadsPage() {
       widthClass: 'hidden lg:table-cell lg:w-[14%] xl:w-[9%]',
       sortValue: l => l.deliveryDate, text: l => l.deliveryDate,
       render: l => (
-        <span className="text-[12px]" style={{ color: 'var(--color-text-muted)' }}>{formatDateShort(l.deliveryDate)}</span>
+        <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>{formatDateShort(l.deliveryDate)}</span>
       ),
     },
   ];
@@ -341,10 +341,10 @@ export default function UnionLeadsPage() {
       {/* Header — one row */}
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+          <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
             Leads
           </h1>
-          <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             {stats.total} leads · {stats.pending} pending review · {stats.hot} hot · {stats.avg} avg signal ·{' '}
             <span style={{ color: 'var(--color-primary)', fontWeight: 600 }}>
               {signalMeta.rows} enriched of {signalMeta.sampleOf}
@@ -376,7 +376,7 @@ export default function UnionLeadsPage() {
           <span className="text-[11px] font-bold uppercase tracking-wide" style={{ color: 'var(--color-text-muted)' }}>
             Delivery
           </span>
-          <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
             <b style={{ color: 'var(--color-text-primary)' }}>{LIVE_CHANNELS.map(c => c.label).join(', ')}</b> live
             {ROADMAP_CHANNELS.length > 0 && <> · {ROADMAP_CHANNELS.map(c => c.label).join(' and ')} coming next</>}
             {lens === 'people' && <> · QA 97 / 2 / 1</>}
@@ -397,15 +397,15 @@ export default function UnionLeadsPage() {
                   {live
                     ? <CheckCircle2 className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
                     : <Clock className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />}
-                  <span className="text-[12px] font-semibold" style={{ color: live ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
+                  <span className="text-xs font-semibold" style={{ color: live ? 'var(--color-text-primary)' : 'var(--color-text-muted)' }}>
                     {channel.label}
                   </span>
-                  <span className="hidden text-[11.5px] sm:inline" style={{ color: 'var(--color-text-muted)' }}>
+                  <span className="hidden text-xs sm:inline" style={{ color: 'var(--color-text-muted)' }}>
                     {channel.blurb}
                   </span>
                   {!live && (
                     <span
-                      className="rounded-full px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide"
+                      className="rounded-full px-1.5 py-0.5 text-[11px] font-bold"
                       style={{ background: 'var(--background-muted)', color: 'var(--color-text-muted)' }}
                     >
                       Coming next
@@ -420,7 +420,7 @@ export default function UnionLeadsPage() {
               People lens; on Accounts it's noise. */}
           {lens === 'people' && (
             <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
-              <span className="inline-flex items-center gap-1.5 text-[12px] font-bold" style={{ color: 'var(--color-text-primary)' }}>
+              <span className="inline-flex items-center gap-1.5 text-xs font-bold" style={{ color: 'var(--color-text-primary)' }}>
                 <ShieldCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
                 Automated QA
               </span>
@@ -429,7 +429,7 @@ export default function UnionLeadsPage() {
                 <span style={{ width: '2%', background: 'var(--color-warning)' }} />
                 <span style={{ width: '1%', background: 'var(--color-error)' }} />
               </span>
-              <span className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+              <span className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                 <b style={{ color: 'var(--color-success)' }}>{deliveredToDate.toLocaleString('en-US')}</b> valid (97%) ·{' '}
                 <b style={{ color: 'var(--color-warning)' }}>{qaCaution}</b> caution ·{' '}
                 <b style={{ color: 'var(--color-error)' }}>{qaInvalid}</b> invalid of {qaTotal.toLocaleString('en-US')} processed · accepted leads sync to your CRM in real time

@@ -73,7 +73,7 @@ function ChangesModal({
           </div>
           <div>
             <h3 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px' }}>
-              Request Changes
+              Request changes
             </h3>
             <p className="text-[var(--color-text-secondary)] mt-0.5" style={{ fontSize: '13px' }}>
               {submission.campaignName}
@@ -198,27 +198,27 @@ function SubmissionCard({
         {/* Key specs — quick glance row */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
           <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
-            <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Type</p>
+            <p className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider mb-1">Type</p>
             <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.serviceType}</p>
           </div>
           <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
             <div className="flex items-center gap-1 mb-1">
               <MapPin className="w-3 h-3 text-[var(--color-text-muted)]" />
-              <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Geo</p>
+              <p className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Geo</p>
             </div>
             <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.geography}</p>
           </div>
           <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
             <div className="flex items-center gap-1 mb-1">
               <Target className="w-3 h-3 text-[var(--color-text-muted)]" />
-              <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Target</p>
+              <p className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Target</p>
             </div>
             <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>{submission.targetLeads.toLocaleString()} leads</p>
           </div>
           <div className="rounded-xl p-3" style={{ background: 'var(--color-surface)' }}>
             <div className="flex items-center gap-1 mb-1">
               <DollarSign className="w-3 h-3 text-[var(--color-text-muted)]" />
-              <p className="text-[10px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Est. Value</p>
+              <p className="text-[11px] font-semibold text-[var(--color-text-muted)] uppercase tracking-wider">Est. Value</p>
             </div>
             <p className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '13px' }}>
               ${(submission.targetLeads * submission.cpl).toLocaleString()}
@@ -369,7 +369,7 @@ function SubmissionCard({
               style={{ fontSize: '13px' }}
             >
               <MessageSquareDiff className="w-4 h-4" />
-              Request Changes
+              Request changes
             </button>
             <button
               onClick={() => onDecline(submission.id)}
@@ -388,7 +388,7 @@ function SubmissionCard({
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 export default function CampaignApprovalsPage() {
-  useDocumentTitle('Campaign Approvals');
+  useDocumentTitle('Campaign approvals');
 
   const { addNotification } = useNotifications();
   const [submissions, setSubmissions] = useState<CampaignSubmission[]>(mockCampaignSubmissions);
@@ -476,7 +476,7 @@ export default function CampaignApprovalsPage() {
         {/* Page header */}
         <div className="mb-4">
           <h1 className="text-[var(--color-text-primary)] mb-1" style={{ fontSize: '24px', fontWeight: 700 }}>
-            Campaign Approvals
+            Campaign approvals
           </h1>
           <p style={{ fontSize: '14px', color: 'var(--color-text-secondary)' }}>
             Review and action campaign requests submitted by clients before they go live.

@@ -163,9 +163,9 @@ function InvoiceCard({
               <thead>
                 <tr style={{ color: 'var(--color-text-muted)', textAlign: 'left' }}>
                   <th className="py-1.5 pr-3 font-semibold">Campaign</th>
-                  <th className="py-1.5 pr-3 font-semibold">Job Card</th>
+                  <th className="py-1.5 pr-3 font-semibold">Job card</th>
                   <th className="py-1.5 pr-3 font-semibold">Geo</th>
-                  <th className="py-1.5 pr-3 font-semibold text-right">Billable Leads</th>
+                  <th className="py-1.5 pr-3 font-semibold text-right">Billable leads</th>
                   <th className="py-1.5 pr-3 font-semibold text-right">CPL</th>
                   <th className="py-1.5 font-semibold text-right">Amount</th>
                 </tr>
@@ -208,7 +208,7 @@ function InvoiceCard({
                 </div>
                 <div className="flex flex-col gap-1.5" style={{ color: 'var(--color-text-primary)' }}>
                   <div className="flex justify-between gap-3">
-                    <span style={{ color: 'var(--color-text-muted)' }}>Job Card</span>
+                    <span style={{ color: 'var(--color-text-muted)' }}>Job card</span>
                     {li.jobCardId ? (
                       <span className="inline-flex items-center gap-1" style={{ color: 'var(--color-primary)' }}>
                         <Link2 className="w-3 h-3" />{li.jobCardId}
@@ -220,7 +220,7 @@ function InvoiceCard({
                     <span>{li.geo}</span>
                   </div>
                   <div className="flex justify-between gap-3">
-                    <span style={{ color: 'var(--color-text-muted)' }}>Billable Leads × CPL</span>
+                    <span style={{ color: 'var(--color-text-muted)' }}>Billable leads × CPL</span>
                     <span>{li.billableLeads.toLocaleString('en-US')} × {formatUSD(li.cpl)}</span>
                   </div>
                   <div className="flex justify-between gap-3 font-semibold">
@@ -311,7 +311,7 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
           </p>
         </div>
         <div className="text-right flex-shrink-0">
-          <div style={{ fontSize: '22px', fontWeight: 700, color: status === 'overdue' ? 'var(--color-error)' : 'var(--color-text-primary)' }}>
+          <div style={{ fontSize: '20px', fontWeight: 700, color: status === 'overdue' ? 'var(--color-error)' : 'var(--color-text-primary)' }}>
             {formatUSD(invoice.total)}
           </div>
           {status === 'paid' && (
@@ -366,8 +366,8 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
               <thead>
                 <tr style={{ color: 'var(--color-text-muted)', textAlign: 'left' }}>
                   <th className="py-1.5 pr-3 font-semibold">Campaign</th>
-                  <th className="py-1.5 pr-3 font-semibold">Job Card</th>
-                  <th className="py-1.5 pr-3 font-semibold text-right">Billable Leads</th>
+                  <th className="py-1.5 pr-3 font-semibold">Job card</th>
+                  <th className="py-1.5 pr-3 font-semibold text-right">Billable leads</th>
                   <th className="py-1.5 pr-3 font-semibold text-right">Cost per Lead</th>
                   <th className="py-1.5 font-semibold text-right">Amount</th>
                 </tr>
@@ -403,11 +403,11 @@ function ClientInvoiceCard({ invoice, busy, onView }: {
                 </div>
                 <div className="flex flex-col gap-1.5" style={{ color: 'var(--color-text-primary)' }}>
                   <div className="flex justify-between gap-3">
-                    <span style={{ color: 'var(--color-text-muted)' }}>Job Card</span>
+                    <span style={{ color: 'var(--color-text-muted)' }}>Job card</span>
                     <span>{li.jobCardId ?? '—'}</span>
                   </div>
                   <div className="flex justify-between gap-3">
-                    <span style={{ color: 'var(--color-text-muted)' }}>Billable Leads × CPL</span>
+                    <span style={{ color: 'var(--color-text-muted)' }}>Billable leads × CPL</span>
                     <span>{li.billableLeads.toLocaleString('en-US')} × {formatUSD(li.cpl)}</span>
                   </div>
                   <div className="flex justify-between gap-3 font-semibold">
@@ -621,7 +621,7 @@ export default function Invoices() {
               style={{ borderColor: 'var(--color-border-light)', background: 'var(--color-surface-raised)' }}
               data-testid="billing-position-bar"
             >
-              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[12.5px]">
+              <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 text-[13px]">
                 <span className="font-bold" style={{ color: 'var(--color-text-primary)' }}>FY2026 billing position</span>
                 <span style={{ color: 'var(--color-text-secondary)' }}>
                   <b style={{ color: 'var(--color-text-primary)' }}>{formatUSD(pos.billed)}</b> billed of {formatUSD(pos.contracted)} contracted ·{' '}

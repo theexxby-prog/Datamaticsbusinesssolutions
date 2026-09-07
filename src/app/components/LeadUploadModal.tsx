@@ -140,7 +140,7 @@ export function LeadUploadModal({
         {/* Header */}
         <div className="px-6 py-4 border-b border-border flex items-center justify-between">
           <div>
-            <h2 className="text-base font-semibold text-foreground">Upload Leads</h2>
+            <h2 className="text-base font-semibold text-foreground">Upload leads</h2>
             <p className="text-sm text-muted-foreground mt-0.5">
               {step === 0 && 'Select a company and campaign'}
               {step === 1 && (displayClientName && displayCampaignName
@@ -368,7 +368,7 @@ export function LeadUploadModal({
                       <p className="text-sm text-muted-foreground">or click to browse</p>
                     </div>
                     <label className="px-6 py-2.5 bg-primary text-primary-foreground text-sm font-semibold rounded-lg hover:bg-primary-hover transition-all cursor-pointer">
-                      Browse Files
+                      Browse files
                       <input
                         type="file"
                         className="hidden"
@@ -420,7 +420,7 @@ export function LeadUploadModal({
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-semibold text-foreground mb-3">Map Columns</h3>
+                  <h3 className="text-sm font-semibold text-foreground mb-3">Map columns</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Match each column from your file to the corresponding field
                   </p>
@@ -483,7 +483,7 @@ export function LeadUploadModal({
                     onClick={() => setStep(1)}
                     className="px-6 py-2.5 text-sm font-semibold text-foreground bg-muted hover:bg-muted/80 rounded-lg transition-all"
                   >
-                    Go Back
+                    Go back
                   </button>
                   <button
                     onClick={handleConfirm}
@@ -516,7 +516,7 @@ export function LeadUploadModal({
                 </motion.div>
 
                 <div>
-                  <h3 className="text-base font-semibold text-foreground mb-2">Upload Successful!</h3>
+                  <h3 className="text-base font-semibold text-foreground mb-2">Upload complete</h3>
                   <p className="text-sm text-muted-foreground">
                     <span className="font-semibold text-foreground">{uploadedCount} leads</span> uploaded to{' '}
                     <span className="font-semibold text-foreground">{displayClientName}</span>
@@ -540,7 +540,7 @@ export function LeadUploadModal({
                     onClick={handleViewLeads}
                     className="px-6 py-2.5 text-sm font-semibold bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg transition-all"
                   >
-                    View Leads
+                    View leads
                   </button>
                 </div>
               </motion.div>

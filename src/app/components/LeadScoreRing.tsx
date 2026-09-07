@@ -72,7 +72,7 @@ export function LeadScoreRing({ score, size = 60, showLabel = true }: LeadScoreR
           {score}
         </div>
         {showLabel && (
-          <div className="text-[9px] uppercase tracking-wide font-medium" style={{ color: 'var(--color-text-secondary)' }}>
+          <div className="text-[11px] uppercase tracking-wide font-medium" style={{ color: 'var(--color-text-secondary)' }}>
             {getLabel(score)}
           </div>
         )}

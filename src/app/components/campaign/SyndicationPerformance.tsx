@@ -70,12 +70,12 @@ export function SyndicationPerformance({ campaignId, totalLeads, opsView = false
           {assets.map(asset => (
             <div key={asset.assetId} data-testid="asset-row" data-conversion={asset.conversionRate}>
               <div className="mb-1 flex flex-wrap items-baseline justify-between gap-x-3">
-                <span className="min-w-0 flex-1 truncate text-[12.5px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                <span className="min-w-0 flex-1 truncate text-[13px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
                   {asset.name}
                   <span className="ml-2 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{asset.type}</span>
                 </span>
                 <span
-                  className="flex-shrink-0 text-[12.5px] font-bold"
+                  className="flex-shrink-0 text-[13px] font-bold"
                   style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
                 >
                   {asset.conversionRate}%
@@ -115,7 +115,7 @@ export function SyndicationPerformance({ campaignId, totalLeads, opsView = false
         <div className="space-y-3">
           {publishers.map(pub => (
             <div key={pub.publisher} className="flex items-center gap-3" data-testid="publisher-row">
-              <span className="w-[34%] flex-shrink-0 truncate text-[12.5px]" style={{ color: 'var(--color-text-primary)' }}>
+              <span className="w-[34%] flex-shrink-0 truncate text-[13px]" style={{ color: 'var(--color-text-primary)' }}>
                 {pub.publisher}
               </span>
               <div className="h-2 flex-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
@@ -128,13 +128,13 @@ export function SyndicationPerformance({ campaignId, totalLeads, opsView = false
                 />
               </div>
               <span
-                className="w-11 flex-shrink-0 text-right text-[12px] font-semibold"
+                className="w-11 flex-shrink-0 text-right text-xs font-semibold"
                 style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 {pub.leads.toLocaleString('en-US')}
               </span>
               <span
-                className="hidden w-[74px] flex-shrink-0 text-right text-[11.5px] sm:block"
+                className="hidden w-[74px] flex-shrink-0 text-right text-xs sm:block"
                 style={{ color: 'var(--color-text-secondary)', fontVariantNumeric: 'tabular-nums' }}
                 title="Share of this source's leads you accepted"
               >
@@ -142,7 +142,7 @@ export function SyndicationPerformance({ campaignId, totalLeads, opsView = false
               </span>
               {pub.costPerLead !== undefined && (
                 <span
-                  className="w-[62px] flex-shrink-0 text-right text-[11.5px] font-semibold"
+                  className="w-[62px] flex-shrink-0 text-right text-xs font-semibold"
                   style={{ color: 'var(--color-warning)', fontVariantNumeric: 'tabular-nums' }}
                   title="Cost per lead — ops only"
                 >
@@ -170,13 +170,13 @@ export function SyndicationPerformance({ campaignId, totalLeads, opsView = false
           ].map(tile => (
             <div key={tile.label}>
               <div
-                className="text-[19px] font-extrabold leading-tight"
+                className="text-xl font-extrabold leading-tight"
                 style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 {tile.value}
               </div>
-              <div className="text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{tile.label}</div>
-              <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{tile.sub}</div>
+              <div className="text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{tile.label}</div>
+              <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{tile.sub}</div>
             </div>
           ))}
         </div>

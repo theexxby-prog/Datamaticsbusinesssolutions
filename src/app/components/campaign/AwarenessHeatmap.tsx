@@ -72,10 +72,10 @@ export function AwarenessHeatmap({ abmCampaignId }: { abmCampaignId: string }) {
             {rows.map(row => (
               <tr key={row.account} data-testid="heatmap-row" data-channels-touched={row.channelsTouched}>
                 <td className="py-0.5 pr-2">
-                  <div className="truncate text-[12px] font-medium" style={{ color: 'var(--color-text-primary)' }}>
+                  <div className="truncate text-xs font-medium" style={{ color: 'var(--color-text-primary)' }}>
                     {row.account}
                   </div>
-                  <div className="truncate text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                  <div className="truncate text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
                     {row.industry}
                   </div>
                 </td>
@@ -100,7 +100,7 @@ export function AwarenessHeatmap({ abmCampaignId }: { abmCampaignId: string }) {
       </div>
 
       {thin > 0 && (
-        <p className="mt-3 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="mt-3 text-xs" style={{ color: 'var(--color-text-muted)' }}>
           {thin} of these {rows.length} accounts have been reached on one channel only.
         </p>
       )}

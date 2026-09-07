@@ -262,7 +262,7 @@ export default function OpsOverridePage() {
 
         {/* Title Section */}
         <div className="mb-5">
-          <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Campaign Metrics Override</h1>
+          <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Campaign metrics override</h1>
           <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
             Operations Override Center with live API data and backend persistence.
             {!isOpsManager && ' You have view-only rights (Read-Only Mode).'}
@@ -288,7 +288,7 @@ export default function OpsOverridePage() {
               onChange={(e) => setClientFilter(e.target.value)}
               className="input-base w-full px-4 py-3 appearance-none"
             >
-              <option value="All">All Clients</option>
+              <option value="All">All clients</option>
               {clientNames.map(name => (
                 <option key={name} value={name}>{name}</option>
               ))}
@@ -302,7 +302,7 @@ export default function OpsOverridePage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="input-base w-full px-4 py-3 appearance-none"
             >
-              <option value="All">All Status</option>
+              <option value="All">All statuses</option>
               <option value="active">Active</option>
               <option value="completed">Completed</option>
               <option value="paused">Paused</option>
@@ -365,7 +365,7 @@ export default function OpsOverridePage() {
                         </span>
                       </td>
                       <td className="table-td text-center">
-                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase ${
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${
                           camp.leadAcceptanceMethod === 'convertr' 
                             ? 'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[var(--color-info)]/20'
                             : 'bg-gray-50 text-gray-700'
@@ -424,7 +424,7 @@ export default function OpsOverridePage() {
               {
                 label: 'Method',
                 value: (camp) => (
-                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium tracking-wide uppercase ${
+                  <span className={`inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium ${
                     camp.leadAcceptanceMethod === 'convertr'
                       ? 'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[var(--color-info)]/20'
                       : 'bg-gray-50 text-gray-700'
@@ -507,7 +507,7 @@ export default function OpsOverridePage() {
                 {/* Header */}
                 <div className="px-6 py-5 border-b border-[var(--color-border)] flex items-center justify-between bg-gray-50/50">
                   <div>
-                    <span className="text-[10px] font-bold text-[var(--color-primary)] tracking-wider uppercase">{selectedCampaign.clientName}</span>
+                    <span className="text-[11px] font-bold text-[var(--color-primary)] tracking-wider uppercase">{selectedCampaign.clientName}</span>
                     <h2 className="text-lg font-bold truncate pr-4 max-w-[380px] mt-0.5" style={{ color: 'var(--color-text-primary)' }}>
                       {selectedCampaign.name}
                     </h2>
@@ -760,10 +760,10 @@ export default function OpsOverridePage() {
                   {/* Real-time Client Dashboard Preview Funnel */}
                   <div className="p-5 rounded-2xl border border-gray-200 bg-gray-50/50 space-y-4">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
                         <Eye className="w-4 h-4" /> Live Client Funnel Preview
                       </span>
-                      <span className="text-[10px] font-semibold text-gray-400 bg-gray-200/50 px-2 py-0.5 rounded">
+                      <span className="text-[11px] font-semibold text-gray-400 bg-gray-200/50 px-2 py-0.5 rounded">
                         Calculated
                       </span>
                     </div>
@@ -773,7 +773,7 @@ export default function OpsOverridePage() {
                       
                       {/* Sent */}
                       <div className="flex items-center gap-3">
-                        <div className="w-20 text-[10px] text-gray-400 uppercase">1. Sent</div>
+                        <div className="w-20 text-[11px] text-gray-400">1. Sent</div>
                         <div className="flex-1 bg-[var(--color-info-bg)] border border-[var(--color-info)]/10 rounded-xl p-3 flex justify-between items-center">
                           <span className="text-gray-800">{liveSent.toLocaleString()} emails</span>
                           <span className="text-[var(--color-info)] text-[11px]">100%</span>
@@ -782,7 +782,7 @@ export default function OpsOverridePage() {
 
                       {/* Opened */}
                       <div className="flex items-center gap-3">
-                        <div className="w-20 text-[10px] text-gray-400 uppercase">2. Opened</div>
+                        <div className="w-20 text-[11px] text-gray-400">2. Opened</div>
                         <div className="flex-1 ml-2 bg-[var(--color-accent-purple-bg)] border border-[var(--color-accent-purple)]/10 rounded-xl p-3 flex justify-between items-center">
                           <span className="text-gray-800">{liveOpened.toLocaleString()} opens</span>
                           <span className="text-[var(--color-accent-purple)] text-[11px]">{liveOpenRate}% OR</span>
@@ -791,29 +791,29 @@ export default function OpsOverridePage() {
 
                       {/* Clicked */}
                       <div className="flex items-center gap-3">
-                        <div className="w-20 text-[10px] text-gray-400 uppercase">3. Clicked</div>
+                        <div className="w-20 text-[11px] text-gray-400">3. Clicked</div>
                         <div className="flex-1 ml-4 bg-[var(--color-success-bg)] border border-[var(--color-success)]/10 rounded-xl p-3 flex justify-between items-center">
                           <span className="text-gray-800">{liveClicked.toLocaleString()} clicks</span>
                           <div className="text-right">
                             <div className="text-[var(--color-success)] text-[11px]">{liveCTR}% CTR</div>
-                            <div className="text-[10px] text-gray-400 mt-0.5">{liveCTOR}% CTOR</div>
+                            <div className="text-[11px] text-gray-400 mt-0.5">{liveCTOR}% CTOR</div>
                           </div>
                         </div>
                       </div>
 
                       {/* Delivered Leads */}
                       <div className="flex items-center gap-3">
-                        <div className="w-20 text-[10px] text-gray-400 uppercase">4. Leads</div>
+                        <div className="w-20 text-[11px] text-gray-400">4. Leads</div>
                         <div className="flex-1 ml-6 bg-gradient-to-r from-[var(--color-primary)]/10 to-[var(--color-primary-dark)]/10 border border-[var(--color-primary)]/15 rounded-xl p-3 flex justify-between items-center">
                           <div className="flex items-center gap-1.5">
                             <span className="text-gray-800">{liveAccepted.toLocaleString()} accepted</span>
-                            <span className="text-[10px] bg-gray-200/40 text-gray-500 px-1.5 py-0.2 rounded font-normal">
+                            <span className="text-[11px] bg-gray-200/40 text-gray-500 px-1.5 py-0.2 rounded font-normal">
                               Goal: {liveTarget}
                             </span>
                           </div>
                           <div className="text-right">
                             <div className="text-[var(--color-primary)] text-[11px]">{liveAcceptanceRate}% Accept</div>
-                            <div className="text-[10px] text-gray-400 mt-0.5">{livePaceRate}% of Goal</div>
+                            <div className="text-[11px] text-gray-400 mt-0.5">{livePaceRate}% of Goal</div>
                           </div>
                         </div>
                       </div>
@@ -838,7 +838,7 @@ export default function OpsOverridePage() {
                         className="btn flex-1 py-3 text-sm font-semibold rounded-xl text-white bg-[var(--color-primary-solid)] hover:bg-[var(--color-primary-dark)] flex items-center justify-center gap-2 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed"
                       >
                         <Save className="w-4 h-4" />
-                        Save Changes
+                        Save changes
                       </button>
                     </>
                   ) : (

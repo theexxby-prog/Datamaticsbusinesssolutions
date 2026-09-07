@@ -55,13 +55,13 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
           <div key={t.label} className="glass-card flex flex-col p-3.5">
             <t.Icon className="mb-1 h-4 w-4" style={{ color: 'var(--color-text-muted)' }} />
             <div
-              className="text-[20px] font-extrabold leading-tight"
+              className="text-xl font-extrabold leading-tight"
               style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
             >
               {t.value.toLocaleString('en-US')}
             </div>
-            <div className="text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
-            <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
+            <div className="text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
+            <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
             {t.delta && (
               <div className="mt-1.5">
                 <WowBadge change={t.delta.change} unit="this week" />
@@ -94,7 +94,7 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
               <div className="mb-1.5 flex flex-wrap items-center justify-between gap-x-3">
                 <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                   {stage.label}
-                  <span className="ml-2 text-[11.5px] font-normal" style={{ color: 'var(--color-text-muted)' }}>
+                  <span className="ml-2 text-xs font-normal" style={{ color: 'var(--color-text-muted)' }}>
                     {stage.hint}
                   </span>
                 </span>
@@ -103,7 +103,7 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
                   style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
                 >
                   {stage.accounts.toLocaleString('en-US')}
-                  <span className="ml-1.5 text-[11.5px] font-semibold" style={{ color: 'var(--color-text-muted)' }}>
+                  <span className="ml-1.5 text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
                     {stage.pctOfTargeted}%
                   </span>
                 </span>
@@ -132,8 +132,8 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
               </linearGradient>
             </defs>
             <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
-            <XAxis dataKey="week" stroke="none" tickLine={false} tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
-            <YAxis stroke="none" tickLine={false} tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
+            <XAxis dataKey="week" stroke="none" tickLine={false} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
+            <YAxis stroke="none" tickLine={false} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number, n: string) => [v.toLocaleString('en-US'), n === 'reached' ? 'Reached' : 'Engaged']} />
             <Area type="monotone" dataKey="reached" stroke="var(--color-primary)" strokeWidth={2} fill="url(#reachFill)" />
             <Area type="monotone" dataKey="engaged" stroke="var(--color-success)" strokeWidth={2} fill="transparent" />
@@ -152,14 +152,14 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
             <Building2 className="h-4 w-4" style={{ color: 'var(--color-warning)' }} />
             Still to reach · <span data-testid="unreached-total">{unreached.total}</span> accounts
           </h3>
-          <p className="mt-1 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <p className="mt-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
             Named in the audience but not yet served an impression. These are where the next flight should point.
           </p>
           <div className="mt-2.5 flex flex-wrap gap-1.5">
             {unreached.named.map(a => (
               <span
                 key={a.name}
-                className="rounded-full border px-2.5 py-1 text-[12px] font-medium"
+                className="rounded-full border px-2.5 py-1 text-xs font-medium"
                 style={{ borderColor: 'var(--color-border)', color: 'var(--color-text-secondary)' }}
                 title={`${a.industry} · ${a.employees} employees`}
               >
@@ -168,7 +168,7 @@ export function CampaignReachTab({ abmCampaignId }: { abmCampaignId: string }) {
             ))}
             {unreached.total > unreached.named.length && (
               <span
-                className="rounded-full px-2.5 py-1 text-[12px] font-semibold"
+                className="rounded-full px-2.5 py-1 text-xs font-semibold"
                 style={{ background: 'var(--background-muted)', color: 'var(--color-text-muted)' }}
               >
                 +{unreached.total - unreached.named.length} more

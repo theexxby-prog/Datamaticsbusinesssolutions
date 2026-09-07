@@ -281,7 +281,7 @@ function StandardHomePage() {
               onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--color-primary-dark)')}
               onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--color-primary-solid)')}
             >
-              📊 Weekly Digest
+              Weekly digest
             </button>
           </div>
         </motion.div>
@@ -335,7 +335,7 @@ function StandardHomePage() {
                     key={p}
                     onClick={() => setLeadsPeriod(p)}
                     className={`px-2.5 py-1 rounded-md transition-all ${leadsPeriod === p ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'}`}
-                    style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                    style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
                   >
                     {p === 'month' ? 'Month' : 'Year'}
                   </button>
@@ -374,7 +374,7 @@ function StandardHomePage() {
                     key={p}
                     onClick={() => setBizPeriod(p)}
                     className={`px-2.5 py-1 rounded-md transition-all ${bizPeriod === p ? 'bg-[var(--color-primary-solid)] text-white shadow-sm' : 'text-[var(--color-text-secondary)] hover:text-[var(--color-primary)]'}`}
-                    style={{ fontSize: '10px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
+                    style={{ fontSize: '11px', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.04em' }}
                   >
                     {p === 'month' ? 'Month' : 'Year'}
                   </button>
@@ -448,7 +448,7 @@ function StandardHomePage() {
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full opacity-60" style={{ background: 'var(--color-primary)' }} />
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5" style={{ background: 'var(--color-primary)' }} />
                       </span>
-                      <span className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>Awaiting Approval</span>
+                      <span className="text-xs font-semibold" style={{ color: 'var(--color-primary)' }}>Awaiting approval</span>
                     </div>
                     <div className="flex items-center gap-1">
                       <span className="text-xs font-bold" style={{ color: 'var(--color-primary)' }}>{campaignStats.pendingApproval}</span>
@@ -571,7 +571,7 @@ function StandardHomePage() {
 
           {/* Recent Activity */}
           <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '17px', fontWeight: 600 }}>Recent Activity</h2>
+            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '16px', fontWeight: 600 }}>Recent activity</h2>
             <div className="divide-y divide-black/[0.04]">
               {recentActivity.map(a => (
                 <div key={a.id} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0 hover:bg-[var(--color-surface-raised)] rounded-xl px-2 -mx-2 transition-colors cursor-pointer">
@@ -592,7 +592,7 @@ function StandardHomePage() {
 
           {/* Needs Your Attention */}
           <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
-            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '17px', fontWeight: 600 }}>Needs Your Attention</h2>
+            <h2 className="font-semibold text-[var(--color-text-primary)] mb-3" style={{ fontSize: '16px', fontWeight: 600 }}>Needs your attention</h2>
             <div className="space-y-2.5">
               {needsAttention.map(item => {
                 const c = attentionColors(item.type);
@@ -631,7 +631,7 @@ function StandardHomePage() {
         {/* ── Campaign Snapshot ───────────────────────────────────────────── */}
         <div className="rounded-2xl p-5 bg-[var(--color-surface-raised)] backdrop-blur-xl border border-white/20 shadow-[0_2px_12px_rgba(0,0,0,0.06)]">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '17px', fontWeight: 600 }}>Campaign Snapshot</h2>
+            <h2 className="font-semibold text-[var(--color-text-primary)]" style={{ fontSize: '16px', fontWeight: 600 }}>Campaign snapshot</h2>
             <button
               onClick={() => navigate('/campaigns')}
               className="flex items-center gap-1 text-[var(--color-primary)] hover:text-[var(--color-primary-dark)] transition-colors font-semibold"

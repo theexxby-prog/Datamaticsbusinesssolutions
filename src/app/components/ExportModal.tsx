@@ -67,7 +67,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-200">
               <h3 className="text-lg font-semibold text-gray-900">
-                Export Report
+                Export report
               </h3>
               <button
                 onClick={onClose}
@@ -82,7 +82,7 @@ export function ExportModal({ isOpen, onClose, reportData }: ExportModalProps) {
               {/* Format Selection */}
               <div>
                 <label className="block text-sm font-medium mb-3 text-gray-700">
-                  Export Format
+                  Export format
                 </label>
                 <div className="space-y-2">
                   {formats.map((format) => (

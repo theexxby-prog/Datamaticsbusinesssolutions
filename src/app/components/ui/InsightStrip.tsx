@@ -43,7 +43,7 @@ export function InsightStrip({ insights }: { insights: Insight[] }) {
             style={{ background: tone.bg }}
           >
             <tone.Icon className="mt-px h-3.5 w-3.5 flex-shrink-0" style={{ color: tone.fg }} aria-hidden />
-            <span className="text-[12px] leading-snug" style={{ color: 'var(--color-text-primary)' }}>
+            <span className="text-xs leading-snug" style={{ color: 'var(--color-text-primary)' }}>
               {insight.text}
             </span>
           </div>

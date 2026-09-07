@@ -18,7 +18,7 @@ import { showFutureModules } from '../config/demo';
 import { useUnionPrefs, setUnionWidget, setDerivedIntel, setLeadsSignalsColumn, UNION_WIDGET_LABELS, UNION_WIDGET_DESCRIPTIONS, type UnionWidgetKey } from '../config/unionPrefs';
 
 export default function Account() {
-  useDocumentTitle('Account Settings');
+  useDocumentTitle('Account settings');
   const { currentUser } = useAuth();
   const lens = useUnionLens();
   const unionPrefs = useUnionPrefs();
@@ -53,7 +53,7 @@ export default function Account() {
         {/* Header */}
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Account Settings</h1>
+            <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Account settings</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
               Manage your account preferences and security
             </p>
@@ -84,7 +84,7 @@ export default function Account() {
           {activeTab === 'profile' && (
             <div className="space-y-5">
               <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-                Personal Information
+                Personal information
               </h2>
 
               <div className="flex items-center gap-4 pb-6" style={{ borderBottom: '1px solid var(--color-border)' }}>
@@ -97,7 +97,7 @@ export default function Account() {
                 </div>
                 <div className="flex-1">
                   <h3 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-                    Profile Photo
+                    Profile photo
                   </h3>
                   <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mb-2">
                     Upload a professional headshot
@@ -139,7 +139,7 @@ export default function Account() {
                 <button className="btn-outline px-4 py-2">Cancel</button>
                 <button onClick={() => toast.success('Profile updated successfully')} className="btn-primary px-4 py-2 flex items-center gap-2">
                   <Save className="w-4 h-4" />
-                  Save Changes
+                  Save changes
                 </button>
               </div>
             </div>
@@ -306,7 +306,7 @@ export default function Account() {
                 <button className="btn-outline px-4 py-2">Cancel</button>
                 <button onClick={() => toast.success('Company information updated')} className="btn-primary px-4 py-2 flex items-center gap-2">
                   <Save className="w-4 h-4" />
-                  Save Changes
+                  Save changes
                 </button>
               </div>
             </div>
@@ -346,7 +346,7 @@ export default function Account() {
               <div className="pt-6 border-t" style={{ borderColor: 'var(--color-border)' }}>
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>Two-Factor Authentication</h3>
+                    <h3 style={{ fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>Two-Factor authentication</h3>
                     <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }} className="mt-1">Add an extra layer of security to your account</p>
                   </div>
                   <button onClick={() => toast.info('2FA setup coming soon')} className="btn-outline px-4 py-2">Enable</button>
@@ -358,7 +358,7 @@ export default function Account() {
           {activeTab === 'team' && (
             <div className="space-y-5">
               <div className="flex items-center justify-between">
-                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>Team Members</h2>
+                <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>Team members</h2>
                 <button onClick={() => toast.info('Invite member modal coming soon')} className="btn-primary px-4 py-2 flex items-center gap-2">
                   <UserPlus className="w-4 h-4" />
                   Invite Member

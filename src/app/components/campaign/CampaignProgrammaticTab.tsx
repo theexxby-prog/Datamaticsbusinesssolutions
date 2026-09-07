@@ -98,7 +98,7 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
                   {stat.value}
                 </div>
                 <div className="text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{stat.label}</div>
-                <div className="text-[10px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{stat.foot}</div>
+                <div className="text-[11px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{stat.foot}</div>
               </div>
             );
           })}
@@ -110,8 +110,8 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
         <ResponsiveContainer width="100%" height={isMobile ? 180 : 220}>
           <BarChart data={frequency} margin={{ top: 6, right: 6, left: -18, bottom: 0 }}>
             <CartesianGrid strokeDasharray="0" stroke="rgba(120,140,170,0.18)" vertical={false} />
-            <XAxis dataKey="band" stroke="none" tickLine={false} tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
-            <YAxis stroke="none" tickLine={false} tick={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} />
+            <XAxis dataKey="band" stroke="none" tickLine={false} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
+            <YAxis stroke="none" tickLine={false} tick={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} />
             <Tooltip contentStyle={TOOLTIP_STYLE} formatter={(v: number) => [`${v} accounts`, 'Accounts']} />
             <Bar dataKey="accounts" radius={[3, 3, 0, 0]}>
               {frequency.map(f => (
@@ -120,7 +120,7 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-        <p className="mt-1 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="mt-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
           Engagement peaks between 7 and 12 impressions per account, where {sweetSpot?.accounts ?? 0} accounts currently
           sit. Below that they don't remember you; above it, returns flatten.
         </p>
@@ -158,7 +158,7 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
                     }}
                   />
                 </div>
-                <div className="mt-1 text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                <div className="mt-1 text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
                   {band.percentage}% of reached accounts
                 </div>
               </div>
@@ -177,10 +177,10 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
           Channel performance
         </h3>
         <div className="scroll-shadows overflow-x-auto">
-          <table className="w-full min-w-[420px] text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+          <table className="w-full min-w-[420px] text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
             <thead>
               <tr
-                className="text-left text-[10.5px] font-bold uppercase tracking-[0.06em]"
+                className="text-left text-xs font-semibold"
                 style={{ color: 'var(--color-text-muted)' }}
               >
                 <th className="py-1.5 pr-3 font-bold">Channel</th>
@@ -230,20 +230,20 @@ export function CampaignProgrammaticTab({ abmCampaignId, opsView = false }: Camp
                 data-testid="creative-card"
               >
                 <div className="flex items-baseline justify-between gap-2">
-                  <span className="text-[10.5px] font-bold uppercase tracking-[0.06em]" style={{ color: 'var(--color-text-muted)' }}>
+                  <span className="text-[11px] font-bold uppercase tracking-[0.06em]" style={{ color: 'var(--color-text-muted)' }}>
                     {creative.channel}
                   </span>
                   <span
-                    className="text-[14px] font-extrabold"
+                    className="text-sm font-extrabold"
                     style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
                   >
                     {creative.ctr}%
                   </span>
                 </div>
-                <div className="mt-0.5 truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                <div className="mt-0.5 truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                   {creative.name}
                 </div>
-                <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
                   {creative.format} · {creative.clicks.toLocaleString('en-US')} clicks from{' '}
                   {creative.impressions.toLocaleString('en-US')} impressions
                   {creative.costPerClick !== undefined && ` · $${creative.costPerClick.toFixed(2)} per click`}
@@ -304,16 +304,16 @@ function AdToLeadFunnel({ abmCampaignId }: { abmCampaignId: string }) {
               className="rounded-xl border px-3.5 py-2"
               style={{ borderColor: 'var(--color-border)', background: i === steps.length - 1 ? 'var(--color-primary-tint)' : 'var(--background-muted)' }}
             >
-              <div className="text-[16px] font-extrabold leading-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
+              <div className="text-base font-extrabold leading-tight" style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}>
                 {step.value.toLocaleString('en-US')}
               </div>
               <div className="text-[11px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{step.label}</div>
-              <div className="text-[10px]" style={{ color: 'var(--color-text-muted)' }}>{step.sub}</div>
+              <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{step.sub}</div>
             </div>
           </div>
         ))}
       </div>
-      <p className="mt-2 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+      <p className="mt-2 text-xs" style={{ color: 'var(--color-text-muted)' }}>
         Ad engagement is never billed directly — it fills the top of the funnel, syndication converts it,
         and the client pays only for leads that come out the far end.
       </p>
@@ -336,14 +336,14 @@ function CohortBreakdown({ abmCampaignId }: { abmCampaignId: string }) {
         <Layers className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
         Delivery by cohort
       </h3>
-      <p className="mt-1 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+      <p className="mt-1 text-xs" style={{ color: 'var(--color-text-muted)' }}>
         Propensity runs a campaign as waves and reports each separately, keyed by name. One campaign,
         cohorts roll up — the client sees the total only.
       </p>
       <div className="mt-2.5 overflow-x-auto">
-        <table className="w-full min-w-[440px] text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <table className="w-full min-w-[440px] text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
           <thead>
-            <tr className="text-left text-[10.5px] font-bold uppercase tracking-[0.06em]" style={{ color: 'var(--color-text-muted)' }}>
+            <tr className="text-left text-xs font-semibold" style={{ color: 'var(--color-text-muted)' }}>
               <th className="py-1.5 pr-3 font-bold">Cohort</th>
               <th className="py-1.5 pr-3 font-bold">Started</th>
               <th className="py-1.5 pr-3 text-right font-bold">Impressions</th>

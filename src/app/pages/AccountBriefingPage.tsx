@@ -68,10 +68,10 @@ export default function AccountBriefingPage() {
 
       {/* Header: name, one inline fact line, the summary once */}
       <div>
-        <h1 className="text-[26px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+        <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
           {account.name}
         </h1>
-        <p className="mt-1 text-[12.5px]" style={{ color: 'var(--color-text-muted)' }}>
+        <p className="mt-1 text-[13px]" style={{ color: 'var(--color-text-muted)' }}>
           {accountFactLine(account)}
         </p>
         <p className="mt-2 max-w-[70ch] text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>
@@ -89,7 +89,7 @@ export default function AccountBriefingPage() {
                 <div className="text-2xl font-extrabold leading-none" style={{ color: 'var(--color-primary)', fontVariantNumeric: 'tabular-nums' }}>
                   {insight.readiness}
                 </div>
-                <div className="text-[10px] font-semibold uppercase" style={{ color: 'var(--color-text-muted)' }}>Readiness</div>
+                <div className="text-[11px] font-semibold uppercase" style={{ color: 'var(--color-text-muted)' }}>Readiness</div>
               </div>
               <p className="text-[13px] leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{insight.readinessNote}</p>
             </div>
@@ -109,7 +109,7 @@ export default function AccountBriefingPage() {
                 style={{ borderColor: 'var(--color-border-light)' }}
               >
                 <span
-                  className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[12px] font-extrabold text-white"
+                  className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-extrabold text-white"
                   style={{ background: 'var(--color-primary-solid)' }}
                 >
                   {index + 1}
@@ -117,9 +117,9 @@ export default function AccountBriefingPage() {
                 <span className="min-w-0">
                   <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
                     <span className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>{contact.name}</span>
-                    <span className="text-[12px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{contact.title}</span>
+                    <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{contact.title}</span>
                     <span
-                      className="rounded-full border px-2 py-0.5 text-[10.5px] font-bold"
+                      className="rounded-full border px-2 py-0.5 text-[11px] font-bold"
                       style={{ borderColor: 'var(--color-border)', color: ROLE_META[contact.roleClass].color }}
                     >
                       {ROLE_META[contact.roleClass].label}
@@ -160,9 +160,9 @@ function EngagedColleagues({ slug }: { slug: string }) {
             style={{ borderColor: 'var(--color-border-light)' }}
           >
             <span className="text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>{person.name}</span>
-            <span className="text-[12px] font-medium" style={{ color: 'var(--color-text-muted)' }}>{person.title}</span>
+            <span className="text-xs font-medium" style={{ color: 'var(--color-text-muted)' }}>{person.title}</span>
             <span
-              className="rounded-full px-2 py-0.5 text-[10.5px] font-bold uppercase"
+              className="rounded-full px-2 py-0.5 text-[11px] font-bold"
               style={{
                 background: person.warmth === 'hot' ? 'var(--color-error-bg)' : 'var(--color-warning-bg)',
                 color: person.warmth === 'hot' ? 'var(--color-error)' : 'var(--color-warning)',
@@ -170,11 +170,11 @@ function EngagedColleagues({ slug }: { slug: string }) {
             >
               {person.warmth}
             </span>
-            <span className="ml-auto text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>{person.activity}</span>
+            <span className="ml-auto text-xs" style={{ color: 'var(--color-text-secondary)' }}>{person.activity}</span>
           </div>
         ))}
       </div>
-      <p className="mt-2.5 text-[11.5px] leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
+      <p className="mt-2.5 text-xs leading-relaxed" style={{ color: 'var(--color-text-muted)' }}>
         Reached by the ad campaign and matched to this account by company domain. They aren't in your
         lead count — an ad hit isn't a lead. Engaged people flow into the syndication outreach, and
         only a positive response there becomes a lead you pay for; until then, a colleague's activity

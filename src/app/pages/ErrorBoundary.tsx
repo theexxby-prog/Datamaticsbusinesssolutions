@@ -24,7 +24,7 @@ export default function ErrorBoundary() {
           className="btn-primary w-full flex items-center justify-center gap-2"
         >
           <Home className="w-4 h-4" />
-          Return to Home
+          Return to dashboard
         </a>
 
         {error?.status === 404 && (

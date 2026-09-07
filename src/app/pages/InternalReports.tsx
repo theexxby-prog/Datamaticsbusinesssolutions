@@ -404,7 +404,7 @@ export default function InternalReports() {
                   verticalAlign="bottom"
                   align="center"
                   iconType="circle"
-                  wrapperStyle={{ fontSize: '10px', paddingTop: '8px' }}
+                  wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -440,7 +440,7 @@ export default function InternalReports() {
                   verticalAlign="bottom"
                   align="center"
                   iconType="circle"
-                  wrapperStyle={{ fontSize: '10px', paddingTop: '8px' }}
+                  wrapperStyle={{ fontSize: '11px', paddingTop: '8px' }}
                 />
               </PieChart>
             </ResponsiveContainer>
@@ -496,7 +496,7 @@ export default function InternalReports() {
             <table className="w-full min-w-[600px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
-                  {['Team Member', 'Leads Delivered', 'Acceptance Rate', 'Clients', 'Performance'].map((header) => (
+                  {['Team member', 'Leads delivered', 'Acceptance rate', 'Clients', 'Performance'].map((header) => (
                     <th
                       key={header}
                       className="text-left px-6 py-3"
@@ -504,8 +504,6 @@ export default function InternalReports() {
                         fontSize: 'var(--font-size-xs)',
                         fontWeight: 'var(--font-weight-semibold)',
                         color: 'var(--color-text-secondary)',
-                        textTransform: 'uppercase',
-                        letterSpacing: 'var(--letter-spacing-wide)',
                       }}
                     >
                       {header}

@@ -173,7 +173,7 @@ export default function Support() {
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
             <div className="flex items-center gap-3 mb-2">
-              <h1 style={{ color: 'var(--color-text-primary)' }}>Support Tickets</h1>
+              <h1 style={{ color: 'var(--color-text-primary)' }}>Support tickets</h1>
             </div>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
               Get help with your campaigns and account
@@ -184,7 +184,7 @@ export default function Support() {
             className="btn-primary px-4 py-2 flex items-center gap-2"
           >
             <Plus className="w-4 h-4" />
-            New Ticket
+            New ticket
           </button>
         </div>
 
@@ -242,7 +242,7 @@ export default function Support() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="input-base w-full px-4 py-3"
             >
-              <option value="All">All Status</option>
+              <option value="All">All statuses</option>
               <option value="Open">Open</option>
               <option value="In Progress">In Progress</option>
               <option value="Waiting">Waiting</option>
@@ -257,7 +257,7 @@ export default function Support() {
               onChange={(e) => setPriorityFilter(e.target.value)}
               className="input-base w-full px-4 py-3"
             >
-              <option value="All">All Priority</option>
+              <option value="All">All priorities</option>
               <option value="Urgent">Urgent</option>
               <option value="High">High</option>
               <option value="Medium">Medium</option>
@@ -273,22 +273,22 @@ export default function Support() {
             <table className="w-full min-w-[900px]">
               <thead style={{ background: 'var(--color-border-light)', borderBottom: '1px solid var(--color-border)' }}>
                 <tr>
-                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
                     Ticket
                   </th>
-                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
                     Category
                   </th>
-                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
                     Priority
                   </th>
-                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
                     Status
                   </th>
-                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
-                    Last Updated
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
+                    Last updated
                   </th>
-                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}>
+                  <th className="text-left px-6 py-3" style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}>
                     Actions
                   </th>
                 </tr>
@@ -499,7 +499,7 @@ export default function Support() {
                 onClick={handleSubmitTicket}
                 className="btn-primary px-4 py-2 flex-1"
               >
-                Submit Ticket
+                Submit ticket
               </button>
             </div>
           </motion.div>

@@ -39,13 +39,13 @@ export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }
           <div key={t.label} className="glass-card flex flex-col p-3.5">
             <t.Icon className="mb-1 h-4 w-4" style={{ color: 'var(--color-text-muted)' }} />
             <div
-              className="text-[20px] font-extrabold leading-tight"
+              className="text-xl font-extrabold leading-tight"
               style={{ color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
             >
               {t.value}
             </div>
-            <div className="text-[11.5px] font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
-            <div className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
+            <div className="text-xs font-semibold" style={{ color: 'var(--color-text-secondary)' }}>{t.label}</div>
+            <div className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{t.sub}</div>
           </div>
         ))}
       </div>
@@ -65,7 +65,7 @@ export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }
         <div className="space-y-2.5">
           {centre.seniority.map((band, i) => (
             <div key={band.name} className="flex items-center gap-3">
-              <span className="flex-shrink-0 truncate text-[12px]" style={{ width: 104, color: 'var(--color-text-secondary)' }}>
+              <span className="flex-shrink-0 truncate text-xs" style={{ width: 104, color: 'var(--color-text-secondary)' }}>
                 {band.name}
               </span>
               <div className="h-2.5 flex-1 overflow-hidden rounded-full" style={{ background: 'var(--background-muted)' }}>
@@ -78,7 +78,7 @@ export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }
                 />
               </div>
               <span
-                className="flex-shrink-0 text-right text-[12px] font-semibold"
+                className="flex-shrink-0 text-right text-xs font-semibold"
                 style={{ width: 40, color: 'var(--color-text-primary)', fontVariantNumeric: 'tabular-nums' }}
               >
                 {band.percentage}%
@@ -111,10 +111,10 @@ export function CampaignAudienceTab({ abmCampaignId }: { abmCampaignId: string }
                 style={{ borderColor: 'var(--color-border-light)' }}
               >
                 <div className="min-w-0 flex-1">
-                  <div className="truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                  <div className="truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                     {company.name}
                   </div>
-                  <div className="truncate text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                  <div className="truncate text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
                     {company.industry}
                   </div>
                 </div>

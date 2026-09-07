@@ -181,7 +181,7 @@ export default function ReportsPage() {
               }}
             >
               <BarChart3 className="w-4 h-4" style={{ color: 'var(--color-primary)' }} />
-              Billing Trend
+              Billing trend
             </h3>
             <div
               className="flex items-center gap-4"
@@ -205,9 +205,9 @@ export default function ReportsPage() {
           <ResponsiveContainer width="100%" height={chartH}>
             <BarChart data={billableTrend} barGap={3} barCategoryGap="22%">
               <CartesianGrid strokeDasharray="0" stroke="var(--chart-grid)" vertical={false} />
-              <XAxis dataKey="label" style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} />
+              <XAxis dataKey="label" style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }} stroke="none" tickLine={false} />
               <YAxis
-                style={{ fontSize: 10, fill: 'var(--color-text-secondary)' }}
+                style={{ fontSize: 11, fill: 'var(--color-text-secondary)' }}
                 stroke="none"
                 tickLine={false}
                 width={44}
@@ -300,7 +300,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.totalLeads.toLocaleString()}</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Total Leads</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: leadDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{leadDelta >= 0 ? '▲' : '▼'} {Math.abs(leadDelta)}% vs last mo</div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: leadDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{leadDelta >= 0 ? '▲' : '▼'} {Math.abs(leadDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -309,7 +309,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.acceptance}%</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Acceptance</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: acceptanceDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{acceptanceDelta >= 0 ? '▲' : '▼'} {Math.abs(acceptanceDelta)} pts</div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: acceptanceDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{acceptanceDelta >= 0 ? '▲' : '▼'} {Math.abs(acceptanceDelta)} pts</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -318,7 +318,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>{currentMetrics.conversions}</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Conversions</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: convDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{convDelta >= 0 ? '▲' : '▼'} {Math.abs(convDelta)}% vs last mo</div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: convDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{convDelta >= 0 ? '▲' : '▼'} {Math.abs(convDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -327,7 +327,7 @@ export default function ReportsPage() {
             </div>
             <div className="kpi-card__number" style={{ fontSize: '20px', marginBottom: '2px' }}>${(currentMetrics.revenue / 1000).toFixed(0)}K</div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Billable</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: revDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{revDelta >= 0 ? '▲' : '▼'} {Math.abs(revDelta)}% vs last mo</div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: revDelta >= 0 ? 'var(--color-success)' : 'var(--color-error)' }}>{revDelta >= 0 ? '▲' : '▼'} {Math.abs(revDelta)}% vs last mo</div>
           </div>
 
           <div className="kpi-card animate-slideInUp" style={{ padding: '12px' }}>
@@ -338,7 +338,7 @@ export default function ReportsPage() {
               {activeCampaigns}<span style={{ fontSize: '12px', fontWeight: 600, color: 'var(--color-text-secondary)' }}> active</span>
             </div>
             <div className="kpi-card__label" style={{ fontSize: '11px' }}>Campaigns</div>
-            <div style={{ fontSize: '10px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{completedCount} completed</div>
+            <div style={{ fontSize: '11px', fontWeight: 600, color: 'var(--color-text-secondary)' }}>{completedCount} completed</div>
           </div>
         </div>
         </Reveal>
@@ -432,7 +432,7 @@ export default function ReportsPage() {
         <Reveal>
         <div className="mt-4">
           <h2 style={{ color: 'var(--color-text-primary)', fontSize: 'var(--font-size-base)', fontWeight: 'var(--font-weight-semibold)' }} className="mb-3">
-            Lead Demographics
+            Lead demographics
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Chips are decorative dimension markers, so they walk the categorical

@@ -107,10 +107,10 @@ function navForRole(role: UserRole | undefined, showFuture = false, unionOps = f
       // (it exists to align contacts and data to a campaign) and lives as the
       // primary button on the Pipeline header instead.
       { name: 'Pipeline', icon: LayoutDashboard, path: '/ops-union', section: 'PLATFORM' },
-      { name: 'Data Intake', icon: Upload, path: '/ops-union/intake', section: 'PLATFORM', primary: true },
+      { name: 'Data intake', icon: Upload, path: '/ops-union/intake', section: 'PLATFORM', primary: true },
       // Cross-campaign, so it can't live in a campaign's tabs. Ops needs the
       // same ranking the client sees to brief them on it.
-      { name: 'Priority Accounts', icon: Flame, path: '/priority-accounts', section: 'PLATFORM' },
+      { name: 'Priority accounts', icon: Flame, path: '/priority-accounts', section: 'PLATFORM' },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
     ];
   }
@@ -120,11 +120,11 @@ function navForRole(role: UserRole | undefined, showFuture = false, unionOps = f
     // Admin Management, Metrics Override, Lead Demographics + the Phase 2 modules.
     return [
       { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard/ops', section: 'PLATFORM' },
-      { name: 'All Campaigns', icon: Layers, path: '/internal/campaigns', section: 'PLATFORM', badgeKey: 'activeCampaigns' },
-      { name: 'Admin Management', icon: UsersRound, path: '/internal/admin', section: 'PLATFORM' },
-      { name: 'Metrics Override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
-      { name: 'Lead Demographics', icon: Globe, path: '/internal/demographics', section: 'PLATFORM' },
-      { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
+      { name: 'All campaigns', icon: Layers, path: '/internal/campaigns', section: 'PLATFORM', badgeKey: 'activeCampaigns' },
+      { name: 'Admin management', icon: UsersRound, path: '/internal/admin', section: 'PLATFORM' },
+      { name: 'Metrics override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
+      { name: 'Lead demographics', icon: Globe, path: '/internal/demographics', section: 'PLATFORM' },
+      { name: 'Job cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
       { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'PLATFORM' },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
     ];
@@ -135,11 +135,11 @@ function navForRole(role: UserRole | undefined, showFuture = false, unionOps = f
       { name: 'Dashboard', icon: LayoutDashboard, path: '/dashboard/manager', section: 'PLATFORM' },
       { name: 'Campaigns', icon: BarChart2, path: '/internal/campaigns', section: 'PLATFORM', badgeKey: 'activeCampaigns' },
       { name: 'Approvals', icon: ClipboardCheck, path: '/internal/approvals', section: 'PLATFORM', badgeKey: 'pendingApprovals' },
-      { name: 'Upload Leads', icon: Upload, path: '/internal/leads', section: 'PLATFORM', badgeKey: 'processingUploads', primary: true },
+      { name: 'Upload leads', icon: Upload, path: '/internal/leads', section: 'PLATFORM', badgeKey: 'processingUploads', primary: true },
       { name: 'Reports', icon: FileBarChart, path: '/internal/reports', section: 'PLATFORM' },
-      { name: 'Metrics Override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
-      { name: 'Lead Demographics', icon: Globe, path: '/internal/demographics', section: 'PLATFORM' },
-      { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
+      { name: 'Metrics override', icon: BarChart2, path: '/internal/ops-override', section: 'PLATFORM' },
+      { name: 'Lead demographics', icon: Globe, path: '/internal/demographics', section: 'PLATFORM' },
+      { name: 'Job cards', icon: FolderOpen, path: '/documents', section: 'ORGANIZATION' },
       { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'ORGANIZATION' },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
       { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
@@ -148,7 +148,7 @@ function navForRole(role: UserRole | undefined, showFuture = false, unionOps = f
 
   if (role === 'account_manager') {
     return [
-      { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
+      { name: 'Job cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
       { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'PLATFORM' },
       { name: 'Campaigns', icon: BarChart2, path: '/internal/campaigns', section: 'PLATFORM' },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
@@ -159,7 +159,7 @@ function navForRole(role: UserRole | undefined, showFuture = false, unionOps = f
   if (role === 'accounts') {
     return [
       { name: 'Invoices', icon: Receipt, path: '/invoices', section: 'PLATFORM' },
-      { name: 'Job Cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
+      { name: 'Job cards', icon: FolderOpen, path: '/documents', section: 'PLATFORM' },
       { name: 'Settings', icon: Settings, path: '/account', section: 'ORGANIZATION' },
       { name: 'Feedback', icon: MessageSquare, path: '/feedback', section: 'ORGANIZATION' },
     ];
@@ -178,7 +178,7 @@ function navForRole(role: UserRole | undefined, showFuture = false, unionOps = f
     // Ranked off the enrichment preview, so it appears for the UNION persona
     // only — the same gate the account briefings behind it already sit behind.
     ...(showFuture
-      ? [{ name: 'Priority Accounts', icon: Flame, path: '/priority-accounts', section: 'PLATFORM' as const }]
+      ? [{ name: 'Priority accounts', icon: Flame, path: '/priority-accounts', section: 'PLATFORM' as const }]
       : []),
     { name: 'Reports', icon: FileBarChart, path: '/reports', section: 'PLATFORM' },
     ...(hideInvoicesDocs

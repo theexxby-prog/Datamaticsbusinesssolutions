@@ -63,7 +63,7 @@ export function MobileAppBar() {
         <h1
           className="min-w-0 flex-1 truncate"
           style={{
-            fontSize: '17px',
+            fontSize: '16px',
             fontWeight: 700,
             letterSpacing: '-0.01em',
             color: 'var(--color-text-primary)',
@@ -85,7 +85,7 @@ export function MobileAppBar() {
               {unreadCount > 0 && (
                 <span
                   className="absolute right-1 top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full px-1 text-white"
-                  style={{ background: 'var(--color-primary-solid)', fontSize: '10px', fontWeight: 700 }}
+                  style={{ background: 'var(--color-primary-solid)', fontSize: '11px', fontWeight: 700 }}
                 >
                   {unreadCount > 9 ? '9+' : unreadCount}
                 </span>

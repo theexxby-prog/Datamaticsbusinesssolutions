@@ -50,15 +50,15 @@ export function ConnectionsPanel({ campaignId, campaignName, pulseId }: Connecti
         {link ? (
           <div className="mt-1.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
             <Check className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-success)' }} />
-            <span className="text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>{link.propensityName}</span>
-            <span className="font-mono text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>{link.propensityId}</span>
+            <span className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>{link.propensityName}</span>
+            <span className="font-mono text-[11px]" style={{ color: 'var(--color-text-muted)' }}>{link.propensityId}</span>
             <span className="basis-full text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
               {link.label} · joined by their id — renames on either side can't break it
             </span>
           </div>
         ) : (
           <div className="mt-1.5 space-y-1.5">
-            <p className="text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
               Not linked — pick the matching ad campaign from the client's Propensity account:
             </p>
             {candidates.map(c => (
@@ -70,24 +70,24 @@ export function ConnectionsPanel({ campaignId, campaignName, pulseId }: Connecti
                   background: c.auto || c.suggested ? 'var(--color-info-bg)' : 'transparent',
                 }}
               >
-                <span className="min-w-0 flex-1 truncate text-[12.5px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
+                <span className="min-w-0 flex-1 truncate text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                   {c.name}
                 </span>
                 {(c.auto || c.suggested) && (
-                  <span className="flex items-center gap-1 text-[10.5px] font-bold" style={{ color: 'var(--color-info)' }}>
+                  <span className="flex items-center gap-1 text-[11px] font-bold" style={{ color: 'var(--color-info)' }}>
                     <Sparkles className="h-3 w-3" /> {c.auto ? 'Name carries the ID' : 'Suggested match'}
                   </span>
                 )}
                 <button
                   onClick={() => doLink(c)}
-                  className="btn-outline flex-shrink-0 px-2.5 py-1 text-[11.5px] font-semibold"
+                  className="btn-outline flex-shrink-0 px-2.5 py-1 text-xs font-semibold"
                   data-testid={`link-${c.id}`}
                 >
                   Link
                 </button>
               </div>
             ))}
-            <p className="text-[10.5px]" style={{ color: 'var(--color-text-muted)' }}>
+            <p className="text-[11px]" style={{ color: 'var(--color-text-muted)' }}>
               A name starting with the Pulse ID links automatically; near-misses are suggested; nothing links on a guess.
             </p>
           </div>
@@ -95,7 +95,7 @@ export function ConnectionsPanel({ campaignId, campaignName, pulseId }: Connecti
       </div>
 
       {/* Convertr + Relish — stated, so the asymmetry is visible */}
-      <div className="mt-3 border-t pt-2.5 text-[11.5px]" style={{ borderColor: 'var(--color-border-light)', color: 'var(--color-text-muted)' }}>
+      <div className="mt-3 border-t pt-2.5 text-xs" style={{ borderColor: 'var(--color-border-light)', color: 'var(--color-text-muted)' }}>
         <b style={{ color: 'var(--color-text-secondary)' }}>Convertr</b> — not used for this client; delivered counts entered by ops.{' '}
         <b style={{ color: 'var(--color-text-secondary)' }}>Relish</b> — no link needed; batches carry the Pulse campaign ID from birth.
       </div>

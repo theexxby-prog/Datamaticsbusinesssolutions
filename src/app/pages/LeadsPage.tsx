@@ -4,8 +4,8 @@ import { TableRow } from '../components/TableRow';
 import {
   Search, Filter, Download, Mail, Phone, Building2, CheckCircle, XCircle,
   Clock, FileText, UserCheck, MoreVertical, Star, Tag, Plus,
-  TrendingUp, Users, Target, Award, Activity, Eye, X,
-  ThumbsUp, ThumbsDown, Shield,
+  Users, Target, Activity, Eye, X,
+  ThumbsUp, ThumbsDown,
 } from 'lucide-react';
 import { mockLeads, type Lead } from '../mockData';
 import { LeadDetailDrawer } from '../components/LeadDetailDrawer';
@@ -14,10 +14,9 @@ import { LeadAvatar } from '../components/LeadAvatar';
 import { LeadDistributionChart } from '../components/LeadDistributionChart';
 import { AdvancedFiltersPanel } from '../components/AdvancedFiltersPanel';
 import { UnifiedKpiCard } from '../components/UnifiedKpiCard';
-import { AnimatedCounter } from '../components/AnimatedCounter';
 import { EmptyState } from '../components/EmptyState';
 import { TableSkeleton } from '../components/SkeletonLoader';
-import { ConvertrQAStats } from '../components/ConvertrQAStatus';
+import { LeadSummaryStrip } from '../components/LeadSummaryStrip';
 import { exportLeadsToCSV } from '../utils/exportUtils';
 import { allClients } from '../data/mockClients';
 import { showFutureModules } from '../config/demo';
@@ -54,7 +53,6 @@ function StandardLeadsPage() {
   const [viewMode, setViewMode] = useState<ViewMode>('table');
   const [showFiltersPanel, setShowFiltersPanel] = useState(false);
   const [starred, setStarred] = useState<string[]>([]);
-  const [showAlert, setShowAlert] = useState(true);
   const [rejectingLeadId, setRejectingLeadId] = useState<string | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
   
@@ -281,90 +279,31 @@ function StandardLeadsPage() {
   return (
     <>
       <div className="max-w-[1440px] mx-auto page-content animate-fadeIn">
-        {/* Header with Stats */}
-        <div className="mb-4 md:mb-6">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 md:mb-6 gap-4">
-            <div>
-              <div className="flex items-center gap-3 mb-2">
-                <h1 style={{ color: 'var(--color-text-primary)' }}>Lead Management</h1>
-              </div>
-              <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
-                {stats.total} leads • {stats.pending} pending review • {stats.hotLeads} hot leads
-              </p>
-            </div>
-            <button
-              onClick={handleExportLeads}
-              className="btn-primary px-4 py-2.5 flex items-center justify-center gap-2"
-            >
-              <Download className="w-4 h-4" />
-              Export Leads (CSV)
-            </button>
+        <div className="mb-5 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <h1 style={{ color: 'var(--color-text-primary)' }}>Leads</h1>
+            <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
+              {isConvertr
+                ? 'Every lead delivered to your campaigns, validated automatically before it reaches you.'
+                : 'Every lead delivered to your campaigns, ready for your review.'}
+            </p>
           </div>
-
-          {/* Automated QA results (only for automated-delivery clients) */}
-          {isConvertr && (
-            <div className="mb-6">
-              <ConvertrQAStats {...convertrQAStats} />
-            </div>
-          )}
-
-          {/* Quick Stats Cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6 stagger-children">
-            {[
-              { icon: <Users className="w-5 h-5" style={{ color: 'var(--color-info)' }} />, bg: 'var(--color-info-bg)', value: stats.total, label: 'Total Leads' },
-              { icon: <Clock className="w-5 h-5" style={{ color: 'var(--color-warning)' }} />, bg: 'var(--color-warning-bg)', value: stats.pending, label: 'Pending' },
-              { icon: <TrendingUp className="w-5 h-5" style={{ color: 'var(--color-primary)' }} />, bg: 'var(--color-primary-tint)', value: stats.hotLeads, label: 'Hot Leads' },
-              { icon: <CheckCircle className="w-5 h-5" style={{ color: 'var(--color-success)' }} />, bg: 'var(--color-success-bg)', value: stats.accepted, label: 'Accepted' },
-              { icon: <Award className="w-5 h-5 text-purple-600" />, bg: 'rgba(142,68,173,0.1)', value: stats.avgScore, label: 'Avg Score' },
-            ].map(({ icon, bg, value, label }) => (
-              <div key={label} className="kpi-card kpi-card--flat animate-slideInUp">
-                <div className="kpi-card__icon w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: bg }}>
-                  {icon}
-                </div>
-                <div>
-                  <div className="kpi-card__number"><AnimatedCounter value={value} /></div>
-                  <div className="kpi-card__label">{label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={handleExportLeads}
+            className="btn-primary px-4 py-2.5 flex items-center justify-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
         </div>
 
-        {/* Highlight callout — count is derived from the table so the two can
-            never disagree on screen. */}
-        {showAlert && stats.hotLeads > 0 && (
-          <div
-            className="mb-5 p-3 rounded-xl border flex items-center justify-between gap-4 animate-slideInUp"
-            style={{
-              backgroundColor: 'var(--color-success-bg)',
-              borderColor: 'var(--color-success)',
-            }}
-          >
-            <div className="flex items-center gap-3 flex-1">
-              <div className="flex-shrink-0 p-2 rounded-lg" style={{ backgroundColor: 'var(--color-success-bg)' }}>
-                <TrendingUp className="w-5 h-5" style={{ color: 'var(--color-success)' }} />
-              </div>
-              <p className="text-sm font-medium" style={{ color: 'var(--color-success)' }}>
-                {stats.hotLeads} hot leads scored 90+ this week.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
-              <button
-                onClick={() => setSortField('leadScore')}
-                className="btn-primary px-4 py-2 text-sm"
-              >
-                View Leads
-              </button>
-              <button
-                onClick={() => setShowAlert(false)}
-                className="btn-ghost p-2"
-                aria-label="Dismiss"
-              >
-                <X className="w-4 h-4" style={{ color: 'var(--color-success)' }} />
-              </button>
-            </div>
-          </div>
-        )}
+        {/* One strip in place of the QA card, five KPI tiles and the hot-leads
+            banner, so the table starts in the first fold. */}
+        <LeadSummaryStrip
+          stats={stats}
+          qa={isConvertr ? convertrQAStats : undefined}
+          onShowHot={() => { setSortField('leadScore'); setSortDirection('desc'); }}
+        />
 
         {/* Filter Row */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-5">
@@ -385,7 +324,7 @@ function StandardLeadsPage() {
               onChange={(e) => setStatusFilter(e.target.value)}
               className="input-base w-full h-[42px] px-4"
             >
-              <option value="all">All Status</option>
+              <option value="all">All statuses</option>
               <option value="Pending Review">Pending Review</option>
               <option value="Accepted">Accepted</option>
               <option value="Contacted">Contacted</option>
@@ -399,7 +338,7 @@ function StandardLeadsPage() {
               onChange={(e) => setCampaignFilter(e.target.value)}
               className="input-base w-full h-[42px] px-4"
             >
-              <option value="all">All Campaigns</option>
+              <option value="all">All campaigns</option>
               {uniqueCampaigns.map(campaignId => {
                 const lead = leads.find(l => l.campaignId === campaignId);
                 return (
@@ -448,7 +387,7 @@ function StandardLeadsPage() {
                         }}
                       />
                     </th>
-                    <th className="table-th">Lead Info</th>
+                    <th className="table-th">Lead info</th>
                     <th className="table-th">Contact</th>
                     <th className="table-th">Company</th>
                     <th className="table-th cursor-pointer hover:text-[var(--color-primary)] transition-colors" onClick={() => handleSort('leadScore')}>Score</th>
@@ -858,7 +797,7 @@ function StandardLeadsPage() {
                   style={{ borderColor: 'var(--color-success)', color: 'var(--color-success)' }}
                 >
                   <ThumbsUp className="w-4 h-4" />
-                  Accept All
+                  Accept all
                 </button>
                 <button 
                   onClick={handleBulkReject}
@@ -866,7 +805,7 @@ function StandardLeadsPage() {
                   style={{ borderColor: 'var(--color-error)', color: 'var(--color-error)' }}
                 >
                   <ThumbsDown className="w-4 h-4" />
-                  Reject All
+                  Reject all
                 </button>
               </>
             )}

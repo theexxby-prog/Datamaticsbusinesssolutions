@@ -53,7 +53,7 @@ export function CommitteeStrip({
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-bold" style={{ color: 'var(--color-text-primary)' }}>
                   {member.name}
-                  {isCurrent && <span className="ml-2 text-[10px] font-semibold uppercase" style={{ color: 'var(--color-primary)' }}>viewing</span>}
+                  {isCurrent && <span className="ml-2 text-[11px] font-semibold" style={{ color: 'var(--color-primary)' }}>Viewing</span>}
                 </span>
                 <span className="block truncate text-xs" style={{ color: 'var(--color-text-muted)' }}>{member.title}</span>
               </span>

@@ -19,7 +19,7 @@ export function AccountTeam({ manager, backup }: AccountTeamProps) {
   return (
     <div className="space-y-4">
       <h3 className="font-semibold text-[var(--color-text-primary)]">
-        My Account Team
+        My account team
       </h3>
       <p className="text-sm text-[var(--color-text-secondary)]">
         Your dedicated team is here to support your success
@@ -71,7 +71,7 @@ function TeamMemberCard({ member }: { member: AccountTeamMember }) {
         whileTap={{ scale: 0.98 }}
       >
         <MessageCircle className="w-4 h-4" />
-        Send Message
+        Send message
       </motion.button>
     </motion.div>
   );

@@ -51,7 +51,7 @@ export function ReplacementTracker({ totalRejected, totalReplaced, remaining }: 
         </div>
         <div>
           <div style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }}>
-            Lead Replacements
+            Lead replacements
           </div>
           <div style={{ fontSize: 'var(--font-size-xs)', color: 'var(--color-text-muted)' }}>
             {remaining > 0 ? `${remaining} replacements still owed` : 'All replacements delivered'}

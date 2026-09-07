@@ -388,7 +388,7 @@ export default function LeadUploadDashboard() {
           <div className="px-6 py-4 border-b" style={{ borderColor: 'var(--color-border)' }}>
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <h2 style={{ fontSize: 'var(--font-size-xl)', fontWeight: 'var(--font-weight-bold)', color: 'var(--color-text-primary)' }}>
-                Recent Uploads
+                Recent uploads
               </h2>
               <div className="flex items-center gap-3">
                 <div className="relative flex-1 md:flex-initial md:w-64">
@@ -408,7 +408,7 @@ export default function LeadUploadDashboard() {
                   className="input-base px-3 py-2"
                   style={{ fontSize: 'var(--font-size-sm)' }}
                 >
-                  <option value="all">All Status</option>
+                  <option value="all">All statuses</option>
                   <option value="processing">Processing</option>
                   <option value="pending">Pending</option>
                   <option value="completed">Completed</option>
@@ -433,49 +433,49 @@ export default function LeadUploadDashboard() {
                 <tr>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
-                    File Name
+                    File name
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Client / Campaign
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Progress
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Success / Errors
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Status
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
-                    Uploaded By
+                    Uploaded by
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Time
                   </th>
                   <th
                     className="text-left px-6 py-3"
-                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)', textTransform: 'uppercase', letterSpacing: 'var(--letter-spacing-wide)' }}
+                    style={{ fontSize: 'var(--font-size-xs)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-secondary)' }}
                   >
                     Actions
                   </th>

@@ -72,7 +72,7 @@ export default function Payment() {
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between mb-4 gap-4">
           <div>
-            <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Payment Methods</h1>
+            <h1 style={{ color: 'var(--color-text-primary)' }} className="mb-2">Payment methods</h1>
             <p style={{ fontSize: 'var(--font-size-sm)', color: 'var(--color-text-secondary)' }}>
               Manage your payment methods and billing information
             </p>
@@ -95,7 +95,7 @@ export default function Payment() {
               </div>
             </div>
             <div className="kpi-card__number"><AnimatedCounter value={paymentMethods.length} /></div>
-            <div className="kpi-card__label">Payment Methods</div>
+            <div className="kpi-card__label">Payment methods</div>
           </div>
 
           <div className="kpi-card animate-slideInUp">
@@ -201,13 +201,13 @@ export default function Payment() {
         {/* Billing Address */}
         <div className="glass-card p-5">
           <h2 style={{ fontSize: 'var(--font-size-lg)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--color-text-primary)' }} className="mb-3">
-            Billing Address
+            Billing address
           </h2>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="md:col-span-2">
               <label style={{ fontSize: 'var(--font-size-sm)', fontWeight: 'var(--font-weight-medium)', color: 'var(--color-text-primary)' }} className="block mb-2">
-                Street Address
+                Street address
               </label>
               <input
                 type="text"
@@ -267,7 +267,7 @@ export default function Payment() {
               onClick={() => toast.success('Billing address updated')}
               className="btn-primary px-4 py-2"
             >
-              Save Address
+              Save address
             </button>
           </div>
         </div>

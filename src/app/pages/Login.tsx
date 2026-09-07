@@ -261,7 +261,7 @@ export default function Login() {
         <div className="flex-1 flex items-center justify-center px-6 py-12">
           <div className="w-full max-w-[400px] animate-fadeIn">
             <h1
-              className="text-[30px] font-bold tracking-tight leading-tight"
+              className="text-3xl font-bold tracking-tight leading-tight"
               style={{ color: 'var(--color-text-primary)' }}
             >
               {IS_CLIENT_DEMO ? 'Welcome, Channel Company team' : 'Welcome back'}

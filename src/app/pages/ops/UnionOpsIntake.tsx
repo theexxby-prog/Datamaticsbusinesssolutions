@@ -35,7 +35,7 @@ const COLUMN_MAP: Array<{ source: string; target: string; note?: string }> = [
 ];
 
 export default function UnionOpsIntake() {
-  useDocumentTitle('Data Intake');
+  useDocumentTitle('Data intake');
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
@@ -113,17 +113,17 @@ export default function UnionOpsIntake() {
       </div>
 
       <div>
-        <h1 className="text-[24px] font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
+        <h1 className="text-2xl font-extrabold tracking-tight leading-tight" style={{ color: 'var(--color-text-primary)' }}>
           Data intake
         </h1>
-        <p className="text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+        <p className="text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
           Bring campaign leads in, map them to portal fields, QA, and send to Relish for enrichment.
         </p>
       </div>
 
       {/* 1 · Campaign + source */}
       <div className="glass-card space-y-3 p-4">
-        <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+        <h2 className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
           1 · Campaign &amp; source
         </h2>
         <div className="flex flex-wrap items-center gap-3">
@@ -169,7 +169,7 @@ export default function UnionOpsIntake() {
             <span className="text-sm font-semibold" style={{ color: 'var(--color-text-primary)' }}>
               Drop a CSV here or click to browse
             </span>
-            <span className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+            <span className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
               Demo loads {MOCK_BATCH.csv.label} · {MOCK_BATCH.csv.rows} rows
             </span>
           </button>
@@ -188,7 +188,7 @@ export default function UnionOpsIntake() {
                 <div className="text-[13px] font-semibold" style={{ color: 'var(--color-text-primary)' }}>
                   Northwind Salesforce — connected
                 </div>
-                <div className="text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+                <div className="text-xs" style={{ color: 'var(--color-text-muted)' }}>
                   List view: GridWorks — August MQLs · {MOCK_BATCH.crm.rows} records match
                 </div>
               </div>
@@ -225,21 +225,21 @@ export default function UnionOpsIntake() {
       {step !== 'idle' && step !== 'loading' && (
         <>
           <div className="glass-card p-4">
-            <h2 className="text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+            <h2 className="text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
               2 · Column mapping
             </h2>
-            <p className="mt-1 text-[12px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="mt-1 text-xs" style={{ color: 'var(--color-text-secondary)' }}>
               Auto-matched against the portal lead schema — adjust anything that mapped wrong.
             </p>
             <div className="mt-2.5 divide-y" style={{ borderColor: 'var(--color-border-light)' }}>
               {COLUMN_MAP.map(col => (
                 <div key={col.source} className="flex items-center gap-3 py-2">
-                  <span className="w-[38%] truncate text-[12.5px] font-semibold sm:w-[30%]" style={{ color: 'var(--color-text-primary)' }}>
+                  <span className="w-[38%] truncate text-[13px] font-semibold sm:w-[30%]" style={{ color: 'var(--color-text-primary)' }}>
                     {col.source}
                   </span>
                   <ChevronRight className="h-3.5 w-3.5 flex-shrink-0" style={{ color: 'var(--color-text-muted)' }} />
                   <span
-                    className="truncate text-[12.5px] font-medium"
+                    className="truncate text-[13px] font-medium"
                     style={{ color: col.target === 'Ignored' ? 'var(--color-text-muted)' : 'var(--color-text-secondary)' }}
                   >
                     {col.target}
@@ -255,7 +255,7 @@ export default function UnionOpsIntake() {
           </div>
 
           <div className="glass-card p-4">
-            <h2 className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
               <ShieldCheck className="h-4 w-4" style={{ color: 'var(--color-success)' }} />
               3 · QA snapshot
             </h2>
@@ -264,7 +264,7 @@ export default function UnionOpsIntake() {
               <span style={{ width: '2%', background: 'var(--color-warning)' }} />
               <span style={{ width: '1%', background: 'var(--color-error)' }} />
             </div>
-            <p className="mt-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="mt-2 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
               <b style={{ color: 'var(--color-success)' }}>{qaValid}</b> valid ·{' '}
               <b style={{ color: 'var(--color-warning)' }}>{qaCaution}</b> caution (missing phone / soft bounce risk) ·{' '}
               <b style={{ color: 'var(--color-error)' }}>{qaInvalid}</b> invalid — flagged rows route to CleanRich, not Relish.
@@ -273,17 +273,17 @@ export default function UnionOpsIntake() {
 
           {/* 4 · Account ledger — the spend guard */}
           <div className="glass-card p-4">
-            <h2 className="flex items-center gap-2 text-[12px] font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
+            <h2 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
               <BookOpen className="h-4 w-4" style={{ color: 'var(--color-primary)' }} />
               4 · Account ledger check
             </h2>
-            <p className="mt-2 text-[12.5px]" style={{ color: 'var(--color-text-secondary)' }}>
+            <p className="mt-2 text-[13px]" style={{ color: 'var(--color-text-secondary)' }}>
               {qaValid} valid rows span <b style={{ color: 'var(--color-text-primary)' }}>{ledgerAccounts} accounts</b>.{' '}
               <b style={{ color: 'var(--color-success)' }}>{ledgerReused} already researched</b> for Northwind in the
               last 90 days — their briefings are reused from the ledger, not billed again.{' '}
               <b style={{ color: 'var(--color-text-primary)' }}>{ledgerNew} new accounts</b> go to Relish.
             </p>
-            <p className="mt-1.5 text-[11.5px]" style={{ color: 'var(--color-text-muted)' }}>
+            <p className="mt-1.5 text-xs" style={{ color: 'var(--color-text-muted)' }}>
               Relish dedups inside a batch, not across batches — this check is what stops a corrected
               re-upload from paying twice for the same companies.
             </p>
@@ -292,7 +292,7 @@ export default function UnionOpsIntake() {
               style={{ borderColor: 'var(--color-warning)', background: 'var(--color-warning-bg)' }}
             >
               <AlertTriangle className="mt-0.5 h-4 w-4 flex-shrink-0" style={{ color: 'var(--color-warning)' }} />
-              <p className="text-[12px]" style={{ color: 'var(--color-text-primary)' }}>
+              <p className="text-xs" style={{ color: 'var(--color-text-primary)' }}>
                 <b>{ledgerStale} of the new accounts {ledgerStale === 1 ? 'was' : 'were'} researched before</b>, more than
                 90 days ago. Sending {ledgerStale === 1 ? 'it' : 'them'} again bills again — flagged so a re-research is
                 a decision, never an accident.
