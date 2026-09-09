@@ -444,13 +444,23 @@ for (const f of fields) {
   uncoveredByTable.get(f.table).push(f.field);
 }
 
+// Each screenshot is declared once here and referenced by class from two
+// places: the full-size panel, and the thumbnail on every field row that reads
+// one of its fields. Inlining an <img> per row instead would have repeated a
+// 130kB data URI up to twenty times over, taking a 6MB page past the limit for
+// no extra information.
+const imageCss = PANELS.map(p => {
+  const d = b64(p.slug);
+  return d ? `.im-${p.slug}{background-image:url(${d});}` : '';
+}).filter(Boolean).join('\n');
+
 const panelCard = p => {
   const m = byslug[p.slug];
   const img = b64(p.slug);
   return `
 <article class="panel" id="p-${p.slug}">
   <div class="panel-shot">
-    ${img ? `<img src="${img}" alt="${esc(titleOf(p.slug))}" loading="lazy" width="${m?.w ?? ''}" height="${m?.h ?? ''}" />` : '<div class="noshot">no capture</div>'}
+    ${img ? `<div class="panel-img im-${p.slug}" role="img" aria-label="Screenshot of ${esc(titleOf(p.slug))}" style="aspect-ratio:${m?.w ?? 4}/${m?.h ?? 3}"></div>` : '<div class="noshot">no capture</div>'}
     <p class="shot-meta">${esc(m?.route ?? '')}${m?.tab ? ' &rsaquo; ' + esc(m.tab) : ''}</p>
   </div>
   <div class="panel-body">
@@ -488,7 +498,11 @@ const areaSection = ([key, name, blurb]) => `
 const fieldRows = fields.map(f => {
   const key = `${f.table}.${f.field}`;
   const panels = usedBy.get(key) ?? [];
+  const first = panels[0];
   return `<tr data-q="${esc((f.table + ' ' + f.field + ' ' + f.what).toLowerCase())}">
+    <td class="c-thumb">${first
+      ? `<a href="#p-${first}" title="${esc(titleOf(first))}" aria-label="Go to ${esc(titleOf(first))}"><span class="thumb im-${first}"></span></a>`
+      : '<span class="thumb thumb-none" title="Not shown on any screen"></span>'}</td>
     <td class="c-table">${esc(f.table)}</td>
     <td class="c-field"><code>${esc(f.field)}</code>${f.key ? ` <span class="k">${esc(f.key)}</span>` : ''}</td>
     <td class="c-type">${esc(f.type)}</td>
@@ -666,13 +680,33 @@ nav.jump a:hover,nav.jump a:focus-visible{color:var(--brand); border-bottom-colo
 .idx-tools input:focus-visible{outline:2px solid var(--brand); outline-offset:1px;}
 .count{font-size:13.5px; color:var(--ink-faint); font-variant-numeric:tabular-nums;}
 .tbl-wrap{overflow-x:auto; border:1px solid var(--rule); border-radius:10px; background:var(--card);}
-table.idx{border-collapse:collapse; width:100%; min-width:860px; font-size:13.5px;}
+table.idx{border-collapse:collapse; width:100%; min-width:980px; font-size:13.5px;}
 table.idx th{
   position:sticky; top:47px; background:var(--sunk); text-align:left;
   padding:11px 13px; font-size:11px; letter-spacing:.1em; text-transform:uppercase;
   color:var(--ink-faint); border-bottom:1px solid var(--rule); z-index:2;
 }
 table.idx td{padding:9px 13px; border-top:1px solid var(--rule-soft); vertical-align:top;}
+.panel-img{
+  width:100%; border-radius:7px; border:1px solid var(--rule-soft);
+  background-color:var(--sunk); background-size:100% auto;
+  background-position:left top; background-repeat:no-repeat;
+}
+.c-thumb{width:120px; padding-right:0;}
+.th-thumb{width:120px;}
+/* contain, not cover. A panel is far wider than the thumbnail box, so cover
+   crops it to an unreadable sliver of the top-left corner. Fitting the whole
+   panel keeps its shape recognisable, which is the entire job of the picture:
+   glance at a row and know which screen the field feeds. */
+.thumb{
+  display:block; width:104px; height:60px; border-radius:4px;
+  border:1px solid var(--rule); background-color:var(--card);
+  background-size:contain; background-position:center; background-repeat:no-repeat;
+}
+.c-thumb a{display:inline-block; border-radius:5px;}
+.c-thumb a:hover .thumb{border-color:var(--brand);}
+.c-thumb a:focus-visible{outline:2px solid var(--brand); outline-offset:2px;}
+.thumb-none{opacity:.3;}
 .c-table{font-family:ui-monospace,Menlo,monospace; color:var(--ink-faint); white-space:nowrap;}
 .c-field code{font-weight:600;}
 .c-type{color:var(--ink-faint); white-space:nowrap; font-size:12.5px;}
@@ -693,6 +727,9 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
   padding-top:44px; border-top:2px solid var(--ink); padding-block-start:18px;}
 .section-lede{margin:0 0 8px; color:var(--ink-faint); font-size:15px; max-width:68ch;}
 @media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important;}}
+
+/* ── the screenshots, each declared once ── */
+${imageCss}
 </style>
 
 <header class="top">
@@ -746,7 +783,7 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
 
   <section id="index">
     <h2 class="section">Field index</h2>
-    <p class="section-lede">All ${fields.length} fields, with the screens that read each one.
+    <p class="section-lede">All ${fields.length} fields, each with a picture of the screen it feeds.
     ${usedBy.size} are read by at least one screen. The remaining ${fields.length - usedBy.size} are not, and
     they fall into three groups: keys that do the joining without ever being displayed, such as the
     <code>campaign_id</code> on almost every table; timestamps and raw payloads kept so a run can be traced or
@@ -758,7 +795,7 @@ h2.section{font-size:26px; font-weight:800; letter-spacing:-.02em; margin:0 0 6p
     </div>
     <div class="tbl-wrap">
       <table class="idx">
-        <thead><tr><th>Table</th><th>Field</th><th>Type</th><th>Visible to</th><th>Screens that read it</th></tr></thead>
+        <thead><tr><th class="th-thumb">Screen</th><th>Table</th><th>Field</th><th>Type</th><th>Visible to</th><th>Screens that read it</th></tr></thead>
         <tbody id="rows">${fieldRows}</tbody>
       </table>
     </div>
