@@ -24,7 +24,7 @@
     "Champion"
    ],
    "roleClass": "champion",
-   "approach": "Engage Jessica as a strategic peer, not a vendor. Lead with the governance and risk management angle, not the technical backup features. Use language like 'governance framework', 'data sovereignty strategy', 'audit-ready compliance', and 'architectural risk mitigation'. The best channel is a direct email or a LinkedIn message referencing her role in the transformation program. Avoid overly technical jargon about blockchains or recovery speeds until she asks. Instead, frame Keepit as the 'governance layer' for her SaaS data. The ideal hook is to discuss how she can centralize and standardize data protection governance across Lonza's global sites to support the digital transformation initiative.",
+   "approach": "Engage Jessica as a strategic peer, not a vendor. Lead with the governance and risk management angle, not the technical backup features. Use language like 'governance framework', 'data sovereignty strategy', 'audit-ready compliance', and 'architectural risk mitigation'. The best channel is a direct email or a LinkedIn message referencing her role in the transformation program. Avoid overly technical jargon about blockchains or recovery speeds until she asks. Instead, frame Northwind as the 'governance layer' for her SaaS data. The ideal hook is to discuss how she can centralize and standardize data protection governance across Lonza's global sites to support the digital transformation initiative.",
    "painPoints": [
     "Governance Gaps in Hybrid Cloud: As Lonza migrates to a hybrid cloud (Azure/AWS), the shared responsibility model creates ambiguity. Jessica needs a clear, auditable governance framework that ensures data protection for SaaS applications (M365, Salesforce) is not left to chance or a third-party hyperscaler, which could create a 'shared fate' risk that violates her governance principles",
     "Data Integrity for Regulatory Compliance: In a GxP environment, data tampering or loss in SaaS apps (e.g., a corrupted email chain with a client, a deleted batch record in SharePoint) is a compliance nightmare. Jessica needs a solution that provides mathematically verifiable, immutable proof of data integrity to satisfy auditors from the FDA and EMA",
@@ -33,7 +33,7 @@
     "Justifying Predictable Spend Against Volatile Budgets: Lonza's financial reports note margin pressure from energy costs. Jessica needs to justify IT spend with clear ROI and predictable, flat-rate costs. She cannot afford surprise egress fees or complex licensing models that blow the budget"
    ],
    "talkingPoints": [
-    "How Keepit provides a vendor-neutral, independent governance layer for your SaaS data, eliminating the 'shared fate' risk of relying on your primary cloud provider for backup",
+    "How Northwind provides a vendor-neutral, independent governance layer for your SaaS data, eliminating the 'shared fate' risk of relying on your primary cloud provider for backup",
     "The challenge of ensuring data integrity for GxP compliance in a hybrid cloud world, and how blockchain-verified immutability provides a mathematically provable audit trail for regulators",
     "How to centralize and standardize data protection governance across 17,000 employees and multiple business units with a single, flat-rate platform, eliminating fragmented point solutions and shadow IT",
     "The strategic value of an independent, ransomware-immune cloud for your SaaS data, ensuring business continuity for critical manufacturing support systems (M365, Salesforce) without relying on the same infrastructure as the primary attack surface",
@@ -64,15 +64,15 @@
    "objections": [
     {
      "q": "We already use Azure Backup/AWS Backup. Why would we add another vendor?",
-     "a": "That's a fair point, and it's a common strategy. However, for a company like Lonza with strict GxP requirements, using a backup tool from the same vendor as your primary cloud creates a 'shared fate' risk. If an attacker compromises your Azure tenant, your Azure Backup data is at risk too. Keepit provides true architectural independence. Think of it as a governance requirement, not just a backup tool. It's your insurance policy against a supply-chain attack on your primary cloud provider."
+     "a": "That's a fair point, and it's a common strategy. However, for a company like Lonza with strict GxP requirements, using a backup tool from the same vendor as your primary cloud creates a 'shared fate' risk. If an attacker compromises your Azure tenant, your Azure Backup data is at risk too. Northwind provides true architectural independence. Think of it as a governance requirement, not just a backup tool. It's your insurance policy against a supply-chain attack on your primary cloud provider."
     },
     {
      "q": "This sounds expensive. We have budget constraints.",
-     "a": "I understand. Our value proposition is actually built for that. Unlike most backup vendors that charge for data egress, API calls, and overage, Keepit offers a single, flat-rate price. This means you can budget with 100% certainty and have unlimited retention for long-term archival and eDiscovery. It's designed to be more predictable and often more cost-effective than the hidden costs of legacy tools or hyperscaler-native solutions, especially at the scale of Lonza."
+     "a": "I understand. Our value proposition is actually built for that. Unlike most backup vendors that charge for data egress, API calls, and overage, Northwind offers a single, flat-rate price. This means you can budget with 100% certainty and have unlimited retention for long-term archival and eDiscovery. It's designed to be more predictable and often more cost-effective than the hidden costs of legacy tools or hyperscaler-native solutions, especially at the scale of Lonza."
     },
     {
      "q": "We are in the middle of a major digital transformation. I can't add another project right now.",
-     "a": "That's exactly the right time to talk to us. Your transformation is the perfect opportunity to build the right governance framework from the start, rather than retrofitting it later. Keepit can be deployed in days, not months, and integrates seamlessly with M365, Google, and Salesforce. It's a low-friction, high-impact project that directly supports the risk management and compliance goals of your transformation program. We can help you define the data protection governance standards for the new environment."
+     "a": "That's exactly the right time to talk to us. Your transformation is the perfect opportunity to build the right governance framework from the start, rather than retrofitting it later. Northwind can be deployed in days, not months, and integrates seamlessly with M365, Google, and Salesforce. It's a low-friction, high-impact project that directly supports the risk management and compliance goals of your transformation program. We can help you define the data protection governance standards for the new environment."
     }
    ],
    "signalScore": 99
@@ -102,7 +102,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Engage Bajro with a data-driven, strategic conversation focused on architecture resilience and risk mitigation. Lead with Keepit's independent cloud infrastructure and blockchain-verified immutability, directly linking to Lonza's regulatory and operational needs. Use technical language around data separation, flat-rate pricing, and unlimited retention. Avoid overly salesy pitches; instead, present Keepit as a vendor-neutral solution that complements his hybrid cloud strategy. Best channels: LinkedIn (for initial connection with a brief, value-driven message) followed by email with a case study or whitepaper on SaaS data protection in regulated industries.",
+   "approach": "Engage Bajro with a data-driven, strategic conversation focused on architecture resilience and risk mitigation. Lead with Northwind's independent cloud infrastructure and blockchain-verified immutability, directly linking to Lonza's regulatory and operational needs. Use technical language around data separation, flat-rate pricing, and unlimited retention. Avoid overly salesy pitches; instead, present Northwind as a vendor-neutral solution that complements his hybrid cloud strategy. Best channels: LinkedIn (for initial connection with a brief, value-driven message) followed by email with a case study or whitepaper on SaaS data protection in regulated industries.",
    "painPoints": [
     "Risk of data tampering or loss in electronic batch records and quality control data, which could trigger regulatory non-compliance and product recalls",
     "Ransomware-induced production halts due to OT/IT integration, with downtime costs in millions per hour for critical drug manufacturing",
@@ -111,7 +111,7 @@
     "Need for immutable, verifiable backup copies to satisfy audit requirements for GxP and data residency regulations (GDPR, NIS2)"
    ],
    "talkingPoints": [
-    "How Keepit's blockchain-verified immutable backups ensure tamper-proof recovery for electronic batch records, supporting cGMP compliance",
+    "How Northwind's blockchain-verified immutable backups ensure tamper-proof recovery for electronic batch records, supporting cGMP compliance",
     "The advantage of an independent cloud infrastructure that eliminates shared fate risk with hyperscalers, critical for Lonza's hybrid cloud migration",
     "Predictable flat-rate pricing with no hidden egress fees, directly addressing margin pressure and budget predictability",
     "Ransomware immunity through a vendor-neutral architecture that guarantees clean recovery points, preventing production halts",
@@ -138,15 +138,15 @@
    "objections": [
     {
      "q": "We already have backup solutions in place (e.g., Azure Backup, Commvault). Why switch?",
-     "a": "Those tools often share fate with your primary infrastructure or hyperscaler, leaving you vulnerable to supply-chain attacks and data tampering. Keepit's independent cloud and blockchain verification provide true data separation and mathematically verifiable integrity, which is essential for GxP environments. Plus, our flat-rate pricing eliminates hidden egress costs, aligning with your cost optimization goals."
+     "a": "Those tools often share fate with your primary infrastructure or hyperscaler, leaving you vulnerable to supply-chain attacks and data tampering. Northwind's independent cloud and blockchain verification provide true data separation and mathematically verifiable integrity, which is essential for GxP environments. Plus, our flat-rate pricing eliminates hidden egress costs, aligning with your cost optimization goals."
     },
     {
-     "q": "Our data is highly sensitive and must stay within Switzerland. Can Keepit guarantee data sovereignty?",
-     "a": "Absolutely. Keepit operates its own data centers in Switzerland, ensuring your data never leaves the region. Our vendor-neutral architecture means we don't rely on third-party clouds, giving you full control and compliance with Swiss data residency laws."
+     "q": "Our data is highly sensitive and must stay within Switzerland. Can Northwind guarantee data sovereignty?",
+     "a": "Absolutely. Northwind operates its own data centers in Switzerland, ensuring your data never leaves the region. Our vendor-neutral architecture means we don't rely on third-party clouds, giving you full control and compliance with Swiss data residency laws."
     },
     {
      "q": "We're in the middle of a digital transformation and can't afford disruptions from a new vendor. How do you ensure a smooth transition?",
-     "a": "Keepit is designed for seamless integration with existing SaaS environments like Microsoft 365, Google Workspace, and Salesforce. Our deployment is non-disruptive, and we offer dedicated migration support to minimize any operational impact. You can run Keepit alongside your current tools initially, then transition at your own pace."
+     "a": "Northwind is designed for seamless integration with existing SaaS environments like Microsoft 365, Google Workspace, and Salesforce. Our deployment is non-disruptive, and we offer dedicated migration support to minimize any operational impact. You can run Northwind alongside your current tools initially, then transition at your own pace."
     }
    ],
    "signalScore": 99
@@ -178,7 +178,7 @@
     "Influencer"
    ],
    "roleClass": "gatekeeper",
-   "approach": "Lead with a tactical and data-driven approach. Do not start with a high-level 'digital transformation' pitch. Instead, frame the conversation around governance, risk, and compliance. Acknowledge his role as the guardian of IT service management. Use language like 'process assurance,' 'audit readiness,' 'service continuity,' and 'operational governance.' The best channel is a direct email followed by a LinkedIn connection request referencing a specific trigger event (e.g., the new Global Head of IT Security & Compliance hire). In the first meeting, present a clear, concise case with a focus on: 1) How Keepit provides a blockchain-verified, immutable audit trail for backup, 2) How it simplifies vendor governance with a single, independent platform, and 3) How its flat-rate pricing eliminates budget surprises. Avoid leading with technical deep-dives on blockchain architecture; instead, lead with the *outcome*: 'mathematically verifiable data integrity.'",
+   "approach": "Lead with a tactical and data-driven approach. Do not start with a high-level 'digital transformation' pitch. Instead, frame the conversation around governance, risk, and compliance. Acknowledge his role as the guardian of IT service management. Use language like 'process assurance,' 'audit readiness,' 'service continuity,' and 'operational governance.' The best channel is a direct email followed by a LinkedIn connection request referencing a specific trigger event (e.g., the new Global Head of IT Security & Compliance hire). In the first meeting, present a clear, concise case with a focus on: 1) How Northwind provides a blockchain-verified, immutable audit trail for backup, 2) How it simplifies vendor governance with a single, independent platform, and 3) How its flat-rate pricing eliminates budget surprises. Avoid leading with technical deep-dives on blockchain architecture; instead, lead with the *outcome*: 'mathematically verifiable data integrity.'",
    "painPoints": [
     "Audit & Compliance Burden: Ensuring that backup and recovery processes for SaaS applications (like M365, Salesforce) meet the stringent data integrity and audit trail requirements of GxP and other regulations. Any failure here is a direct personal and professional risk",
     "Ransomware Recovery Guarantee: He needs a provable, immutable, and clean recovery point for critical IT systems (like M365) that support the manufacturing floor. A failed recovery during an incident would be catastrophic and a direct failure of his governance and service management responsibilities",
@@ -188,10 +188,10 @@
    ],
    "talkingPoints": [
     "Audit-Ready Data Protection: 'Maurizio, our platform is built to provide a blockchain-verified, tamper-proof audit trail for all your SaaS data backups. This directly supports your GxP compliance and simplifies your audit process, providing a clear chain of custody that regulators love.'",
-    "Simplified Governance, One Vendor: 'We understand the challenge of managing multiple backup tools and vendors. Keepit offers a single, independent platform for M365, Google Workspace, and Salesforce, giving you a unified governance model and reducing operational complexity.'",
-    "Predictable Cost for Service Management: 'Unlike other vendors with complex per-user or egress fees, Keepit offers a flat-rate pricing model. This allows you to accurately budget for data protection without surprises, aligning with your need for cost predictability and operational efficiency.'",
+    "Simplified Governance, One Vendor: 'We understand the challenge of managing multiple backup tools and vendors. Northwind offers a single, independent platform for M365, Google Workspace, and Salesforce, giving you a unified governance model and reducing operational complexity.'",
+    "Predictable Cost for Service Management: 'Unlike other vendors with complex per-user or egress fees, Northwind offers a flat-rate pricing model. This allows you to accurately budget for data protection without surprises, aligning with your need for cost predictability and operational efficiency.'",
     "Ransomware Immunity for Business Continuity: 'Our independent cloud, decoupled from your primary SaaS infrastructure, ensures that your backups are immune to the same ransomware attack. This provides a guaranteed clean recovery point, critical for your service continuity and production uptime.'",
-    "Swiss Data Sovereignty: 'As a Swiss-headquartered company, data residency is paramount. Keepit operates its own data centers in [mention a relevant region, e.g., Switzerland or Germany], ensuring your data never leaves a jurisdiction you trust, meeting your strictest data sovereignty requirements.'"
+    "Swiss Data Sovereignty: 'As a Swiss-headquartered company, data residency is paramount. Northwind operates its own data centers in [mention a relevant region, e.g., Switzerland or Germany], ensuring your data never leaves a jurisdiction you trust, meeting your strictest data sovereignty requirements.'"
    ],
    "motivations": [
     {
@@ -214,7 +214,7 @@
    "objections": [
     {
      "q": "We already have a backup solution for M365 from our existing IT vendor (e.g., Microsoft, Commvault). Why add another tool?",
-     "a": "That's a very common and valid point for someone in your governance role. The key difference is independence and risk. Relying on your primary SaaS or infrastructure provider for backup creates a 'shared fate' risk, if they are compromised, your backups are compromised too. Keepit is the only truly independent, vendor-neutral cloud for SaaS data. This gives you a guaranteed, clean recovery point and a clear separation of duties, which is a best practice for governance and compliance in regulated environments. We're not replacing your vendor; we're providing a critical, independent layer of protection."
+     "a": "That's a very common and valid point for someone in your governance role. The key difference is independence and risk. Relying on your primary SaaS or infrastructure provider for backup creates a 'shared fate' risk, if they are compromised, your backups are compromised too. Northwind is the only truly independent, vendor-neutral cloud for SaaS data. This gives you a guaranteed, clean recovery point and a clear separation of duties, which is a best practice for governance and compliance in regulated environments. We're not replacing your vendor; we're providing a critical, independent layer of protection."
     },
     {
      "q": "This sounds like another complex system to manage. My team is already stretched thin.",
@@ -222,7 +222,7 @@
     },
     {
      "q": "Our budget is tight. We're focusing on cost optimization across IT.",
-     "a": "That's exactly why Keepit is a strong fit. Our flat-rate, all-inclusive pricing model is the most predictable in the industry. You won't see surprise costs for data egress, API calls, or long-term retention. This allows you to accurately forecast your data protection costs and avoid the budget overruns common with hyperscaler-native or per-user licensed tools. In many cases, we can provide a lower total cost of ownership while delivering a higher level of data integrity and compliance assurance."
+     "a": "That's exactly why Northwind is a strong fit. Our flat-rate, all-inclusive pricing model is the most predictable in the industry. You won't see surprise costs for data egress, API calls, or long-term retention. This allows you to accurately forecast your data protection costs and avoid the budget overruns common with hyperscaler-native or per-user licensed tools. In many cases, we can provide a lower total cost of ownership while delivering a higher level of data integrity and compliance assurance."
     }
    ],
    "signalScore": 96
@@ -253,7 +253,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Engage Georg with a data-driven, technical, and operationally-focused conversation. Lead with the specific risks to his Visp site and global engineering operations (e.g., GxP data integrity, ransomware recovery time). Avoid high-level strategic jargon about 'digital transformation' without grounding it in his daily reality. Use language like 'immutable recovery points,' 'blockchain verification,' 'predictable flat-rate pricing,' and 'vendor-neutral architecture.' The best channels are LinkedIn or a direct email, referencing a specific trigger event (e.g., the new security hires) or a pain point (e.g., margin pressure). Frame Keepit as a way to de-risk his operations and simplify his team's workload.",
+   "approach": "Engage Georg with a data-driven, technical, and operationally-focused conversation. Lead with the specific risks to his Visp site and global engineering operations (e.g., GxP data integrity, ransomware recovery time). Avoid high-level strategic jargon about 'digital transformation' without grounding it in his daily reality. Use language like 'immutable recovery points,' 'blockchain verification,' 'predictable flat-rate pricing,' and 'vendor-neutral architecture.' The best channels are LinkedIn or a direct email, referencing a specific trigger event (e.g., the new security hires) or a pain point (e.g., margin pressure). Frame Northwind as a way to de-risk his operations and simplify his team's workload.",
    "painPoints": [
     "Risk of data corruption or loss in GxP-critical SaaS applications (e.g., M365, Salesforce) that could lead to regulatory findings (FDA/EMA) and production delays at the Visp site",
     "Lack of true data separation and immutability in current backup solutions (likely legacy or hyperscaler-native), creating shared-fate risk with primary SaaS vendors",
@@ -262,10 +262,10 @@
     "Difficulty in guaranteeing data sovereignty for Swiss and EU manufacturing data, especially when using global cloud providers with data centers outside these regions"
    ],
    "talkingPoints": [
-    "How Keepit's blockchain-verified immutability provides mathematically provable data integrity, directly supporting Lonza's GxP and FDA/EMA compliance requirements",
-    "How Keepit's independent, vendor-neutral cloud eliminates the shared-fate risk of storing backups on the same hyperscaler infrastructure (Azure/AWS) as your primary SaaS data",
+    "How Northwind's blockchain-verified immutability provides mathematically provable data integrity, directly supporting Lonza's GxP and FDA/EMA compliance requirements",
+    "How Northwind's independent, vendor-neutral cloud eliminates the shared-fate risk of storing backups on the same hyperscaler infrastructure (Azure/AWS) as your primary SaaS data",
     "How our flat-rate, predictable pricing with no egress or API fees can help you manage IT costs more effectively, especially given the current focus on margin optimization",
-    "How Keepit provides a single, unified platform for protecting all critical SaaS data (M365, Salesforce, Google Workspace) across your global engineering sites, reducing complexity",
+    "How Northwind provides a single, unified platform for protecting all critical SaaS data (M365, Salesforce, Google Workspace) across your global engineering sites, reducing complexity",
     "How we guarantee data sovereignty by storing your data in Swiss-owned data centers, ensuring compliance with Swiss and EU data residency regulations"
    ],
    "motivations": [
@@ -330,7 +330,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Lead with a technical, architecture-focused conversation. Do not lead with ROI or cost savings. Start by acknowledging the unique complexity of the IT/OT interface. Frame Keepit as an independent, third plane of data protection that breaks the 'shared fate' risk with hyperscalers. Use language like 'data sovereignty,' 'immutable recovery points,' and 'vendor-neutral architecture.' The best channel is a direct email or LinkedIn message referencing a specific technical challenge (e.g., 'I saw you're integrating Vacaville-ensuring clean backup separation between IT and OT must be a key priority.'). Avoid high-level sales pitches about 'business continuity' without explaining the technical 'how.' Be prepared to discuss blockchain verification in detail and how it provides a mathematically verifiable chain of custody for audit trails.",
+   "approach": "Lead with a technical, architecture-focused conversation. Do not lead with ROI or cost savings. Start by acknowledging the unique complexity of the IT/OT interface. Frame Northwind as an independent, third plane of data protection that breaks the 'shared fate' risk with hyperscalers. Use language like 'data sovereignty,' 'immutable recovery points,' and 'vendor-neutral architecture.' The best channel is a direct email or LinkedIn message referencing a specific technical challenge (e.g., 'I saw you're integrating Vacaville-ensuring clean backup separation between IT and OT must be a key priority.'). Avoid high-level sales pitches about 'business continuity' without explaining the technical 'how.' Be prepared to discuss blockchain verification in detail and how it provides a mathematically verifiable chain of custody for audit trails.",
    "painPoints": [
     "Ransomware-induced production halts: An attack on the IT side (e.g., Microsoft 365) that cascades into the OT network, locking up batch records or control systems, causing a multi-million dollar production stoppage",
     "Data integrity for regulatory audits: Ensuring that electronic batch records and quality data stored in SaaS applications (like M365 or Salesforce) are tamper-proof and can be instantly recovered to satisfy an FDA or EMA inspection, avoiding warning letters or plant shutdowns",
@@ -339,11 +339,11 @@
     "Unpredictable backup costs: Egress and API fees from hyperscaler-native or point-solutions make budgeting for long-term retention of regulated data difficult, especially under current margin pressure at Lonza"
    ],
    "talkingPoints": [
-    "Discuss the 'shared fate' risk: 'Most backup solutions are built on the same hyperscaler (Azure/AWS) as your primary data. If that provider is compromised, both your production and backup are at risk. Keepit's wholly-owned, independent cloud is the only way to guarantee true data separation for your OT-supporting IT systems.'",
-    "Focus on ransomware immunity for the factory floor: 'A ransomware attack on your Microsoft 365 tenant could encrypt shared batch record files. With Keepit, you get blockchain-verified, immutable snapshots that are mathematically guaranteed to be clean, enabling a recovery in minutes, not days, preventing a production line halt.'",
-    "Address regulatory audit pressure: 'For cGMP compliance, you need to prove data hasn't been altered. Keepit's blockchain-anchored encryption keys provide a tamper-proof audit trail that satisfies even the strictest FDA or EMA inspector, giving you immediate confidence during an audit.'",
-    "Simplify the hybrid cloud complexity: 'Managing separate backup tools for M365, Salesforce, and your on-prem systems is a headache. Keepit provides a single, unified platform with a flat-rate price for unlimited retention, eliminating egress fees and reducing your operational overhead.'",
-    "Leverage the Vacaville integration: 'With the integration of the new Vacaville site, ensuring a consistent, sovereign data protection policy across all global sites is critical. Keepit's Swiss-owned data centers can provide that standard for data residency and protection, regardless of where the site is located.'"
+    "Discuss the 'shared fate' risk: 'Most backup solutions are built on the same hyperscaler (Azure/AWS) as your primary data. If that provider is compromised, both your production and backup are at risk. Northwind's wholly-owned, independent cloud is the only way to guarantee true data separation for your OT-supporting IT systems.'",
+    "Focus on ransomware immunity for the factory floor: 'A ransomware attack on your Microsoft 365 tenant could encrypt shared batch record files. With Northwind, you get blockchain-verified, immutable snapshots that are mathematically guaranteed to be clean, enabling a recovery in minutes, not days, preventing a production line halt.'",
+    "Address regulatory audit pressure: 'For cGMP compliance, you need to prove data hasn't been altered. Northwind's blockchain-anchored encryption keys provide a tamper-proof audit trail that satisfies even the strictest FDA or EMA inspector, giving you immediate confidence during an audit.'",
+    "Simplify the hybrid cloud complexity: 'Managing separate backup tools for M365, Salesforce, and your on-prem systems is a headache. Northwind provides a single, unified platform with a flat-rate price for unlimited retention, eliminating egress fees and reducing your operational overhead.'",
+    "Leverage the Vacaville integration: 'With the integration of the new Vacaville site, ensuring a consistent, sovereign data protection policy across all global sites is critical. Northwind's Swiss-owned data centers can provide that standard for data residency and protection, regardless of where the site is located.'"
    ],
    "motivations": [
     {
@@ -366,15 +366,15 @@
    "objections": [
     {
      "q": "We already have Azure Backup and Commvault. Why do we need another tool?",
-     "a": "That's a fair point, and those are great for their specific use cases. However, they share a critical vulnerability: they are often on the same infrastructure as your primary data. If a supply-chain attack targets Azure, or a ransomware variant targets your Commvault environment, you have no clean recovery point. Keepit is a completely separate, independent cloud. We are vendor-neutral and purpose-built for SaaS. We don't just back up your data; we guarantee its integrity with blockchain verification, which your legacy tools can't offer. Think of us as the 'off-site, fireproof safe' for your most critical SaaS data that supports your OT systems."
+     "a": "That's a fair point, and those are great for their specific use cases. However, they share a critical vulnerability: they are often on the same infrastructure as your primary data. If a supply-chain attack targets Azure, or a ransomware variant targets your Commvault environment, you have no clean recovery point. Northwind is a completely separate, independent cloud. We are vendor-neutral and purpose-built for SaaS. We don't just back up your data; we guarantee its integrity with blockchain verification, which your legacy tools can't offer. Think of us as the 'off-site, fireproof safe' for your most critical SaaS data that supports your OT systems."
     },
     {
      "q": "Blockchain sounds like a gimmick. What does it actually do for me on the factory floor?",
-     "a": "It's not a gimmick; it's a mathematically verifiable proof of integrity. For you, that means if a regulator asks, 'Was this batch record altered between June 1st and June 10th?', you can provide a cryptographic proof that it was not. More importantly, if ransomware encrypts your files, you can prove that a specific recovery point from Keepit is 100% clean and unmodified, giving you the confidence to restore immediately without fear of re-infection. It removes the guesswork from recovery, which is critical when every minute of downtime costs millions."
+     "a": "It's not a gimmick; it's a mathematically verifiable proof of integrity. For you, that means if a regulator asks, 'Was this batch record altered between June 1st and June 10th?', you can provide a cryptographic proof that it was not. More importantly, if ransomware encrypts your files, you can prove that a specific recovery point from Northwind is 100% clean and unmodified, giving you the confidence to restore immediately without fear of re-infection. It removes the guesswork from recovery, which is critical when every minute of downtime costs millions."
     },
     {
      "q": "This sounds expensive. We are under cost pressure.",
-     "a": "I understand margin pressure is a reality. That's actually why our model works well for you. Unlike hyperscalers that charge unpredictable egress and API fees, Keepit offers a transparent, flat-rate price for unlimited retention. You get a single, predictable line item in your budget. More importantly, what is the cost of one hour of downtime for a blockbuster drug production line? Our solution is an insurance policy against that multi-million dollar risk, with a fixed, manageable premium."
+     "a": "I understand margin pressure is a reality. That's actually why our model works well for you. Unlike hyperscalers that charge unpredictable egress and API fees, Northwind offers a transparent, flat-rate price for unlimited retention. You get a single, predictable line item in your budget. More importantly, what is the cost of one hour of downtime for a blockbuster drug production line? Our solution is an insurance policy against that multi-million dollar risk, with a fixed, manageable premium."
     }
    ],
    "signalScore": 99
@@ -405,7 +405,7 @@
     "Decision-maker"
    ],
    "roleClass": "decision-maker",
-   "approach": "Lead with strategic empathy and urgency. Acknowledge the immense pressure he is under following Fortinet's recent security incidents. Do NOT pitch Keepit as a 'backup tool', pitch it as a 'Critical Infrastructure Recovery Platform' and an essential complement to the Fortinet Security Fabric. Use language of resilience, immutability, and regulatory proof. Avoid generic 'data loss prevention' talk; focus on guaranteed clean recovery from ransomware and supply-chain independence. The best channel is a direct email referencing the June 2026 incident, followed by a LinkedIn connection. Frame the conversation around a 'post-breach resilience audit' for his OT/CI environment.",
+   "approach": "Lead with strategic empathy and urgency. Acknowledge the immense pressure he is under following Fortinet's recent security incidents. Do NOT pitch Northwind as a 'backup tool', pitch it as a 'Critical Infrastructure Recovery Platform' and an essential complement to the Fortinet Security Fabric. Use language of resilience, immutability, and regulatory proof. Avoid generic 'data loss prevention' talk; focus on guaranteed clean recovery from ransomware and supply-chain independence. The best channel is a direct email referencing the June 2026 incident, followed by a LinkedIn connection. Frame the conversation around a 'post-breach resilience audit' for his OT/CI environment.",
    "painPoints": [
     "Critical Infrastructure Ransomware Risk: The June 2026 credential harvesting campaign and active exploitation of Fortinet vulnerabilities have proven that even a 'prevention-first' Security Fabric can be breached. He needs a guaranteed, clean recovery path for OT/CI systems that is independent of the compromised security stack",
     "Data Integrity & Tamper-Proof Recovery: In OT/CI, a 'restored' backup that has been silently corrupted or contains a dormant threat is a safety and operational disaster. He needs blockchain-verified, immutable backups to prove to regulators and his board that recovery data is mathematically guaranteed to be clean",
@@ -414,10 +414,10 @@
     "Complexity of Protecting Hybrid OT/IT Environments: His domain includes Microsoft 365, Google Workspace, and Salesforce for the business side, alongside OT systems. He needs a single, simple, predictable solution for SaaS data protection that doesn't add complexity to his already overburdened team"
    ],
    "talkingPoints": [
-    "'The Fortinet Security Fabric is world-class for prevention, but the June 2026 campaign proved that prevention can fail. The question is not *if* you'll need to recover, but *how* you'll guarantee that recovery is clean. Keepit provides that guarantee with blockchain-verified immutability, independent of the Fabric.'",
-    "'For critical infrastructure, a corrupted backup is worse than no backup. It creates a false sense of security and can lead to catastrophic operational failures. Keepit's vendor-neutral, independent cloud ensures your recovery data is mathematically tamper-proof and immune to the attack that compromised your primary environment.'",
+    "'The Fortinet Security Fabric is world-class for prevention, but the June 2026 campaign proved that prevention can fail. The question is not *if* you'll need to recover, but *how* you'll guarantee that recovery is clean. Northwind provides that guarantee with blockchain-verified immutability, independent of the Fabric.'",
+    "'For critical infrastructure, a corrupted backup is worse than no backup. It creates a false sense of security and can lead to catastrophic operational failures. Northwind's vendor-neutral, independent cloud ensures your recovery data is mathematically tamper-proof and immune to the attack that compromised your primary environment.'",
     "'Regulators are increasingly demanding proof of recovery capability, not just prevention. Our platform provides an auditable, immutable chain of custody for your Microsoft 365, Google Workspace, and Salesforce data, giving you a clear answer to any NERC CIP or NIS2 inquiry.'",
-    "'You don't need another complex tool to manage. Keepit offers a single, flat-rate, predictable platform for all your SaaS data protection. It's designed to be set-and-forget, freeing your team to focus on securing the OT environment.'",
+    "'You don't need another complex tool to manage. Northwind offers a single, flat-rate, predictable platform for all your SaaS data protection. It's designed to be set-and-forget, freeing your team to focus on securing the OT environment.'",
     "'We are not a competitor to Fortinet. We are the missing piece of your resilience strategy. We protect the data *inside* the applications that Fortinet secures, creating a complete, defense-in-depth posture for your critical infrastructure.'"
    ],
    "motivations": [
@@ -445,15 +445,15 @@
    "objections": [
     {
      "q": "We already have backup covered with Veeam/Commvault and Microsoft's native retention.",
-     "a": "That's a common setup, Christopher, and it's a good start. However, those solutions often rely on the same cloud infrastructure (AWS/Azure) as your primary environment, creating a single point of failure. More critically, they don't provide blockchain-verified immutability. After the recent Fortinet credential harvesting campaign, can you be 100% sure that your backup infrastructure wasn't also compromised? Keepit is an independent, third cloud, purpose-built for SaaS data. It's the only way to guarantee a clean, tamper-proof recovery point that is completely isolated from the attack surface."
+     "a": "That's a common setup, Christopher, and it's a good start. However, those solutions often rely on the same cloud infrastructure (AWS/Azure) as your primary environment, creating a single point of failure. More critically, they don't provide blockchain-verified immutability. After the recent Fortinet credential harvesting campaign, can you be 100% sure that your backup infrastructure wasn't also compromised? Northwind is an independent, third cloud, purpose-built for SaaS data. It's the only way to guarantee a clean, tamper-proof recovery point that is completely isolated from the attack surface."
     },
     {
      "q": "This sounds like an additional cost and complexity I don't need right now.",
-     "a": "I understand budget pressure, especially post-incident. But consider the cost of a single day of downtime for a critical infrastructure asset. The cost of Keepit is a fraction of that. And in terms of complexity, we are the opposite. We offer a single, flat-rate platform with unlimited retention. No egress fees, no complex licensing. It's designed to reduce the burden on your team, not add to it. The real complexity and cost come from trying to recover from a ransomware attack without a guaranteed clean backup."
+     "a": "I understand budget pressure, especially post-incident. But consider the cost of a single day of downtime for a critical infrastructure asset. The cost of Northwind is a fraction of that. And in terms of complexity, we are the opposite. We offer a single, flat-rate platform with unlimited retention. No egress fees, no complex licensing. It's designed to reduce the burden on your team, not add to it. The real complexity and cost come from trying to recover from a ransomware attack without a guaranteed clean backup."
     },
     {
      "q": "We are a Fortinet shop. We prefer to stay within the Security Fabric ecosystem.",
-     "a": "And we complement it perfectly. Fortinet is the best at prevention. Keepit is the best at guaranteed recovery. We are not a replacement, we are an essential layer of defense. In fact, after the recent incidents, many of your peers are actively looking for an independent, vendor-neutral backup solution to de-risk their reliance on a single ecosystem. Think of us as the 'insurance policy' for your Security Fabric investment, ensuring that if the unthinkable happens, you have a guaranteed way back to a clean state."
+     "a": "And we complement it perfectly. Fortinet is the best at prevention. Northwind is the best at guaranteed recovery. We are not a replacement, we are an essential layer of defense. In fact, after the recent incidents, many of your peers are actively looking for an independent, vendor-neutral backup solution to de-risk their reliance on a single ecosystem. Think of us as the 'insurance policy' for your Security Fabric investment, ensuring that if the unthinkable happens, you have a guaranteed way back to a clean state."
     }
    ],
    "signalScore": 99
@@ -484,7 +484,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Engage Jaime Ciso with a strategic, consultative tone that acknowledges Fortinet's strengths while positioning Keepit as an essential complement, not a competitor. Lead with recent security incidents and the need for independent, immutable backup to restore customer trust. Use data and case studies from similar enterprise accounts in Latin America. Avoid criticizing Fortinet directly; instead, frame Keepit as the 'last line of defense' that completes the Security Fabric. Best channels: LinkedIn direct message or email referencing regional data sovereignty challenges, followed by a call to discuss a joint customer resilience workshop.",
+   "approach": "Engage Jaime Ciso with a strategic, consultative tone that acknowledges Fortinet's strengths while positioning Northwind as an essential complement, not a competitor. Lead with recent security incidents and the need for independent, immutable backup to restore customer trust. Use data and case studies from similar enterprise accounts in Latin America. Avoid criticizing Fortinet directly; instead, frame Northwind as the 'last line of defense' that completes the Security Fabric. Best channels: LinkedIn direct message or email referencing regional data sovereignty challenges, followed by a call to discuss a joint customer resilience workshop.",
    "painPoints": [
     "Recent Fortinet security incidents (credential harvesting, CVE exploitation) have eroded customer trust and created urgent demand for guaranteed clean recovery, which Fortinet's native tools cannot fully provide",
     "Customers in Latin America & the Caribbean face strict data sovereignty regulations (LGPD, etc.), and Fortinet's reliance on hyperscaler infrastructure for backup may not meet local residency requirements",
@@ -493,11 +493,11 @@
     "Pressure to demonstrate a comprehensive resilience strategy beyond prevention, as customers demand immutable, tamper-proof recovery options post-breach"
    ],
    "talkingPoints": [
-    "How Keepit's blockchain-verified immutable backup can help Fortinet customers in Latin America recover from ransomware attacks with guaranteed clean copies, addressing trust issues from recent incidents",
-    "Keepit's wholly-owned data centers in the region ensure compliance with LGPD and other data sovereignty laws, unlike hyperscaler-dependent backup solutions",
-    "Position Keepit as a vendor-neutral, independent backup layer that prevents supply-chain attacks, complementing Fortinet's Security Fabric without competing with it",
-    "Offer to co-host a webinar or workshop on 'Building Cyber Resilience in Latin America' featuring Keepit's independent backup as a key component",
-    "Share a case study of a Fortinet customer who used Keepit to recover from a credential harvesting attack, highlighting reduced downtime and compliance benefits"
+    "How Northwind's blockchain-verified immutable backup can help Fortinet customers in Latin America recover from ransomware attacks with guaranteed clean copies, addressing trust issues from recent incidents",
+    "Northwind's wholly-owned data centers in the region ensure compliance with LGPD and other data sovereignty laws, unlike hyperscaler-dependent backup solutions",
+    "Position Northwind as a vendor-neutral, independent backup layer that prevents supply-chain attacks, complementing Fortinet's Security Fabric without competing with it",
+    "Offer to co-host a webinar or workshop on 'Building Cyber Resilience in Latin America' featuring Northwind's independent backup as a key component",
+    "Share a case study of a Fortinet customer who used Northwind to recover from a credential harvesting attack, highlighting reduced downtime and compliance benefits"
    ],
    "motivations": [
     {
@@ -523,16 +523,16 @@
    ],
    "objections": [
     {
-     "q": "Fortinet already has backup capabilities through our Security Fabric and partnerships with Veeam/Commvault. Why do we need Keepit?",
-     "a": "That's a fair point. However, those solutions often rely on the same infrastructure (AWS/Azure) as your primary environment, creating a single point of failure. Keepit is the only independent, vendor-neutral backup cloud with its own data centers, ensuring true data separation and immunity from supply-chain attacks. It's designed to complement your Security Fabric, not replace it, providing guaranteed clean recovery when prevention fails."
+     "q": "Fortinet already has backup capabilities through our Security Fabric and partnerships with Veeam/Commvault. Why do we need Northwind?",
+     "a": "That's a fair point. However, those solutions often rely on the same infrastructure (AWS/Azure) as your primary environment, creating a single point of failure. Northwind is the only independent, vendor-neutral backup cloud with its own data centers, ensuring true data separation and immunity from supply-chain attacks. It's designed to complement your Security Fabric, not replace it, providing guaranteed clean recovery when prevention fails."
     },
     {
      "q": "Our customers in Latin America are already satisfied with Microsoft 365 native retention. Why add another tool?",
-     "a": "Native retention is great for short-term recovery, but it doesn't protect against ransomware that encrypts the primary environment, malicious insider deletion, or compliance requirements for long-term archival. Keepit provides immutable, blockchain-verified backups with unlimited retention, giving your customers a true safety net. Plus, with regional data centers, we meet local data sovereignty laws that native tools may not fully address."
+     "a": "Native retention is great for short-term recovery, but it doesn't protect against ransomware that encrypts the primary environment, malicious insider deletion, or compliance requirements for long-term archival. Northwind provides immutable, blockchain-verified backups with unlimited retention, giving your customers a true safety net. Plus, with regional data centers, we meet local data sovereignty laws that native tools may not fully address."
     },
     {
      "q": "We're focused on prevention-first security. Backup is a lower priority for our customers.",
-     "a": "I understand, but recent events show that even the best prevention can fail. The credential harvesting campaign and CVE exploitation prove that recovery is now a top concern for your customers. By partnering with Keepit, you can offer a complete resilience story, prevention from Fortinet and guaranteed recovery from Keepit, building trust and differentiating your value proposition in the market."
+     "a": "I understand, but recent events show that even the best prevention can fail. The credential harvesting campaign and CVE exploitation prove that recovery is now a top concern for your customers. By partnering with Northwind, you can offer a complete resilience story, prevention from Fortinet and guaranteed recovery from Northwind, building trust and differentiating your value proposition in the market."
     }
    ],
    "signalScore": 99
@@ -562,7 +562,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Lead with technical depth and architecture. Do not lead with ROI or cost savings, Hua cares about integrity, not price. Share a technical whitepaper or architecture diagram showing how Keepit's independent cloud infrastructure and blockchain verification work. Reference the 2026 Fortinet credential harvesting campaign and ask: 'How are you currently ensuring your backup data is not compromised if your primary environment was?' Use LinkedIn or email for initial outreach, then offer a technical deep-dive call with your engineering team. Avoid vague marketing language like 'best-in-class' or 'industry-leading.' Instead, use precise terms like 'vendor-neutral,' 'blockchain-anchored encryption keys,' and 'immutable recovery points.' Acknowledge that you understand Fortinet's security products and position Keepit as a complementary layer that enhances, not competes with, the Security Fabric.",
+   "approach": "Lead with technical depth and architecture. Do not lead with ROI or cost savings, Hua cares about integrity, not price. Share a technical whitepaper or architecture diagram showing how Northwind's independent cloud infrastructure and blockchain verification work. Reference the 2026 Fortinet credential harvesting campaign and ask: 'How are you currently ensuring your backup data is not compromised if your primary environment was?' Use LinkedIn or email for initial outreach, then offer a technical deep-dive call with your engineering team. Avoid vague marketing language like 'best-in-class' or 'industry-leading.' Instead, use precise terms like 'vendor-neutral,' 'blockchain-anchored encryption keys,' and 'immutable recovery points.' Acknowledge that you understand Fortinet's security products and position Northwind as a complementary layer that enhances, not competes with, the Security Fabric.",
    "painPoints": [
     "Post-breach data integrity crisis: After the 2026 credential harvesting campaign, Hua needs absolute proof that backup data is clean and untampered. Relying on native Microsoft retention or backup tools that share infrastructure with the primary environment is no longer acceptable",
     "Engineering team productivity loss from data recovery: If Fortinet's internal SaaS data (e.g., Salesforce records, M365 mailboxes, Google Workspace files) is lost or corrupted, Hua's engineering teams lose critical collaboration and customer data, causing massive delays in product development and incident response",
@@ -572,7 +572,7 @@
    ],
    "talkingPoints": [
     "Fortinet's own recent security incidents (credential harvesting, CVE exploitation) highlight that prevention is not enough. How are you ensuring your internal SaaS data (M365, Salesforce) can be recovered with mathematical certainty, not just a restore from a potentially compromised backup?",
-    "Most backup solutions run on the same hyperscaler infrastructure (AWS/Azure) as the primary data. Keepit is the only platform with its own independent, wholly-owned data centers, eliminating the supply-chain risk of a hyperscaler outage or compromise affecting both your live data and backup",
+    "Most backup solutions run on the same hyperscaler infrastructure (AWS/Azure) as the primary data. Northwind is the only platform with its own independent, wholly-owned data centers, eliminating the supply-chain risk of a hyperscaler outage or compromise affecting both your live data and backup",
     "We provide blockchain-verified immutability. This means every recovery point is anchored with a cryptographic hash that can be independently verified, giving you tamper-proof proof of data integrity for auditors and regulators",
     "Our architecture is purpose-built for SaaS, not adapted from legacy backup tools. This means no complex agents, no infrastructure to manage, and instant, granular search and recovery for your engineering teams",
     "We offer unlimited retention with flat-rate pricing. For a company of Fortinet's scale, this eliminates cost surprises and ensures you can keep long-term archives for eDiscovery and compliance without budget battles"
@@ -602,19 +602,19 @@
    "objections": [
     {
      "q": "We already use Veeam/Commvault for backup. Why do we need another vendor?",
-     "a": "That's a fair point. However, Veeam and Commvault were designed for on-prem or hybrid environments and often run on the same hyperscaler infrastructure (AWS/Azure) as your primary SaaS data. If that hyperscaler is compromised or suffers an outage, your backup is also at risk. Keepit is the only independent cloud built exclusively for SaaS data protection. Our blockchain-verified immutability and wholly-owned data centers provide a true air-gap that Veeam/Commvault cannot offer. We're not replacing them, we're adding a critical layer of resilience that Fortinet's own security incidents have proven is necessary."
+     "a": "That's a fair point. However, Veeam and Commvault were designed for on-prem or hybrid environments and often run on the same hyperscaler infrastructure (AWS/Azure) as your primary SaaS data. If that hyperscaler is compromised or suffers an outage, your backup is also at risk. Northwind is the only independent cloud built exclusively for SaaS data protection. Our blockchain-verified immutability and wholly-owned data centers provide a true air-gap that Veeam/Commvault cannot offer. We're not replacing them, we're adding a critical layer of resilience that Fortinet's own security incidents have proven is necessary."
     },
     {
      "q": "We trust Microsoft 365's native retention and recycle bin. Our engineers know how to use it.",
-     "a": "Microsoft's native retention is a great first line of defense, but it's not designed for ransomware recovery or long-term, immutable archiving. If an attacker gains admin privileges (as seen in the 2026 credential harvesting campaign), they can delete or corrupt data in the recycle bin. Microsoft's own terms of service also limit liability. Keepit provides an independent, immutable copy that is completely outside Microsoft's control, with unlimited retention and granular recovery. It's the safety net your engineering teams need when native tools fail."
+     "a": "Microsoft's native retention is a great first line of defense, but it's not designed for ransomware recovery or long-term, immutable archiving. If an attacker gains admin privileges (as seen in the 2026 credential harvesting campaign), they can delete or corrupt data in the recycle bin. Microsoft's own terms of service also limit liability. Northwind provides an independent, immutable copy that is completely outside Microsoft's control, with unlimited retention and granular recovery. It's the safety net your engineering teams need when native tools fail."
     },
     {
      "q": "We have a strong prevention-first Security Fabric. We don't expect to need recovery.",
-     "a": "That's exactly what many of Fortinet's customers thought before the 2026 incidents. The reality is that even the best prevention can be bypassed, as Fortinet's own experience shows. Keepit is not about replacing your Security Fabric; it's about completing it. We provide the 'last line of defense' that ensures even if prevention fails, your data is safe, clean, and recoverable. This is not a reflection on Fortinet's products, it's a recognition that no system is 100% immune."
+     "a": "That's exactly what many of Fortinet's customers thought before the 2026 incidents. The reality is that even the best prevention can be bypassed, as Fortinet's own experience shows. Northwind is not about replacing your Security Fabric; it's about completing it. We provide the 'last line of defense' that ensures even if prevention fails, your data is safe, clean, and recoverable. This is not a reflection on Fortinet's products, it's a recognition that no system is 100% immune."
     },
     {
      "q": "This sounds expensive. We have budget constraints.",
-     "a": "Keepit offers flat-rate, predictable pricing with no hidden egress or API fees. For a company of Fortinet's size, the cost of a single data loss incident, in terms of engineering downtime, customer trust, and regulatory fines, far exceeds the investment in Keepit. Plus, our unlimited retention means you won't face surprise costs for long-term archives. We can provide a quick, no-obligation quote to show how it fits within your budget."
+     "a": "Northwind offers flat-rate, predictable pricing with no hidden egress or API fees. For a company of Fortinet's size, the cost of a single data loss incident, in terms of engineering downtime, customer trust, and regulatory fines, far exceeds the investment in Northwind. Plus, our unlimited retention means you won't face surprise costs for long-term archives. We can provide a quick, no-obligation quote to show how it fits within your budget."
     }
    ],
    "signalScore": 99
@@ -643,7 +643,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Engage Latha with a technical, data-driven conversation focused on software integrity and recovery. Lead with the engineering implications of recent security incidents and how Keepit's blockchain-verified immutable backup can serve as a safety net for engineering data and configurations. Avoid overly salesy language; instead, speak her language of code, architecture, and resilience. Best channels: LinkedIn direct message with a technical insight, followed by a brief email referencing a specific vulnerability or incident. Offer a technical deep-dive or proof-of-concept tailored to Fortinet's environment.",
+   "approach": "Engage Latha with a technical, data-driven conversation focused on software integrity and recovery. Lead with the engineering implications of recent security incidents and how Northwind's blockchain-verified immutable backup can serve as a safety net for engineering data and configurations. Avoid overly salesy language; instead, speak her language of code, architecture, and resilience. Best channels: LinkedIn direct message with a technical insight, followed by a brief email referencing a specific vulnerability or incident. Offer a technical deep-dive or proof-of-concept tailored to Fortinet's environment.",
    "painPoints": [
     "Recent exploitation of critical vulnerabilities (e.g., CVE-2025-64446) undermines confidence in software integrity and requires robust recovery mechanisms beyond patching",
     "The June 2026 credential harvesting campaign exposed gaps in backup and recovery of engineering data and configurations, risking prolonged downtime and data loss",
@@ -655,7 +655,7 @@
     "How blockchain-verified immutability can provide tamper-proof recovery points for engineering configurations and SaaS data, directly addressing the aftermath of the credential harvesting campaign",
     "The importance of an independent backup layer to protect against supply-chain attacks that could compromise Fortinet's own software development pipelines",
     "Demonstrating data integrity to customers and auditors post-breach with mathematically verifiable recovery points",
-    "How Keepit's vendor-neutral architecture complements Fortinet's Security Fabric without adding complexity or dependency on hyperscalers",
+    "How Northwind's vendor-neutral architecture complements Fortinet's Security Fabric without adding complexity or dependency on hyperscalers",
     "Unlimited retention and granular recovery for SaaS data used by engineering teams (e.g., Microsoft 365, Google Workspace) to prevent accidental deletion or insider threats"
    ],
    "motivations": [
@@ -683,15 +683,15 @@
    "objections": [
     {
      "q": "We already have backup solutions from Veeam or Commvault in place.",
-     "a": "Those solutions often rely on the same cloud infrastructure as your primary environment, creating a single point of failure. Keepit's independent cloud and blockchain verification provide an additional, truly isolated layer of defense. We can complement your existing tools without replacing them, ensuring you have a clean, immutable copy even if your primary backup is compromised."
+     "a": "Those solutions often rely on the same cloud infrastructure as your primary environment, creating a single point of failure. Northwind's independent cloud and blockchain verification provide an additional, truly isolated layer of defense. We can complement your existing tools without replacing them, ensuring you have a clean, immutable copy even if your primary backup is compromised."
     },
     {
      "q": "Our prevention-first approach should be enough; we don't need another backup tool.",
-     "a": "Recent events like the credential harvesting campaign and active exploitation of FortiWeb vulnerabilities show that prevention can fail. When it does, you need guaranteed clean data to recover. Keepit acts as your last line of defense, ensuring business continuity and data integrity without competing with your security products."
+     "a": "Recent events like the credential harvesting campaign and active exploitation of FortiWeb vulnerabilities show that prevention can fail. When it does, you need guaranteed clean data to recover. Northwind acts as your last line of defense, ensuring business continuity and data integrity without competing with your security products."
     },
     {
      "q": "We're concerned about adding complexity to our Security Fabric.",
-     "a": "Keepit is designed to be simple and non-disruptive. It integrates seamlessly with SaaS applications and requires no agents or changes to your existing infrastructure. Our flat-rate pricing and unlimited retention also eliminate billing surprises, making it a low-overhead addition to your resilience strategy."
+     "a": "Northwind is designed to be simple and non-disruptive. It integrates seamlessly with SaaS applications and requires no agents or changes to your existing infrastructure. Our flat-rate pricing and unlimited retention also eliminate billing surprises, making it a low-overhead addition to your resilience strategy."
     }
    ],
    "signalScore": 99
@@ -720,7 +720,7 @@
     "Decision-maker"
    ],
    "roleClass": "decision-maker",
-   "approach": "Lead with empathy and strategic partnership, not a sales pitch. Acknowledge the pressure he is under post-incident. Frame Keepit as the 'last line of defense' that completes the Fortinet Security Fabric, not as a competitor. Use data-driven language: reference the specific incident (June 2026 credential harvesting) and the gap it exposed. Emphasize Keepit's independence (wholly-owned data centers) and blockchain verification as the only way to guarantee clean recovery. Avoid criticizing Fortinet's products directly; instead, position Keepit as the essential complement. Best channels: LinkedIn message referencing the incident and a follow-up email with a case study of a similar company that recovered using Keepit. Offer a brief, no-commitment technical overview for his team.",
+   "approach": "Lead with empathy and strategic partnership, not a sales pitch. Acknowledge the pressure he is under post-incident. Frame Northwind as the 'last line of defense' that completes the Fortinet Security Fabric, not as a competitor. Use data-driven language: reference the specific incident (June 2026 credential harvesting) and the gap it exposed. Emphasize Northwind's independence (wholly-owned data centers) and blockchain verification as the only way to guarantee clean recovery. Avoid criticizing Fortinet's products directly; instead, position Northwind as the essential complement. Best channels: LinkedIn message referencing the incident and a follow-up email with a case study of a similar company that recovered using Northwind. Offer a brief, no-commitment technical overview for his team.",
    "painPoints": [
     "Post-breach credibility: The June 2026 credential harvesting campaign that compromised Fortinet devices globally directly undermines his cloud security narrative. He urgently needs to demonstrate that Fortinet's own cloud data is immutably protected and recoverable to restore customer and board confidence",
     "Immutable recovery guarantee: Fortinet's prevention-first approach failed. He needs a provably clean, independent backup layer that is immune to the same attacks that compromised Fortinet's own infrastructure, ensuring he can recover SaaS data (M365, Google Workspace) without trusting the same environment that was breached",
@@ -730,8 +730,8 @@
    ],
    "talkingPoints": [
     "Vincent, after the June 2026 credential harvesting campaign, how are you ensuring that your own cloud data (M365, Google Workspace) is recoverable from a clean, independent source that can't be compromised by the same attack vector?",
-    "We've seen that even the most robust prevention-first architectures can be breached. Keepit provides the independent, immutable 'last line of defense' that guarantees you have a clean copy of your SaaS data, verified by blockchain, regardless of what happens to your primary environment",
-    "Unlike backup solutions that run on AWS or Azure, Keepit operates its own global data centers. This ensures true data sovereignty and eliminates the supply-chain risk of having your backup in the same cloud ecosystem as your primary data",
+    "We've seen that even the most robust prevention-first architectures can be breached. Northwind provides the independent, immutable 'last line of defense' that guarantees you have a clean copy of your SaaS data, verified by blockchain, regardless of what happens to your primary environment",
+    "Unlike backup solutions that run on AWS or Azure, Northwind operates its own global data centers. This ensures true data sovereignty and eliminates the supply-chain risk of having your backup in the same cloud ecosystem as your primary data",
     "Our blockchain-verified immutability gives you mathematically provable audit trails for compliance. Post-breach, this is exactly what regulators and auditors will demand to prove data integrity and recovery capabilities",
     "We offer flat-rate, predictable pricing with unlimited retention. No surprise egress fees, no complex licensing. This makes it easy to budget and scale as Fortinet's cloud footprint grows"
    ],
@@ -760,19 +760,19 @@
    "objections": [
     {
      "q": "We already have native retention in Microsoft 365 and our own FortiCloud backup features. Why do we need a third-party solution?",
-     "a": "That's a fair point, Vincent. Native retention is great for accidental deletions, but it's not designed for ransomware recovery or sophisticated attacks. The June 2026 campaign showed that attackers can compromise the entire environment, including native recovery tools. Keepit provides an independent, air-gapped copy that is immune to the same attack. Think of it as your insurance policy when prevention fails. It's not a replacement for native tools, it's a critical complement."
+     "a": "That's a fair point, Vincent. Native retention is great for accidental deletions, but it's not designed for ransomware recovery or sophisticated attacks. The June 2026 campaign showed that attackers can compromise the entire environment, including native recovery tools. Northwind provides an independent, air-gapped copy that is immune to the same attack. Think of it as your insurance policy when prevention fails. It's not a replacement for native tools, it's a critical complement."
     },
     {
      "q": "We're a security company. We can build this ourselves.",
-     "a": "Absolutely, you have world-class security talent. But building a truly independent, blockchain-verified, globally distributed backup cloud is a massive engineering and operational undertaking. It's not core to your business. Keepit is purpose-built for exactly this, with over a decade of focus. Partnering with us lets you focus on your core Security Fabric while we guarantee your data recovery. It's faster, cheaper, and more reliable than building from scratch."
+     "a": "Absolutely, you have world-class security talent. But building a truly independent, blockchain-verified, globally distributed backup cloud is a massive engineering and operational undertaking. It's not core to your business. Northwind is purpose-built for exactly this, with over a decade of focus. Partnering with us lets you focus on your core Security Fabric while we guarantee your data recovery. It's faster, cheaper, and more reliable than building from scratch."
     },
     {
      "q": "We're concerned about vendor lock-in with another backup provider.",
-     "a": "I understand that concern. Keepit is actually the antidote to vendor lock-in. We are vendor-neutral and operate our own independent cloud infrastructure. We don't rely on AWS, Azure, or Google Cloud. Our data format is open, and we support standard restore protocols. You are never locked into our ecosystem. In fact, we give you more freedom and control than relying on a backup solution that runs on the same hyperscaler as your primary data."
+     "a": "I understand that concern. Northwind is actually the antidote to vendor lock-in. We are vendor-neutral and operate our own independent cloud infrastructure. We don't rely on AWS, Azure, or Google Cloud. Our data format is open, and we support standard restore protocols. You are never locked into our ecosystem. In fact, we give you more freedom and control than relying on a backup solution that runs on the same hyperscaler as your primary data."
     },
     {
      "q": "This seems expensive. We have budget constraints.",
-     "a": "I appreciate the budget reality. But consider the cost of a single breach that you can't recover from cleanly. The June 2026 campaign alone likely cost Fortinet millions in remediation, legal fees, and lost customer trust. Keepit's flat-rate, predictable pricing with no hidden egress fees means you can budget accurately. It's a fraction of the cost of a single major incident. We can also start with a targeted pilot for your most critical SaaS data (e.g., M365 for your executive team) to prove value before a full rollout."
+     "a": "I appreciate the budget reality. But consider the cost of a single breach that you can't recover from cleanly. The June 2026 campaign alone likely cost Fortinet millions in remediation, legal fees, and lost customer trust. Northwind's flat-rate, predictable pricing with no hidden egress fees means you can budget accurately. It's a fraction of the cost of a single major incident. We can also start with a targeted pilot for your most critical SaaS data (e.g., M365 for your executive team) to prove value before a full rollout."
     }
    ],
    "signalScore": 99
@@ -801,7 +801,7 @@
     "Decision-maker"
    ],
    "roleClass": "decision-maker",
-   "approach": "Lead with strategic, board-level language. Frame the conversation around operational resilience, risk reduction, and cost predictability, not technical features. Start with a brief, data-driven email referencing a trigger event (e.g., Royal London's recent digital transformation or the St. James's Place mandate) and the growing ransomware threat to UK financial institutions. Propose a 15-minute call to discuss how Keepit's independent, blockchain-verified backup cloud eliminates cloud concentration risk and provides guaranteed data integrity for FCA/PRA compliance. Avoid overly technical jargon (he has a technical background but now thinks strategically). Use LinkedIn for initial outreach, then follow up with a personalized video or PDF one-pager. Channels: Email (executive summary), LinkedIn (connection request with brief value prop), and phone (only after warm-up).",
+   "approach": "Lead with strategic, board-level language. Frame the conversation around operational resilience, risk reduction, and cost predictability, not technical features. Start with a brief, data-driven email referencing a trigger event (e.g., Royal London's recent digital transformation or the St. James's Place mandate) and the growing ransomware threat to UK financial institutions. Propose a 15-minute call to discuss how Northwind's independent, blockchain-verified backup cloud eliminates cloud concentration risk and provides guaranteed data integrity for FCA/PRA compliance. Avoid overly technical jargon (he has a technical background but now thinks strategically). Use LinkedIn for initial outreach, then follow up with a personalized video or PDF one-pager. Channels: Email (executive summary), LinkedIn (connection request with brief value prop), and phone (only after warm-up).",
    "painPoints": [
     "Cloud concentration risk: Heavy reliance on Microsoft Azure and M365 creates a single point of failure, if Microsoft suffers an outage or breach, both production data and native backups are compromised. He needs a truly independent, vendor-neutral backup cloud to eliminate this risk",
     "Regulatory compliance burden: Must demonstrate robust, tested backup and recovery capabilities under FCA Operational Resilience and PRA requirements, with long-term data retention for audits. He cannot afford to fail a regulatory review on data protection",
@@ -810,7 +810,7 @@
     "Legacy system migration risk: Moving data from legacy on-premise systems to the cloud introduces risks of data loss or corruption. He needs a solution that can protect data during and after the migration, with unlimited retention for long-term archival"
    ],
    "talkingPoints": [
-    "As Royal London deepens its Azure and M365 dependency, how are you ensuring your backup strategy doesn't create a single point of failure? Keepit is the only independent cloud backup platform that guarantees data sovereignty and immunity from supply-chain attacks",
+    "As Royal London deepens its Azure and M365 dependency, how are you ensuring your backup strategy doesn't create a single point of failure? Northwind is the only independent cloud backup platform that guarantees data sovereignty and immunity from supply-chain attacks",
     "With FCA Operational Resilience rules demanding demonstrable recovery capabilities, our blockchain-verified immutability provides mathematically provable clean recovery points, something native Azure Backup cannot offer",
     "Our flat-rate, predictable pricing model eliminates hidden egress and API fees, aligning perfectly with Royal London's mutual ethos of prudent financial management. No surprises, no budget overruns",
     "Given your digital transformation and portal upgrades, now is the ideal time to standardize on a purpose-built SaaS backup solution that can protect new data flows from day one, without legacy vendor lock-in",
@@ -841,19 +841,19 @@
    "objections": [
     {
      "q": "We already use Azure Backup and M365 native backup, why do we need another tool?",
-     "a": "That's a fair point, James. However, native backups share the same infrastructure as your production data. If Azure suffers a ransomware attack or a configuration error, both your live data and backups could be compromised. Keepit's independent cloud, hosted in our own UK data centers, provides true separation and blockchain-verified immutability. It's not about replacing your current tools entirely; it's about adding a guaranteed clean copy for recovery, especially for critical systems like M365 and Salesforce that underpin member services."
+     "a": "That's a fair point, James. However, native backups share the same infrastructure as your production data. If Azure suffers a ransomware attack or a configuration error, both your live data and backups could be compromised. Northwind's independent cloud, hosted in our own UK data centers, provides true separation and blockchain-verified immutability. It's not about replacing your current tools entirely; it's about adding a guaranteed clean copy for recovery, especially for critical systems like M365 and Salesforce that underpin member services."
     },
     {
      "q": "Our budget is tight, we're a mutual, so we need to be very cost-conscious.",
-     "a": "Understood, and that's exactly why Keepit's flat-rate pricing is a perfect fit. Unlike Azure Backup, which charges unpredictable egress and API fees as your data grows, we offer a single, predictable price with unlimited retention. You can budget accurately for years without surprises. Plus, by consolidating multiple backup tools into one platform, you'll likely reduce total cost of ownership. Let me show you a quick cost comparison based on your current M365 data volume."
+     "a": "Understood, and that's exactly why Northwind's flat-rate pricing is a perfect fit. Unlike Azure Backup, which charges unpredictable egress and API fees as your data grows, we offer a single, predictable price with unlimited retention. You can budget accurately for years without surprises. Plus, by consolidating multiple backup tools into one platform, you'll likely reduce total cost of ownership. Let me show you a quick cost comparison based on your current M365 data volume."
     },
     {
      "q": "We're in the middle of a major cloud migration, we can't add another vendor right now.",
-     "a": "Actually, this is the perfect time. As you migrate legacy systems to Azure, you're creating new data flows that need protection. By standardizing on Keepit now, you can protect those new workloads from day one with a single, scalable platform. We've helped other financial institutions during similar migrations, our implementation is quick (typically days for M365) and doesn't disrupt existing operations. Let's schedule a 30-minute technical briefing to show you how seamless it is."
+     "a": "Actually, this is the perfect time. As you migrate legacy systems to Azure, you're creating new data flows that need protection. By standardizing on Northwind now, you can protect those new workloads from day one with a single, scalable platform. We've helped other financial institutions during similar migrations, our implementation is quick (typically days for M365) and doesn't disrupt existing operations. Let's schedule a 30-minute technical briefing to show you how seamless it is."
     },
     {
      "q": "We need to ensure data stays in the UK, can you guarantee data sovereignty?",
-     "a": "Absolutely. Keepit operates its own data centers in the UK (and other regions globally), so your member data never leaves UK jurisdiction. We don't rely on AWS or Azure for storage, which means we can guarantee data sovereignty and protect against extraterritorial access (e.g., US CLOUD Act). This is a key differentiator for regulated financial institutions like Royal London. I can provide a data residency certificate and our UK data center locations in our proposal."
+     "a": "Absolutely. Northwind operates its own data centers in the UK (and other regions globally), so your member data never leaves UK jurisdiction. We don't rely on AWS or Azure for storage, which means we can guarantee data sovereignty and protect against extraterritorial access (e.g., US CLOUD Act). This is a key differentiator for regulated financial institutions like Royal London. I can provide a data residency certificate and our UK data center locations in our proposal."
     }
    ],
    "signalScore": 99
@@ -896,7 +896,7 @@
    "talkingPoints": [
     "I noticed CPFL's recent R$31.1 billion capex plan and the Cisco cybersecurity partnership, impressive steps. But with your heavy reliance on Microsoft 365 and Azure, how are you addressing the shared responsibility gap for SaaS data protection?",
     "As a critical energy infrastructure provider, you're a prime ransomware target. Native Microsoft backup won't protect you if Azure Entra ID is compromised. Our blockchain-verified, immutable backups are mathematically guaranteed to be clean for recovery",
-    "LGPD requires data sovereignty and audit trails. Keepit's independent data centers in Brazil ensure your customer data never leaves the jurisdiction, with tamper-proof verification for every backup",
+    "LGPD requires data sovereignty and audit trails. Northwind's independent data centers in Brazil ensure your customer data never leaves the jurisdiction, with tamper-proof verification for every backup",
     "We offer predictable, flat-rate pricing with unlimited retention, no hidden egress fees. This aligns with your capex planning and avoids budget surprises as your SaaS footprint grows",
     "Our platform is purpose-built for SaaS, not adapted from legacy tools. We can show you a proof of concept in under an hour, demonstrating instant search and recovery for your Microsoft 365 environment"
    ],
@@ -925,15 +925,15 @@
    "objections": [
     {
      "q": "We already have Microsoft 365's native retention and backup capabilities. Why do we need another tool?",
-     "a": "That's a common assumption. Microsoft's native retention is designed for short-term recovery from accidental deletion, not for ransomware resilience. If a sophisticated attacker compromises Azure Entra ID, they can delete both production and backup data. Keepit is vendor-neutral and independent, our blockchain-verified backups are immutable and stored in our own data centers, not on Azure. This gives you true defense-in-depth and a guaranteed clean copy for recovery."
+     "a": "That's a common assumption. Microsoft's native retention is designed for short-term recovery from accidental deletion, not for ransomware resilience. If a sophisticated attacker compromises Azure Entra ID, they can delete both production and backup data. Northwind is vendor-neutral and independent, our blockchain-verified backups are immutable and stored in our own data centers, not on Azure. This gives you true defense-in-depth and a guaranteed clean copy for recovery."
     },
     {
      "q": "We're already working with Cisco on cybersecurity. Isn't that covering data protection?",
-     "a": "Cisco is excellent for network and endpoint security, but they don't address SaaS data protection. Your Microsoft 365 data, emails, SharePoint files, Teams conversations, is outside Cisco's scope. Keepit fills that critical gap, providing the 'last line of defense' for your SaaS data. Think of it as the recovery layer that complements your existing security investments."
+     "a": "Cisco is excellent for network and endpoint security, but they don't address SaaS data protection. Your Microsoft 365 data, emails, SharePoint files, Teams conversations, is outside Cisco's scope. Northwind fills that critical gap, providing the 'last line of defense' for your SaaS data. Think of it as the recovery layer that complements your existing security investments."
     },
     {
      "q": "We have a massive capex plan. Adding another vendor is a tough sell.",
-     "a": "I understand. But consider the cost of a ransomware incident: downtime, regulatory fines, reputational damage, and potential grid disruption. Keepit's flat-rate pricing with no hidden fees makes it easy to budget. Plus, we offer unlimited retention, so you're not paying per gigabyte as your data grows. It's a cost-effective insurance policy for your most critical SaaS data."
+     "a": "I understand. But consider the cost of a ransomware incident: downtime, regulatory fines, reputational damage, and potential grid disruption. Northwind's flat-rate pricing with no hidden fees makes it easy to budget. Plus, we offer unlimited retention, so you're not paying per gigabyte as your data grows. It's a cost-effective insurance policy for your most critical SaaS data."
     },
     {
      "q": "How do you ensure data sovereignty under LGPD?",
@@ -968,7 +968,7 @@
     "Decision-maker"
    ],
    "roleClass": "decision-maker",
-   "approach": "Engage with a strategic, consultative tone that acknowledges the gravity of his role. Lead with the 'Shared Responsibility Gap' and the 'Single Point of Failure' risk of Azure-native backup. Use language that resonates with a VP: 'operational resilience,' 'risk mitigation,' 'compliance assurance,' and 'strategic independence.' Avoid overly technical jargon about backup mechanics; instead, frame Keepit as a strategic risk-management platform. The best channel is a personalized LinkedIn message followed by an email to his direct line (if available), referencing a recent Dräger achievement (e.g., CMMC certification) and proposing a 15-minute 'executive briefing' on achieving a zero-trust data protection model. Do NOT lead with a generic pitch about 'backup.'",
+   "approach": "Engage with a strategic, consultative tone that acknowledges the gravity of his role. Lead with the 'Shared Responsibility Gap' and the 'Single Point of Failure' risk of Azure-native backup. Use language that resonates with a VP: 'operational resilience,' 'risk mitigation,' 'compliance assurance,' and 'strategic independence.' Avoid overly technical jargon about backup mechanics; instead, frame Northwind as a strategic risk-management platform. The best channel is a personalized LinkedIn message followed by an email to his direct line (if available), referencing a recent Dräger achievement (e.g., CMMC certification) and proposing a 15-minute 'executive briefing' on achieving a zero-trust data protection model. Do NOT lead with a generic pitch about 'backup.'",
    "painPoints": [
     "The 'Shared Responsibility Gap' in Azure: As Dräger migrates to Azure, he knows Microsoft protects the infrastructure, but *he* is responsible for protecting the data *in* Microsoft 365 and other SaaS apps. Azure Backup alone is a single point of failure if an attacker compromises admin credentials, which is unacceptable for life-critical data",
     "Ransomware & Supply-Chain Attack Risk: A successful attack could encrypt patient logs, device calibration data, or cloud analytics. As a VP of Product & Application Management, a breach would not only cause operational chaos but could also halt production or endanger patient safety, directly impacting his core responsibility",
@@ -978,11 +978,11 @@
    ],
    "talkingPoints": [
     "The Shared Responsibility Gap: 'Norbert, your Azure migration is impressive, but it creates a critical data protection gap. Microsoft is responsible for the *cloud*, but you are responsible for your data *in* the cloud. If an attacker compromises your Azure admin, they can delete your backups. How are you ensuring true independence and immutability for your M365 and IoT data?'",
-    "CMMC & Compliance Alignment: 'Given Dräger's perfect-score CMMC Level 2 certification, you clearly understand the need for mathematically verifiable data integrity. Keepit's blockchain-anchored immutability provides the tamper-proof audit trail that standard backups can't offer, directly supporting your compliance with FDA, EU MDR, and GDPR.'",
+    "CMMC & Compliance Alignment: 'Given Dräger's perfect-score CMMC Level 2 certification, you clearly understand the need for mathematically verifiable data integrity. Northwind's blockchain-anchored immutability provides the tamper-proof audit trail that standard backups can't offer, directly supporting your compliance with FDA, EU MDR, and GDPR.'",
     "Ransomware Immunity: 'For a company that makes life-saving equipment, recovery from a ransomware attack isn't just about restoring files",
-    "it's about guaranteeing the integrity of the data you're restoring. Keepit's immutable, air-gapped cloud is designed to be immune to ransomware, ensuring you always have a clean copy of your critical application data.'",
+    "it's about guaranteeing the integrity of the data you're restoring. Northwind's immutable, air-gapped cloud is designed to be immune to ransomware, ensuring you always have a clean copy of your critical application data.'",
     "Vendor-Neutral Independence: 'We are the only independent backup cloud, not built on top of AWS or Azure. This means we are immune to supply-chain attacks on your primary cloud vendor, and it guarantees true data sovereignty in our EU data centers. It's a zero-trust approach to your data protection strategy.'",
-    "Unlimited Retention & Predictable Costs: 'Your IoT devices generate massive amounts of data. With legacy tools, long-term retention becomes a cost and complexity nightmare. Keepit offers unlimited retention with a simple, flat-rate price, making it easy to archive and instantly search all your critical data for eDiscovery and compliance.'"
+    "Unlimited Retention & Predictable Costs: 'Your IoT devices generate massive amounts of data. With legacy tools, long-term retention becomes a cost and complexity nightmare. Northwind offers unlimited retention with a simple, flat-rate price, making it easy to archive and instantly search all your critical data for eDiscovery and compliance.'"
    ],
    "motivations": [
     {
@@ -1009,15 +1009,15 @@
    "objections": [
     {
      "q": "We already use Azure Backup, and we are comfortable with it. Why do we need another vendor?",
-     "a": "That's a fair point, and Azure Backup is a good tool. However, it creates a single point of failure. If an attacker compromises your Azure admin credentials, they can delete your backups. For a company like Dräger, where data integrity is a matter of life and safety, that's an unacceptable risk. Keepit provides an independent, air-gapped, and immutable copy of your data that survives that compromise. It's not a replacement for Azure Backup; it's your insurance policy against the most sophisticated attacks. Think of it as a zero-trust data protection layer."
+     "a": "That's a fair point, and Azure Backup is a good tool. However, it creates a single point of failure. If an attacker compromises your Azure admin credentials, they can delete your backups. For a company like Dräger, where data integrity is a matter of life and safety, that's an unacceptable risk. Northwind provides an independent, air-gapped, and immutable copy of your data that survives that compromise. It's not a replacement for Azure Backup; it's your insurance policy against the most sophisticated attacks. Think of it as a zero-trust data protection layer."
     },
     {
      "q": "This sounds expensive. We have a budget for security, but this is a new line item.",
-     "a": "I understand. When you look at the cost, consider the risk you're mitigating. A ransomware attack that encrypts your patient monitoring data or device calibration logs could halt operations and damage your brand. Keepit's flat-rate pricing is predictable and eliminates hidden egress fees. It's a fraction of the cost of a single hour of downtime for your safety-critical systems. We can also help you build a business case showing the ROI of this independent recovery layer."
+     "a": "I understand. When you look at the cost, consider the risk you're mitigating. A ransomware attack that encrypts your patient monitoring data or device calibration logs could halt operations and damage your brand. Northwind's flat-rate pricing is predictable and eliminates hidden egress fees. It's a fraction of the cost of a single hour of downtime for your safety-critical systems. We can also help you build a business case showing the ROI of this independent recovery layer."
     },
     {
      "q": "We are a highly regulated company. We need to ensure any new vendor meets our strict compliance requirements.",
-     "a": "That's exactly why Keepit is the right fit. Our blockchain-verified immutability provides a mathematically provable audit trail that is superior to what any other backup vendor offers. We have dedicated data centers in Germany and Europe to guarantee data sovereignty. We would be happy to provide you with our SOC 2 reports, ISO certifications, and a detailed compliance matrix that maps directly to FDA, EU MDR, and GDPR requirements."
+     "a": "That's exactly why Northwind is the right fit. Our blockchain-verified immutability provides a mathematically provable audit trail that is superior to what any other backup vendor offers. We have dedicated data centers in Germany and Europe to guarantee data sovereignty. We would be happy to provide you with our SOC 2 reports, ISO certifications, and a detailed compliance matrix that maps directly to FDA, EU MDR, and GDPR requirements."
     }
    ],
    "signalScore": 99
@@ -1046,7 +1046,7 @@
     "Decision-maker"
    ],
    "roleClass": "decision-maker",
-   "approach": "Engage Knut with a data-driven, strategic tone that emphasizes risk mitigation, compliance, and ROI. Lead with the unique value of Keepit's independent, blockchain-verified backup cloud, highlighting how it addresses his specific pain points around ransomware recovery, IoT data integrity, and data sovereignty. Avoid overly technical jargon unless he asks; focus on outcomes like guaranteed recovery, audit trails, and predictable pricing. Best channels: LinkedIn (for initial connection with a personalized message referencing SalMar's green bonds or Capital Markets Day), followed by email with a concise case study or whitepaper on SaaS data protection in critical infrastructure. Avoid generic pitches about 'backup', he likely hears those daily. Instead, position Keepit as a strategic enabler of operational resilience and compliance.",
+   "approach": "Engage Knut with a data-driven, strategic tone that emphasizes risk mitigation, compliance, and ROI. Lead with the unique value of Northwind's independent, blockchain-verified backup cloud, highlighting how it addresses his specific pain points around ransomware recovery, IoT data integrity, and data sovereignty. Avoid overly technical jargon unless he asks; focus on outcomes like guaranteed recovery, audit trails, and predictable pricing. Best channels: LinkedIn (for initial connection with a personalized message referencing SalMar's green bonds or Capital Markets Day), followed by email with a concise case study or whitepaper on SaaS data protection in critical infrastructure. Avoid generic pitches about 'backup', he likely hears those daily. Instead, position Northwind as a strategic enabler of operational resilience and compliance.",
    "painPoints": [
     "Ransomware vulnerability: SalMar's heavy reliance on Microsoft 365 and Azure for core operations means a successful ransomware attack could cripple global coordination and production",
     "native Microsoft backup lacks true immutability and is vulnerable to tenant compromise",
@@ -1060,12 +1060,12 @@
     "needs fast, granular recovery independent of Microsoft's infrastructure to ensure business continuity without relying on the same vendor"
    ],
    "talkingPoints": [
-    "How Keepit's blockchain-verified immutability provides a mathematically verifiable recovery point, ensuring SalMar's IoT and M365 data is tamper-proof and audit-ready for GDPR and NIS2 compliance",
+    "How Northwind's blockchain-verified immutability provides a mathematically verifiable recovery point, ensuring SalMar's IoT and M365 data is tamper-proof and audit-ready for GDPR and NIS2 compliance",
     "The risk of relying on native Microsoft backup: a single ransomware attack could compromise both primary and backup data",
-    "Keepit's independent cloud ensures true separation and immunity from supply-chain attacks",
-    "How Keepit's flat-rate pricing with no hidden egress fees aligns with SalMar's focus on predictable costs and strategic investments (e.g., recent green bonds), avoiding budget overruns from unexpected data recovery charges",
-    "Real-world recovery scenarios: how Keepit enables fast, granular recovery from SaaS outages or accidental deletions, ensuring business continuity for SalMar's global operations without dependency on Microsoft's infrastructure",
-    "Data sovereignty: Keepit's Norwegian/European data centers guarantee that SalMar's sensitive operational data remains within jurisdiction, supporting compliance with local food safety and data protection regulations"
+    "Northwind's independent cloud ensures true separation and immunity from supply-chain attacks",
+    "How Northwind's flat-rate pricing with no hidden egress fees aligns with SalMar's focus on predictable costs and strategic investments (e.g., recent green bonds), avoiding budget overruns from unexpected data recovery charges",
+    "Real-world recovery scenarios: how Northwind enables fast, granular recovery from SaaS outages or accidental deletions, ensuring business continuity for SalMar's global operations without dependency on Microsoft's infrastructure",
+    "Data sovereignty: Northwind's Norwegian/European data centers guarantee that SalMar's sensitive operational data remains within jurisdiction, supporting compliance with local food safety and data protection regulations"
    ],
    "motivations": [
     {
@@ -1092,19 +1092,19 @@
    "objections": [
     {
      "q": "We already have Microsoft 365 retention policies and Azure Backup, why do we need another tool?",
-     "a": "That's a common assumption, but native Microsoft tools are not true backup, they lack immutability and are vulnerable to total tenant compromise. If a ransomware attacker gains admin access to your Microsoft tenant, they can delete or encrypt your backup data too. Keepit provides a completely independent, vendor-neutral cloud with blockchain-verified immutability, ensuring you have a guaranteed clean copy to recover from. It's like having a fireproof safe for your data, separate from the building."
+     "a": "That's a common assumption, but native Microsoft tools are not true backup, they lack immutability and are vulnerable to total tenant compromise. If a ransomware attacker gains admin access to your Microsoft tenant, they can delete or encrypt your backup data too. Northwind provides a completely independent, vendor-neutral cloud with blockchain-verified immutability, ensuring you have a guaranteed clean copy to recover from. It's like having a fireproof safe for your data, separate from the building."
     },
     {
      "q": "We're concerned about adding another vendor to our stack, it increases complexity.",
-     "a": "I understand the concern, but Keepit is purpose-built to reduce complexity. It's a single, unified platform for all your SaaS data protection needs (M365, Google Workspace, Salesforce) with transparent pricing and no hidden fees. Our architecture is designed to integrate seamlessly with your existing Microsoft environment, and we provide instant, granular search and recovery, so your team won't need extensive training. It's actually simpler than managing multiple point solutions or relying on fragmented native tools."
+     "a": "I understand the concern, but Northwind is purpose-built to reduce complexity. It's a single, unified platform for all your SaaS data protection needs (M365, Google Workspace, Salesforce) with transparent pricing and no hidden fees. Our architecture is designed to integrate seamlessly with your existing Microsoft environment, and we provide instant, granular search and recovery, so your team won't need extensive training. It's actually simpler than managing multiple point solutions or relying on fragmented native tools."
     },
     {
      "q": "Our budget is already allocated for this year, we can't justify a new expense.",
-     "a": "Given SalMar's recent green bond issuance and focus on operational resilience, this is exactly the kind of strategic investment that protects shareholder value. Our flat-rate pricing means no surprises, and the cost of a single ransomware incident, in terms of downtime, reputational damage, and recovery, far outweighs the investment in Keepit. Plus, we offer flexible deployment options and a quick ROI through reduced recovery times and compliance assurance. Would a short pilot help demonstrate the value to your CFO?"
+     "a": "Given SalMar's recent green bond issuance and focus on operational resilience, this is exactly the kind of strategic investment that protects shareholder value. Our flat-rate pricing means no surprises, and the cost of a single ransomware incident, in terms of downtime, reputational damage, and recovery, far outweighs the investment in Northwind. Plus, we offer flexible deployment options and a quick ROI through reduced recovery times and compliance assurance. Would a short pilot help demonstrate the value to your CFO?"
     },
     {
      "q": "We're already evaluating other backup solutions like Veeam or Commvault.",
-     "a": "Those are great tools, but they were originally designed for on-premise environments and adapted for SaaS. Keepit is the only platform built exclusively for SaaS data protection, with its own independent cloud infrastructure, not reliant on AWS or Azure. This means faster recovery, true data separation, and no egress fees. I'd invite you to compare our blockchain-verified immutability and unlimited retention against any other solution. We're confident you'll see the difference in both security and cost predictability."
+     "a": "Those are great tools, but they were originally designed for on-premise environments and adapted for SaaS. Northwind is the only platform built exclusively for SaaS data protection, with its own independent cloud infrastructure, not reliant on AWS or Azure. This means faster recovery, true data separation, and no egress fees. I'd invite you to compare our blockchain-verified immutability and unlimited retention against any other solution. We're confident you'll see the difference in both security and cost predictability."
     }
    ],
    "signalScore": 99
@@ -1133,7 +1133,7 @@
     "Champion"
    ],
    "roleClass": "champion",
-   "approach": "Engage Denis with a technical, data-driven conversation. Lead with the specific challenges of SaaS data protection in mining, referencing MinRes's digital transformation and the SOCI Act. Emphasize Keepit's independent cloud architecture, blockchain-verified immutability, and flat-rate pricing. Use case studies from similar industries (e.g., other critical infrastructure or resource companies). Avoid overly salesy language; focus on technical details and ROI. Best channels: LinkedIn message or email, followed by a technical demo. Topics to avoid: generic backup comparisons or irrelevant features.",
+   "approach": "Engage Denis with a technical, data-driven conversation. Lead with the specific challenges of SaaS data protection in mining, referencing MinRes's digital transformation and the SOCI Act. Emphasize Northwind's independent cloud architecture, blockchain-verified immutability, and flat-rate pricing. Use case studies from similar industries (e.g., other critical infrastructure or resource companies). Avoid overly salesy language; focus on technical details and ROI. Best channels: LinkedIn message or email, followed by a technical demo. Topics to avoid: generic backup comparisons or irrelevant features.",
    "painPoints": [
     "Managing data protection for a hybrid IT/OT environment where SaaS platforms (Microsoft 365, AWS) are critical for real-time mining decisions and safety",
     "Ensuring immutable, tamper-proof backups to recover from ransomware attacks that could disrupt operations and compromise sensitive data",
@@ -1142,7 +1142,7 @@
     "Controlling costs with predictable flat-rate pricing, avoiding hidden egress or API fees as data volumes grow"
    ],
    "talkingPoints": [
-    "How Keepit's vendor-neutral cloud ensures true data separation from Microsoft and AWS, eliminating single-cloud dependency risk for MinRes's critical mining data",
+    "How Northwind's vendor-neutral cloud ensures true data separation from Microsoft and AWS, eliminating single-cloud dependency risk for MinRes's critical mining data",
     "Blockchain-verified immutability provides mathematically verifiable recovery points, essential for SOCI Act compliance and ransomware immunity",
     "Unlimited retention with instant search and recovery supports long-term archival for decades-long mining asset lifecycles without escalating costs",
     "Flat-rate pricing with no egress fees aligns with cost-conscious IT budgeting, especially as data volumes grow with IoT and AI analytics",
@@ -1173,15 +1173,15 @@
    "objections": [
     {
      "q": "We already use Veeam/Veritas for backup and it works fine.",
-     "a": "Understand that. However, those tools were designed for on-premises environments and adapted for SaaS. Keepit is purpose-built for SaaS, offering true vendor independence and blockchain-verified immutability that legacy tools can't match. Plus, with flat-rate pricing, you avoid the hidden costs of egress fees and complex licensing as your data grows."
+     "a": "Understand that. However, those tools were designed for on-premises environments and adapted for SaaS. Northwind is purpose-built for SaaS, offering true vendor independence and blockchain-verified immutability that legacy tools can't match. Plus, with flat-rate pricing, you avoid the hidden costs of egress fees and complex licensing as your data grows."
     },
     {
      "q": "We trust Microsoft/AWS for backup; they have built-in tools.",
-     "a": "That's a common approach, but it creates a single point of failure. If your Microsoft or AWS account is compromised, your backups are too. Keepit's independent cloud ensures you have a clean, isolated copy that's immune to supply-chain attacks. It's a best practice for critical infrastructure under the SOCI Act."
+     "a": "That's a common approach, but it creates a single point of failure. If your Microsoft or AWS account is compromised, your backups are too. Northwind's independent cloud ensures you have a clean, isolated copy that's immune to supply-chain attacks. It's a best practice for critical infrastructure under the SOCI Act."
     },
     {
      "q": "We don't have budget for another backup solution right now.",
-     "a": "I understand budget constraints. Keepit's flat-rate pricing is predictable and often more cost-effective than legacy tools when you factor in egress fees and management overhead. Plus, the cost of a ransomware incident or compliance failure far outweighs the investment. Let's run a quick ROI analysis to show the savings."
+     "a": "I understand budget constraints. Northwind's flat-rate pricing is predictable and often more cost-effective than legacy tools when you factor in egress fees and management overhead. Plus, the cost of a ransomware incident or compliance failure far outweighs the investment. Let's run a quick ROI analysis to show the savings."
     }
    ],
    "signalScore": 99
@@ -1210,7 +1210,7 @@
     "Gatekeeper"
    ],
    "roleClass": "gatekeeper",
-   "approach": "Lead with empathy and operational pragmatism. Acknowledge the 2023 incident directly but respectfully, framing Keepit as the operational solution to prevent recurrence. Avoid high-level strategy or boardroom ROI talk; focus on RTO/RPO, ease of recovery, and predictable pricing. Use language like 'service continuity,' 'operational resilience,' and 'flat-rate budgeting.' Best channel: Email introduction referencing the RSH standards or a short LinkedIn message. Avoid technical deep-dives on blockchain initially; lead with the outcome (guaranteed clean recovery).",
+   "approach": "Lead with empathy and operational pragmatism. Acknowledge the 2023 incident directly but respectfully, framing Northwind as the operational solution to prevent recurrence. Avoid high-level strategy or boardroom ROI talk; focus on RTO/RPO, ease of recovery, and predictable pricing. Use language like 'service continuity,' 'operational resilience,' and 'flat-rate budgeting.' Best channel: Email introduction referencing the RSH standards or a short LinkedIn message. Avoid technical deep-dives on blockchain initially; lead with the outcome (guaranteed clean recovery).",
    "painPoints": [
     "Post-breach recovery confidence: After the 2023 ransomware incident, he needs verifiable proof that backups are clean and recoverable, not just assumptions. Native Microsoft 365 backup lacks the immutability he now requires",
     "Operational downtime for tenant services: Any outage in Microsoft 365 (Teams, SharePoint, Outlook) directly impacts housing management, care coordination, and tenant communications. He needs near-instant recovery to protect vulnerable populations",
@@ -1220,10 +1220,10 @@
    ],
    "talkingPoints": [
     "'We help IT service heads like you sleep better at night by guaranteeing that your Microsoft 365 backups are immune to ransomware and instantly recoverable-no more hoping backups are clean.'",
-    "'Unlike native Microsoft backup, Keepit stores your data in its own independent cloud, not on Azure. This means if your Microsoft tenant is compromised, your backups remain completely untouched.'",
+    "'Unlike native Microsoft backup, Northwind stores your data in its own independent cloud, not on Azure. This means if your Microsoft tenant is compromised, your backups remain completely untouched.'",
     "'Our flat-rate pricing means you know exactly what you'll pay each month-no per-user fees, no egress charges. Perfect for non-profit budgeting.'",
     "'We can recover a single deleted email from two years ago in seconds, or restore an entire SharePoint site in minutes. This minimizes downtime for your 5,000 users and 350,000 tenants.'",
-    "'With the new RSH data protection standards coming in late 2025, Keepit provides blockchain-verified, tamper-proof audit trails that make compliance reporting effortless.'"
+    "'With the new RSH data protection standards coming in late 2025, Northwind provides blockchain-verified, tamper-proof audit trails that make compliance reporting effortless.'"
    ],
    "motivations": [
     {
@@ -1246,7 +1246,7 @@
    "objections": [
     {
      "q": "We already have Microsoft 365 backup included in our E5 license.",
-     "a": "That's a common starting point, and it's good for basic retention. However, native backup stores your data on the same infrastructure as your live data. If a ransomware attack targets your Microsoft tenant, your backups are vulnerable too. Keepit is an independent, immutable cloud-even if your Microsoft account is compromised, your backups remain 100% safe and recoverable. Plus, we offer unlimited retention and granular recovery that native tools don't."
+     "a": "That's a common starting point, and it's good for basic retention. However, native backup stores your data on the same infrastructure as your live data. If a ransomware attack targets your Microsoft tenant, your backups are vulnerable too. Northwind is an independent, immutable cloud-even if your Microsoft account is compromised, your backups remain 100% safe and recoverable. Plus, we offer unlimited retention and granular recovery that native tools don't."
     },
     {
      "q": "We're a non-profit with tight budgets. I can't afford another tool.",
@@ -1254,7 +1254,7 @@
     },
     {
      "q": "We're still recovering from the 2023 incident and focusing on core systems.",
-     "a": "That makes perfect sense, and I respect that. In fact, that's exactly why many IT leaders in your position reach out to us. After an incident, the priority shifts to ensuring it can't happen again. Keepit is designed to be the final safety net-simple to deploy, low maintenance, and it gives you verifiable proof that your backups are clean. We can start with a small pilot for just your critical Teams or SharePoint data to prove the value without disrupting your current operations."
+     "a": "That makes perfect sense, and I respect that. In fact, that's exactly why many IT leaders in your position reach out to us. After an incident, the priority shifts to ensuring it can't happen again. Northwind is designed to be the final safety net-simple to deploy, low maintenance, and it gives you verifiable proof that your backups are clean. We can start with a small pilot for just your critical Teams or SharePoint data to prove the value without disrupting your current operations."
     }
    ],
    "signalScore": 99
@@ -1283,7 +1283,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Lead with operational simplicity and branch-level impact. Avoid deep technical architecture or blockchain jargon initially, she cares about results, not the underlying technology. Frame Keepit as a 'set it and forget it' solution that eliminates backup headaches for her branch teams. Use language like 'predictable flat-rate pricing' (appeals to her project budget concerns) and 'granular, instant recovery for any branch user' (appeals to her need to reduce support tickets). Best channel: LinkedIn message or email, referencing a specific branch technology challenge. Avoid: Overly security-focused messaging (that's for the CISO); keep it operational and project-focused.",
+   "approach": "Lead with operational simplicity and branch-level impact. Avoid deep technical architecture or blockchain jargon initially, she cares about results, not the underlying technology. Frame Northwind as a 'set it and forget it' solution that eliminates backup headaches for her branch teams. Use language like 'predictable flat-rate pricing' (appeals to her project budget concerns) and 'granular, instant recovery for any branch user' (appeals to her need to reduce support tickets). Best channel: LinkedIn message or email, referencing a specific branch technology challenge. Avoid: Overly security-focused messaging (that's for the CISO); keep it operational and project-focused.",
    "painPoints": [
     "Branch-level disruption from backup failures or data loss: If a branch manager loses a critical email or a customer file in SharePoint, Christi gets the escalation. She needs a solution that prevents data loss before it impacts branch operations",
     "Complexity of managing multiple SaaS backup tools: She likely juggles native retention policies in Microsoft 365, plus whatever backup tool IT has deployed. This creates confusion and manual work for her team when they need to restore data for a branch",
@@ -1292,7 +1292,7 @@
     "Data sovereignty and compliance pressure at the branch level: With regulations like state-level data privacy laws and SEC/FDIC rules, Christi needs to ensure that branch data (PII, loan applications) is stored and protected in a compliant manner, without adding operational overhead"
    ],
    "talkingPoints": [
-    "How would you like to eliminate backup-related support tickets from your branch staff entirely? Keepit provides instant self-service recovery so branch managers can restore their own files without an IT ticket",
+    "How would you like to eliminate backup-related support tickets from your branch staff entirely? Northwind provides instant self-service recovery so branch managers can restore their own files without an IT ticket",
     "We offer flat-rate, predictable pricing with no egress fees, so you can budget for backup costs accurately across your branch technology projects, without surprises",
     "Our solution is purpose-built for Microsoft 365 and Salesforce, meaning no complex integrations or training required for your branch teams. It just works",
     "With our vendor-neutral, independent cloud, you get true data sovereignty, critical for compliance with banking regulations, without being locked into a hyperscaler's backup infrastructure",
@@ -1323,15 +1323,15 @@
    "objections": [
     {
      "q": "We already have backup covered through Microsoft's native retention and our existing backup vendor.",
-     "a": "Many banks initially think that, but they find that native retention doesn't protect against ransomware or malicious deletion, and legacy backup tools weren't built for SaaS. Keepit is the only platform with blockchain-verified immutability, meaning you get guaranteed clean copies, not just more retention. Plus, our flat-rate pricing means no egress fees, which is a common budget headache for project managers like you."
+     "a": "Many banks initially think that, but they find that native retention doesn't protect against ransomware or malicious deletion, and legacy backup tools weren't built for SaaS. Northwind is the only platform with blockchain-verified immutability, meaning you get guaranteed clean copies, not just more retention. Plus, our flat-rate pricing means no egress fees, which is a common budget headache for project managers like you."
     },
     {
      "q": "This sounds like a security/IT infrastructure decision, not something I would lead.",
-     "a": "You're right that security is a key concern, but the operational impact lands squarely on your team. When a branch manager loses a file, you get the call. Keepit is designed to make your life easier, giving your branch staff instant self-service recovery and eliminating backup-related tickets. I'm not asking you to replace the CISO; I'm asking you to evaluate how this could improve your branch technology metrics."
+     "a": "You're right that security is a key concern, but the operational impact lands squarely on your team. When a branch manager loses a file, you get the call. Northwind is designed to make your life easier, giving your branch staff instant self-service recovery and eliminating backup-related tickets. I'm not asking you to replace the CISO; I'm asking you to evaluate how this could improve your branch technology metrics."
     },
     {
      "q": "We don't have budget for a new backup tool right now.",
-     "a": "I understand budget constraints. Keepit's flat-rate pricing actually helps you predict and control costs better than variable models. Many of our clients find that the savings from eliminating egress fees and reducing IT support tickets more than covers the investment. Could we do a quick ROI analysis based on your current backup spend and support ticket volume?"
+     "a": "I understand budget constraints. Northwind's flat-rate pricing actually helps you predict and control costs better than variable models. Many of our clients find that the savings from eliminating egress fees and reducing IT support tickets more than covers the investment. Could we do a quick ROI analysis based on your current backup spend and support ticket volume?"
     }
    ],
    "signalScore": 88
@@ -1371,11 +1371,11 @@
     "Vendor Lock-In & Architecture Dependency: Rune is likely wary of being locked into a single cloud provider (Microsoft) for both primary workloads and backup. He needs a truly independent, vendor-neutral solution that provides a clean, immutable recovery environment, decoupled from the primary infrastructure"
    ],
    "talkingPoints": [
-    "The Independent Recovery Layer: 'Most backup solutions are built on the same infrastructure they're protecting. If a sophisticated attack compromises your Microsoft tenant, your backup is compromised too. Keepit is the only platform with its own independent, vendor-neutral cloud, providing a true air-gapped recovery environment that is immune to supply-chain attacks.'",
-    "Board-Level Assurance with Blockchain Verification: 'Your board needs to know that your data hasn't been tampered with. Keepit uses blockchain-anchored encryption keys to provide mathematically verifiable proof of data integrity, giving you the confidence to certify a clean recovery to regulators and the board.'",
-    "Predictable Cost for Unpredictable Growth: 'As DFDS's data volumes from IoT and digital services explode, your backup costs shouldn't. Keepit offers a simple, flat-rate pricing model with unlimited retention and no hidden egress fees, allowing you to budget accurately and scale without financial surprises.'",
-    "Sovereignty & Compliance by Design: 'With operations across multiple EU jurisdictions, data sovereignty is non-negotiable. Keepit's region-specific data centers guarantee your data stays within your chosen geography, simplifying compliance with GDPR and NIS2.'",
-    "Future-Proofing Against the Next Threat: 'The threat landscape is evolving. A solution that only protects against accidental deletion is not enough. Keepit is purpose-built for the modern era of ransomware and insider threats, providing a guaranteed clean copy of your Microsoft 365, Google Workspace, and Salesforce data.'"
+    "The Independent Recovery Layer: 'Most backup solutions are built on the same infrastructure they're protecting. If a sophisticated attack compromises your Microsoft tenant, your backup is compromised too. Northwind is the only platform with its own independent, vendor-neutral cloud, providing a true air-gapped recovery environment that is immune to supply-chain attacks.'",
+    "Board-Level Assurance with Blockchain Verification: 'Your board needs to know that your data hasn't been tampered with. Northwind uses blockchain-anchored encryption keys to provide mathematically verifiable proof of data integrity, giving you the confidence to certify a clean recovery to regulators and the board.'",
+    "Predictable Cost for Unpredictable Growth: 'As DFDS's data volumes from IoT and digital services explode, your backup costs shouldn't. Northwind offers a simple, flat-rate pricing model with unlimited retention and no hidden egress fees, allowing you to budget accurately and scale without financial surprises.'",
+    "Sovereignty & Compliance by Design: 'With operations across multiple EU jurisdictions, data sovereignty is non-negotiable. Northwind's region-specific data centers guarantee your data stays within your chosen geography, simplifying compliance with GDPR and NIS2.'",
+    "Future-Proofing Against the Next Threat: 'The threat landscape is evolving. A solution that only protects against accidental deletion is not enough. Northwind is purpose-built for the modern era of ransomware and insider threats, providing a guaranteed clean copy of your Microsoft 365, Google Workspace, and Salesforce data.'"
    ],
    "motivations": [
     {
@@ -1402,15 +1402,15 @@
    "objections": [
     {
      "q": "We already have backup covered by Microsoft's native retention and our existing on-premise tools (e.g., Veeam).",
-     "a": "That's a very common and valid starting point, Rune. However, those solutions have a critical blind spot. Microsoft's native backup is not immune to an admin-level compromise, if an attacker gains global admin rights, they can delete your data and the retention policies. And your on-premise tools are built on infrastructure that could be compromised in the same attack. Keepit is the only independent, immutable copy of your SaaS data, stored in its own cloud. It's not a backup of your infrastructure; it's a backup of your *data*, guaranteed. It's your last line of defense, not another tool in the same toolbox."
+     "a": "That's a very common and valid starting point, Rune. However, those solutions have a critical blind spot. Microsoft's native backup is not immune to an admin-level compromise, if an attacker gains global admin rights, they can delete your data and the retention policies. And your on-premise tools are built on infrastructure that could be compromised in the same attack. Northwind is the only independent, immutable copy of your SaaS data, stored in its own cloud. It's not a backup of your infrastructure; it's a backup of your *data*, guaranteed. It's your last line of defense, not another tool in the same toolbox."
     },
     {
      "q": "This sounds expensive. We have other budget priorities.",
-     "a": "I understand the budget pressure. But let's frame the cost differently. What is the cost of a single day of ferry operations being down due to a ransomware attack? Or the cost of a GDPR fine for a data breach involving passenger PII? Keepit's flat-rate pricing is predictable and often *lower* than the total cost of ownership of legacy solutions when you factor in egress fees, API costs, and the management overhead. This isn't a cost; it's an insurance policy against a catastrophic business disruption. We can show you a TCO analysis that compares our flat rate to your current estimated costs, including the hidden ones."
+     "a": "I understand the budget pressure. But let's frame the cost differently. What is the cost of a single day of ferry operations being down due to a ransomware attack? Or the cost of a GDPR fine for a data breach involving passenger PII? Northwind's flat-rate pricing is predictable and often *lower* than the total cost of ownership of legacy solutions when you factor in egress fees, API costs, and the management overhead. This isn't a cost; it's an insurance policy against a catastrophic business disruption. We can show you a TCO analysis that compares our flat rate to your current estimated costs, including the hidden ones."
     },
     {
      "q": "We're happy with our current security posture. Our SOC team handles this.",
-     "a": "That's excellent, and a strong SOC is critical. But prevention and detection are not the same as guaranteed recovery. Even the best SOC can be bypassed. The question isn't 'if' an attack will get through, but 'when' it does, can you recover your *data* instantly and with 100% integrity? Most security tools focus on the endpoint. Keepit focuses on the data itself, providing an immutable, independent copy that your own SOC can use as a clean source for recovery, even if your primary systems are destroyed. It's the missing piece in a mature security strategy."
+     "a": "That's excellent, and a strong SOC is critical. But prevention and detection are not the same as guaranteed recovery. Even the best SOC can be bypassed. The question isn't 'if' an attack will get through, but 'when' it does, can you recover your *data* instantly and with 100% integrity? Most security tools focus on the endpoint. Northwind focuses on the data itself, providing an immutable, independent copy that your own SOC can use as a clean source for recovery, even if your primary systems are destroyed. It's the missing piece in a mature security strategy."
     }
    ],
    "signalScore": 99
@@ -1439,7 +1439,7 @@
     "Influencer"
    ],
    "roleClass": "influencer",
-   "approach": "Engage Ibrahim with a technical, data-driven conversation. Lead with the specific failure of the 2021 backup system and how Keepit's blockchain-verified immutability and independent cloud architecture directly address that gap. Use case studies or technical demos showing how Keepit ensures clean, isolated recovery points even if Azure AD is compromised. Avoid generic sales pitches; focus on architecture and integration with Azure/M365. Best channels are LinkedIn or email with a clear subject line referencing the 2021 incident or cloud migration. Emphasize that Keepit is vendor-neutral and not reliant on Azure infrastructure, which aligns with the mandate for independent recovery.",
+   "approach": "Engage Ibrahim with a technical, data-driven conversation. Lead with the specific failure of the 2021 backup system and how Northwind's blockchain-verified immutability and independent cloud architecture directly address that gap. Use case studies or technical demos showing how Northwind ensures clean, isolated recovery points even if Azure AD is compromised. Avoid generic sales pitches; focus on architecture and integration with Azure/M365. Best channels are LinkedIn or email with a clear subject line referencing the 2021 incident or cloud migration. Emphasize that Northwind is vendor-neutral and not reliant on Azure infrastructure, which aligns with the mandate for independent recovery.",
    "painPoints": [
     "Lack of immutable backups: The 2021 ransomware attack encrypted backups because they were not isolated from production systems, leading to extended downtime and data compromise",
     "Cloud migration risk: Consolidating legacy DHB systems into a single national Health NZ platform on Azure creates risk of data corruption, loss, or ransomware targeting during the transition",
@@ -1448,10 +1448,10 @@
     "Data sovereignty concerns: Need to ensure Waikato's data can be recovered independently even if national-level infrastructure is compromised, to maintain business continuity for critical services like the Cancer Hub"
    ],
    "talkingPoints": [
-    "How Keepit's independent cloud infrastructure ensures that Waikato's backups are completely isolated from the Azure tenant, preventing a repeat of the 2021 ransomware encryption of backups",
-    "The blockchain-verified immutability of Keepit's backups guarantees tamper-proof recovery points, which is critical for maintaining data integrity during the national cloud migration",
-    "Keepit's flat-rate pricing with unlimited retention eliminates egress fees and provides predictable costs for long-term archival and eDiscovery, supporting the $87M legacy decommissioning",
-    "Regional data sovereignty: Keepit's region-specific data centers allow Waikato to recover independently even if the national Health NZ Azure infrastructure is breached",
+    "How Northwind's independent cloud infrastructure ensures that Waikato's backups are completely isolated from the Azure tenant, preventing a repeat of the 2021 ransomware encryption of backups",
+    "The blockchain-verified immutability of Northwind's backups guarantees tamper-proof recovery points, which is critical for maintaining data integrity during the national cloud migration",
+    "Northwind's flat-rate pricing with unlimited retention eliminates egress fees and provides predictable costs for long-term archival and eDiscovery, supporting the $87M legacy decommissioning",
+    "Regional data sovereignty: Northwind's region-specific data centers allow Waikato to recover independently even if the national Health NZ Azure infrastructure is breached",
     "Seamless integration with Microsoft 365 and Azure, providing a drop-in replacement for native Azure Backup with guaranteed clean copies for ransomware recovery"
    ],
    "motivations": [
@@ -1479,15 +1479,15 @@
    "objections": [
     {
      "q": "We already use Azure Backup and are investing heavily in Azure security.",
-     "a": "Azure Backup is a great tool, but it stores backups in the same cloud tenant as your production data. A compromised Azure AD admin account, as seen in many ransomware attacks, can delete both. Keepit's independent cloud, with blockchain-verified immutability, ensures your backups are completely isolated and recoverable even if your Azure tenant is compromised. This directly addresses the gap identified in your 2021 post-incident report."
+     "a": "Azure Backup is a great tool, but it stores backups in the same cloud tenant as your production data. A compromised Azure AD admin account, as seen in many ransomware attacks, can delete both. Northwind's independent cloud, with blockchain-verified immutability, ensures your backups are completely isolated and recoverable even if your Azure tenant is compromised. This directly addresses the gap identified in your 2021 post-incident report."
     },
     {
      "q": "We are consolidating under Health NZ nationally; regional decisions may not be supported.",
-     "a": "That's exactly why an independent backup is critical. If the national tenant is breached, Waikato needs the ability to recover its own data independently. Keepit's regional data centers and vendor-neutral architecture give you that sovereignty without conflicting with national cloud strategy. You can deploy Keepit as a complementary layer that protects against a centralized blast radius."
+     "a": "That's exactly why an independent backup is critical. If the national tenant is breached, Waikato needs the ability to recover its own data independently. Northwind's regional data centers and vendor-neutral architecture give you that sovereignty without conflicting with national cloud strategy. You can deploy Northwind as a complementary layer that protects against a centralized blast radius."
     },
     {
      "q": "We have already allocated budget for cybersecurity; we may not have room for another vendor.",
-     "a": "The $75.7M cybersecurity funding was specifically allocated to address weaknesses exposed by the 2021 attack, including backup immutability. Keepit directly fills that verified gap. Additionally, the $87M legacy decommissioning budget includes replacing on-premise backup solutions, Keepit can replace those tools with a modern, cloud-native solution that integrates with Azure. The budget is there, and the mandate is clear."
+     "a": "The $75.7M cybersecurity funding was specifically allocated to address weaknesses exposed by the 2021 attack, including backup immutability. Northwind directly fills that verified gap. Additionally, the $87M legacy decommissioning budget includes replacing on-premise backup solutions, Northwind can replace those tools with a modern, cloud-native solution that integrates with Azure. The budget is there, and the mandate is clear."
     }
    ],
    "signalScore": 94
@@ -1516,7 +1516,7 @@
     "Decision-maker"
    ],
    "roleClass": "decision-maker",
-   "approach": "Lead with a strategic, risk-focused message. Avoid technical jargon initially; instead, frame the conversation around provable data integrity, ransomware immunity, and regulatory compliance. Use data points (e.g., '100% guarantee of clean recovery points' or 'blockchain-verified immutability') to appeal to his data-driven nature. Reference Cornèr Banca's recent cloud migration and FINMA roundtable participation to show you understand his context. Best channels: LinkedIn message (brief, value-driven) followed by a personalized email to set up a 15-minute 'risk assessment' call. Avoid: Over-selling features; he cares about outcomes, not technology. Do not dismiss his current vendors; instead, position Keepit as a complementary, independent layer that solves his specific supply-chain risk.",
+   "approach": "Lead with a strategic, risk-focused message. Avoid technical jargon initially; instead, frame the conversation around provable data integrity, ransomware immunity, and regulatory compliance. Use data points (e.g., '100% guarantee of clean recovery points' or 'blockchain-verified immutability') to appeal to his data-driven nature. Reference Cornèr Banca's recent cloud migration and FINMA roundtable participation to show you understand his context. Best channels: LinkedIn message (brief, value-driven) followed by a personalized email to set up a 15-minute 'risk assessment' call. Avoid: Over-selling features; he cares about outcomes, not technology. Do not dismiss his current vendors; instead, position Northwind as a complementary, independent layer that solves his specific supply-chain risk.",
    "painPoints": [
     "Ransomware immunity for SaaS data: As a high-value financial target, Vasco cannot rely on Microsoft's native backup, which is vulnerable to the same attack vector. He needs guaranteed clean, immutable recovery points for Microsoft 365 to ensure business continuity after a ransomware attack",
     "Supply-chain and third-party risk: Cornèr Banca is migrating to dedicated cloud infrastructure. Vasco is acutely aware that storing backups on the same cloud provider (e.g., Azure) creates a single point of failure and exposure to supply-chain attacks. He needs a vendor-neutral, independent backup cloud",
@@ -1526,11 +1526,11 @@
     "Cost efficiency and budget justification: With a mandate to improve the cost-to-income ratio, Vasco needs to justify backup costs to the CFO. He is likely frustrated by hidden egress fees, API costs, and complex pricing from legacy or native backup tools. He needs a predictable, flat-rate model"
    ],
    "talkingPoints": [
-    "How Keepit's blockchain-verified immutability provides mathematically provable data integrity that satisfies FINMA and GDPR audit requirements for SaaS data",
-    "The risk of storing backups on the same cloud platform as your production data (e.g., Azure) and how Keepit's independent, vendor-neutral cloud eliminates that single point of failure",
-    "How Keepit's flat-rate, predictable pricing eliminates surprise egress and API fees, supporting Cornèr Banca's cost efficiency mandate",
-    "A real-world example of a Swiss financial institution that recovered from a ransomware attack in hours using Keepit's clean, immutable recovery points",
-    "How Keepit's Swiss data centers guarantee data sovereignty and residency, aligning with Cornèr Banca's multi-year cloud migration project"
+    "How Northwind's blockchain-verified immutability provides mathematically provable data integrity that satisfies FINMA and GDPR audit requirements for SaaS data",
+    "The risk of storing backups on the same cloud platform as your production data (e.g., Azure) and how Northwind's independent, vendor-neutral cloud eliminates that single point of failure",
+    "How Northwind's flat-rate, predictable pricing eliminates surprise egress and API fees, supporting Cornèr Banca's cost efficiency mandate",
+    "A real-world example of a Swiss financial institution that recovered from a ransomware attack in hours using Northwind's clean, immutable recovery points",
+    "How Northwind's Swiss data centers guarantee data sovereignty and residency, aligning with Cornèr Banca's multi-year cloud migration project"
    ],
    "motivations": [
     {
@@ -1557,19 +1557,19 @@
    "objections": [
     {
      "q": "We already have backup for Microsoft 365 through our existing cloud provider or native Microsoft tools.",
-     "a": "That's a common starting point. However, native Microsoft backup is not independent, it's vulnerable to the same ransomware that can encrypt your production data. If an attacker compromises your tenant, they can also delete or corrupt those backups. Keepit is a vendor-neutral, independent cloud that is immune to supply-chain attacks. Think of it as a fireproof safe for your digital assets, stored in a different building. Plus, we provide blockchain-verified immutability, which native tools cannot offer."
+     "a": "That's a common starting point. However, native Microsoft backup is not independent, it's vulnerable to the same ransomware that can encrypt your production data. If an attacker compromises your tenant, they can also delete or corrupt those backups. Northwind is a vendor-neutral, independent cloud that is immune to supply-chain attacks. Think of it as a fireproof safe for your digital assets, stored in a different building. Plus, we provide blockchain-verified immutability, which native tools cannot offer."
     },
     {
      "q": "We are concerned about adding another vendor to our stack.",
-     "a": "I understand. But Keepit is designed to simplify your stack, not complicate it. We replace multiple point solutions (e.g., one for M365, one for Google Workspace, one for Salesforce) with a single, unified platform. Our flat-rate pricing also eliminates the need to manage complex licensing. The result is lower operational overhead and a single pane of glass for all your SaaS data protection."
+     "a": "I understand. But Northwind is designed to simplify your stack, not complicate it. We replace multiple point solutions (e.g., one for M365, one for Google Workspace, one for Salesforce) with a single, unified platform. Our flat-rate pricing also eliminates the need to manage complex licensing. The result is lower operational overhead and a single pane of glass for all your SaaS data protection."
     },
     {
      "q": "Your solution sounds expensive compared to what we have now.",
-     "a": "I appreciate that. However, most backup solutions have hidden costs, egress fees, API charges, and costs for long-term retention. Keepit's pricing is completely transparent and flat-rate, meaning you pay one predictable price for unlimited retention and all recovery operations. When you factor in the cost of a single ransomware incident or a failed audit, our solution is actually the most cost-effective insurance you can buy. Would you be open to a quick ROI comparison?"
+     "a": "I appreciate that. However, most backup solutions have hidden costs, egress fees, API charges, and costs for long-term retention. Northwind's pricing is completely transparent and flat-rate, meaning you pay one predictable price for unlimited retention and all recovery operations. When you factor in the cost of a single ransomware incident or a failed audit, our solution is actually the most cost-effective insurance you can buy. Would you be open to a quick ROI comparison?"
     },
     {
      "q": "We are in the middle of a cloud migration and cannot take on new projects right now.",
-     "a": "That's actually the perfect time to evaluate Keepit. As you migrate your data management systems to dedicated cloud infrastructure in Switzerland, you have a unique opportunity to architect a truly independent backup layer from the start. Keepit is designed to integrate seamlessly with your new cloud environment, ensuring data sovereignty and ransomware immunity from day one. We can help you avoid the costly mistake of building a backup strategy that is tied to a single vendor."
+     "a": "That's actually the perfect time to evaluate Northwind. As you migrate your data management systems to dedicated cloud infrastructure in Switzerland, you have a unique opportunity to architect a truly independent backup layer from the start. Northwind is designed to integrate seamlessly with your new cloud environment, ensuring data sovereignty and ransomware immunity from day one. We can help you avoid the costly mistake of building a backup strategy that is tied to a single vendor."
     }
    ],
    "signalScore": 99
@@ -1662,7 +1662,7 @@
     3,
     4
    ],
-   "sellerFit": "Strong fit: Keepit's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
+   "sellerFit": "Strong fit: Northwind's blockchain-verified immutable backup directly addresses Lonza's existential risk of data tampering in regulated GxP environments. The independent, ransomware-immune cloud provides guaranteed recovery for OT-supporting IT systems, preventing production halts. Flat-rate pricing with no hidden fees aligns with Lonza's margin pressure concerns. The vendor-neutral architecture supports Lonza's hybrid cloud migration without shared fate risk.",
    "engagementPriority": "P1"
   },
   {
@@ -1694,7 +1694,7 @@
    "competitiveOps": [
     "Displace legacy backup solutions (Veeam, Commvault) that rely on same cloud infrastructure as primary environment",
     "Displace 'do nothing' approach where customers rely solely on Microsoft 365 native recycle bins",
-    "Displace the 'prevention is enough' mindset by positioning Keepit as essential complement to Fortinet's Security Fabric",
+    "Displace the 'prevention is enough' mindset by positioning Northwind as essential complement to Fortinet's Security Fabric",
     "Replace risky, unprotected practices with blockchain-verified immutable backup independent of hyperscalers"
    ],
    "currentVendors": [
@@ -1790,7 +1790,7 @@
     8,
     9
    ],
-   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Keepit's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Keepit can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
+   "sellerFit": "Exceptional fit. Fortinet's recent security incidents (credential harvesting campaign, active exploitation of critical vulnerabilities) have exposed a fundamental gap in their prevention-first approach: guaranteed data recovery and integrity. Northwind's independent, blockchain-verified immutable backup cloud directly addresses this gap without competing with Fortinet's core security products. Northwind can be positioned as the essential 'last line of defense' that completes the Security Fabric, turning Fortinet's moment of vulnerability into a strategic partnership opportunity. The timing is critical as Fortinet customers urgently seek recovery solutions post-breach.",
    "engagementPriority": "P1"
   },
   {
@@ -1877,7 +1877,7 @@
    "contactIds": [
     10
    ],
-   "sellerFit": "Excellent fit. Keepit's immutable, vendor-neutral backup cloud directly addresses Royal London's critical pain points: ransomware resilience (blockchain-verified immutability), regulatory compliance (FCA/PRA operational resilience), cloud concentration risk (independent from Azure), and cost efficiency (flat-rate pricing with no egress fees). The mutual's member-owned structure aligns perfectly with Keepit's predictable pricing model. The timing is optimal given active digital transformation and cloud migration initiatives that create natural entry points for re-evaluating backup strategies.",
+   "sellerFit": "Excellent fit. Northwind's immutable, vendor-neutral backup cloud directly addresses Royal London's critical pain points: ransomware resilience (blockchain-verified immutability), regulatory compliance (FCA/PRA operational resilience), cloud concentration risk (independent from Azure), and cost efficiency (flat-rate pricing with no egress fees). The mutual's member-owned structure aligns perfectly with Northwind's predictable pricing model. The timing is optimal given active digital transformation and cloud migration initiatives that create natural entry points for re-evaluating backup strategies.",
    "engagementPriority": "P1"
   },
   {
@@ -1972,7 +1972,7 @@
    "contactIds": [
     11
    ],
-   "sellerFit": "Excellent fit: CPFL's heavy Microsoft ecosystem dependency, cybersecurity modernization focus, LGPD compliance needs, and financial capacity align perfectly with Keepit's value proposition of independent, immutable, blockchain-verified SaaS backup. The absence of a documented backup vendor creates a greenfield opportunity to position Keepit as the essential cyber-recovery layer for their critical energy infrastructure.",
+   "sellerFit": "Excellent fit: CPFL's heavy Microsoft ecosystem dependency, cybersecurity modernization focus, LGPD compliance needs, and financial capacity align perfectly with Northwind's value proposition of independent, immutable, blockchain-verified SaaS backup. The absence of a documented backup vendor creates a greenfield opportunity to position Northwind as the essential cyber-recovery layer for their critical energy infrastructure.",
    "engagementPriority": "P1"
   },
   {
@@ -2079,14 +2079,14 @@
    "contactIds": [
     12
    ],
-   "sellerFit": "Exceptional fit. Keepit's independent, immutable, ransomware-immune backup cloud directly addresses Dräger's most critical pain points: ensuring absolute data integrity and business continuity for life-supporting systems. Keepit's blockchain-verified immutability aligns with Dräger's security-first culture and CMMC certification. The vendor-neutral architecture fills the SaaS data protection gap in Dräger's Azure migration, while flat-rate pricing and guaranteed data sovereignty appeal to compliance and IT leaders. Keepit is uniquely positioned as the recovery layer that guarantees the integrity of Dräger's safety systems.",
+   "sellerFit": "Exceptional fit. Northwind's independent, immutable, ransomware-immune backup cloud directly addresses Dräger's most critical pain points: ensuring absolute data integrity and business continuity for life-supporting systems. Northwind's blockchain-verified immutability aligns with Dräger's security-first culture and CMMC certification. The vendor-neutral architecture fills the SaaS data protection gap in Dräger's Azure migration, while flat-rate pricing and guaranteed data sovereignty appeal to compliance and IT leaders. Northwind is uniquely positioned as the recovery layer that guarantees the integrity of Dräger's safety systems.",
    "engagementPriority": "P1"
   },
   {
    "slug": "salmar",
    "name": "SalMar",
    "domain": "www.salmar.no",
-   "summary": "SalMar ASA is a global leader in aquaculture, pioneering offshore salmon farming with a strong commitment to sustainability and technological innovation. The company's operations are highly digitalized, relying on a Microsoft-centric cloud infrastructure (Azure, M365) to manage everything from IoT-enabled offshore farms to global supply chains. This creates a critical dependency on SaaS data, making SalMar an ideal, high-value prospect for Keepit A/S. The primary opportunity lies in protecting their operational and business data from ransomware, ensuring compliance, and providing business continuity for their Azure and Microsoft 365 environments, all of which align perfectly with Keepit's independent, immutable backup cloud.",
+   "summary": "SalMar ASA is a global leader in aquaculture, pioneering offshore salmon farming with a strong commitment to sustainability and technological innovation. The company's operations are highly digitalized, relying on a Microsoft-centric cloud infrastructure (Azure, M365) to manage everything from IoT-enabled offshore farms to global supply chains. This creates a critical dependency on SaaS data, making SalMar an ideal, high-value prospect for Northwind Technologies. The primary opportunity lies in protecting their operational and business data from ransomware, ensuring compliance, and providing business continuity for their Azure and Microsoft 365 environments, all of which align perfectly with Northwind's independent, immutable backup cloud.",
    "industry": "Aquaculture (Atlantic Salmon Farming & Processing)",
    "employees": "~2,500 (Estimated based on industry and revenue scale)",
    "revenue": "~€2.7 Billion Annual Revenue (2025)",
@@ -2112,9 +2112,9 @@
    ],
    "competitiveOps": [
     "Displace native Microsoft backup: Native tools are not true backup",
-    "they lack immutability and are vulnerable to total tenant compromise. Keepit offers a superior, independent safety net",
-    "Displace legacy or fragmented solutions: If SalMar uses a patchwork of on-premise backup tools or a legacy cloud provider's solution, Keepit's purpose-built SaaS platform offers a unified, modern alternative with transparent pricing",
-    "Preempt competitors like Veeam or Commvault: Keepit's 100% independent, purpose-built SaaS cloud ensures fastest recovery and true data separation from primary environment, unlike tools adapted from legacy backup"
+    "they lack immutability and are vulnerable to total tenant compromise. Northwind offers a superior, independent safety net",
+    "Displace legacy or fragmented solutions: If SalMar uses a patchwork of on-premise backup tools or a legacy cloud provider's solution, Northwind's purpose-built SaaS platform offers a unified, modern alternative with transparent pricing",
+    "Preempt competitors like Veeam or Commvault: Northwind's 100% independent, purpose-built SaaS cloud ensures fastest recovery and true data separation from primary environment, unlike tools adapted from legacy backup"
    ],
    "currentVendors": [
     "Microsoft (Azure, M365) - inferred as primary cloud provider",
@@ -2200,7 +2200,7 @@
    "contactIds": [
     13
    ],
-   "sellerFit": "Keepit A/S is an ideal fit for SalMar ASA due to the critical alignment between SalMar's digital transformation risks and Keepit's unique value proposition. SalMar's heavy reliance on Microsoft 365 and Azure for core operations, combined with its IoT/OT data dependencies and strict regulatory compliance needs, directly maps to Keepit's strengths in providing independent, immutable, and blockchain-verified backup for SaaS data. Keepit's vendor-neutral architecture, guaranteed data sovereignty in Norwegian/European data centers, and predictable flat-rate pricing address SalMar's key pain points around ransomware recovery, supply chain attack resilience, and compliance. The timing is optimal given SalMar's recent strategic investments and focus on operational resilience.",
+   "sellerFit": "Northwind Technologies is an ideal fit for SalMar ASA due to the critical alignment between SalMar's digital transformation risks and Northwind's unique value proposition. SalMar's heavy reliance on Microsoft 365 and Azure for core operations, combined with its IoT/OT data dependencies and strict regulatory compliance needs, directly maps to Northwind's strengths in providing independent, immutable, and blockchain-verified backup for SaaS data. Northwind's vendor-neutral architecture, guaranteed data sovereignty in Norwegian/European data centers, and predictable flat-rate pricing address SalMar's key pain points around ransomware recovery, supply chain attack resilience, and compliance. The timing is optimal given SalMar's recent strategic investments and focus on operational resilience.",
    "engagementPriority": "P2"
   },
   {
@@ -2311,7 +2311,7 @@
    "contactIds": [
     14
    ],
-   "sellerFit": "Excellent fit. Keepit's independent, vendor-neutral backup platform directly addresses MinRes's critical pain points: ransomware immunity for SaaS data, supply-chain data integrity, immutable backups for compliance (SOCI Act), and long-term archival with predictable pricing. The presence of a dedicated CISO (Richard Asch) and aggressive digital transformation make MinRes an ideal target for Keepit's value proposition of true data separation and blockchain-verified recovery.",
+   "sellerFit": "Excellent fit. Northwind's independent, vendor-neutral backup platform directly addresses MinRes's critical pain points: ransomware immunity for SaaS data, supply-chain data integrity, immutable backups for compliance (SOCI Act), and long-term archival with predictable pricing. The presence of a dedicated CISO (Richard Asch) and aggressive digital transformation make MinRes an ideal target for Northwind's value proposition of true data separation and blockchain-verified recovery.",
    "engagementPriority": "P2"
   },
   {
@@ -2343,7 +2343,7 @@
     "Displace reliance on native Microsoft 365 backup by demonstrating lack of immutability and independent storage",
     "Displace hyperscaler-dependent backup (e.g., Veeam/Cohesity on AWS/Azure) by highlighting vulnerability to supply-chain attacks",
     "Displace legacy on-premise backup solutions that are not designed for SaaS data and cloud environments",
-    "Position Keepit as the only vendor-neutral, independent backup cloud with blockchain-verified immutability"
+    "Position Northwind as the only vendor-neutral, independent backup cloud with blockchain-verified immutability"
    ],
    "currentVendors": [
     "Microsoft 365 (likely with native backup only)",
@@ -2407,7 +2407,7 @@
    "contactIds": [
     15
    ],
-   "sellerFit": "Strong fit. Keepit's immutable, blockchain-verified backup directly addresses Clarion's critical pain points: ransomware immunity for expanded attack surface, UK GDPR compliance with data sovereignty, and protection for Microsoft 365 data. The post-breach context makes Clarion highly receptive to independent backup solutions. Keepit's predictable flat-rate pricing aligns with Clarion's non-profit budget constraints. The 2026 digital transformation creates a timely trigger for engagement.",
+   "sellerFit": "Strong fit. Northwind's immutable, blockchain-verified backup directly addresses Clarion's critical pain points: ransomware immunity for expanded attack surface, UK GDPR compliance with data sovereignty, and protection for Microsoft 365 data. The post-breach context makes Clarion highly receptive to independent backup solutions. Northwind's predictable flat-rate pricing aligns with Clarion's non-profit budget constraints. The 2026 digital transformation creates a timely trigger for engagement.",
    "engagementPriority": "P2"
   },
   {
@@ -2488,7 +2488,7 @@
    "contactIds": [
     16
    ],
-   "sellerFit": "Keepit A/S is an excellent fit for Regions Financial Corp. due to its independent, vendor-neutral cloud platform that provides blockchain-verified, immutable backups immune to ransomware and supply-chain attacks. Regions' explicit focus on ransomware defense, data integrity, and compliance aligns perfectly with Keepit's value proposition. The recent M&A activity and CFO transition create a timely opportunity to present Keepit's predictable flat-rate pricing and guaranteed data sovereignty as a strategic solution for financial and operational resilience.",
+   "sellerFit": "Northwind Technologies is an excellent fit for Regions Financial Corp. due to its independent, vendor-neutral cloud platform that provides blockchain-verified, immutable backups immune to ransomware and supply-chain attacks. Regions' explicit focus on ransomware defense, data integrity, and compliance aligns perfectly with Northwind's value proposition. The recent M&A activity and CFO transition create a timely opportunity to present Northwind's predictable flat-rate pricing and guaranteed data sovereignty as a strategic solution for financial and operational resilience.",
    "engagementPriority": "P3"
   },
   {
@@ -2593,7 +2593,7 @@
    "contactIds": [
     17
    ],
-   "sellerFit": "Keepit is uniquely positioned to address DFDS's most critical vulnerabilities. The persistent daily cyber threats create an urgent need for an immutable, ransomware-proof backup solution that guarantees data integrity and rapid recovery. Keepit's vendor-independent cloud, blockchain-verified immutability, and predictable flat-rate pricing directly counter DFDS's pain points of data integrity gaps, regulatory pressure, and unpredictable costs. The recent compliance failure further amplifies the need for audit-ready, verifiable data protection that Keepit provides. DFDS's mature security team and active solution search make them a high-priority target for Keepit's differentiated offering.",
+   "sellerFit": "Northwind is uniquely positioned to address DFDS's most critical vulnerabilities. The persistent daily cyber threats create an urgent need for an immutable, ransomware-proof backup solution that guarantees data integrity and rapid recovery. Northwind's vendor-independent cloud, blockchain-verified immutability, and predictable flat-rate pricing directly counter DFDS's pain points of data integrity gaps, regulatory pressure, and unpredictable costs. The recent compliance failure further amplifies the need for audit-ready, verifiable data protection that Northwind provides. DFDS's mature security team and active solution search make them a high-priority target for Northwind's differentiated offering.",
    "engagementPriority": "P2"
   },
   {
@@ -2677,7 +2677,7 @@
    "contactIds": [
     18
    ],
-   "sellerFit": "Exceptional fit. Keepit's core value proposition - a truly independent, vendor-neutral, immutable backup cloud - directly addresses the single most critical vulnerability exposed by the 2021 ransomware attack. The organization has verified budget ($75.7M), a documented mandate to fix backup immutability, and is actively migrating to the cloud platforms (Azure/M365) that Keepit protects. Keepit's blockchain-verified immutability and independent cloud architecture provide the exact solution needed to prevent a repeat of the 2021 disaster. The timing is optimal as the organization is actively decommissioning legacy backup solutions and implementing new cloud security architecture.",
+   "sellerFit": "Exceptional fit. Northwind's core value proposition - a truly independent, vendor-neutral, immutable backup cloud - directly addresses the single most critical vulnerability exposed by the 2021 ransomware attack. The organization has verified budget ($75.7M), a documented mandate to fix backup immutability, and is actively migrating to the cloud platforms (Azure/M365) that Northwind protects. Northwind's blockchain-verified immutability and independent cloud architecture provide the exact solution needed to prevent a repeat of the 2021 disaster. The timing is optimal as the organization is actively decommissioning legacy backup solutions and implementing new cloud security architecture.",
    "engagementPriority": "P1"
   },
   {
@@ -2703,12 +2703,12 @@
     "Participation in FINMA roundtable on digital banking compliance, showing board-level cybersecurity focus",
     "Stated investments in advanced threat detection (SIEM, endpoint protection), signaling defense-in-depth strategy",
     "Focus on ESG and joining Swiss Sustainable Finance initiative, aligning with efficient cloud backup reducing carbon footprint",
-    "Cost efficiency mandate to improve cost-to-income ratio, matching Keepit's predictable flat-rate pricing"
+    "Cost efficiency mandate to improve cost-to-income ratio, matching Northwind's predictable flat-rate pricing"
    ],
    "competitiveOps": [
-    "Displace legacy backup tools not purpose-built for SaaS with Keepit's SaaS-exclusive platform offering superior granularity and instant recovery",
-    "Replace in-cloud vendor backup (Microsoft/Azure native) with Keepit's true data separation and independent cloud storage",
-    "Consolidate multiple point solutions into Keepit's single unified platform for Microsoft 365, Azure, and other SaaS apps"
+    "Displace legacy backup tools not purpose-built for SaaS with Northwind's SaaS-exclusive platform offering superior granularity and instant recovery",
+    "Replace in-cloud vendor backup (Microsoft/Azure native) with Northwind's true data separation and independent cloud storage",
+    "Consolidate multiple point solutions into Northwind's single unified platform for Microsoft 365, Azure, and other SaaS apps"
    ],
    "currentVendors": [
     "Likely legacy backup tools from core banking system or first-gen cloud backup",
@@ -2777,7 +2777,7 @@
    "contactIds": [
     19
    ],
-   "sellerFit": "Excellent fit: Keepit's blockchain-verified immutable backup directly addresses Cornèr Banca's need for ransomware immunity and data integrity for SaaS data. The vendor-neutral, independent cloud architecture aligns with the bank's supply-chain risk mitigation needs and Swiss data sovereignty requirements. Keepit's predictable flat-rate pricing supports the bank's cost efficiency mandate, while the SaaS-exclusive platform can displace legacy backup tools and consolidate point solutions. The bank's active digital transformation and cybersecurity investments signal a receptive audience for Keepit's modern, cloud-native backup solution.",
+   "sellerFit": "Excellent fit: Northwind's blockchain-verified immutable backup directly addresses Cornèr Banca's need for ransomware immunity and data integrity for SaaS data. The vendor-neutral, independent cloud architecture aligns with the bank's supply-chain risk mitigation needs and Swiss data sovereignty requirements. Northwind's predictable flat-rate pricing supports the bank's cost efficiency mandate, while the SaaS-exclusive platform can displace legacy backup tools and consolidate point solutions. The bank's active digital transformation and cybersecurity investments signal a receptive audience for Northwind's modern, cloud-native backup solution.",
    "engagementPriority": "P1"
   }
  ],
@@ -2788,8 +2788,8 @@
   "companies": 12,
   "sampleOf": 252,
   "leadFor": {
-   "name": "Keepit A/S",
-   "domain": "keepit.com"
+   "name": "Northwind Technologies",
+   "domain": "northwindtech.com"
   }
  },
  "synth": {
