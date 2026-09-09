@@ -18,6 +18,46 @@ and then `npm run build` typechecks the project twice for no benefit — that is
 20 wasted seconds every iteration. While iterating, `npm run typecheck` (~21s)
 is the whole gate; run the full build once before pushing.
 
+### If vite dies with `Bus error`
+
+`.claude/hooks/session-start.sh` repairs this automatically on session start, so
+you should never hit it — but if you do, this is what it is, because the symptom
+is a bare `Bus error` with no stack trace and it is expensive to diagnose cold:
+
+1. **npm cannot reach the registry through the agent proxy.** The proxy's own
+   `noProxy` list contains `registry.npmjs.org`, so routing npm through it gives
+   `ECONNRESET` partway through and leaves a partial `node_modules`. Install with
+   the registry bypassed:
+   ```bash
+   npm_config_https_proxy= npm_config_noproxy=registry.npmjs.org npm i
+   ```
+2. **That partial install leaves native `.node` binaries truncated** — the ELF
+   header points past end-of-file (`file` reports `missing section headers at …`).
+   Mapping one raises SIGBUS, which kills vite in *both* dev and build.
+   `lightningcss` is the usual casualty, reached via `@tailwindcss/vite`.
+   **Re-running `npm i` does not fix it** — npm sees the package directory and
+   considers it satisfied. Delete the package first:
+   ```bash
+   rm -rf node_modules/lightningcss*   # then reinstall as above
+   ```
+
+Quickest probe for which native module is bad: `node -e "require('lightningcss')"`.
+Exit code 135 is SIGBUS.
+
+## Working in this repo
+
+Changes here are usually small and surgical — a token, a handful of class
+strings, one component. Inventory first (`grep` for the token or literal across
+`src/`), then edit inline. Fanning work out to subagents costs far more in
+setup than it saves at this size, and parallel `npm run build` invocations
+contend for the same cores. Reserve that for genuinely large, independent
+workloads.
+
+Verify with the cheapest instrument that actually settles the question. For a
+colour or token change that means computed style in a browser, or grepping the
+built CSS in `dist/assets/` — not screenshot diffs, which the animated counters
+and staggered entrance animations make non-deterministic.
+
 ## Architecture
 
 **Datamatics Business Solutions** (product name **Pulse**) is a business-to-business
