@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router';
 import {
   ArrowLeft, Mail, Phone, Globe2, BrainCircuit, AlertTriangle, MessageSquare,
   Heart, Compass, ShieldQuestion, Sparkles, MapPin, Award, Layers,
-  CheckCircle, XCircle, Clock, User as UserIcon, ChevronLeft, ChevronRight,
+  CheckCircle, XCircle, Clock, User as UserIcon, ChevronLeft, ChevronRight, MessagesSquare,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useAuth } from '../context/AuthContext';
@@ -18,7 +18,7 @@ import { RelishCompanyPanel } from '../components/relish/RelishCompanyPanel';
 import { RelishContactPanel } from '../components/relish/RelishContactPanel';
 import { SynthesisBlock } from '../components/signal/SynthesisBlock';
 import { CommitteeStrip } from '../components/signal/CommitteeStrip';
-import { Section, BulletList, accountFactLine } from '../components/signal/BriefingSections';
+import { Section, BulletList, ChipList, accountFactLine, SellerLens } from '../components/signal/BriefingSections';
 import { IntentChip, RoleDot } from '../components/signal/signalMeta';
 import { useUnionPrefs } from '../config/unionPrefs';
 import { formatDateLong, formatDateShort } from '../utils/formatDate';
@@ -95,7 +95,7 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
         <div className="flex items-center gap-2">
           <span className="hidden items-center gap-1.5 text-[11px] sm:flex" style={{ color: 'var(--color-text-muted)' }}>
             <Sparkles className="h-3.5 w-3.5" style={{ color: 'var(--color-primary)' }} />
-            {signalMeta.campaign} · enriched by {signalMeta.enrichedBy}
+            {signalMeta.campaign} · leads for {signalMeta.leadFor.name} · enriched by {signalMeta.enrichedBy}
           </span>
           {(prevMember || nextMember) && (
             <span className="flex items-center gap-1">
@@ -195,11 +195,27 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
       <h2 id="sec-person" className="pt-1 text-xs font-bold uppercase tracking-[0.08em]" style={{ color: 'var(--color-text-muted)' }}>
         Person
       </h2>
-      <Section icon={BrainCircuit} title="Role analysis">
+      <Section icon={BrainCircuit} title="Role Analysis">
         <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.roleAnalysis}</p>
       </Section>
+      {/* Communication Style — a delivered column that this page used to drop.
+          The tags are the compact read; the sentence is the nuance. */}
+      {contact.commStyle && (
+        <Section icon={MessagesSquare} title="Communication Style">
+          <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.commStyle}</p>
+          {contact.styleTags?.length > 0 && (
+            <div className="mt-2.5">
+              <ChipList items={contact.styleTags} />
+            </div>
+          )}
+        </Section>
+      )}
       <div className="grid gap-4 md:grid-cols-2">
-        <Section icon={Compass} title="Recommended approach">
+        <Section
+          icon={Compass}
+          title="Recommended Approach"
+          note={<SellerLens seller={signalMeta.leadFor.name} account={contact.company} />}
+        >
           <p className="text-sm leading-relaxed" style={{ color: 'var(--color-text-secondary)' }}>{contact.approach}</p>
         </Section>
         <Section icon={Heart} title="Motivations">
@@ -219,14 +235,22 @@ function EnrichedBriefing({ contactLeadId }: { contactLeadId: string }) {
         </Section>
       </div>
       <div className="grid gap-4 md:grid-cols-2">
-        <Section icon={AlertTriangle} title="Pain points">
+        <Section icon={AlertTriangle} title="Pain Points">
           <BulletList items={contact.painPoints} />
         </Section>
-        <Section icon={MessageSquare} title="Talking points">
+        <Section
+          icon={MessageSquare}
+          title="Talking Points"
+          note={<SellerLens seller={signalMeta.leadFor.name} account={contact.company} />}
+        >
           <BulletList items={contact.talkingPoints} />
         </Section>
       </div>
-      <Section icon={ShieldQuestion} title="Objection handling">
+      <Section
+        icon={ShieldQuestion}
+        title="Objection Handling"
+        note={<SellerLens seller={signalMeta.leadFor.name} account={contact.company} />}
+      >
         <div className="divide-y" style={{ borderColor: 'var(--color-border-light)' }}>
           {contact.objections.map(objection => (
             <div key={objection.q} className="py-2.5 first:pt-0 last:pb-0">

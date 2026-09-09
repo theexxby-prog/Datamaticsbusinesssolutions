@@ -20,6 +20,11 @@ export function StatusBadge({ status }: StatusBadgeProps) {
     'Rejected':           'bg-[var(--color-error-bg)] text-[var(--color-error)] border border-[rgba(220,38,38,0.2)]',
     'Declined':           'bg-[var(--color-error-bg)] text-[var(--color-error)] border border-[rgba(220,38,38,0.2)]',
     'Overdue':            'bg-[var(--color-error-bg)] text-[var(--color-error)] border border-[rgba(220,38,38,0.2)]',
+    // Relish enrichment batch lifecycle. 'Completed' above is shared.
+    'Queued':             'bg-[var(--color-accent-purple-bg)] text-[var(--color-accent-purple)] border border-[rgba(124,58,237,0.2)]',
+    'Grouping':           'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[rgba(37,99,235,0.2)]',
+    'Processing':         'bg-[var(--color-info-bg)] text-[var(--color-info)] border border-[rgba(37,99,235,0.2)]',
+    'Failed':             'bg-[var(--color-error-bg)] text-[var(--color-error)] border border-[rgba(220,38,38,0.2)]',
   };
 
   const style = statusStyles[status] ?? 'bg-[var(--color-surface)] text-[var(--color-text-secondary)] border border-[rgba(107,114,128,0.2)]';
